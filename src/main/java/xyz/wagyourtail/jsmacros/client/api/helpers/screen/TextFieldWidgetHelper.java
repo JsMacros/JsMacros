@@ -36,7 +36,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @param text
-     * @return
+     * @return self for chaining.
      * @since 1.0.5
      */
     public TextFieldWidgetHelper setText(String text) throws InterruptedException {
@@ -49,7 +49,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
      *
      * @param text
      * @param await
-     * @return
+     * @return self for chaining.
      * @throws InterruptedException
      * @since 1.3.1
      */
@@ -69,7 +69,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @param color
-     * @return
+     * @return self for chaining.
      * @since 1.0.5
      */
     public TextFieldWidgetHelper setEditableColor(int color) {
@@ -79,7 +79,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @param edit
-     * @return
+     * @return self for chaining.
      * @since 1.0.5
      */
     public TextFieldWidgetHelper setEditable(boolean edit) {
@@ -97,7 +97,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @param color
-     * @return
+     * @return self for chaining.
      * @since 1.0.5
      */
     public TextFieldWidgetHelper setUneditableColor(int color) {
@@ -125,7 +125,6 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
 
     /**
      * @return the maximum length of this text field.
-     * @return self for chaining.
      * @since 1.8.4
      */
     public int getMaxLength() {
@@ -173,7 +172,16 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setCursorPosition(int position) {
-        base.setCursor(position);
+        base.setCursor(position, false);
+        return this;
+    }
+
+    /**
+     * @return the cursor position.
+     * @since 1.9.0
+     */
+    public TextFieldWidgetHelper setCursorPosition(int position, boolean shift) {
+        base.setCursor(position, shift);
         return this;
     }
 
@@ -182,7 +190,16 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setCursorToStart() {
-        base.setCursorToStart();
+        base.setCursorToStart(false);
+        return this;
+    }
+
+    /**
+     * @return self for chaining.
+     * @since 1.9.0
+     */
+    public TextFieldWidgetHelper setCursorToStart(boolean shift) {
+        base.setCursorToStart(shift);
         return this;
     }
 
@@ -191,7 +208,16 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
      * @since 1.8.4
      */
     public TextFieldWidgetHelper setCursorToEnd() {
-        base.setCursorToEnd();
+        base.setCursorToEnd(false);
+        return this;
+    }
+
+    /**
+     * @return self for chaining.
+     * @since 1.9.0
+     */
+    public TextFieldWidgetHelper setCursorToEnd(boolean shift) {
+        base.setCursorToEnd(shift);
         return this;
     }
 

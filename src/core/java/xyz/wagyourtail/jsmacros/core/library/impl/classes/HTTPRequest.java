@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.authlib.yggdrasil.response.Response;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;

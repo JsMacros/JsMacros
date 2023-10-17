@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
@@ -136,7 +137,7 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
      * @since 1.8.4
      */
     public List<RecipeHelper> getRecipes(boolean craftable) throws InterruptedException {
-        Stream<Recipe<?>> recipes;
+        Stream<RecipeEntry<?>> recipes;
         RecipeBookResults res;
         IRecipeBookWidget recipeBookWidget = getRecipeBookWidget();
         if (recipeBookWidget == null) {

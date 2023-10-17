@@ -17,35 +17,35 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     @Override
-    public int size() {
+    public synchronized int size() {
         return tasks.size();
     }
 
     @Override
-    public boolean isEmpty() {
+    public synchronized boolean isEmpty() {
         return tasks.isEmpty();
     }
 
     @Override
-    public boolean contains(Object o) {
+    public synchronized boolean contains(Object o) {
         return taskSet.contains(o);
     }
 
     @NotNull
     @Override
-    public Iterator<E> iterator() {
+    public synchronized Iterator<E> iterator() {
         return taskSet.iterator();
     }
 
     @NotNull
     @Override
-    public Object[] toArray() {
+    public synchronized Object[] toArray() {
         return taskSet.toArray();
     }
 
     @NotNull
     @Override
-    public <T> T[] toArray(@NotNull T[] ts) {
+    public synchronized <T> T[] toArray(@NotNull T[] ts) {
         return taskSet.toArray(ts);
     }
 
@@ -64,7 +64,7 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     @Override
-    public boolean remove(Object o) {
+    public synchronized boolean remove(Object o) {
         if (taskSet.remove(o)) {
             int prio = priorityFunction.apply((E) o);
             List<E> list = tasks.get(prio);
@@ -78,12 +78,12 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     @Override
-    public boolean containsAll(@NotNull Collection<?> collection) {
+    public synchronized boolean containsAll(@NotNull Collection<?> collection) {
         return taskSet.containsAll(collection);
     }
 
     @Override
-    public boolean addAll(@NotNull Collection<? extends E> collection) {
+    public synchronized boolean addAll(@NotNull Collection<? extends E> collection) {
         boolean changed = false;
         for (E e : collection) {
             changed |= add(e);
@@ -92,7 +92,7 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     @Override
-    public boolean removeAll(@NotNull Collection<?> collection) {
+    public synchronized boolean removeAll(@NotNull Collection<?> collection) {
         boolean changed = false;
         for (Object o : collection) {
             changed |= remove(o);
@@ -101,7 +101,7 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     @Override
-    public boolean retainAll(@NotNull Collection<?> collection) {
+    public synchronized boolean retainAll(@NotNull Collection<?> collection) {
         boolean changed = false;
         for (Object o : taskSet) {
             if (!collection.contains(o)) {
@@ -112,13 +112,13 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     @Override
-    public void clear() {
+    public synchronized void clear() {
         taskSet.clear();
         tasks.clear();
     }
 
     @Override
-    public boolean offer(E e) {
+    public synchronized boolean offer(E e) {
         return add(e);
     }
 
@@ -166,16 +166,16 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     @Override
-    public E element() {
+    public synchronized E element() {
         return currentTask;
     }
 
     @Override
-    public E peek() {
+    public synchronized E peek() {
         return currentTask;
     }
 
-    private E getLowestPrioItem() {
+    private synchronized E getLowestPrioItem() {
         if (tasks.isEmpty()) {
             return null;
         }

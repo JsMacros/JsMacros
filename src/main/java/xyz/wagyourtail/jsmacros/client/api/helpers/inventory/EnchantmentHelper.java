@@ -97,7 +97,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
         if (level != 1 || this.getMaxLevel() != 1) {
             mutableText.append(" ").append(getRomanNumeral(level));
         }
-        return new TextHelper(mutableText);
+        return TextHelper.wrap(mutableText);
     }
 
     private static String getRomanNumeral(int number) {

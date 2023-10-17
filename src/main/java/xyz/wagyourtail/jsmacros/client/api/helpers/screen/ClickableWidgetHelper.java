@@ -111,7 +111,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @since 1.2.3, renamed fro {@code getText} in 1.3.1
      */
     public TextHelper getLabel() {
-        return new TextHelper(base.getMessage());
+        return TextHelper.wrap(base.getMessage());
     }
 
     /**
@@ -236,7 +236,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @since 1.8.4
      */
     public List<TextHelper> getTooltips() {
-        return tooltips.stream().map(TextHelper::new).collect(Collectors.toList());
+        return tooltips.stream().map(TextHelper::wrap).collect(Collectors.toList());
     }
 
     @Override

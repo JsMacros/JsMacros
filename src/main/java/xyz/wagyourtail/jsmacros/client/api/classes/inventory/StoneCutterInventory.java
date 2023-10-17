@@ -60,7 +60,7 @@ public class StoneCutterInventory extends Inventory<StonecutterScreen> {
      * @since 1.8.4
      */
     public List<ItemStackHelper> getRecipes() {
-        return inventory.getScreenHandler().getAvailableRecipes().stream().map(recipe -> new ItemStackHelper(recipe.getOutput(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager()))).collect(Collectors.toList());
+        return inventory.getScreenHandler().getAvailableRecipes().stream().map(recipe -> new ItemStackHelper(recipe.value().getResult(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager()))).collect(Collectors.toList());
     }
 
     /**

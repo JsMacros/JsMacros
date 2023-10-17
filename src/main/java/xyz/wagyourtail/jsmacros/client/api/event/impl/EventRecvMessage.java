@@ -28,7 +28,7 @@ public class EventRecvMessage extends BaseEvent {
     public String messageType;
 
     public EventRecvMessage(Text message, MessageSignatureData signature, MessageIndicator indicator) {
-        this.text = new TextHelper(message);
+        this.text = TextHelper.wrap(message);
 
         if (signature == null) {
             this.signature = null;

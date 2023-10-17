@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.util.SkinTextures;
 import net.minecraft.world.GameMode;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -59,7 +60,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @since 1.1.9
      */
     public TextHelper getDisplayText() {
-        return new TextHelper(base.getDisplayName());
+        return TextHelper.wrap(base.getDisplayName());
     }
 
     /**
@@ -75,7 +76,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @since 1.8.4
      */
     public boolean hasCape() {
-        return base.hasCape();
+        return base.getSkinTextures().capeTexture() != null;
     }
 
     /**
@@ -85,7 +86,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @since 1.8.4
      */
     public boolean hasSlimModel() {
-        return base.getModel().equals("slim");
+        return base.getSkinTextures().model().equals(SkinTextures.Model.SLIM);
     }
 
     /**
@@ -93,7 +94,14 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @since 1.8.4
      */
     public String getSkinTexture() {
-        return base.getSkinTexture() == null ? null : base.getSkinTexture().toString();
+        return base.getSkinTextures().texture().toString();
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public String getSkinUrl() {
+        return base.getSkinTextures().textureUrl();
     }
 
     /**
@@ -101,7 +109,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @since 1.8.4
      */
     public String getCapeTexture() {
-        return base.getCapeTexture() == null ? null : base.getCapeTexture().toString();
+        return base.getSkinTextures().capeTexture() == null ? null : base.getSkinTextures().capeTexture().toString();
     }
 
     /**
@@ -109,7 +117,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @since 1.8.4
      */
     public String getElytraTexture() {
-        return base.getElytraTexture() == null ? null : base.getElytraTexture().toString();
+        return base.getSkinTextures().elytraTexture() == null ? null : base.getSkinTextures().elytraTexture().toString();
     }
 
     /**

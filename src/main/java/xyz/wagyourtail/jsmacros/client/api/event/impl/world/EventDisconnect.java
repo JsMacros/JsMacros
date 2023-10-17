@@ -17,7 +17,7 @@ public class EventDisconnect extends BaseEvent {
     public final TextHelper message;
 
     public EventDisconnect(Text message) {
-        this.message = new TextHelper(message);
+        this.message = TextHelper.wrap(message);
     }
 
     @Override

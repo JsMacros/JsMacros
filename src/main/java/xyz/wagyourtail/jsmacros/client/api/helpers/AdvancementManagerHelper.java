@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementManager;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.client.MinecraftClient;
@@ -57,7 +58,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getStartedAdvancements() {
-        return getProgressStream().filter(progress -> !progress.getValue().isDone() && progress.getValue().isAnyObtained()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).collect(Collectors.toList());
+        return getProgressStream().filter(progress -> !progress.getValue().isDone() && progress.getValue().isAnyObtained()).map(advancementProgressEntry -> new AdvancementHelper(base.get(advancementProgressEntry.getKey()))).collect(Collectors.toList());
     }
 
     /**
@@ -65,7 +66,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getMissingAdvancements() {
-        return getProgressStream().filter(advancementProgressEntry -> !advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).collect(Collectors.toList());
+        return getProgressStream().filter(advancementProgressEntry -> !advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(base.get(advancementProgressEntry.getKey()))).collect(Collectors.toList());
     }
 
     /**
@@ -73,7 +74,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @since 1.8.4
      */
     public List<AdvancementHelper> getCompletedAdvancements() {
-        return getProgressStream().filter(advancementProgressEntry -> advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey())).collect(Collectors.toList());
+        return getProgressStream().filter(advancementProgressEntry -> advancementProgressEntry.getValue().isDone()).map(advancementProgressEntry -> new AdvancementHelper(base.get(advancementProgressEntry.getKey()))).collect(Collectors.toList());
     }
 
     /**
@@ -108,7 +109,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      */
     public Map<AdvancementHelper, AdvancementProgressHelper> getAdvancementsProgress() {
         return getProgressStream().collect(Collectors.toMap(
-                advancementProgressEntry -> new AdvancementHelper(advancementProgressEntry.getKey()),
+                advancementProgressEntry -> new AdvancementHelper(base.get(advancementProgressEntry.getKey())),
                 advancementProgressEntry -> new AdvancementProgressHelper(advancementProgressEntry.getValue())
         ));
     }
@@ -119,10 +120,11 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      */
     @DocletReplaceParams("identifier: AdvancementId")
     public AdvancementProgressHelper getAdvancementProgress(String identifier) {
-        return new AdvancementProgressHelper(((MixinClientAdvancementManager) MinecraftClient.getInstance().player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base.get(RegistryHelper.parseIdentifier(identifier))));
+        assert MinecraftClient.getInstance().player != null;
+        return new AdvancementProgressHelper(((MixinClientAdvancementManager) MinecraftClient.getInstance().player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base.get(RegistryHelper.parseIdentifier(identifier)).getAdvancementEntry()));
     }
 
-    private Stream<Map.Entry<Advancement, AdvancementProgress>> getProgressStream() {
+    private Stream<Map.Entry<AdvancementEntry, AdvancementProgress>> getProgressStream() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
         return ((MixinClientAdvancementManager) player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().entrySet().stream();

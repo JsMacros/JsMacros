@@ -584,7 +584,7 @@ public class FWorld extends BaseLibrary {
         }
         ServerInfo multiplayerServer = mc.getCurrentServerEntry();
         if (multiplayerServer != null) {
-            if (mc.isConnectedToRealms()) {
+            if (multiplayerServer.isRealm()) {
                 return "REALM_" + multiplayerServer.name;
             }
             if (multiplayerServer.isLocal()) {
@@ -811,7 +811,7 @@ public class FWorld extends BaseLibrary {
     public TextHelper getTabListHeader() {
         Text header = ((IPlayerListHud) mc.inGameHud.getPlayerListHud()).jsmacros_getHeader();
         if (header != null) {
-            return new TextHelper(header);
+            return TextHelper.wrap(header);
         }
         return null;
     }
@@ -823,7 +823,7 @@ public class FWorld extends BaseLibrary {
     public TextHelper getTabListFooter() {
         Text footer = ((IPlayerListHud) mc.inGameHud.getPlayerListHud()).jsmacros_getFooter();
         if (footer != null) {
-            return new TextHelper(footer);
+            return TextHelper.wrap(footer);
         }
         return null;
     }

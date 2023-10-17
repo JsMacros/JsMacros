@@ -128,7 +128,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     public List<TextHelper> getTabTexts() {
-        return ItemGroups.getGroups().stream().map(e -> new TextHelper(e.getDisplayName())).collect(Collectors.toList());
+        return ItemGroups.getGroups().stream().map(e -> TextHelper.wrap(e.getDisplayName())).collect(Collectors.toList());
     }
 
     private CreativeInventory selectTab(ItemGroup group) {
