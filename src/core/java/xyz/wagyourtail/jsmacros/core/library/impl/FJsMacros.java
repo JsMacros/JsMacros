@@ -473,8 +473,6 @@ public class FJsMacros extends PerExecLibrary {
      * @see FJsMacros#off(String, IEventListener)
      * @since 1.2.3
      */
-    @DocletReplaceTypeParams("E extends keyof Events")
-    @DocletReplaceParams("event: E, listener: IEventListener")
     public boolean off(IEventListener listener) {
         return Core.getInstance().eventRegistry.removeListener(listener);
     }
@@ -488,6 +486,8 @@ public class FJsMacros extends PerExecLibrary {
      * @see IEventListener
      * @since 1.2.3
      */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, listener: IEventListener")
     public boolean off(String event, IEventListener listener) {
         return Core.getInstance().eventRegistry.removeListener(event, listener);
     }
