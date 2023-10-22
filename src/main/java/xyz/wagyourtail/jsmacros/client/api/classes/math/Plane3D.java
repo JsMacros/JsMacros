@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
+import java.util.Objects;
+
 /**
  * @since 1.6.5
  */
@@ -40,6 +42,27 @@ public class Plane3D {
 
     public Vec3D getVec23() {
         return new Vec3D(x2, y2, z2, x3, y3, z3);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Plane3D plane3D = (Plane3D) o;
+        return Double.compare(x1, plane3D.x1) == 0
+                && Double.compare(y1, plane3D.y1) == 0
+                && Double.compare(z1, plane3D.z1) == 0
+                && Double.compare(x2, plane3D.x2) == 0
+                && Double.compare(y2, plane3D.y2) == 0
+                && Double.compare(z2, plane3D.z2) == 0
+                && Double.compare(x3, plane3D.x3) == 0
+                && Double.compare(y3, plane3D.y3) == 0
+                && Double.compare(z3, plane3D.z3) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x1, y1, z1, x2, y2, z2, x3, y3, z3);
     }
 
 }

@@ -32,7 +32,7 @@ public class Text implements RenderElement, Alignable<Text> {
     public int zIndex;
 
     public Text(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
-        this(new TextHelper(net.minecraft.text.Text.literal(text)), x, y, color, zIndex, shadow, scale, rotation);
+        this(TextHelper.wrap(net.minecraft.text.Text.literal(text)), x, y, color, zIndex, shadow, scale, rotation);
     }
 
     public Text(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
@@ -122,7 +122,7 @@ public class Text implements RenderElement, Alignable<Text> {
      * @since 1.2.7
      */
     public TextHelper getText() {
-        return new TextHelper(text);
+        return TextHelper.wrap(text);
     }
 
     /**
@@ -389,7 +389,7 @@ public class Text implements RenderElement, Alignable<Text> {
          * @since 1.8.4
          */
         public TextHelper getText() {
-            return new TextHelper(text.copy());
+            return TextHelper.wrap(text.copy());
         }
 
         /**
@@ -593,7 +593,7 @@ public class Text implements RenderElement, Alignable<Text> {
 
         @Override
         public Text createElement() {
-            return new Text(new TextHelper(text), x, y, color, zIndex, shadow, scale, rotation).setRotateCenter(
+            return new Text(TextHelper.wrap(text), x, y, color, zIndex, shadow, scale, rotation).setRotateCenter(
                     rotateCenter).setParent(parent);
         }
 

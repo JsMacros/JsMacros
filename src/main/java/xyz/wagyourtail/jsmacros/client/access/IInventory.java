@@ -5,10 +5,10 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 public interface IInventory {
     @Accessor
-    int getX();
+    int jsmacros$getX();
 
     @Accessor
-    int getY();
+    int jsmacros$getY();
 
     Slot jsmacros_getSlotUnder(double x, double y);
 

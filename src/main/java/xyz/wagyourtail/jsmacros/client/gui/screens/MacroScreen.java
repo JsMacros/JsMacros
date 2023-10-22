@@ -89,11 +89,11 @@ public class MacroScreen extends BaseScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horiz, double vert) {
         if (overlay == null) {
-            macroScroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
+            macroScroll.mouseDragged(mouseX, mouseY, 0, 0, -vert * 2);
         }
-        return super.mouseScrolled(mouseX, mouseY, amount);
+        return super.mouseScrolled(mouseX, mouseY, horiz, vert);
     }
 
     public void addMacro(ScriptTrigger macro) {
@@ -192,7 +192,7 @@ public class MacroScreen extends BaseScreen {
         if (drawContext == null) {
             return;
         }
-        this.renderBackground(drawContext);
+        this.renderBackground(drawContext, mouseX, mouseY, delta);
 
         topbar.render(drawContext, mouseX, mouseY, delta);
 

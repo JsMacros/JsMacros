@@ -43,7 +43,7 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
         Map<Integer, TextHelper> scores = new LinkedHashMap<>();
         for (ScoreboardPlayerScore pl : base.getScoreboard().getAllPlayerScores(base)) {
             Team team = base.getScoreboard().getPlayerTeam(pl.getPlayerName());
-            scores.put(pl.getScore(), new TextHelper(Team.decorateName(team, Text.literal(pl.getPlayerName()))));
+            scores.put(pl.getScore(), TextHelper.wrap(Team.decorateName(team, Text.literal(pl.getPlayerName()))));
         }
         return scores;
     }
@@ -62,7 +62,7 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      */
     public List<TextHelper> getKnownPlayersDisplayNames() {
         return ImmutableList.copyOf(base.getScoreboard().getKnownPlayers()).stream()
-                .map(e -> new TextHelper(Team.decorateName(base.getScoreboard().getPlayerTeam(e), Text.literal(e))))
+                .map(e -> TextHelper.wrap(Team.decorateName(base.getScoreboard().getPlayerTeam(e), Text.literal(e))))
                 .collect(Collectors.toList());
     }
 
@@ -79,7 +79,7 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      * @since 1.2.9
      */
     public TextHelper getDisplayName() {
-        return new TextHelper(base.getDisplayName());
+        return TextHelper.wrap(base.getDisplayName());
     }
 
     @Override

@@ -184,6 +184,7 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    throw new RuntimeException(e);
                 } finally {
                     ctx.unbindThread(Thread.currentThread());
                     assert ctx.tasks.peek() != null;

@@ -31,7 +31,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @since 1.3.0
      */
     public TextHelper getDisplayName() {
-        return new TextHelper(base.getDisplayName());
+        return TextHelper.wrap(base.getDisplayName());
     }
 
     /**
@@ -97,7 +97,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @since 1.3.0
      */
     public TextHelper getPrefix() {
-        return new TextHelper(base.getPrefix());
+        return TextHelper.wrap(base.getPrefix());
     }
 
     /**
@@ -105,7 +105,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @since 1.3.0
      */
     public TextHelper getSuffix() {
-        return new TextHelper(base.getSuffix());
+        return TextHelper.wrap(base.getSuffix());
     }
 
     /**

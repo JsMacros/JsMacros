@@ -220,7 +220,7 @@ public class TextBuilder {
      * @since 1.3.0
      */
     public TextHelper build() {
-        return new TextHelper(head);
+        return TextHelper.wrap(head);
     }
 
 }

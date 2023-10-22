@@ -132,7 +132,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * @since 1.8.4
          */
         public TextHelper getOption() {
-            return new TextHelper(optionText);
+            return TextHelper.wrap(optionText);
         }
 
         /**

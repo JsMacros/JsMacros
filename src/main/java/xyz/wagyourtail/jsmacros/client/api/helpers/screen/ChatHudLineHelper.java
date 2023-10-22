@@ -16,7 +16,7 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
     }
 
     public TextHelper getText() {
-        return new TextHelper(base.content());
+        return TextHelper.wrap(base.content());
     }
 
 //    public int getId() {

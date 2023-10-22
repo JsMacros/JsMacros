@@ -11,10 +11,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
-import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
-import xyz.wagyourtail.jsmacros.core.event.BaseListener;
-import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.event.*;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
@@ -767,6 +764,33 @@ public class FJsMacros extends PerExecLibrary {
      */
     public EventCustom createCustomEvent(String eventName) {
         return new EventCustom(eventName);
+    }
+
+    /**
+     * asserts if {@code event} is the correct type of event<br>
+     * and convert {@code event} type to target type in ts<br>
+     * example:
+     * <pre>
+     * JsMacros.assertEvent(event, 'Service')
+     * </pre>
+     * @param event the event to assert
+     * @param type string of the event type
+     * @since 1.9.0
+     */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: Events.BaseEvent, type: E")
+    @DocletReplaceReturn("asserts event is Events[E]")
+    public void assertEvent(BaseEvent event, String type) {
+        if (event == null) throw new AssertionError("event is null!");
+        if (type == null) throw new AssertionError("event type is null!");
+        if (event.getClass().isAnnotationPresent(Event.class)) {
+            String eventName = event.getClass().getAnnotation(Event.class).value();
+            if (!eventName.equals(type)) {
+                throw new AssertionError(String.format("event type (%s) is not %s!", eventName, type));
+            }
+        } else {
+            throw new AssertionError("The event doesn't have proper event annotation, " + event.getClass().getSimpleName());
+        }
     }
 
     public interface ScriptEventListener extends IEventListener {

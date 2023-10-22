@@ -3,6 +3,8 @@ package xyz.wagyourtail.jsmacros.client.api.classes.math;
 import net.minecraft.util.math.MathHelper;
 import org.joml.Vector3f;
 
+import java.util.Objects;
+
 /**
  * @author Wagyourtail
  * @since 1.2.6 [citation needed]
@@ -217,6 +219,24 @@ public class Vec3D extends Vec2D {
      */
     public Vector3f toMojangFloatVector() {
         return new Vector3f((float) (x2 - x1), (float) (y2 - y1), (float) (z2 - z1));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vec3D vec3D = (Vec3D) o;
+        return Double.compare(x1, vec3D.x1) == 0
+                && Double.compare(y1, vec3D.y1) == 0
+                && Double.compare(x2, vec3D.x2) == 0
+                && Double.compare(y2, vec3D.y2) == 0
+                && Double.compare(z1, vec3D.z1) == 0
+                && Double.compare(z2, vec3D.z2) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), z1, z2);
     }
 
 }

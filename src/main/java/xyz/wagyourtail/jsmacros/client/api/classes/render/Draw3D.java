@@ -11,11 +11,9 @@ import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Box;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Line3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.RenderElement3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Surface;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 
 import java.util.*;
@@ -56,6 +54,36 @@ public class Draw3D {
             for (RenderElement3D element : elements) {
                 if (element instanceof Line3D) {
                     list.add((Line3D) element);
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public List<TraceLine> getTraceLines() {
+        List<TraceLine> list = new ArrayList<>();
+        synchronized (elements) {
+            for (RenderElement3D element : elements) {
+                if (element instanceof TraceLine) {
+                    list.add((TraceLine) element);
+                }
+            }
+        }
+        return list;
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public List<EntityTraceLine> getEntityTraceLines() {
+        List<EntityTraceLine> list = new ArrayList<>();
+        synchronized (elements) {
+            for (RenderElement3D element : elements) {
+                if (element instanceof EntityTraceLine) {
+                    list.add((EntityTraceLine) element);
                 }
             }
         }
@@ -112,6 +140,15 @@ public class Draw3D {
      * @since 1.8.4
      */
     public void addLine(Line3D line) {
+        synchronized (elements) {
+            elements.add(line);
+        }
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public void addTraceLine(TraceLine line) {
         synchronized (elements) {
             elements.add(line);
         }
@@ -286,6 +323,90 @@ public class Draw3D {
     public Draw3D removeLine(Line3D l) {
         synchronized (elements) {
             elements.remove(l);
+        }
+        return this;
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public TraceLine addTraceLine(double x, double y, double z, int color) {
+        TraceLine l = new TraceLine(x, y, z, color);
+        synchronized (elements) {
+            elements.add(l);
+        }
+        return l;
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public TraceLine addTraceLine(double x, double y, double z, int color, int alpha) {
+        TraceLine l = new TraceLine(x, y, z, color, alpha);
+        synchronized (elements) {
+            elements.add(l);
+        }
+        return l;
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public TraceLine addTraceLine(Pos3D pos, int color) {
+        TraceLine l = new TraceLine(pos, color);
+        synchronized (elements) {
+            elements.add(l);
+        }
+        return l;
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public TraceLine addTraceLine(Pos3D pos, int color, int alpha) {
+        TraceLine l = new TraceLine(pos, color, alpha);
+        synchronized (elements) {
+            elements.add(l);
+        }
+        return l;
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public EntityTraceLine addEntityTraceLine(EntityHelper<?> entity, int color) {
+        EntityTraceLine l = new EntityTraceLine(entity, color, 0.5);
+        synchronized (elements) {
+            elements.add(l);
+        }
+        return l;
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public EntityTraceLine addEntityTraceLine(EntityHelper<?> entity, int color, int alpha) {
+        return addEntityTraceLine(entity, color, alpha, 0.5);
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public EntityTraceLine addEntityTraceLine(EntityHelper<?> entity, int color, int alpha, double yOffset) {
+        EntityTraceLine l = new EntityTraceLine(entity, color, alpha, yOffset);
+        synchronized (elements) {
+            elements.add(l);
+        }
+        return l;
+    }
+
+    /**
+     * @return self for chaining
+     * @since 1.9.0
+     */
+    public Draw3D removeTraceLine(TraceLine traceLine) {
+        synchronized (elements) {
+            elements.remove(traceLine);
         }
         return this;
     }
@@ -526,6 +647,22 @@ public class Draw3D {
     }
 
     /**
+     * @return a new {@link TraceLine.Builder} instance.
+     * @since 1.9.0
+     */
+    public TraceLine.Builder traceLineBuilder() {
+        return new TraceLine.Builder(this);
+    }
+
+    /**
+     * @return a new {@link EntityTraceLine.Builder} instance.
+     * @since 1.9.0
+     */
+    public EntityTraceLine.Builder entityTraceLineBuilder() {
+        return new EntityTraceLine.Builder(this);
+    }
+
+    /**
      * @return a new {@link Surface.Builder} instance.
      * @since 1.8.4
      */
@@ -570,6 +707,8 @@ public class Draw3D {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
+        EntityTraceLine.dirty = false;
+
         //sort elements by type
         synchronized (elements) {
             for (RenderElement3D element : elements) {
@@ -581,6 +720,12 @@ public class Draw3D {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 
         matrixStack.pop();
+
+        if (EntityTraceLine.dirty) {
+            synchronized (elements) {
+                elements.removeIf(e -> e instanceof EntityTraceLine etl && etl.shouldRemove);
+            }
+        }
 
     }
 

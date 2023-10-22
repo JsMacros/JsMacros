@@ -187,7 +187,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
                             MutableText mutableText2 = Text.Serializer.fromJson(string);
                             if (mutableText2 != null) {
                                 Texts.setStyleIfAbsent(mutableText2, LORE_STYLE);
-                                texts.add(new TextHelper(mutableText2));
+                                texts.add(TextHelper.wrap(mutableText2));
                             }
                         } catch (JsonParseException e) {
                             e.printStackTrace();
@@ -253,14 +253,14 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.2.0
      */
     public TextHelper getDefaultName() {
-        return new TextHelper(base.getItem().getName());
+        return TextHelper.wrap(base.getItem().getName());
     }
 
     /**
      * @return was string before 1.6.5
      */
     public TextHelper getName() {
-        return new TextHelper(base.getName());
+        return TextHelper.wrap(base.getName());
     }
 
     /**
@@ -291,7 +291,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.3
      */
     public List<TextHelper> getCreativeTab() {
-        return ItemGroups.getGroups().parallelStream().filter(group -> !group.isSpecial() && group.getDisplayStacks().parallelStream().anyMatch(e -> ItemStack.areItemsEqual(e, base))).map(ItemGroup::getDisplayName).map(TextHelper::new).collect(Collectors.toList());
+        return ItemGroups.getGroups().parallelStream().filter(group -> !group.isSpecial() && group.getDisplayStacks().parallelStream().anyMatch(e -> ItemStack.areItemsEqual(e, base))).map(ItemGroup::getDisplayName).map(TextHelper::wrap).collect(Collectors.toList());
     }
 
     /**

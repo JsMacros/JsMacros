@@ -149,7 +149,7 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
      * @since 1.8.4
      */
     public TextHelper getMessage() {
-        return new TextHelper(message);
+        return TextHelper.wrap(message);
     }
 
     /**

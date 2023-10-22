@@ -314,7 +314,15 @@ public class FChat extends BaseLibrary {
      * @since 1.1.3
      */
     public TextHelper createTextHelperFromString(String content) {
-        return new TextHelper(Text.literal(content));
+        return TextHelper.wrap(Text.literal(content));
+    }
+
+    /**
+     * @since 1.9.0
+     * @return a new {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper}
+     */
+    public TextHelper createTextHelperFromTranslationKey(String key, Object... content) {
+        return TextHelper.wrap(Text.translatable(key, content));
     }
 
     /**
@@ -345,8 +353,7 @@ public class FChat extends BaseLibrary {
      * @since 1.1.3
      */
     public TextHelper createTextHelperFromJSON(String json) {
-        TextHelper t = new TextHelper(null);
-        t.replaceFromJson(json);
+        TextHelper t = TextHelper.wrap(Text.Serializer.fromJson(json));
         return t;
     }
 

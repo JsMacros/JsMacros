@@ -58,26 +58,18 @@ sourceSets {
         compileClasspath += core.output
         runtimeClasspath += core.output
     }
-    forge {
-        compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
-        runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation
+    if (enabled_loaders.contains("forge")) {
+        forge {
+            compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
+            runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation
+        }
     }
-    fabric {
-        compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
-        runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation
+    if (enabled_loaders.contains("fabric")) {
+        fabric {
+            compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
+            runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation
+        }
     }
-}
-
-tasks.register("fabricJar", Jar) {
-    from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
-
-    archiveClassifier = "fabric"
-}
-
-tasks.register("forgeJar", Jar) {
-    from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
-
-    archiveClassifier = "forge"
 }
 
 unimined.useGlobalCache = false
@@ -101,32 +93,61 @@ sourceSets {
     }
 }
 
-unimined.minecraft(sourceSets.forge) {
-    version project.minecraft_version
 
-    mappings {
-        intermediary()
-        yarn project.yarn_mappings
+if (enabled_loaders.contains("forge")) {
 
-        devFallbackNamespace "intermediary"
+    tasks.register("forgeJar", Jar) {
+        from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
+
+        archiveClassifier = "forge"
     }
 
-    minecraftForge {
-        loader project.forge_version
+    unimined.minecraft(sourceSets.forge) {
+        version project.minecraft_version
 
-        mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
+        mappings {
+            intermediary()
+            yarn project.yarn_mappings
+
+            devFallbackNamespace "intermediary"
+        }
+
+        minecraftForge {
+            loader project.forge_version
+
+            mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
+        }
+    }
+} else {
+    configurations {
+        forgeRuntimeOnly
     }
 }
 
-unimined.minecraft(sourceSets.fabric) {
-    version project.minecraft_version
+if (enabled_loaders.contains("fabric")) {
 
-    mappings {
-        yarn project.yarn_mappings
+    tasks.register("fabricJar", Jar) {
+        from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
+
+        archiveClassifier = "fabric"
     }
 
-    fabric {
-        loader project.fabric_loader_version
+    unimined.minecraft(sourceSets.fabric) {
+        version project.minecraft_version
+
+        mappings {
+            yarn project.yarn_mappings
+        }
+
+        fabric {
+            loader project.fabric_loader_version
+        }
+    }
+} else {
+    configurations {
+        fabricModImplementation
+        fabricRuntimeOnly
+        fabricInclude
     }
 }
 
@@ -190,84 +211,88 @@ tasks.withType(JavaCompile).configureEach {
         options.release.set javaVersion
     }
 }
-
-processForgeResources {
-    inputs.property "version", project.version
-
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
-    }
-
-    filesMatching("jsmacros.extension.json") {
-        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
-    }
-}
-
 jar {
     enabled = false
 }
 
-forgeJar {
-    archiveClassifier = "forge-dev"
-    from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
-
-    preserveFileTimestamps = false
-    reproducibleFileOrder = true
-}
-
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
-task shadowForgeJar(type: ShadowJar) {
-    archiveClassifier = "forge-dev-shadow"
-    from(forgeJar)
+if (enabled_loaders.contains("forge")) {
+    processForgeResources {
+        inputs.property "version", project.version
 
-    // exclude icu that's "accidentally" (I hope) included in graaljs jar
-    exclude "com/ibm/**"
+        filesMatching("META-INF/mods.toml") {
+            expand "version": project.version
+        }
 
-    mergeServiceFiles()
+        filesMatching("jsmacros.extension.json") {
+            expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+        }
+    }
 
-    configurations = [project.configurations.shadowForge]
+
+    forgeJar {
+        archiveClassifier = "forge-dev"
+        from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
+
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+    }
+
+    task shadowForgeJar(type: ShadowJar) {
+        archiveClassifier = "forge-dev-shadow"
+        from(forgeJar)
+
+        // exclude icu that's "accidentally" (I hope) included in graaljs jar
+        exclude "com/ibm/**"
+
+        mergeServiceFiles()
+
+        configurations = [project.configurations.shadowForge]
 }
 
-remapForgeJar {
-    dependsOn(shadowForgeJar)
-    inputFile = shadowForgeJar.archiveFile.get().asFile
+    remapForgeJar {
+        dependsOn(shadowForgeJar)
+        inputFile = shadowForgeJar.archiveFile.get().asFile
 
-    from(configurations.jsmacrosExtensionInclude.files) {
-        include '*'
-        into "META-INF/jsmacrosdeps"
-    }
+        from(configurations.jsmacrosExtensionInclude.files) {
+            include '*'
+            into "META-INF/jsmacrosdeps"
+        }
 
-    manifest {
-        attributes([
-                'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
-        ])
-    }
-}
-
-processFabricResources {
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
-
-    filesMatching("jsmacros.extension.json") {
-        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+        manifest {
+            attributes([
+                    'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
+            ])
+        }
     }
 }
 
-fabricJar {
-    from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
+if (enabled_loaders.contains("fabric")) {
+    processFabricResources {
+        inputs.property "version", project.version
 
-    preserveFileTimestamps = false
-    reproducibleFileOrder = true
+        filesMatching("fabric.mod.json") {
+            expand "version": project.version
+        }
 
-    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+        filesMatching("jsmacros.extension.json") {
+            expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+        }
+    }
 
-    from(configurations.jsmacrosExtensionInclude.files) {
-        include '*'
-        into "META-INF/jsmacrosdeps"
+    fabricJar {
+        from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
+
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+
+        duplicatesStrategy DuplicatesStrategy.EXCLUDE
+
+        from(configurations.jsmacrosExtensionInclude.files) {
+            include '*'
+            into "META-INF/jsmacrosdeps"
+        }
     }
 }
 

@@ -4,6 +4,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 
+import java.util.Objects;
+
 /**
  * @author Wagyourtail
  * @since 1.2.6 [citation needed]
@@ -199,6 +201,19 @@ public class Pos3D extends Pos2D {
      */
     public Vec3d toMojangDoubleVector() {
         return new Vec3d(x, y, z);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pos3D pos3D = (Pos3D) o;
+        return Double.compare(x, pos3D.x) == 0 && Double.compare(y, pos3D.y) == 0 && Double.compare(z, pos3D.z) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), z);
     }
 
 }

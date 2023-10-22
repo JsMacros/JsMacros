@@ -142,18 +142,11 @@ public class Main implements Doclet {
                  */
                 declare const context: EventContainer;
                 /**
-                 * Cast event in javascript:  \n\
-                 * Remove the `\\` between `*` and `///` because jsdoc doesn't escape it
+                 * Assert and convert event type:
                  * ```js
-                 * /** @type {Events.Service} *\\/// @ts-ignore
+                 * JsMacros.assertEvent(event, 'Service')
                  * ```
-                 * ```js
-                 * const e = event;
-                 * ```
-                 * Cast event in typescript:
-                 * ```ts
-                 * const e = event as Events.Service;
-                 * ```
+                 * If the type doesn't convert, that means the event type doesn't have any properties
                  */
                 declare const event: Events.BaseEvent;
                 declare const file: Packages.java.io.File;

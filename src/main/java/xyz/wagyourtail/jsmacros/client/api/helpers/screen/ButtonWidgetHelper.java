@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.util.Identifier;
@@ -89,7 +90,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
                     Core.getInstance().profile.logError(e);
                 }
             }).position(getX(), getY()).size(getWidth(), 20).build();
-            b.set(new ButtonWidgetHelper(button, getZIndex()));
+            b.set(new ButtonWidgetHelper<>(button, getZIndex()));
             return b.get();
         }
 
@@ -102,12 +103,11 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
     public static class TexturedButtonBuilder extends AbstractWidgetBuilder<TexturedButtonBuilder, TexturedButtonWidget, ButtonWidgetHelper<TexturedButtonWidget>> {
 
         private MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> action;
-        private int u = 0;
-        private int v = 0;
-        private int hoverOffset = 20;
-        private Identifier texture;
-        private int textureWidth = 256;
-        private int textureHeight = 256;
+
+        private Identifier enabled;
+        private Identifier disabled;
+        private Identifier enabledFocused;
+        private Identifier disabledFocused;
 
         public TexturedButtonBuilder(IScreen screen) {
             super(screen);
@@ -155,143 +155,45 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         }
 
         /**
-         * @return the x position in the texture to start drawing from.
-         * @since 1.8.4
-         */
-        public int getU() {
-            return u;
-        }
-
-        /**
-         * @param u the x position in the texture to start drawing from
+         * @since 1.9.0
          * @return self for chaining.
-         * @since 1.8.4
          */
-        public TexturedButtonBuilder u(int u) {
-            this.u = u;
+        public TexturedButtonBuilder enabledTexture(Identifier enabled) {
+            this.enabled = enabled;
             return this;
         }
 
         /**
-         * @return the y position in the texture to start drawing from.
-         * @since 1.8.4
-         */
-        public int getV() {
-            return v;
-        }
-
-        /**
-         * @param v the y position in the texture to start drawing from
+         * @since 1.9.0
          * @return self for chaining.
-         * @since 1.8.4
          */
-        public TexturedButtonBuilder v(int v) {
-            this.v = v;
+        public TexturedButtonBuilder disabledTexture(Identifier disabled) {
+            this.disabled = disabled;
             return this;
         }
 
         /**
-         * @param u the x position in the texture to start drawing from
-         * @param v the y position in the texture to start drawing from
+         * @since 1.9.0
          * @return self for chaining.
-         * @since 1.8.4
          */
-        public TexturedButtonBuilder uv(int u, int v) {
-            this.u = u;
-            this.v = v;
+        public TexturedButtonBuilder enabledFocusedTexture(Identifier enabledFocused) {
+            this.enabledFocused = enabledFocused;
             return this;
         }
 
         /**
-         * @return the hover offset of the button.
-         * @since 1.8.4
-         */
-        public int getHoverOffset() {
-            return hoverOffset;
-        }
-
-        /**
-         * The hover offset is the vertical amount of pixels to offset the texture when the button
-         * is hovered.
-         *
-         * @param hoverOffset the hover offset
-         * @return self for chaining.
-         * @since 1.8.4
-         */
-        public TexturedButtonBuilder hoverOffset(int hoverOffset) {
-            this.hoverOffset = hoverOffset;
-            return this;
-        }
-
-        /**
-         * @return the id of the texture to use or {@code null} if none is set.
-         * @since 1.8.4
-         */
-        public String getTexture() {
-            return texture == null ? null : texture.toString();
-        }
-
-        /**
-         * @param texture the texture id to use for the button
+         * @since 1.9.0
          * @return self for chaining.
          */
-        public TexturedButtonBuilder texture(String texture) {
-            this.texture = RegistryHelper.parseIdentifier(texture);
-            return this;
-        }
-
-        /**
-         * @return the width of the texture.
-         * @since 1.8.4
-         */
-        public int getTextureWidth() {
-            return textureWidth;
-        }
-
-        /**
-         * @param textureWidth the width of the texture
-         * @return self for chaining.
-         * @since 1.8.4
-         */
-        public TexturedButtonBuilder textureWidth(int textureWidth) {
-            this.textureWidth = textureWidth;
-            return this;
-        }
-
-        /**
-         * @return the height of the texture.
-         * @since 1.8.4
-         */
-        public int getTextureHeight() {
-            return textureHeight;
-        }
-
-        /**
-         * @param textureHeight the height of the texture
-         * @return self for chaining.
-         * @since 1.8.4
-         */
-        public TexturedButtonBuilder textureHeight(int textureHeight) {
-            this.textureHeight = textureHeight;
-            return this;
-        }
-
-        /**
-         * @param textureWidth  the width of the texture
-         * @param textureHeight the height of the texture
-         * @return self for chaining.
-         * @since 1.8.4
-         */
-        public TexturedButtonBuilder textureSize(int textureWidth, int textureHeight) {
-            this.textureWidth = textureWidth;
-            this.textureHeight = textureHeight;
+        public TexturedButtonBuilder disabledFocusedTexture(Identifier disabledFocused) {
+            this.disabledFocused = disabledFocused;
             return this;
         }
 
         @Override
         public ButtonWidgetHelper<TexturedButtonWidget> createWidget() {
             AtomicReference<ButtonWidgetHelper<TexturedButtonWidget>> b = new AtomicReference<>(null);
-            TexturedButtonWidget button = new TexturedButtonWidget(getX(), getY(), getWidth(), getHeight(), u, v, hoverOffset, texture, textureWidth, textureHeight, btn -> {
+            TexturedButtonWidget button = new TexturedButtonWidget(getX(), getY(), getWidth(), getHeight(), new ButtonTextures(enabled, disabled, enabledFocused, disabledFocused), btn -> {
                 try {
                     if (getAction() != null) {
                         getAction().accept(b.get(), screen);
@@ -300,7 +202,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
                     Core.getInstance().profile.logError(e);
                 }
             }, getMessage().getRaw());
-            b.set(new ButtonWidgetHelper(button, getZIndex()));
+            b.set(new ButtonWidgetHelper<>(button, getZIndex()));
             return b.get();
         }
 

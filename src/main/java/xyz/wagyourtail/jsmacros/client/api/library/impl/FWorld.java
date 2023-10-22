@@ -516,6 +516,8 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
+     * ticks processed since world was started.
+     *
      * @return the current world time.
      * @since 1.1.5
      */
@@ -525,7 +527,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * This is supposed to be time of day, but it appears to be the same as {@link FWorld#getTime()} to me...
+     * icks passed since world was started INCLUDING those skipped when nights were cut short with sleeping.
      *
      * @return the current world time of day.
      * @since 1.1.5
@@ -584,7 +586,7 @@ public class FWorld extends BaseLibrary {
         }
         ServerInfo multiplayerServer = mc.getCurrentServerEntry();
         if (multiplayerServer != null) {
-            if (mc.isConnectedToRealms()) {
+            if (multiplayerServer.isRealm()) {
                 return "REALM_" + multiplayerServer.name;
             }
             if (multiplayerServer.isLocal()) {
@@ -811,7 +813,7 @@ public class FWorld extends BaseLibrary {
     public TextHelper getTabListHeader() {
         Text header = ((IPlayerListHud) mc.inGameHud.getPlayerListHud()).jsmacros_getHeader();
         if (header != null) {
-            return new TextHelper(header);
+            return TextHelper.wrap(header);
         }
         return null;
     }
@@ -823,7 +825,7 @@ public class FWorld extends BaseLibrary {
     public TextHelper getTabListFooter() {
         Text footer = ((IPlayerListHud) mc.inGameHud.getPlayerListHud()).jsmacros_getFooter();
         if (footer != null) {
-            return new TextHelper(footer);
+            return TextHelper.wrap(footer);
         }
         return null;
     }
