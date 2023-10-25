@@ -113,6 +113,7 @@ public class FHud extends BaseLibrary {
      * @return The name of the currently open screen.
      * @since 1.0.5, renamed from {@code getOpenScreen} in 1.2.7
      */
+    @SuppressWarnings("SpellCheckingInspection")
     @DocletReplaceReturn("ScreenName")
     @DocletEnumType(name = "HandledScreenName", type =
             """

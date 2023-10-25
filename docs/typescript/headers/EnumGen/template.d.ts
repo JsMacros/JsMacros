@@ -25,19 +25,16 @@ type RecipeId = string
 type Gamemode = string
 //@Eval RegistryManager.method_30530(RegistryKeys.field_41241).method_10235().toArray().map(id => id.toString())
 type Dimension = string
-//@Unknown
-type ScreenName =// string
+//@Custom
+type ScreenName = string
 | HandledScreenName
-// | ScreenClass
-//@Unknown
+
+//@Custom
 type ScreenClass = string
 //@Enum class_1269.toString
 type ActionResult = string
-//@Enum class_1282.method_5525
+//@Eval const DamageSource = Java.type('net.minecraft.class_1282');const sources = Client.getMinecraft().field_1687.method_48963();sources.getClass().getDeclaredFields().filter(f => f.getType().equals(DamageSource)).map(f => {f.setAccessible(true);return f.get(sources)}).filter(s => s && s instanceof DamageSource).map(s => s.method_5525())
 type DamageSource = string
-//@Unknown
-type InventoryType =// string
-| HandledScreenName
 //@RegistryHelper getStatusEffectIds
 type StatusEffectId = string
 //@Enum class_3619.toString
@@ -92,7 +89,7 @@ type MemoryModuleTypeId = string
 type StructureFeatureId = string
 //@RegistryHelper getPointOfInterestTypeIds
 type PointOfInterestTypeId = string
-//@Eval Client.getMinecraft().method_1526().method_4665().toArray().map(l => l.getCode())
+//@Eval Client.getMinecraft().method_1526().method_4665().keySet().toArray()
 type Locale = string
 //@Eval Java.from(Client.getGameOptions().control.getCategories())
 type KeyCategory = string
@@ -108,4 +105,3 @@ type EnchantmentRarity = string
 type EnchantmentTargetType = string
 //@Eval Java.from(Client.createPacketByteBuffer().getPacketNames())
 type PacketName = string
-type SlotUpdateType = "HELD" | "INVENTORY" | "SCREEN"

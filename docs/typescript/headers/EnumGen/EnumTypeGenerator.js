@@ -1,5 +1,5 @@
 
-// version jsm1.8.4 mc1.19.3
+// version >=jsm1.8.4 >=mc1.19.3
 // need to be in a world to run this script
 
 
@@ -18,14 +18,11 @@ const fromEval = {}
 //--- get methods of fetching enums
 //@Custom
 // will place the code in this script, like Key
-/**
- * storing it this way instead of string[] looks better when using it
- * @type {{ [type: string]: never }}
- */
-const custom = {}
+/** @type {Set<string>} */
+const custom = new Set()
 ;[...enumFile.matchAll(/\/\/@[Cc]ustom.*\n *type +(\w+) *= *string/g)]
   .map(m => m[1])
-  .forEach(type => custom[type] = null)
+  .forEach(type => custom.add(type))
 
 //@Unknown
 // mark as unknown, don't know how to get the enum (reserved type)
@@ -50,9 +47,9 @@ for (const [, code, type] of EvalMatcher) fromEval[type] = code
 
 /**
  * for enum, call the methods on value
- * @param {any} value 
- * @param {string[]} methods 
- * @returns 
+ * @param {any} value
+ * @param {string[]} methods
+ * @returns
  */
 const call = (value, methods) => {
   for (const method of methods)
@@ -63,8 +60,8 @@ const call = (value, methods) => {
 
 /**
  * take the string[] from {@link temp} then place it into file
- * @param {string} type 
- * @returns 
+ * @param {string} type
+ * @returns
  */
 const replaceToFile = type => {
   if (!temp) return
@@ -121,8 +118,8 @@ for (const [type, method] of Object.entries(fromRegistryHelper)) {
 
 log('fetching custom')
 
-if ('Key' in custom) {
-  delete custom.Key
+if (custom.has('Key')) {
+  custom.delete('Key')
   const InputUtil = Java.type('net.minecraft.class_3675')
   const InputUtil$Type = Java.type('net.minecraft.class_3675$class_307')
 
@@ -149,7 +146,54 @@ if ('Key' in custom) {
     .concat(temp.filter(k => !funcRegex.test(k) && !commonRegex.test(k) && !groupRegex.test(k)))
   log(`fetched ${temp?.length} keys for Key`)
   replaceToFile('Key')
-} else Chat.log('custom type Key not found')
+} else log('custom type Key not found')
+
+if (custom.has('ScreenName') || custom.has('ScreenClass')) {
+  const Screen = Reflection.getClass('net.minecraft.class_437')
+  const HandledScreen = Reflection.getClass('net.minecraft.class_465')
+  /** @type {Set<JavaClass>} */
+  const screens = new Set()
+  const fabricLoader = Client.getMinecraft().getClass().getClassLoader()
+  //@ts-ignore
+  const loader = Java.type('com.google.common.reflect.ClassPath').from(fabricLoader)
+  log('loading through classes to get all screen classes...')
+  /** @type {JavaSet} */
+  const get = loader.getAllClasses()
+  const size = get.size()
+  let count = 0
+  for (const clz of get) {
+    if (++count % 1000 === 0) log(`${count} / ${size}`)
+    try {
+      const loaded = Reflection.getClass(clz.getName())
+      // @ts-ignore
+      if (Screen.isAssignableFrom(loaded)) screens.add(loaded)
+    } catch (e) {}
+  }
+
+  if (custom.has('ScreenName')) {
+    custom.delete('ScreenName')
+    temp = [...screens]
+      .filter(c => !c.getTypeName().startsWith('net.minecraft.') && HandledScreen.isAssignableFrom(c))
+      .map(c => c.getName())
+      .filter(n => n)
+      .sort()
+      .filter((v, i, a) => v && v !== a[i - 1])
+    log(`fetched ${temp?.length} names for ScreenName`)
+    replaceToFile('ScreenName')
+  } else log('custom type ScreenName not found')
+
+  if (custom.has('ScreenClass')) {
+    custom.delete('ScreenClass')
+    temp = [...screens]
+      .map(c => c.getSimpleName())
+      .filter(n => n)
+      .sort()
+      .filter((v, i, a) => v && v !== a[i - 1])
+    log(`fetched ${temp?.length} names for ScreenClass`)
+    replaceToFile('ScreenClass')
+  } else log('custom type ScreenClass not found')
+
+} else log('custom type ScreenName and ScreenClass not found')
 
 
 // get registry classes for evals
@@ -172,9 +216,8 @@ for (const [type, code] of Object.entries(fromEval)) {
 }
 
 
-const customLeft = Object.keys(custom).length
-if (customLeft) Chat.log(`There's ${customLeft} not fetched enum:\n${Object.keys(custom).join(', ')}`)
-if (unknown[0]) Chat.log(`Enums marked as unknown:\n${unknown.join(', ')}`)
+if (custom.size) log(`There's ${custom.size} not fetched enum:\n${[...custom].join(', ')}`)
+if (unknown[0]) log(`Enums marked as unknown:\n${unknown.join(', ')}`)
 
 FS.open('./McIdsAndEnums.d.ts').write(enumFile.replace(/\n+$/, "\n"))
 log('exported')

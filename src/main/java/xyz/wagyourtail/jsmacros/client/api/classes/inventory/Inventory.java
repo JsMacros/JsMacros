@@ -515,7 +515,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the part of the mapping the slot is in.
      * @since 1.1.3
      */
-    @DocletReplaceReturn("InventoryType")
+    @DocletReplaceReturn("ScreenName")
     public String getType() {
         return JsMacros.getScreenName(this.inventory);
     }
@@ -524,6 +524,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the inventory mappings different depending on the type of open container/inventory.
      * @since 1.1.3
      */
+    @SuppressWarnings("SpellCheckingInspection")
     @DocletReplaceReturn("JavaMap<InvMapId, JavaArray<number>>")
     @DocletEnumType(name = "InvMapId", type =
             """
@@ -549,7 +550,7 @@ public class Inventory<T extends HandledScreen<?>> {
                 type Smithing         = _invio;
                 type Grindstone       = _invio;
                 type CartographyTable = _invio;
-                type All = 
+                type All =
                 | Inventory
                 | CreativeInvInvTab
                 | CreativeInv
