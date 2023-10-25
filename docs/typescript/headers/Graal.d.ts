@@ -95,6 +95,7 @@ type ListPackages<T extends object, P extends string = ''> =
 namespace GetJava {
 
     type Type$Graal<P extends string, _K extends keyof Primitive<any> = 'type'> =
+        IsStrictAny<P> extends true ? any :
         P extends `${string}[]` ? (ArrayType<P> extends JavaArray<infer T> ? typeof Packages.java.lang.Array<T> : never) :
         P extends keyof Primitives ? Primitives[P][_K] : Type<P>;
 
@@ -102,9 +103,9 @@ namespace GetJava {
         P extends `${infer C extends string}[]` ? JavaArray<ArrayType<C>> :
         Type$Graal<P, _K> extends { readonly class: JavaClass<infer T> } ? T : unknown;
 
-    type GraalTo<P extends string> = ArrayType<P>;
-    type GraalJsArr<P extends string> = JavaToJsArr<ArrayType<P, 'from'>>;
-    type JavaToJsArr<T> = T extends JavaArray<infer C> ? JavaToJsArr<C>[] : T;
+    type GraalTo<P extends string> = IsStrictAny<P> extends true ? any : ArrayType<P>;
+    type GraalJsArr<P extends string> = IsStrictAny<P> extends true ? any : JavaToJsArr<ArrayType<P, 'from'>>;
+    type JavaToJsArr<T> = IsStrictAny<P> extends true ? any : T extends JavaArray<infer C> ? JavaToJsArr<C>[] : T;
 
     type Type$Reflection<P extends string> =
         P extends keyof Primitives ? Primitives[P]['type']['class'] : TypeClass<P>;
@@ -191,7 +192,7 @@ declare namespace Packages {
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html
             interface Class<T> extends io.Serializable, reflect.GenericDeclaration, reflect.Type, reflect.AnnotatedElement, invoke.TypeDescriptor$OfField<Class<T>>, constant.Constable {
-                new (...args: any): T;
+                new (...args: any[]): T;
             }
             class Class<T> extends Object {
                 static readonly class: Class<Class<any>>;
@@ -219,17 +220,17 @@ declare namespace Packages {
                 getClasses(): JavaArray<Class<any>>;
                 getClassLoader(): ClassLoader;
                 getComponentType(): T extends JavaArray<infer C> ? Class<C> : null;
-                getConstructor(...parameterTypes: JavaClassArg): reflect.Constructor<T>;
+                getConstructor(...parameterTypes: JavaClassArg[]): reflect.Constructor<T>;
                 getConstructors(): JavaArray<reflect.Constructor<any>>;
                 getDeclaredAnnotation<A extends annotation.Annotation>(annotationClass: Class<A>): A?;
                 getDeclaredAnnotations(): JavaArray<annotation.Annotation>;
                 getDeclaredAnnotationsByType<A extends annotation.Annotation>(annotationClass: Class<A>): JavaArray<A>;
                 getDeclaredClasses(): JavaArray<Class<any>>;
-                getDeclaredConstructor(...parameterTypes: JavaClassArg): reflect.Constructor<T>;
+                getDeclaredConstructor(...parameterTypes: JavaClassArg[]): reflect.Constructor<T>;
                 getDeclaredConstructors(): JavaArray<reflect.Constructor<any>>;
                 getDeclaredField(name: string): reflect.Field;
                 getDeclaredFields(): JavaArray<reflect.Field>;
-                getDeclaredMethod(name: string, ...parameterTypes: JavaClassArg): reflect.Method;
+                getDeclaredMethod(name: string, ...parameterTypes: JavaClassArg[]): reflect.Method;
                 getDeclaredMethods(): JavaArray<reflect.Method>;
                 getDeclaringClass(): Class<any>;
                 getEnclosingClass(): Class<any>;
@@ -241,7 +242,7 @@ declare namespace Packages {
                 getGenericInterfaces(): JavaArray<reflect.Type>;
                 getGenericSuperclass(): reflect.Type;
                 getInterfaces(): JavaArray<Class<any>>;
-                getMethod(name: string, ...parameterTypes: JavaClassArg): reflect.Method;
+                getMethod(name: string, ...parameterTypes: JavaClassArg[]): reflect.Method;
                 getMethods(): JavaArray<reflect.Method>;
                 getModifiers(): number;
                 getModule(): Module;
@@ -264,14 +265,14 @@ declare namespace Packages {
                 isAnnotationPresent(annotationClass: Class<annotation.Annotation>): boolean;
                 isAnonymousClass(): boolean;
                 isArray(): T extends JavaArray<any> ? true : false;
-                isAssignableFrom(cls: Class<any>): boolean;
+                isAssignableFrom(cls: JavaClassArg): boolean;
                 isEnum(): boolean;
                 isHidden(): boolean;
                 isInstance(obj: Object): boolean;
                 isInterface(): boolean;
                 isLocalClass(): boolean;
                 isMemberClass(): boolean;
-                isNestmateOf(c: Class<any>): boolean;
+                isNestmateOf(c: JavaClassArg): boolean;
                 isPrimitive(): boolean;
                 isRecord(): boolean;
                 isSealed(): boolean;
@@ -379,7 +380,6 @@ declare namespace Packages {
 
                 iterator(): util.Iterator<T>;
                 forEach(action: MethodWrapper<T>): void;
-                forEach(action: (e: T) => void): void;
                 spliterator(): util.Spliterator<T>;
 
             }
@@ -411,13 +411,11 @@ declare namespace Packages {
                 remove(o: any): boolean;
                 removeAll(c: Collection<any>): boolean;
                 removeIf(filter: MethodWrapper<E, any, boolean>): boolean;
-                removeIf(filter: (e: E) => boolean): boolean;
                 retainAll(c: Collection<any>): boolean;
                 size(): number;
                 stream(): stream.Stream<E>;
                 toArray(a?: E[]): JavaArray<E>;
                 toArray(generator: MethodWrapper<int, any, E[]>): JavaArray<E>;
-                toArray(generator: (length: int) => E[]): JavaArray<E>;
 
             }
 
@@ -448,10 +446,8 @@ declare namespace Packages {
                 remove(o: E): boolean;
                 remove(o: any): boolean;
                 replaceAll(operator: MethodWrapper<E, any, E>): void;
-                replaceAll(operator: (e: E) => E): void;
                 set(index: int, element: E): E;
                 sort(c: MethodWrapper<E, E, number>): void;
-                sort(c: (a: E, b: E) => number): void;
                 subList(fromIndex: int, toIndex: int): List<E>;
 
             }
@@ -481,18 +477,14 @@ declare namespace Packages {
 
                 clear(): void;
                 compute(key: K, remappingFunction: MethodWrapper<K, V, V>): V?;
-                compute(key: K, remappingFunction: (key: K, value: V) => V): V?;
                 computeIfAbsent(key: K, mappingFunction: MethodWrapper<K, any, V>): V;
-                computeIfAbsent(key: K, mappingFunction: (key: K) => V): V;
                 computeIfPresent(key: K, remappingFunction: MethodWrapper<K, NonNullable<V>, V>): V;
-                computeIfPresent(key: K, remappingFunction: (key: K, value: NonNullable<V>) => V): V;
                 containsKey(key: K): boolean;
                 containsKey(key: any): boolean;
                 containsValue(value: V): boolean;
                 containsValue(value: any): boolean;
                 entrySet(): Set<Map$Entry<K, V>>;
                 forEach(action: MethodWrapper<K, V>): void;
-                forEach(action: (key: K, value: V) => void): void;
                 get(key: K): V?;
                 get(key: any): V?;
                 getOrDefault(key: K, defaultValue: V): V;
@@ -500,7 +492,6 @@ declare namespace Packages {
                 isEmpty(): boolean;
                 keySet(): Set<K>;
                 merge(key: K, value: V, remappingFunction: MethodWrapper<V, V, V>): V;
-                merge(key: K, value: V, remappingFunction: (a: V, b: V) => V): V;
                 put(ket: K, value: V): V;
                 putAll(m: Map<K, V>): void;
                 putIfAbsent(key: K, value: V): V?;
@@ -511,7 +502,6 @@ declare namespace Packages {
                 replace(key: K, value: V): V;
                 replace(key: K, oldValue: V, newValue: V): boolean;
                 replaceAll(fn: MethodWrapper<K, V, V>): void;
-                replaceAll(fn: (key: K, value: V) => V): void;
                 size(): number;
                 values(): Collection<V>;
 
@@ -577,12 +567,9 @@ declare namespace Packages {
                 length(): number;
                 list(): JavaArray<string>;
                 list(filter: MethodWrapper<File, string, boolean>): JavaArray<string>;
-                list(filter: (dir: File, name: string) => boolean): JavaArray<string>;
                 listFiles(): JavaArray<File>;
                 listFiles(filter: MethodWrapper<File, any, boolean>): JavaArray<File>;
-                listFiles(filter: (pathname: File) => boolean): JavaArray<File>;
                 listFiles(filter: MethodWrapper<File, string, boolean>): JavaArray<File>;
-                listFiles(filter: (dir: File, name: string) => boolean): JavaArray<File>;
                 mkdir(): boolean;
                 mkdirs(): boolean;
                 renameTo(dest: File): boolean;
