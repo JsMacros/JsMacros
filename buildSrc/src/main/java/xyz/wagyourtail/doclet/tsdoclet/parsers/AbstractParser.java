@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.Map;
 import java.util.HashSet;
 
+import static xyz.wagyourtail.doclet.tsdoclet.PackageTree.tsReservedWords;
+
 public abstract class AbstractParser {
     static final public Set<String> javaShortifies = Set.of(
         "java.lang.Class",
@@ -223,7 +225,9 @@ public abstract class AbstractParser {
                 VariableElement restParam = e.isVarArgs() ? params.get(params.size() - 1) : null;
                 for (VariableElement param : params) {
                     if (restParam != null && restParam.equals(param)) s.append("...");
-                    s.append(param.getSimpleName()).append(": ")
+                    String name = param.getSimpleName().toString();
+                    if (tsReservedWords.contains(name)) s.append("_");
+                    s.append(name).append(": ")
                         .append(transformType(param, true));
                     if (isNullable(param)) s.append(" | null");
                     s.append(", ");

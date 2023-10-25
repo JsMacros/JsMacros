@@ -72,6 +72,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
         event.trigger();
         lines = event.signText;
+        if (lines == null) lines = Arrays.asList("", "", "", "");
         if (event.closeScreen || event.isCanceled()) {
             SignText text = new SignText();
             for (int i = 0; i < 4; ++i) {
@@ -86,7 +87,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         //this part to not info.cancel is here for more compatibility with other mods.
         boolean cancel = false;
         for (String line : lines) {
-            if (!line.equals("")) {
+            if (!line.isEmpty()) {
                 cancel = true;
                 break;
             }
@@ -95,6 +96,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
             final SignEditScreen signScreen = new SignEditScreen(sign, front, true);
             client.setScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
+                //noinspection DataFlowIssue
                 ((ISignEditScreen) signScreen).jsmacros_setLine(i, lines.get(i));
             }
             ci.cancel();
