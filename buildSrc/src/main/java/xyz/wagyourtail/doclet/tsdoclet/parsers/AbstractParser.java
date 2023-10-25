@@ -160,7 +160,9 @@ public abstract class AbstractParser {
         StringBuilder s = new StringBuilder();
         s.append(genComment(field));
 
-        if (field.getModifiers().contains(Modifier.FINAL)) s.append("readonly ");
+        Set<Modifier> mods = field.getModifiers();
+        if (mods.contains(Modifier.STATIC)) s.append("static ");
+        if (mods.contains(Modifier.FINAL)) s.append("readonly ");
         s.append(field.getSimpleName()).append(": ");
 
         DocletReplaceReturn replace = field.getAnnotation(DocletReplaceReturn.class);
@@ -187,7 +189,8 @@ public abstract class AbstractParser {
     public String genExecutable(ExecutableElement e, boolean isConstructor) {
         final StringBuilder s = new StringBuilder();
         s.append(genComment(e));
-        s.append(isConstructor ? "new " : e.getSimpleName());
+        if (!isConstructor && e.getModifiers().contains(Modifier.STATIC)) s.append("static ");
+        s.append(isConstructor ? "constructor " : e.getSimpleName());
 
         // diamondOperator
         DocletReplaceTypeParams replace = e.getAnnotation(DocletReplaceTypeParams.class);
@@ -228,17 +231,20 @@ public abstract class AbstractParser {
                 s.setLength(s.length() - 2);
             }
         }
-        s.append("): ");
+        s.append(")");
 
-        DocletReplaceReturn replace3 = e.getAnnotation(DocletReplaceReturn.class);
-        if (replace3 != null) {
-            transformType(e.getReturnType()); // to add type to the Packages
-            s.append(replace3.value());
-        } else if (!isConstructor && returnsSelf && type.asType().equals(e.getReturnType())) {
-            s.append("this");
-        } else {
-            s.append(transformType(isConstructor ? type.asType() : e.getReturnType()));
-            if (isNullable(e)) s.append(" | null");
+        if (!isConstructor) {
+            s.append(": ");
+            DocletReplaceReturn replace3 = e.getAnnotation(DocletReplaceReturn.class);
+            if (replace3 != null) {
+                transformType(e.getReturnType()); // to add type to the Packages
+                s.append(replace3.value());
+            } else if (returnsSelf && type.asType().equals(e.getReturnType())) {
+                s.append("this");
+            } else {
+                s.append(transformType(e.getReturnType()));
+                if (isNullable(e)) s.append(" | null");
+            }
         }
         s.append(";");
 

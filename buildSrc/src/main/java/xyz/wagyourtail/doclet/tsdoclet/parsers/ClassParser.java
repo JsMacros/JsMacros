@@ -11,6 +11,7 @@ import java.lang.Override;
 import java.util.*;
 
 public class ClassParser extends AbstractParser {
+    private static final Set<String> objectAliases = Set.of("void", "any", "JavaObject", "Object");
     public static Map<TypeElement, Set<TypeElement>> mixinInterfaceMap = new LinkedHashMap<>();
     private Set<TypeElement> superMcClasses;
     private boolean doesDirectExtendMc = false;
@@ -53,37 +54,48 @@ public class ClassParser extends AbstractParser {
         return s.toString();
     }
 
+    private String getClassHeader() {
+        StringBuilder s = new StringBuilder("static readonly class: JavaClass<").append(getClassName(false));
+        int params = type.getTypeParameters().size();
+        if (params > 0) {
+            s.append("<").append(", any".repeat(params).substring(2)).append(">");
+        }
+        s.append(">;\n/** @deprecated */ static prototype: undefined;\n");
+        return s.toString();
+    }
+
     private String buildExtends() {
         StringBuilder s = new StringBuilder(" extends ");
         String sup = transformType(type.getSuperclass(), false, true);
-        if (sup.equals("void") || sup.equals("any")) {
-            s.append("JavaObject");
+        if (objectAliases.contains(sup)) {
+            s.append("java.lang.Object");
         } else if (sup.startsWith("/* net.minecraft")) {
-            s.append(sup, 0, sup.length() - 3).append("JavaObject");
+            s.append(sup, 0, sup.length() - 3).append("java.lang.Object");
         } else {
             s.append(sup);
         }
+        return s.toString();
+    }
 
-
-        Set<TypeMirror> iface = new HashSet<>(type.getInterfaces());
+    private String buildImplements() {
+        Set<TypeMirror> interfaces = new HashSet<>(type.getInterfaces());
         if (doesDirectExtendMc) for (TypeElement e : mixinInterfaces) {
-            iface.add(e.asType());
+            interfaces.add(e.asType());
             System.out.println("Added mixin interface " + e.getSimpleName() + " on class " + type.getSimpleName());
         }
-        if (!iface.isEmpty()) {
-            for (TypeMirror ifa : iface) {
-                sup = transformType(ifa, false, true);
-                s.append(", ");
-                if (sup.startsWith("/* net.minecraft")) {
-                    s.append(sup, 0, sup.length() - 3).append("JavaObject");
-                } else {
-                    s.append(sup);
-                }
+        if (interfaces.isEmpty()) return "";
+        StringBuilder s = new StringBuilder();
+        for (TypeMirror ifa : interfaces) {
+            String sup = transformType(ifa, false, true);
+            s.append(", ");
+            if (sup.startsWith("/* net.minecraft")) {
+                s.append(sup, 0, sup.length() - 3).append("JavaObject");
+            } else {
+                s.append(sup);
             }
         }
-
-        if (s.toString().startsWith(" extends JavaObject, ")) s.delete(9, 21);
-
+        s.delete(0, 2);
+        s.insert(0, " extends ");
         return s.toString();
     }
 
@@ -138,10 +150,6 @@ public class ClassParser extends AbstractParser {
             }
         }
         return false;
-    }
-
-    public String gapper(String fields, String methods) {
-        return methods.isEmpty() ? fields : fields + "\n" + methods + "\n";
     }
 
     @Override
@@ -237,58 +245,43 @@ public class ClassParser extends AbstractParser {
             }
         }
 
-        StringBuilder s = new StringBuilder(genComment(type))
-            .append("const ").append(getClassName(false)).append(": Java");
+        StringBuilder s = new StringBuilder(genComment(type));
 
-        String statics = gapper(genStaticFields(fields), genStaticMethods(methods));
+        String className = getClassName(true);
+        String temp;
         if (type.getKind().isInterface()) {
-            s.append("InterfaceStatics<").append(getClassName(false));
-            List<? extends TypeParameterElement> params = this.type.getTypeParameters();
-            if (params != null && !params.isEmpty()) {
-                s.append("<");
-                for (TypeParameterElement param : params) s.append("any, ");
-                s.setLength(s.length() - 2);
-                s.append(">");
-            }
-            s.append(">");
-            if (!statics.isEmpty()) {
-                s.append(" & {\n")
-                    .append(StringHelpers.tabIn(statics))
-                .append("}\n");
-            } else s.append(";\n");
+            s.append("abstract class ").append(className).append(" extends java.lang.Interface {\n")
+                    .append(StringHelpers.tabIn(getClassHeader()));
+            if (!(temp = genStaticFields(fields)).isEmpty()) s.append("\n").append(StringHelpers.tabIn(temp));
+            if (!(temp = genStaticMethods(methods)).isEmpty()) s.append("\n").append(StringHelpers.tabIn(temp)).append("\n");
+            s.append("}\ninterface ").append(className).append(buildImplements()).append(" {\n");
+            int len = s.length();
+            if (!(temp = genFields(fields)).isEmpty()) s.append(StringHelpers.tabIn(temp));
+            if (!(temp = genMethods(methods)).isEmpty()) s.append("\n").append(StringHelpers.tabIn(temp)).append("\n");
+            if (len == s.length()) s.delete(len - 1, len);
+            s.append("}");
         } else {
+            //noinspection SpellCheckingInspection
             String constrs = genConstructors(constructors);
-
-            s.append("ClassStatics<").append(getClassName(false));
-            List<? extends TypeParameterElement> params = this.type.getTypeParameters();
-            if (params != null && !params.isEmpty()) {
-                s.append("<");
-                for (TypeParameterElement param : params) s.append("any, ");
-                s.setLength(s.length() - 2);
-                s.append(">");
+            String implementS = buildImplements();
+            if (!implementS.isEmpty()) s.append("interface ").append(className).append(implementS).append(" {}\n");
+            if (constrs.isBlank()) s.append("abstract ");
+            s.append("class ").append(className).append(buildExtends()).append(" {\n")
+                    .append(StringHelpers.tabIn(getClassHeader()));
+            if (!(temp = genStaticFields(fields)).isEmpty()) s.append("\n").append(StringHelpers.tabIn(temp));
+            int len = s.length();
+            if (!(temp = genStaticMethods(methods)).isEmpty()) s.append("\n").append(StringHelpers.tabIn(temp));
+            if (!constrs.isEmpty()) s.append("\n").append(StringHelpers.tabIn(constrs));
+            if (!(temp = genFields(fields)).isEmpty()) {
+                s.append("\n").append(StringHelpers.tabIn(temp));
+                len = s.length();
             }
-            if (constrs.isEmpty()) s.append("> & NoConstructor");
-            else s.append(", ").append(getClassName(false)).append("$$constructor>");
-
-            if (!statics.isEmpty()) {
-                s.append(" & {\n")
-                    .append(StringHelpers.tabIn(statics))
-                .append("}\n");
-            } else s.append(";\n");
-
-            if (!constrs.isEmpty()) {
-                s.append("interface ").append(getClassName(false))
-                        .append("$$constructor extends SuppressProperties {\n\n")
-                    .append(StringHelpers.tabIn(constrs)).append("\n")
-                .append("}\n");
-            }
+            if (!(temp = genMethods(methods)).isEmpty()) s.append("\n").append(StringHelpers.tabIn(temp));
+            if (len != s.length()) s.append("\n");
+            s.append("}");
         }
 
-        s.append("interface ").append(getClassName(true)).append(buildExtends()).append(" {\n")
-            .append(StringHelpers.tabIn(gapper(genFields(fields), genMethods(methods))))
-        .append("}");
-
-        return s.toString().trim().replaceAll("\\{[\n ]+\\}", "{}").replaceAll("\n\n\n+", "\n\n");
+        return s.toString().replaceAll("\n\n\n+", "\n\n");
     }
 
 }
