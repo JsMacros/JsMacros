@@ -48,6 +48,7 @@ public class Main implements Doclet {
         return "TypeScript Generator";
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Override
     public Set<? extends Option> getSupportedOptions() {
         return Set.of(
@@ -91,11 +92,13 @@ public class Main implements Doclet {
             for (AnnotationMirror annotationMirror : e.getAnnotationMirrors()) {
                 String annotationName = annotationMirror.getAnnotationType().asElement().getSimpleName().toString();
                 if (annotationName.equals("Library")) {
+                    //noinspection DataFlowIssue
                     libraryClasses.add(new LibraryParser(e, getAnnotationValue("value", annotationMirror).toString()));
                 }
                 if (annotationName.equals("Event")) {
                     Boolean cancellableValue = (Boolean) getAnnotationValue("cancellable", annotationMirror);
                     boolean cancellable = cancellableValue != null && cancellableValue;
+                    //noinspection DataFlowIssue
                     eventClasses.add(new EventParser(e, getAnnotationValue("value", annotationMirror).toString(), cancellable));
                 }
                 if (annotationName.equals("Mixin")) {
@@ -197,6 +200,7 @@ public class Main implements Doclet {
             outputTS.append(String.join("", sorter));
 
             // append number enums here because they are very unlikely to change
+            //noinspection SpellCheckingInspection
             outputTS.append("\n\n// Enum types\n").append(
                 """
                 type Bit    = 1 | 0;

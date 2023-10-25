@@ -1,5 +1,6 @@
 package xyz.wagyourtail;
 
+@SuppressWarnings("unused")
 public class StringHelpers {
 
     public static String toSymbolsGTLT(String s) {

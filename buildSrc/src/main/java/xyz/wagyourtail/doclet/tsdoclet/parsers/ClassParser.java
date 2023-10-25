@@ -13,12 +13,20 @@ import java.util.*;
 public class ClassParser extends AbstractParser {
     private static final Set<String> objectAliases = Set.of("void", "any", "JavaObject", "Object");
     public static Map<TypeElement, Set<TypeElement>> mixinInterfaceMap = new LinkedHashMap<>();
+    public final String className;
     private Set<TypeElement> superMcClasses;
     private boolean doesDirectExtendMc = false;
     private Set<TypeElement> mixinInterfaces;
 
     public ClassParser(TypeElement type) {
         super(type);
+        StringBuilder s = new StringBuilder(type.getSimpleName());
+        Element enclosing = type.getEnclosingElement();
+        while (enclosing.getKind() == ElementKind.INTERFACE || enclosing.getKind() == ElementKind.CLASS) {
+            s.insert(0, enclosing.getSimpleName() + "$");
+            enclosing = enclosing.getEnclosingElement();
+        }
+        className = s.toString();
     }
 
     public String getClassName(boolean typeParams) {
@@ -26,30 +34,24 @@ public class ClassParser extends AbstractParser {
     }
 
     public String getClassName(boolean typeParams, boolean defaultToAny) {
-        StringBuilder s = new StringBuilder(type.getSimpleName());
-        Element type = this.type.getEnclosingElement();
-        while (type.getKind() == ElementKind.INTERFACE || type.getKind() == ElementKind.CLASS) {
-            s.insert(0, type.getSimpleName() + "$");
-            type = type.getEnclosingElement();
-        }
-        if (typeParams) {
-            List<? extends TypeParameterElement> params = this.type.getTypeParameters();
-            if (params != null && !params.isEmpty()) {
-                s.append("<");
-                for (TypeParameterElement param : params) {
-                    s.append(transformType(param));
-                    String ext = transformType(((TypeVariable) param.asType()).getUpperBound());
-                    if (!ext.endsWith("any")) {
-                        s.append(" extends ").append(ext);
-                        if (defaultToAny) s.append(" = any");
-                    } else if (ext.startsWith("/* net.minecraft")) {
-                        s.append(" = ").append(ext);
-                    } else if (defaultToAny) s.append(" = any");
-                    s.append(", ");
-                }
-                s.setLength(s.length() - 2);
-                s.append(">");
+        if (!typeParams) return className;
+        StringBuilder s = new StringBuilder(className);
+        List<? extends TypeParameterElement> params = this.type.getTypeParameters();
+        if (params != null && !params.isEmpty()) {
+            s.append("<");
+            for (TypeParameterElement param : params) {
+                s.append(transformType(param));
+                String ext = transformType(((TypeVariable) param.asType()).getUpperBound());
+                if (!ext.endsWith("any")) {
+                    s.append(" extends ").append(ext);
+                    if (defaultToAny) s.append(" = any");
+                } else if (ext.startsWith("/* net.minecraft")) {
+                    s.append(" = ").append(ext);
+                } else if (defaultToAny) s.append(" = any");
+                s.append(", ");
             }
+            s.setLength(s.length() - 2);
+            s.append(">");
         }
         return s.toString();
     }
@@ -84,51 +86,47 @@ public class ClassParser extends AbstractParser {
             System.out.println("Added mixin interface " + e.getSimpleName() + " on class " + type.getSimpleName());
         }
         if (interfaces.isEmpty()) return "";
-        StringBuilder s = new StringBuilder();
+        StringBuilder s = new StringBuilder(" extends ");
         for (TypeMirror ifa : interfaces) {
             String sup = transformType(ifa, false, true);
-            s.append(", ");
             if (sup.startsWith("/* net.minecraft")) {
                 s.append(sup, 0, sup.length() - 3).append("JavaObject");
             } else {
                 s.append(sup);
             }
+            s.append(", ");
         }
-        s.delete(0, 2);
-        s.insert(0, " extends ");
+        s.setLength(s.length() - 2);
         return s.toString();
     }
 
-    private void getSuperMcClasses(Set<TypeElement> set, TypeElement c) {
+    private void getSuperClasses(Set<TypeElement> set, TypeElement c) {
         if (!c.getKind().isInterface()) {
-            TypeMirror sup = c.getSuperclass();
-            if (sup instanceof DeclaredType) {
-                TypeElement supe = (TypeElement) ((DeclaredType) sup).asElement();
-                if (transformType(sup).startsWith("/* net.minecraft")) {
-                    superMcClasses.add(supe);
-                    if (doesDirectExtendMc && mixinInterfaceMap.containsKey(supe)) {
-                        Set<TypeElement> ifs = mixinInterfaceMap.get(supe);
+            TypeMirror t = c.getSuperclass();
+            if (t instanceof DeclaredType) {
+                TypeElement e = (TypeElement) ((DeclaredType) t).asElement();
+                if (transformType(t).startsWith("/* net.minecraft")) {
+                    superMcClasses.add(e);
+                    if (doesDirectExtendMc && mixinInterfaceMap.containsKey(e)) {
+                        Set<TypeElement> ifs = mixinInterfaceMap.get(e);
                         set.addAll(ifs);
                         mixinInterfaces.addAll(ifs);
                     }
                 } else {
-                    set.add(supe);
+                    set.add(e);
                 }
-                getSuperMcClasses(set, supe);
+                getSuperClasses(set, e);
             }
         }
 
-        List<? extends TypeMirror> ifaces = c.getInterfaces();
-        if (ifaces != null && !ifaces.isEmpty()) {
-            for (TypeMirror ifa : ifaces) {
-                TypeElement ifae = (TypeElement) ((DeclaredType) ifa).asElement();
-                if (transformType(ifa).startsWith("/* net.minecraft")) {
-                    superMcClasses.add(ifae);
-                } else {
-                    set.add(ifae);
-                }
-                getSuperMcClasses(set, ifae);
+        for (TypeMirror t : c.getInterfaces()) {
+            TypeElement e = (TypeElement) ((DeclaredType) t).asElement();
+            if (transformType(t).startsWith("/* net.minecraft")) {
+                superMcClasses.add(e);
+            } else {
+                set.add(e);
             }
+            getSuperClasses(set, e);
         }
     }
 
@@ -164,7 +162,7 @@ public class ClassParser extends AbstractParser {
             doesDirectExtendMc = true;
             mixinInterfaces = new LinkedHashSet<>();
         }
-        getSuperMcClasses(superClasses, type);
+        getSuperClasses(superClasses, type);
 
         for (Element el : type.getEnclosedElements()) {
             if (el.getModifiers().contains(Modifier.PUBLIC)) {
@@ -174,8 +172,6 @@ public class ClassParser extends AbstractParser {
                     }
                     case FIELD, ENUM_CONSTANT -> fields.add(el);
                     case CONSTRUCTOR -> constructors.add(el);
-                    default -> {
-                    }
                 }
             }
         }

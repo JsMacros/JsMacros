@@ -12,10 +12,10 @@ import java.util.*;
 
 public class PackageTree {
     public final static Set<String> predefinedClasses = Set.of(
+        "java.lang.Class", "java.lang.Object", "java.lang.Iterable",
+        "java.lang.Throwable", "java.lang.StackTraceElement",
         "java.util.Collection", "java.util.List", "java.util.Map", "java.util.Set",
-        "java.io.File", "java.net.URL", "java.net.URI", "java.lang.Object", "java.lang.Class",
-        "java.lang.Throwable", "java.io.Serializable", "java.lang.StackTraceElement",
-        "java.lang.Iterable"
+        "java.io.Serializable", "java.io.File", "java.net.URL", "java.net.URI"
     );
     // List of reserved keywords #2536
     // https://github.com/microsoft/TypeScript/issues/2536
@@ -26,9 +26,9 @@ public class PackageTree {
         "switch", "this", "throw", "true", "try", "typeof", "var", "void", "while", "with"
     );
     private String pkgName;
-    private Map<String, PackageTree> children = new LinkedHashMap<>();
-    private Set<ClassParser> classes = new LinkedHashSet<>();
-    private Map<ClassParser, String> compiledClasses = new LinkedHashMap<>();
+    private final Map<String, PackageTree> children = new TreeMap<>();
+    private final Set<ClassParser> classes = new TreeSet<>((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.className, b.className));
+    private final Map<ClassParser, String> compiledClasses = new LinkedHashMap<>();
 
     public boolean dirty = true;
 
@@ -46,10 +46,7 @@ public class PackageTree {
         if (enclose != null) {
             String[] pkg = ((PackageElement)enclose).getQualifiedName().toString().split("\\.");
             for (int i = pkg.length - 1; i >= 0; --i) {
-                if (pkg[i].equals("")) {
-                    continue;
-                }
-                enclosing.push(pkg[i]);
+                if (!pkg[i].isEmpty()) enclosing.push(pkg[i]);
             }
             if (predefinedClasses.contains(String.join(".", pkg) + "." + clazz.getSimpleName())) {
                 return;
@@ -86,7 +83,7 @@ public class PackageTree {
     }
 
     private String genTSTreeIntern() {
-        if (classes.size() == 0 && children.size() == 1) {
+        if (classes.isEmpty() && children.size() == 1) {
             PackageTree onlyChild = children.values().stream().findFirst().get();
             if (!tsReservedWords.contains(onlyChild.pkgName)) {
                 onlyChild.pkgName = pkgName + "." + onlyChild.pkgName;
@@ -94,7 +91,7 @@ public class PackageTree {
             }
         }
 
-        StringBuilder exports = new StringBuilder("");
+        StringBuilder exports = new StringBuilder();
         StringBuilder se = new StringBuilder("namespace ");
         if (tsReservedWords.contains(pkgName)) {
             System.out.println("Escaped typescript reserved word: " + pkgName + " -> _" + pkgName);
@@ -107,11 +104,9 @@ public class PackageTree {
             exports.append(key.getClassName(false)).append(",\n");
             se.append("\n\n").append(StringHelpers.tabIn(compiledClasses.get(key)));
         }
-        boolean escaped = false;
         for (PackageTree value : children.values()) {
             if (tsReservedWords.contains(value.pkgName)) {
                 exports.append("_").append(value.pkgName).append(" as ").append(value.pkgName).append(",\n");
-                escaped = true;
                 se.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
             } else sn.append("\n\n").append(StringHelpers.tabIn(value.genTSTreeIntern()));
         }

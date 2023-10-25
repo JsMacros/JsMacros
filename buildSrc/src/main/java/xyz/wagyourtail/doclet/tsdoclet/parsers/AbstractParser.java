@@ -1,6 +1,7 @@
 package xyz.wagyourtail.doclet.tsdoclet.parsers;
 
 import com.sun.source.doctree.*;
+import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.StringHelpers;
 import xyz.wagyourtail.doclet.*;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
@@ -35,15 +36,15 @@ public abstract class AbstractParser {
         "java.lang.Number",    "number"
     );
     static final public Map<String, String> functionalInterfaces = Map.of(
-        "java.util.function.Consumer", "MethodWrapper<$0>",
-        "java.util.function.BiConsumer", "MethodWrapper<$0, $1>",
-        "java.util.function.Function", "MethodWrapper<$0, any, $1>",
-        "java.util.function.BiFunction", "MethodWrapper<$0, $1, $2>",
-        "java.util.function.Predicate", "MethodWrapper<$0, any, boolean>",
+        "java.util.function.Consumer",    "MethodWrapper<$0>",
+        "java.util.function.BiConsumer",  "MethodWrapper<$0, $1>",
+        "java.util.function.Function",    "MethodWrapper<$0, any, $1>",
+        "java.util.function.BiFunction",  "MethodWrapper<$0, $1, $2>",
+        "java.util.function.Predicate",   "MethodWrapper<$0, any, boolean>",
         "java.util.function.BiPredicate", "MethodWrapper<$0, $1, boolean>",
-        "java.util.function.Supplier", "MethodWrapper<any, any, $0>",
-        "java.util.Comparator", "MethodWrapper<$0, $0, int>",
-        "java.lang.Runnable", "MethodWrapper"
+        "java.util.function.Supplier",    "MethodWrapper<any, any, $0>",
+        "java.util.Comparator",           "MethodWrapper<$0, $0, int>",
+        "java.lang.Runnable",             "MethodWrapper"
     );
 
     private static final Set<String> loggedTypes = new HashSet<>();
@@ -61,9 +62,9 @@ public abstract class AbstractParser {
         objectMethods = new HashSet<>();
         for (Element oel : objectElement.getEnclosedElements()) {
             if (oel.getKind() != ElementKind.METHOD) continue;
-            if (!oel.getModifiers().contains(Modifier.PUBLIC)) continue;
-            if (oel.getModifiers().contains(Modifier.STATIC)) continue;
-            objectMethods.add((ExecutableElement) oel);
+            if (checkModifier(oel, false)) {
+                objectMethods.add((ExecutableElement) oel);
+            }
         }
         objectMethodNames = new HashSet<>();
         for (Element m : objectMethods) objectMethodNames.add(m.getSimpleName());
@@ -79,16 +80,9 @@ public abstract class AbstractParser {
     public String genFields(Set<Element> fields) {
         final StringBuilder s = new StringBuilder();
         for (Element field : fields) {
-            if (!field.getModifiers().contains(Modifier.PUBLIC)) {
-                continue;
+            if (checkModifier(field, false) && !shouldIgnore(field)) {
+                s.append(genField(field)).append("\n");
             }
-            if (field.getModifiers().contains(Modifier.STATIC)) {
-                continue;
-            }
-            if (field.getAnnotation(DocletIgnore.class) != null) {
-                continue;
-            }
-            s.append(genField(field)).append("\n");
         }
         return s.toString();
     }
@@ -96,16 +90,9 @@ public abstract class AbstractParser {
     public String genStaticFields(Set<Element> fields) {
         final StringBuilder s = new StringBuilder();
         for (Element field : fields) {
-            if (!field.getModifiers().contains(Modifier.PUBLIC)) {
-                continue;
+            if (checkModifier(field, true) && !shouldIgnore(field)) {
+                s.append(genField(field)).append("\n");
             }
-            if (!field.getModifiers().contains(Modifier.STATIC)) {
-                continue;
-            }
-            if (field.getAnnotation(DocletIgnore.class) != null) {
-                continue;
-            }
-            s.append(genField(field)).append("\n");
         }
         return s.toString();
     }
@@ -113,16 +100,9 @@ public abstract class AbstractParser {
     public String genMethods(Set<Element> methods) {
         final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
-            if (!method.getModifiers().contains(Modifier.PUBLIC)) {
-                continue;
+            if (checkModifier(method, false) && !shouldIgnore(method)) {
+                s.append(genMethod((ExecutableElement) method)).append("\n");
             }
-            if (method.getModifiers().contains(Modifier.STATIC)) {
-                continue;
-            }
-            if (method.getAnnotation(DocletIgnore.class) != null) {
-                continue;
-            }
-            s.append(genMethod((ExecutableElement) method)).append("\n");
         }
         return s.toString();
     }
@@ -130,16 +110,9 @@ public abstract class AbstractParser {
     public String genStaticMethods(Set<Element> methods) {
         final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
-            if (!method.getModifiers().contains(Modifier.PUBLIC)) {
-                continue;
+            if (checkModifier(method, true) && !shouldIgnore(method)) {
+                s.append(genMethod((ExecutableElement) method)).append("\n");
             }
-            if (!method.getModifiers().contains(Modifier.STATIC)) {
-                continue;
-            }
-            if (method.getAnnotation(DocletIgnore.class) != null) {
-                continue;
-            }
-            s.append(genMethod((ExecutableElement) method)).append("\n");
         }
         return s.toString();
     }
@@ -147,12 +120,8 @@ public abstract class AbstractParser {
     public String genConstructors(Set<Element> methods) {
         final StringBuilder s = new StringBuilder();
         for (Element method : methods) {
-            if (!method.getModifiers().contains(Modifier.PUBLIC)) {
-                continue;
-            }
-            if (method.getAnnotation(DocletIgnore.class) != null) {
-                continue;
-            }
+            if (!method.getModifiers().contains(Modifier.PUBLIC)) continue;
+            if (shouldIgnore(method)) continue;
             s.append(genConstructor((ExecutableElement) method)).append("\n");
         }
         return s.toString();
@@ -199,8 +168,8 @@ public abstract class AbstractParser {
         if (replace != null) {
             if (!replace.value().isEmpty()) s.append("<").append(replace.value()).append(">");
         } else {
-            List<? extends TypeParameterElement> typeParams = isConstructor ? type.getTypeParameters() : e.getTypeParameters();
-            if (typeParams != null && !typeParams.isEmpty()) {
+            List<? extends TypeParameterElement> typeParams = (isConstructor ? type : e).getTypeParameters();
+            if (!typeParams.isEmpty()) {
                 s.append("<");
                 for (TypeParameterElement param : typeParams) {
                     s.append(transformType(param));
@@ -221,14 +190,13 @@ public abstract class AbstractParser {
             s.append(replace2.value());
         } else {
             List<? extends VariableElement> params = e.getParameters();
-            if (params != null && !params.isEmpty()) {
+            if (!params.isEmpty()) {
                 VariableElement restParam = e.isVarArgs() ? params.get(params.size() - 1) : null;
                 for (VariableElement param : params) {
-                    if (restParam != null && restParam.equals(param)) s.append("...");
+                    if (restParam == param) s.append("...");
                     String name = param.getSimpleName().toString();
                     if (tsReservedWords.contains(name)) s.append("_");
-                    s.append(name).append(": ")
-                        .append(transformType(param, true));
+                    s.append(name).append(": ").append(transformType(param, true));
                     if (isNullable(param)) s.append(" | null");
                     s.append(", ");
                 }
@@ -263,6 +231,7 @@ public abstract class AbstractParser {
         return transformType(elem.asType(), isParamType, false);
     }
 
+    @SuppressWarnings("unused")
     public String transformType(Element elem, boolean isParamType, boolean isExtends) {
         return transformType(elem.asType(), isParamType, isExtends);
     }
@@ -271,6 +240,7 @@ public abstract class AbstractParser {
         return transformType(type, false, false);
     }
 
+    @SuppressWarnings("unused")
     public String transformType(TypeMirror type, boolean isParamType) {
         return transformType(type, isParamType, false);
     }
@@ -353,7 +323,7 @@ public abstract class AbstractParser {
 
                 mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().toString().equals("Library")).findFirst().orElse(null);
                 if (mirror != null) {
-                    return Main.getAnnotationValue("value", mirror).toString();
+                    return "typeof " + Main.getAnnotationValue("value", mirror);
                 }
 
                 if (rawType.toString().equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) {
@@ -443,17 +413,21 @@ public abstract class AbstractParser {
                 }
                 case PARAM -> {
                     ParamTree param = (ParamTree) blockTag;
-                    if (!param.getDescription().isEmpty()) {
+                    List<? extends DocTree> description = param.getDescription();
+                    if (!description.isEmpty()) {
                         b.append(param.isTypeParameter() ? "\n@template " : "\n@param ")
                                 .append(param.getName().getName()).append(" ")
-                                .append(genCommentDesc(param.getDescription()));
+                                .append(genCommentDesc(description));
                     }
                 }
                 case RETURN -> {
-                    if (!((ReturnTree) blockTag).getDescription().isEmpty()) {
-                        String desc = genCommentDesc(((ReturnTree) blockTag).getDescription());
-                        if (desc.equals("self") || desc.startsWith("self ")) returnsSelf = true;
-                        b.append("\n@return ").append(desc.startsWith("{") ? "{*} " : "").append(desc);
+                    List<? extends DocTree> description = ((ReturnTree) blockTag).getDescription();
+                    if (!description.isEmpty()) {
+                        String desc = genCommentDesc(description);
+                        if (desc.startsWith("self") && (desc.length() == 4 || desc.charAt(4) == ' ')) returnsSelf = true;
+                        b.append("\n@return ");
+                        if (desc.startsWith("{")) b.append("{*} ");
+                        b.append(desc);
                     }
                 }
                 case SINCE -> b.append("\n@since ").append(genCommentDesc(((SinceTree) blockTag).getBody()));
@@ -521,10 +495,6 @@ public abstract class AbstractParser {
 
     public abstract String genTSInterface();
 
-    public TypeElement getType() {
-        return type;
-    }
-
     public String getQualifiedType() {
         return isPackage ? this.path + "." + transformType(type) : transformType(type);
     }
@@ -543,6 +513,16 @@ public abstract class AbstractParser {
         }
     }
 
+    public static boolean checkModifier(@NotNull Element e, boolean shouldBeStatic) {
+        Set<Modifier> mods = e.getModifiers();
+        return mods.contains(Modifier.PUBLIC) && mods.contains(Modifier.STATIC) == shouldBeStatic;
+    }
+
+    public static boolean shouldIgnore(@NotNull Element e) {
+        return e.getAnnotation(DocletIgnore.class) != null;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected boolean isObjectMethod(Element m) {
         if (!objectMethodNames.contains(m.getSimpleName())
         ||  m.getKind() != ElementKind.METHOD
@@ -554,22 +534,14 @@ public abstract class AbstractParser {
     }
 
     public boolean isNullable(Element e) {
-        for (AnnotationMirror annotationMirror : e.getAnnotationMirrors()) {
-            if (annotationMirror.getAnnotationType().asElement().getSimpleName().toString().equals("Nullable")) {
-                return true;
-            }
-        }
-        return false;
+        return e.getAnnotationMirrors().stream()
+                .anyMatch(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Nullable"));
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof AbstractParser that)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof AbstractParser that)) return false;
         return type.equals(that.type);
     }
 
