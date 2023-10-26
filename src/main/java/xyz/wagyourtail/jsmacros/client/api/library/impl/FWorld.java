@@ -831,6 +831,15 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
+     * Create a particle accessor
+     * @return a new particle accessor
+     * @since 1.9.0
+     */
+    public ParticleHelper.Accessor createParticleAccessor() {
+        return new ParticleHelper.Accessor();
+    }
+
+    /**
      * Summons the amount of particles at the desired position.
      *
      * @param id    the particle id
