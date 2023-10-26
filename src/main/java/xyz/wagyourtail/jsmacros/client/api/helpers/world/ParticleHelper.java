@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.ClassPath;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.Particle;
@@ -253,6 +254,18 @@ public class ParticleHelper extends BaseHelper<Particle> {
                 ((MixinParticle) p).setPrevPosZ(0);
             }
             return this;
+        }
+
+        /**
+         * These names are subject to change and are only for an easier access. They will probably not
+         * change in the future, but it is not guaranteed.
+         *
+         * @return a list of all particle names.
+         * @since 1.9.0
+         */
+        @DocletReplaceReturn("JavaList<ParticleName>")
+        public List<String> getParticleNames() {
+            return ImmutableList.copyOf(PARTICLES.keySet());
         }
 
         /**
