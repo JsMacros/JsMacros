@@ -13,6 +13,8 @@ import xyz.wagyourtail.doclet.tsdoclet.parsers.*;
 
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.File;
@@ -26,6 +28,7 @@ public class Main implements Doclet {
     public static DocTrees treeUtils;
     public static Elements elementUtils;
     public static Map<String, String> enumTypes = new HashMap<>();
+    private final Map<String, String> filterableEvents = new TreeMap<>();
 
     @Override
     public void init(Locale locale, Reporter reporter) {
@@ -83,7 +86,16 @@ public class Main implements Doclet {
                     libraryClasses.add(new LibraryParser(e, getAnnotationValue("value", annotationMirror).toString()));
                 }
                 if (annotationName.equals("Event")) {
-                    eventClasses.add(new EventParser(e, getAnnotationValue("value", annotationMirror).toString()));
+                    String name = getAnnotationValue("value", annotationMirror).toString();
+                    eventClasses.add(new EventParser(e, name));
+                    DeclaredType filterer = (DeclaredType) getAnnotationValue("filterer", annotationMirror);
+                    if (filterer != null) {
+                        String filtererName = filterer.asElement().getSimpleName().toString();
+                        if (!filtererName.equals("EventFilterer")) {
+                            classes.addClass(filterer.asElement());
+                            filterableEvents.put(name, filtererName);
+                        }
+                    }
                 }
             }
             if (e.getSimpleName().toString().equals("EventContainer")) {
@@ -123,6 +135,12 @@ public class Main implements Doclet {
             );
             for (EventParser event : eventClasses) {
                 outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
+            }
+
+            outputTS.append("\n\n}\n\ninterface EventFilterers {\n");
+            for (String name : filterableEvents.keySet()) {
+                outputTS.append("\n    ").append(name)
+                        .append(": ").append(filterableEvents.get(name)).append(";");
             }
 
             // for type-safe event listener

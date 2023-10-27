@@ -21,6 +21,7 @@ import xyz.wagyourtail.jsmacros.core.library.impl.classes.WrappedScript;
 import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -302,7 +303,7 @@ public class FJsMacros extends PerExecLibrary {
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener on(String event, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
-        return on(event, false, callback);
+        return on(event, null, false, callback);
     }
 
     /**
@@ -317,11 +318,45 @@ public class FJsMacros extends PerExecLibrary {
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, joined: boolean, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener on(String event, boolean joined, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
+        return on(event, null, joined, callback);
+    }
+
+    /**
+     * Creates a listener for an event, this function can be more efficient that running a script file when used properly.
+     *
+     * @param event
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
+     * @return
+     * @see IEventListener
+     * @since 1.9.0
+     */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, filterer: EventFilterers[E], callback: MethodWrapper<Events[E], EventContainer>")
+    public IEventListener on(String event, EventFilterer filterer, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
+        return on(event, filterer, false, callback);
+    }
+
+    /**
+     * Creates a listener for an event, this function can be more efficient that running a script file when used properly.
+     *
+     * @param event
+     * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
+     * @return
+     * @see IEventListener
+     * @since 1.9.0
+     */
+    @SuppressWarnings("ExtractMethodRecommender")
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, filterer: EventFilterers[E], joined: boolean, callback: MethodWrapper<Events[E], EventContainer>")
+    public IEventListener on(String event, EventFilterer filterer, boolean joined, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
         if (callback == null) {
             return null;
         }
         if (!Core.getInstance().eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
+        }
+        if (filterer != null && !event.equals(filterer.getDedicatedEventName())) {
+            throw new IllegalArgumentException(String.format("Filterer is dedicated to %s but %s is provided.", filterer.getDedicatedEventName(), event));
         }
         Thread th = Thread.currentThread();
         String creatorName = th.getName();
@@ -334,6 +369,7 @@ public class FJsMacros extends PerExecLibrary {
 
             @Override
             public EventContainer<?> trigger(BaseEvent e) {
+                if (filterer != null && !filterer.test(e)) return null;
                 EventContainer<?> p = new EventContainer<>(ctx);
                 Thread ot = callback.overrideThread();
                 Thread th = Core.getInstance().threadPool.runTask(() -> {
@@ -751,6 +787,29 @@ public class FJsMacros extends PerExecLibrary {
             }
         }
         return listeners;
+    }
+
+    /**
+     * create an event filterer
+     * @since 1.9.0
+     */
+    @DocletReplaceTypeParams("E extends keyof EventFilterers")
+    @DocletReplaceParams("event: E")
+    @DocletReplaceReturn("EventFilterers[E]")
+    public EventFilterer createEventFilterer(String event) {
+        Class<? extends EventFilterer> fclass = Core.getInstance().eventRegistry.filterableEvents.get(event);
+        if (fclass == null) {
+            if (Core.getInstance().eventRegistry.events.contains(event)) {
+                throw new IllegalArgumentException(String.format("Event %s doesn't have a filterer class!", event));
+            } else {
+                throw new IllegalArgumentException(String.format("Event %s not found!", event));
+            }
+        }
+        try {
+            return fclass.getDeclaredConstructor().newInstance();
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
