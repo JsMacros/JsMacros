@@ -234,7 +234,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.4
      */
-    @DocletReplaceParams("ids: BlockId[], chunkrange: int")
+    @DocletReplaceParams("ids: CanOmitNamespace<BlockId>[], chunkrange: int")
     public List<Pos3D> findBlocksMatching(String[] ids, int chunkrange) {
         assert mc.player != null;
         int playerChunkX = mc.player.getBlockX() >> 4;
@@ -251,7 +251,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.4
      */
-    @DocletReplaceParams("centerX: int, centerZ: int, ids: BlockId[], chunkrange: int")
+    @DocletReplaceParams("centerX: int, centerZ: int, ids: CanOmitNamespace<BlockId>[], chunkrange: int")
     public List<Pos3D> findBlocksMatching(int centerX, int centerZ, String[] ids, int chunkrange) {
         Set<String> ids2 = Arrays.stream(ids).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         return new WorldScanner(mc.world, block -> ids2.contains(Registries.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
@@ -392,7 +392,7 @@ public class FWorld extends BaseLibrary {
      * @return all entities in the render distance, that match the specified entity type.
      * @since 1.8.4
      */
-    @DocletReplaceParams("...types: EntityId[]")
+    @DocletReplaceParams("...types: CanOmitNamespace<EntityId>[]")
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registries.ENTITY_TYPE.getId(entity.getType()).toString());
@@ -416,7 +416,7 @@ public class FWorld extends BaseLibrary {
      * @return a list of entities within the specified distance to the player, that match the specified entity type.
      * @since 1.8.4
      */
-    @DocletReplaceParams("distance: double, ...types: EntityId[]")
+    @DocletReplaceParams("distance: double, ...types: CanOmitNamespace<EntityId>[]")
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         assert mc.player != null;
