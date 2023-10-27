@@ -195,7 +195,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * current world.
      * @since 1.6.5
      */
-    @DocletReplaceParams("pos: BlockPosHelper, entity: EntityId")
+    @DocletReplaceParams("pos: BlockPosHelper, entity: CanOmitNamespace<EntityId>")
     public boolean allowsSpawning(BlockPosHelper pos, String entity) {
         return base.allowsSpawning(MinecraftClient.getInstance().world, pos.getRaw(), Registries.ENTITY_TYPE.get(RegistryHelper.parseIdentifier(entity)));
     }

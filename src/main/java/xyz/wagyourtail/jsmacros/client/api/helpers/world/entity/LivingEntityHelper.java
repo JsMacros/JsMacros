@@ -68,7 +68,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return {@code true} if the entity has the specified status effect, {@code false} otherwise.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: StatusEffectId")
+    @DocletReplaceParams("id: CanOmitNamespace<StatusEffectId>")
     public boolean hasStatusEffect(String id) {
         StatusEffect effect = Registries.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
         return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));

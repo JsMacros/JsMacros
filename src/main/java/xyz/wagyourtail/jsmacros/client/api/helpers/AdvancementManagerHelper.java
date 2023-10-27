@@ -98,7 +98,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @return the advancement for the given identifier.
      * @since 1.8.4
      */
-    @DocletReplaceParams("identifier: AdvancementId")
+    @DocletReplaceParams("identifier: CanOmitNamespace<AdvancementId>")
     public AdvancementHelper getAdvancement(String identifier) {
         return new AdvancementHelper(base.get(RegistryHelper.parseIdentifier(identifier)));
     }
@@ -118,7 +118,7 @@ public class AdvancementManagerHelper extends BaseHelper<AdvancementManager> {
      * @return the progress of the given advancement.
      * @since 1.8.4
      */
-    @DocletReplaceParams("identifier: AdvancementId")
+    @DocletReplaceParams("identifier: CanOmitNamespace<AdvancementId>")
     public AdvancementProgressHelper getAdvancementProgress(String identifier) {
         assert MinecraftClient.getInstance().player != null;
         return new AdvancementProgressHelper(((MixinClientAdvancementManager) MinecraftClient.getInstance().player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base.get(RegistryHelper.parseIdentifier(identifier)).getAdvancementEntry()));
