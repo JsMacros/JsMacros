@@ -1,5 +1,5 @@
 
-// version >=jsm1.8.4 >=mc1.19.3
+// ~version >=jsm1.8.4 >=mc1.19.3
 // need to be in a world to run this script
 
 
@@ -149,26 +149,33 @@ if (custom.has('Key')) {
 } else log('custom type Key not found')
 
 if (custom.has('ScreenName') || custom.has('ScreenClass')) {
-  const Screen = Reflection.getClass('net.minecraft.class_437')
   const HandledScreen = Reflection.getClass('net.minecraft.class_465')
-  /** @type {Set<JavaClass>} */
-  const screens = new Set()
-  const fabricLoader = Client.getMinecraft().getClass().getClassLoader()
-  //@ts-ignore
-  const loader = Java.type('com.google.common.reflect.ClassPath').from(fabricLoader)
-  log('loading through classes to get all screen classes...')
-  /** @type {JavaSet} */
-  const get = loader.getAllClasses()
-  const size = get.size()
-  let count = 0
-  for (const clz of get) {
-    if (++count % 1000 === 0) log(`${count} / ${size}`)
-    try {
-      const loaded = Reflection.getClass(clz.getName())
-      // @ts-ignore
-      if (Screen.isAssignableFrom(loaded)) screens.add(loaded)
-    } catch (e) {}
-  }
+
+  /** @type {JavaSet<JavaClass>} */
+  const screens = GlobalVars.getObject('lastFilteredScreenClasses') ?? (() => {
+    /** @type {JavaSet<JavaClass>} */
+    const res = JavaUtils.createHashSet()
+    const Screen = Reflection.getClass('net.minecraft.class_437')
+    const fabricLoader = Client.getMinecraft().getClass().getClassLoader()
+    //@ts-ignore
+    const loader = Java.type('com.google.common.reflect.ClassPath').from(fabricLoader)
+    log('loading through classes to get all screen classes...')
+    /** @type {JavaSet} */
+    const get = loader.getAllClasses()
+    const size = get.size()
+    let count = 0
+    for (const clz of get) {
+      if (++count % 1000 === 0) log(`${count} / ${size}`)
+      try {
+        const Class = java.lang.Class
+        const loaded = Class.forName(clz.getName(), false, fabricLoader)
+        // @ts-ignore
+        if (Screen.isAssignableFrom(loaded)) res.add(loaded)
+      } catch (e) {}
+    }
+    GlobalVars.putObject('lastFilteredScreenClasses', res)
+    return res;
+  })()
 
   if (custom.has('ScreenName')) {
     custom.delete('ScreenName')

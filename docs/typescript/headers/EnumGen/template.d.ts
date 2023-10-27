@@ -13,13 +13,15 @@ type ItemId = string
 type ItemTag = string
 //@Eval Registries.field_41172.method_10235().toArray().map(id => id.toString())
 type SoundId = string
+//@Eval Registries.field_41173.method_10235().toArray().map(id => id.toString())
+type FluidId = string
 //@RegistryHelper getBlockIds
 type BlockId = string
 //@Eval Java.from(RegistryHelper.getBlocks()).flatMap(b => b.getTags())
 type BlockTag = string
 //@RegistryHelper getEntityTypeIds
 type EntityId = string
-//@Eval Client.getMinecraft().field_1687.method_8433().method_8126().toArray().map(r => r.method_8114().toString())
+//@Eval Client.getMinecraft().field_1687.method_8433().method_8126().toArray().map(r => r.toString())
 type RecipeId = string
 //@Enum class_1934.method_8381
 type Gamemode = string
@@ -105,3 +107,30 @@ type EnchantmentRarity = string
 type EnchantmentTargetType = string
 //@Eval Java.from(Client.createPacketByteBuffer().getPacketNames())
 type PacketName = string
+//@Eval Java.from(World.createParticleAccessor().getParticleNames())
+type ParticleName = string
+
+//@Enum class_1767.method_7792
+type DyeColorName = string
+//@Eval const PhaseType = Java.type('net.minecraft.class_1527');const F = PhaseType.class.getDeclaredField('field_7070');F.setAccessible(true);Object.values(PhaseType).filter(f => f instanceof PhaseType).map(p => F.get(p))
+type DragonPhase = string
+//@Eval new Packages.net.minecraft.class_1510(null, Client.getMinecraft().field_1687).method_5690().map(p => p.field_7006)
+type DragonBodyPart = string
+//@Enum class_5762$class_5767.method_33238
+type AxolotlVariant = string
+//@Eval Registries.field_41164.method_10235().toArray().map(id => id.toString())
+type FrogVariant = string
+//@Enum class_1501$class_7993.method_15434
+type LlamaVariant = string
+//@Enum class_1440$class_1443.method_15434
+type PandaGene = string
+//@Enum class_1453$class_7989.method_15434
+type ParrotVariant = string
+//@Enum class_1463$class_7990.method_15434
+type RabbitVariant = string
+//@Enum class_1474$class_1475.method_15434
+type TropicalVariant = string
+//@Enum class_1474$class_7991.name
+type TropicalSize = string
+//@Enum class_1690$class_1692.method_15434
+type BoatType = string

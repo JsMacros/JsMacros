@@ -107,6 +107,7 @@ public class RegistryHelper {
      * @param id the status effect's id
      * @return an {@link StatusEffectHelper} for the given status effect with 0 ticks duration.
      */
+    @DocletReplaceParams("id: StatusEffectId")
     public StatusEffectHelper getStatusEffect(String id) {
         return new StatusEffectHelper(Registries.STATUS_EFFECT.get(parseIdentifier(id)));
     }
@@ -191,6 +192,7 @@ public class RegistryHelper {
      * @return an {@link EntityHelper} for the given entity.
      * @since 1.8.4
      */
+    @DocletReplaceParams("type: EntityId")
     public EntityHelper<?> getEntity(String type) {
         return EntityHelper.create(Registries.ENTITY_TYPE.get(parseIdentifier(type)).create(MinecraftClient.getInstance().world));
     }
@@ -219,6 +221,7 @@ public class RegistryHelper {
      * @return an {@link FluidStateHelper} for the given fluid.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: FluidId")
     public FluidStateHelper getFluidState(String id) {
         return new FluidStateHelper(Registries.FLUID.get(parseIdentifier(id)).getDefaultState());
     }

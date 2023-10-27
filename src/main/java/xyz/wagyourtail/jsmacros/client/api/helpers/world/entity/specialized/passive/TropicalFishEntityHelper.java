@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.TropicalFishEntity;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 
 /**
  * @author Etheradon
@@ -17,6 +18,7 @@ public class TropicalFishEntityHelper extends FishEntityHelper<TropicalFishEntit
      * @return the variant of this tropical fish.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("TropicalVariant")
     public String getVariant() {
         return base.getVariant().asString();
     }
@@ -25,6 +27,7 @@ public class TropicalFishEntityHelper extends FishEntityHelper<TropicalFishEntit
      * @return the size of this tropical fish's variant.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("TropicalSize")
     public String getSize() {
         return base.getVariant().getSize().name();
     }

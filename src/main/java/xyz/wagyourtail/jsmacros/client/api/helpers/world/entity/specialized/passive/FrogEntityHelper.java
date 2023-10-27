@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.pas
 
 import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.registry.Registries;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -19,6 +20,7 @@ public class FrogEntityHelper extends AnimalEntityHelper<FrogEntity> {
      * @return the variant of this frog.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("FrogVariant")
     public String getVariant() {
         return Registries.FROG_VARIANT.getId(base.getVariant()).toString();
     }

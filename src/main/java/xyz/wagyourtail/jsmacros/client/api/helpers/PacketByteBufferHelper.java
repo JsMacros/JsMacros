@@ -692,6 +692,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @return self for chaining.
      * @since 1.8.4
      */
+    @DocletReplaceParams("dimension: Dimension, pos: BlockPosHelper")
     public PacketByteBufferHelper writeGlobalPos(String dimension, BlockPosHelper pos) {
         RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, new Identifier(dimension));
         base.writeGlobalPos(GlobalPos.create(key, pos.getRaw()));
@@ -707,6 +708,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @return self for chaining.
      * @since 1.8.4
      */
+    @DocletReplaceParams("dimension: Dimension, x: int, y: int, z: int")
     public PacketByteBufferHelper writeGlobalPos(String dimension, int x, int y, int z) {
         RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, new Identifier(dimension));
         base.writeGlobalPos(GlobalPos.create(key, new BlockPos(x, y, z)));
