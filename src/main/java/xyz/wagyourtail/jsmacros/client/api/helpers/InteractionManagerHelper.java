@@ -19,6 +19,7 @@ import xyz.wagyourtail.jsmacros.client.access.IClientPlayerInteractionManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.InteractionProxy;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.HitResultHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -33,7 +34,7 @@ import java.util.concurrent.Semaphore;
  * @author aMelonRind
  * @since 1.9.0
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public class InteractionManagerHelper {
     protected final MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -94,6 +95,7 @@ public class InteractionManagerHelper {
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
     @DocletEnumType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
     public InteractionManagerHelper setTarget(int x, int y, int z, String direction) {
+        //noinspection DataFlowIssue
         setTarget(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
         return this;
     }
@@ -126,6 +128,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("bpos: BlockPosHelper, direction: Direction")
     public InteractionManagerHelper setTarget(BlockPosHelper pos, String direction) {
+        //noinspection DataFlowIssue
         setTarget(pos, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
         return this;
     }
@@ -151,6 +154,14 @@ public class InteractionManagerHelper {
         if (entity.getRaw() == mc.player) throw new AssertionError("Can't target self!");
         InteractionProxy.Target.setTarget(new EntityHitResult(entity.getRaw()));
         return this;
+    }
+
+    /**
+     * @return current hitResult
+     * @since 1.9.0
+     */
+    public @Nullable HitResultHelper getTarget() {
+        return HitResultHelper.resolve(mc.crosshairTarget);
     }
 
     /**
@@ -328,6 +339,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
     public InteractionManagerHelper attack(int x, int y, int z, String direction) throws InterruptedException {
+        //noinspection DataFlowIssue
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
     }
 
@@ -354,6 +366,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, await: boolean")
     public InteractionManagerHelper attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
+        //noinspection DataFlowIssue
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
     }
 
@@ -658,6 +671,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
+        //noinspection DataFlowIssue
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
     }
 
@@ -685,6 +699,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean, await: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
+        //noinspection DataFlowIssue
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
     }
 

@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
@@ -22,6 +23,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.InteractionManagerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.HitResultHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
@@ -104,6 +106,7 @@ public class FPlayer extends BaseLibrary {
      * @see BlockDataHelper
      * @since 1.0.5
      */
+    @Nullable
     public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
         assert mc.world != null;
         assert mc.player != null;
@@ -120,12 +123,23 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
+     * @return the raycast result.
+     * @since 1.9.0
+     */
+    public HitResultHelper.Block detailedRayTraceBlock(double distance, boolean fluid) {
+        assert mc.world != null;
+        assert mc.player != null;
+        return new HitResultHelper.Block((BlockHitResult) mc.player.raycast(distance, 0, fluid));
+    }
+
+    /**
      * @return the entity the camera is currently looking at. can be affected by {@link InteractionManagerHelper#setTarget(EntityHelper)}
      * @see EntityHelper
      * @deprecated use {@link FPlayer#rayTraceEntity(int)} or {@link InteractionManagerHelper#getTargetedEntity()} instead
      * @since 1.0.5
      */
     @Deprecated
+    @Nullable
     public EntityHelper<?> rayTraceEntity() {
         if (mc.targetedEntity != null) {
             return EntityHelper.create(mc.targetedEntity);
@@ -139,6 +153,7 @@ public class FPlayer extends BaseLibrary {
      * @return entity the player entity is currently looking at (if any).
      * @since 1.8.3
      */
+    @Nullable
     public EntityHelper<?> rayTraceEntity(int distance) {
         return DebugRenderer.getTargetedEntity(mc.player, distance).map(EntityHelper::create).orElse(null);
     }
