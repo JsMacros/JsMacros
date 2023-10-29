@@ -15,20 +15,20 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
  * @since 1.9.0
  */
 @SuppressWarnings("unused")
-public class HitResultHelper extends BaseHelper<HitResult> {
+public class HitResultHelper<T extends HitResult> extends BaseHelper<T> {
 
     @Nullable
-    public static HitResultHelper resolve(@Nullable HitResult hr) {
+    public static HitResultHelper<?> resolve(@Nullable HitResult hr) {
         if (hr == null) return null;
         return switch (hr.getType()) {
             case MISS, BLOCK -> new Block((BlockHitResult) hr);
             case ENTITY -> new Entity((EntityHitResult) hr);
             //noinspection UnnecessaryDefault
-            default -> new HitResultHelper(hr);
+            default -> new HitResultHelper<>(hr);
         };
     }
 
-    protected HitResultHelper(HitResult base) {
+    protected HitResultHelper(T base) {
         super(base);
     }
 
@@ -51,12 +51,10 @@ public class HitResultHelper extends BaseHelper<HitResult> {
         return String.format("HitResultHelper:{\"pos\": %s}", getPos());
     }
 
-    public static class Block extends HitResultHelper {
-        private final BlockHitResult base;
+    public static class Block extends HitResultHelper<BlockHitResult> {
 
         public Block(BlockHitResult base) {
             super(base);
-            this.base = base;
         }
 
         @Nullable
@@ -91,12 +89,10 @@ public class HitResultHelper extends BaseHelper<HitResult> {
 
     }
 
-    public static class Entity extends HitResultHelper {
-        private final EntityHitResult base;
+    public static class Entity extends HitResultHelper<EntityHitResult> {
 
         public Entity(EntityHitResult base) {
             super(base);
-            this.base = base;
         }
 
         public EntityHelper<?> getEntity() {

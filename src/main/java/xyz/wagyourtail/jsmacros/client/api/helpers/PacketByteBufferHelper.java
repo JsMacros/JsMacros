@@ -1001,7 +1001,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @since 1.9.0
      */
     public PacketByteBufferHelper writeBlockHitResult(HitResultHelper.Block hitResult) {
-        base.writeBlockHitResult((BlockHitResult) hitResult.getRaw());
+        base.writeBlockHitResult(hitResult.getRaw());
         return this;
     }
 

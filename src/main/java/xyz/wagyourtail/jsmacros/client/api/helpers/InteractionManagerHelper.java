@@ -160,7 +160,7 @@ public class InteractionManagerHelper {
      * @return current hitResult
      * @since 1.9.0
      */
-    public @Nullable HitResultHelper getTarget() {
+    public @Nullable HitResultHelper<?> getTarget() {
         return HitResultHelper.resolve(mc.crosshairTarget);
     }
 
