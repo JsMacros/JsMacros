@@ -19,7 +19,7 @@ public class DrownedEntityHelper extends ZombieEntityHelper<DrownedEntity> {
      * @since 1.8.4
      */
     public boolean hasTrident() {
-        return base.getMainHandStack().isOf(Items.TRIDENT);
+        return base.isHolding(Items.TRIDENT);
     }
 
     /**
@@ -27,7 +27,7 @@ public class DrownedEntityHelper extends ZombieEntityHelper<DrownedEntity> {
      * @since 1.8.4
      */
     public boolean hasNautilusShell() {
-        return base.getMainHandStack().isOf(Items.NAUTILUS_SHELL);
+        return base.isHolding(Items.NAUTILUS_SHELL);
     }
 
 }

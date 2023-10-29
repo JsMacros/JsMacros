@@ -55,6 +55,38 @@ public class Box implements RenderElement3D {
     }
 
     /**
+     * set this component's pos to a block
+     * @since 1.9.0
+     */
+    public void setPosToBlock(BlockPosHelper pos) {
+        setPosToBlock(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    /**
+     * set this component's pos to a block
+     * @since 1.9.0
+     */
+    public void setPosToBlock(int x, int y, int z) {
+        setPos(x, y, z, x + 1, y + 1, z + 1);
+    }
+
+    /**
+     * set this component's pos to a point
+     * @since 1.9.0
+     */
+    public void setPosToPoint(Pos3D pos, double radius) {
+        setPosToPoint(pos.getX(), pos.getY(), pos.getZ(), radius);
+    }
+
+    /**
+     * set this component's pos to a point
+     * @since 1.9.0
+     */
+    public void setPosToPoint(double x, double y, double z, double radius) {
+        setPos(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
+    }
+
+    /**
      * @param color
      * @since 1.0.6
      */
