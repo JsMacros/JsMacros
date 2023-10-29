@@ -1,18 +1,29 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.command.argument.NbtPathArgumentType;
 import net.minecraft.nbt.*;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @since 1.5.1
  */
 @SuppressWarnings("unused")
 public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
+    private static final LinkedHashMap<String, NbtPathArgumentType.NbtPath> nbtPaths = new LinkedHashMap<>(32, 0.75f, true) {
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, NbtPathArgumentType.NbtPath> eldest) {
+            return size() > 24;
+        }
+
+    };
 
     private NBTElementHelper(T base) {
         super(base);
@@ -23,6 +34,25 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
      */
     public int getType() {
         return base.getType();
+    }
+
+    /**
+     * resolves the nbt path to elements, or null if not found.<br>
+     * <a href="https://minecraft.wiki/w/NBT_path_format">NBT path format wiki</a>
+     * @throws CommandSyntaxException if the path format is incorrect
+     * @since 1.9.0
+     */
+    @Nullable
+    public List<NBTElementHelper<?>> resolve(String nbtPath) throws CommandSyntaxException {
+        NbtPathArgumentType.NbtPath path = nbtPaths.get(nbtPath);
+        if (path == null) {
+            path = NbtPathArgumentType.nbtPath().parse(new StringReader(nbtPath));
+            nbtPaths.put(nbtPath, path);
+        }
+        try {
+            return path.get(base).stream().map(NBTElementHelper::resolve).collect(Collectors.toList());
+        } catch (CommandSyntaxException ignored) {}
+        return null;
     }
 
     /**
