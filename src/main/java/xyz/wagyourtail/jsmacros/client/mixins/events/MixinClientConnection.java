@@ -26,9 +26,9 @@ public class MixinClientConnection {
     @Shadow
     private Channel channel;
     @Unique
-    private EventRecvPacket jsmacros$eventRecvPacket;
+    private EventRecvPacket eventRecvPacket;
     @Unique
-    private EventSendPacket jsmacros$eventSendPacket;
+    private EventSendPacket eventSendPacket;
 
     @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
     private void onReceivePacket(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
@@ -41,28 +41,28 @@ public class MixinClientConnection {
             return;
         }
         event.trigger();
-        jsmacros$eventRecvPacket = event;
+        eventRecvPacket = event;
     }
 
     @ModifyArg(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;handlePacket(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;)V"), index = 0)
     public Packet<?> modifyReceivedPacket(Packet<?> packet) {
-        return jsmacros$eventRecvPacket.packet;
+        return eventRecvPacket.packet;
     }
 
     @Inject(method = "sendImmediately", at = @At("HEAD"), cancellable = true)
-    private void onSendPacket(Packet<?> packet, PacketCallbacks callbacks, boolean flush, CallbackInfo ci) {
+    private void onSendPacket(Packet<?> packet, PacketCallbacks callbacks, CallbackInfo ci) {
         EventSendPacket event = new EventSendPacket(packet);
         event.trigger();
         if (event.isCanceled() || event.packet == null) {
             ci.cancel();
             return;
         }
-        jsmacros$eventSendPacket = event;
+        eventSendPacket = event;
     }
 
     @ModifyVariable(method = "sendImmediately", at = @At(value = "LOAD"), ordinal = 0, argsOnly = true)
     public Packet<?> modifySendPacket(Packet<?> packet) {
-        return jsmacros$eventSendPacket.packet;
+        return eventSendPacket.packet;
     }
 
 }

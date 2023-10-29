@@ -20,33 +20,36 @@ import java.util.Arrays;
 @Mixin(CreativeInventoryScreen.class)
 public abstract class MixinCreativeInventoryScreen {
 
-    @Unique
-    private static Class<? extends Slot> jsmacros$lockableSlot;
+    @Shadow
+    protected abstract boolean isCreativeInventorySlot(@Nullable Slot slot);
 
     @Unique
-    private static Class<? extends Slot> jsmacros$creativeSlot;
+    private static Class<? extends Slot> lockableSlot;
 
     @Unique
-    private static Field jsmacros$slotInCreativeSlot;
+    private static Class<? extends Slot> creativeSlot;
 
     @Unique
-    private synchronized Slot jsmacros$getSlotFromCreativeSlot(Slot in) {
+    private static Field slotInCreativeSlot;
+
+    @Unique
+    private synchronized Slot getSlotFromCreativeSlot(Slot in) {
         if (in.getClass().equals(Slot.class)) {
             return in;
         }
-        boolean lockable = in.getClass().equals(jsmacros$lockableSlot);
-        boolean creative = in.getClass().equals(jsmacros$creativeSlot);
+        boolean lockable = in.getClass().equals(lockableSlot);
+        boolean creative = in.getClass().equals(creativeSlot);
         if (lockable) {
             return in;
         }
         if (creative) {
             try {
-                return (Slot) jsmacros$slotInCreativeSlot.get(in);
+                return (Slot) slotInCreativeSlot.get(in);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         }
-        if (jsmacros$lockableSlot == null || jsmacros$creativeSlot == null) {
+        if (lockableSlot == null || creativeSlot == null) {
             // define creative/lockable slot classes
             try {
                 Class<? extends Slot> unknown = in.getClass();
@@ -55,16 +58,16 @@ public abstract class MixinCreativeInventoryScreen {
                         .findFirst()
                         .orElse(null);
                 if (slotField == null) {
-                    jsmacros$lockableSlot = unknown;
+                    lockableSlot = unknown;
                 } else {
-                    jsmacros$slotInCreativeSlot = slotField;
-                    jsmacros$slotInCreativeSlot.setAccessible(true);
-                    jsmacros$creativeSlot = unknown;
+                    slotInCreativeSlot = slotField;
+                    slotInCreativeSlot.setAccessible(true);
+                    creativeSlot = unknown;
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            return jsmacros$getSlotFromCreativeSlot(in);
+            return getSlotFromCreativeSlot(in);
         }
         throw new NullPointerException("Unknown slot class");
     }
@@ -72,7 +75,7 @@ public abstract class MixinCreativeInventoryScreen {
     @Inject(method = "onMouseClick", at = @At("HEAD"), cancellable = true)
     public void beforeMouseClick(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
         if (slot != null) {
-            slotId = jsmacros$getSlotFromCreativeSlot(slot).id;
+            slotId = getSlotFromCreativeSlot(slot).id;
         }
         EventClickSlot event = new EventClickSlot((HandledScreen<?>) (Object) this, actionType.ordinal(), button, slotId);
         event.trigger();

@@ -6,7 +6,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 
@@ -17,10 +16,6 @@ import java.util.function.Consumer;
  * @since 1.8.4
  */
 public class Slider extends ClickableWidget {
-    private static final Identifier TEXTURE = new Identifier("widget/slider");
-    private static final Identifier HIGHLIGHTED_TEXTURE = new Identifier("widget/slider_highlighted");
-    private static final Identifier HANDLE_TEXTURE = new Identifier("widget/slider_handle");
-    private static final Identifier HANDLE_HIGHLIGHTED_TEXTURE = new Identifier("widget/slider_handle_highlighted");
 
     private int steps;
     private double value;
@@ -79,20 +74,12 @@ public class Slider extends ClickableWidget {
         this.steps = steps - 1;
     }
 
-    private Identifier getTexture() {
-        return this.isFocused() && !this.isFocused() ? HIGHLIGHTED_TEXTURE : TEXTURE;
-    }
-
-    private Identifier getHandleTexture() {
-        return !this.hovered && !this.isFocused() ? HANDLE_TEXTURE : HANDLE_HIGHLIGHTED_TEXTURE;
-    }
-
-
     @Override
     public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        drawContext.drawGuiTexture(this.getTexture(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
-        drawContext.drawGuiTexture(this.getHandleTexture(), this.getX() + (int)(this.value * (double)(this.width - 8)), this.getY(), 8, this.getHeight());
+        int offset = (isHovered() ? 2 : 1) * 20;
+        drawContext.drawTexture(WIDGETS_TEXTURE, getX() + (int) (value * (double) (width - 8)), getY(), 0, 46 + offset, 4, 20);
+        drawContext.drawTexture(WIDGETS_TEXTURE, getX() + (int) (value * (double) (width - 8)) + 4, getY(), 196, 46 + offset, 4, 20);
     }
 
     @Override

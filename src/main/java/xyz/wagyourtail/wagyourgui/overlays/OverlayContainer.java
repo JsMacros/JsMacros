@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,7 +78,7 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
     }
 
     @Override
-    public void setFocused(Element focused) {
+    public void setFocused(@Nullable Element focused) {
         parent.setFocused(focused);
     }
 

@@ -586,7 +586,7 @@ public class FWorld extends BaseLibrary {
         }
         ServerInfo multiplayerServer = mc.getCurrentServerEntry();
         if (multiplayerServer != null) {
-            if (multiplayerServer.isRealm()) {
+            if (mc.isConnectedToRealms()) {
                 return "REALM_" + multiplayerServer.name;
             }
             if (multiplayerServer.isLocal()) {

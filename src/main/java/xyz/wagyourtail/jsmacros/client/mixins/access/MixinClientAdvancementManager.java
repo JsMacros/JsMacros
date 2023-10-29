@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.client.network.ClientAdvancementManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,6 +16,6 @@ import java.util.Map;
 public interface MixinClientAdvancementManager {
 
     @Accessor
-    Map<AdvancementEntry, AdvancementProgress> getAdvancementProgresses();
+    Map<Advancement, AdvancementProgress> getAdvancementProgresses();
 
 }
