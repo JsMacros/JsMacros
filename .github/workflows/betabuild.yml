@@ -49,6 +49,26 @@ jobs:
           chmod +x gradlew
           ./gradlew :javascript_extension:build -x test
           ./gradlew build -x test
+      
+      - name: Create NPM types
+        uses: actions/github-script@v6
+        with: 
+          script: |
+            const { execSync } = require("child_process");
+            const fs = require("fs");
+            const paths = { tsHeaders: "./dist/typescript/headers", npmTypes: "./npm", dist: "./dist" };
+            const packageJson = { "name": "@types/jsmacros", "version": undefined, "description": "TypeScript definitions for JsMacros", "license": "MPL 2.0", "author": "wagyourtail", "main": "", "types": undefined, "scripts": {}, "dependencies": {}, "tsName": undefined };
+            let files = fs.readdirSync(paths.tsHeaders);
+            let typesFile = files.filter(name => !name.startsWith("Graal")).at(0);
+            let version = typesFile.replace(".d.ts", "").split("-").slice(1).join("-");
+            packageJson.version = version;
+            packageJson.types = typesFile;
+            packageJson.tsName = typesFile;
+            !fs.existsSync(paths.npmTypes) ? fs.mkdirSync(paths.npmTypes) : null;
+            fs.writeFileSync(`${paths.npmTypes}/package.json`, JSON.stringify(packageJson, null, "\t"));
+            files.forEach((file) => fs.copyFileSync(`${paths.tsHeaders}/${file}`, `${paths.npmTypes}/${file}`));
+            execSync("npm pack", { cwd: paths.npmTypes });
+            await io.mv(`${paths.npmTypes}/types-${typesFile.replace(".d.ts", "").toLowerCase()}.tgz`, `${paths.dist}/types-${typesFile.replace(".d.ts", "").toLowerCase()}.tgz`);
 
       - name: Bundle mods, documentation and source code
         uses: actions/upload-artifact@v3
