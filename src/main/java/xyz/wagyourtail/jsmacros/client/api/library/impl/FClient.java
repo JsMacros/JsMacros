@@ -435,7 +435,6 @@ public class FClient extends PerExecLibrary {
      *
      * @since 1.8.4
      */
-    @DocletReplaceReturn("never")
     public void exitGamePeacefully() {
         mc.scheduleStop();
     }
