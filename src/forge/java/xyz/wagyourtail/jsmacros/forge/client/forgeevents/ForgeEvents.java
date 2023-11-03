@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.forge.client.forgeevents;
 
 import com.google.common.collect.ImmutableSet;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -100,19 +101,19 @@ public class ForgeEvents {
     }
 
     public static void renderWorldListener(RenderLevelStageEvent e) {
-        if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) {
-            return;
-        }
-        client.getProfiler().swap("jsmacros_draw3d");
-        for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
-            try {
-                DrawContext drawContext = DRAW_CONTEXT_CONSTRUCTOR.newInstance(client, e.getPoseStack(), client.getBufferBuilders().getEntityVertexConsumers());
-                d.render(drawContext, e.getPartialTick());
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        }
-        client.getProfiler().pop();
+//        if (e.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) {
+//            return;
+//        }
+//        client.getProfiler().swap("jsmacros_draw3d");
+//        for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
+//            try {
+//                DrawContext drawContext = DRAW_CONTEXT_CONSTRUCTOR.newInstance(client, e.getPoseStack(), client.getBufferBuilders().getEntityVertexConsumers());
+//                d.render(drawContext, e.getPartialTick());
+//            } catch (Throwable t) {
+//                t.printStackTrace();
+//            }
+//        }
+//        client.getProfiler().pop();
     }
 
     public static void onTick(TickEvent.ClientTickEvent event) {

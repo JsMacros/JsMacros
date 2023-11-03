@@ -4,10 +4,10 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

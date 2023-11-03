@@ -150,10 +150,10 @@ class MixinMinecraftClient implements IMinecraftClient {
         InteractionProxy.Interact.ensureInteracting(itemUseCooldown);
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleManager;addBlockBreakingParticles(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)V"), method = "handleBlockBreaking")
-    private void catchEmptyShapeException(ParticleManager pm, BlockPos pos, Direction dir) {
-        if (world != null && !world.getBlockState(pos).getOutlineShape(world, pos).isEmpty()) pm.addBlockBreakingParticles(pos, dir);
-    }
+//    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleManager;addBlockBreakingParticles(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)V"), method = "handleBlockBreaking")
+//    private void catchEmptyShapeException(ParticleManager pm, BlockPos pos, Direction dir) {
+//        if (world != null && !world.getBlockState(pos).getOutlineShape(world, pos).isEmpty()) pm.addBlockBreakingParticles(pos, dir);
+//    }
 
     @Override
     public FontManager jsmacros_getFontManager() {
