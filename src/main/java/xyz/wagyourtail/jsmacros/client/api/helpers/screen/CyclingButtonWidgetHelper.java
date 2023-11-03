@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCyclingButton;
@@ -95,8 +96,10 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
 
         private T value = null;
         private Text optionText = Text.empty();
+        @Nullable
         private MethodWrapper<CyclingButtonWidgetHelper<T>, IScreen, Object, ?> action;
         private MethodWrapper<T, ?, TextHelper, ?> valueToText;
+        @Nullable
         private MethodWrapper<?, ?, Boolean, ?> alternateToggle;
         private boolean optionTextOmitted = false;
         private List<T> defaultValues = Collections.emptyList();
@@ -163,6 +166,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * @return the action to run when the button is pressed.
          * @since 1.8.4
          */
+        @Nullable
         public MethodWrapper<CyclingButtonWidgetHelper<T>, IScreen, Object, ?> getAction() {
             return action;
         }
@@ -172,7 +176,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * @return self for chaining.
          * @since 1.8.4
          */
-        public CyclicButtonBuilder<T> action(MethodWrapper<CyclingButtonWidgetHelper<T>, IScreen, Object, ?> action) {
+        public CyclicButtonBuilder<T> action(@Nullable MethodWrapper<CyclingButtonWidgetHelper<T>, IScreen, Object, ?> action) {
             this.action = action;
             return this;
         }
@@ -268,6 +272,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * or the alternate values.
          * @since 1.8.4
          */
+        @Nullable
         public MethodWrapper<?, ?, Boolean, ?> getAlternateToggle() {
             return alternateToggle;
         }
@@ -278,7 +283,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          * @return self for chaining.
          * @since 1.8.4
          */
-        public CyclicButtonBuilder<T> alternateToggle(MethodWrapper<?, ?, Boolean, ?> alternateToggle) {
+        public CyclicButtonBuilder<T> alternateToggle(@Nullable MethodWrapper<?, ?, Boolean, ?> alternateToggle) {
             if (alternateToggle != null) {
                 this.alternateToggle = alternateToggle;
             }

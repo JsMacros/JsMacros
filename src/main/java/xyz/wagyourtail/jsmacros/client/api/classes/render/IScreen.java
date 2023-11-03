@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -455,6 +456,7 @@ public interface IScreen extends IDraw2D<IScreen> {
         return Screen.hasAltDown();
     }
 
+    @Nullable
     MethodWrapper<IScreen, Object, Object, ?> getOnClose();
 
 }

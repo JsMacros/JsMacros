@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.HTTPRequest;
@@ -55,7 +56,7 @@ public class FRequest extends BaseLibrary {
      * @see HTTPRequest.Response
      * @since 1.1.8
      */
-    public Response get(String url, Map<String, String> headers) throws IOException {
+    public Response get(String url, @Nullable Map<String, String> headers) throws IOException {
         HTTPRequest req = new HTTPRequest(url);
         if (headers != null) {
             req.headers = new HashMap<>(headers);
@@ -85,7 +86,7 @@ public class FRequest extends BaseLibrary {
      * @throws IOException
      * @since 1.1.8
      */
-    public Response post(String url, String data, Map<String, String> headers) throws IOException {
+    public Response post(String url, String data, @Nullable Map<String, String> headers) throws IOException {
         HTTPRequest req = new HTTPRequest(url);
         if (headers != null) {
             req.headers = new HashMap<>(headers);

@@ -22,6 +22,7 @@ import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
@@ -200,6 +201,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the vehicle of the entity.
      * @since 1.1.8 [citation needed]
      */
+    @Nullable
     public EntityHelper<?> getVehicle() {
         Entity parent = base.getVehicle();
         if (parent != null) {
@@ -212,6 +214,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the entity passengers.
      * @since 1.1.8 [citation needed]
      */
+    @Nullable
     public List<EntityHelper<?>> getPassengers() {
         List<EntityHelper<?>> entities = base.getPassengerList().stream().map(EntityHelper::create).collect(Collectors.toList());
         return entities.size() == 0 ? null : entities;
@@ -232,7 +235,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @param name
      * @since 1.6.4
      */
-    public EntityHelper<T> setCustomName(TextHelper name) {
+    public EntityHelper<T> setCustomName(@Nullable TextHelper name) {
         if (name == null) {
             base.setCustomName(null);
         } else {
@@ -676,6 +679,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @return the entity as a server entity if an integrated server is running and {@code null} otherwise.
      * @since 1.8.4
      */
+    @Nullable
     public EntityHelper<?> asServerEntity() {
         MinecraftClient client = MinecraftClient.getInstance();
         if (!client.isIntegratedServerRunning()) {

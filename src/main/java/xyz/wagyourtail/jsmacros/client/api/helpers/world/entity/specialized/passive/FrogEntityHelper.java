@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.pas
 
 import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.registry.Registries;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -27,6 +28,7 @@ public class FrogEntityHelper extends AnimalEntityHelper<FrogEntity> {
      * @return the target of this frog, or {@code null} if it has none.
      * @since 1.8.4
      */
+    @Nullable
     public EntityHelper<?> getTarget() {
         return base.getFrogTarget().map(EntityHelper::create).orElse(null);
     }

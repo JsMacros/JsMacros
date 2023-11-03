@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinTextFieldWidget;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -233,6 +234,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
     public static class TextFieldBuilder extends AbstractWidgetBuilder<TextFieldBuilder, TextFieldWidget, TextFieldWidgetHelper> {
 
         private String suggestion = "";
+        @Nullable
         private MethodWrapper<String, IScreen, Object, ?> action;
         private final TextRenderer textRenderer;
 
@@ -245,6 +247,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
          * @return the callback for when the text is changed.
          * @since 1.8.4
          */
+        @Nullable
         public MethodWrapper<String, IScreen, Object, ?> getAction() {
             return action;
         }
@@ -254,7 +257,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
          * @return self for chaining.
          * @since 1.8.4
          */
-        public TextFieldBuilder action(MethodWrapper<String, IScreen, Object, ?> action) {
+        public TextFieldBuilder action(@Nullable MethodWrapper<String, IScreen, Object, ?> action) {
             this.action = action;
             return this;
         }
