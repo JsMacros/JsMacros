@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
@@ -16,6 +17,7 @@ import java.util.function.IntSupplier;
 public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     public final Draw2D draw2D;
+    @Nullable
     public IDraw2D<?> parent;
     public int x;
     public int y;

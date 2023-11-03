@@ -41,6 +41,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.Chunk;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.FoodComponentHelper;
@@ -139,6 +140,7 @@ public class FJavaUtils extends BaseLibrary {
      * {@code null} otherwise.
      * @since 1.8.4
      */
+    @Nullable
     public Object getHelperFromRaw(Object raw) {
         // Didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
         if (raw instanceof Entity) {

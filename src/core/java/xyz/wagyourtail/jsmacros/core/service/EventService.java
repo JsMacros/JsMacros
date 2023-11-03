@@ -113,6 +113,7 @@ public class EventService extends BaseEvent {
      * @since 1.6.5
      */
     @DocletReplaceReturn("'Int' | 'String' | 'Double' | 'Boolean' | 'Object' | null")
+    @Nullable
     public String getType(String name) {
         Object i = args.get(name);
         if (i == null) {

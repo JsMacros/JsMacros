@@ -5,6 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 
@@ -15,6 +16,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 @SuppressWarnings("unused")
 public class Line implements RenderElement, Alignable<Line> {
 
+    @Nullable
     public IDraw2D<?> parent;
     public int x1;
     public int y1;

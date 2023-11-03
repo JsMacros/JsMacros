@@ -33,6 +33,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -73,6 +74,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     private static final Map<String, Class<? extends Packet<?>>> PACKETS = new HashMap<>();
     private static final Map<Class<? extends Packet<?>>, String> PACKET_NAMES = new HashMap<>();
 
+    @Nullable
     private final Packet<?> packet;
     private final ByteBuf original;
 
@@ -107,6 +109,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * helper.
      * @since 1.8.4
      */
+    @Nullable
     public Packet<?> toPacket() {
         return packet == null ? null : toPacket(packet.getClass());
     }
@@ -252,6 +255,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @see #getPacketNames()
      * @since 1.8.4
      */
+    @DocletReplaceParams("packetName: PacketName")
     public PacketByteBufferHelper receivePacket(String packetName) {
         if (packet != null) {
             ((Packet<ClientPlayPacketListener>) toPacket(packetName)).apply(MinecraftClient.getInstance().getNetworkHandler());
@@ -646,6 +650,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @return a {@link ChunkHelper} for the read chunk position.
      * @since 1.8.4
      */
+    @Nullable
     public ChunkHelper readChunkHelper() {
         ChunkPos pos = base.readChunkPos();
         assert MinecraftClient.getInstance().world != null;

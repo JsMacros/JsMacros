@@ -7,6 +7,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -22,6 +23,7 @@ public class Image implements RenderElement, Alignable<Image> {
     private static MinecraftClient mc = MinecraftClient.getInstance();
 
     private Identifier imageid;
+    @Nullable
     public IDraw2D<?> parent;
     public float rotation;
     public boolean rotateCenter;

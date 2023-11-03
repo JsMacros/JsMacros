@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.pas
 
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.passive.AbstractHorseEntity;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractHorseEntity;
 
 /**
@@ -19,6 +20,7 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      * @return the UUID of this horse's owner, or {@code null} if it has no owner.
      * @since 1.8.4
      */
+    @Nullable
     public String getOwner() {
         return base.getOwnerUuid() == null ? null : base.getOwnerUuid().toString();
     }

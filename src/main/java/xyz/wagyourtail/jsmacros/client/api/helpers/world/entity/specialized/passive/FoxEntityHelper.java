@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.FoxEntity;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinFoxEntity;
@@ -49,6 +50,7 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      * @return the owner's UUID, or {@code null} if this fox has no owner.
      * @since 1.8.4
      */
+    @Nullable
     public String getOwner() {
         return getTrustedUUIDs().get(0).map(UUID::toString).orElse(null);
     }
@@ -57,6 +59,7 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      * @return the second owner's name, or {@code null} if this fox has no owner.
      * @since 1.8.4
      */
+    @Nullable
     public String getSecondOwner() {
         return getTrustedUUIDs().get(1).map(UUID::toString).orElse(null);
     }

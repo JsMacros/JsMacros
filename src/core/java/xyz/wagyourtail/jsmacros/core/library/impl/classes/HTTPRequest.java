@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -244,11 +245,13 @@ public class HTTPRequest {
      */
     public static class Response {
         private final InputStream raw;
+        @Nullable
         private String text;
+        @Nullable
         public Map<String, List<String>> headers;
         public int responseCode;
 
-        public Response(InputStream inputStream, int responseCode, Map<String, List<String>> headers) {
+        public Response(InputStream inputStream, int responseCode, @Nullable Map<String, List<String>> headers) {
             this.raw = inputStream;
             this.responseCode = responseCode;
             if (headers != null) {
