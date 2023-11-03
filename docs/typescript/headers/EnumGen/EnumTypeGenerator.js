@@ -29,9 +29,9 @@ const custom = new Set()
 /** @type {string[]} */
 const unknown = [...enumFile.matchAll(/\/\/@[Uu]nknown.*\n *type +(\w+) *= *string/g)].map(m => m[1])
 
-//@Enum class.method.method...
+//@Enum class.key.key...
 // will try to find all static field of that class, and the values are instance of class
-// and then call the methods on the values
+// and then get the fields/call the methods on the values
 const EnumMatcher = enumFile.matchAll(/\/\/@Enum +(\S+).*\n *type +(\w+) *= *string/g)
 for (const [, expression, type] of EnumMatcher) fromEnum[type] = expression
 
@@ -46,15 +46,17 @@ const EvalMatcher = enumFile.matchAll(/\/\/@Eval +(.*)\n *type +(\w+) *= *string
 for (const [, code, type] of EvalMatcher) fromEval[type] = code
 
 /**
- * for enum, call the methods on value
+ * for enum, get the fields/call the methods on value
  * @param {any} value
- * @param {string[]} methods
+ * @param {string[]} keys
  * @returns
  */
-const call = (value, methods) => {
-  for (const method of methods)
-    if (!value || (typeof value === 'object' && !(method in value))) return
-    else value = value[method]()
+function call(value, keys) {
+  for (const key of keys)
+    if (!value || (typeof value === 'object' && !(key in value))) return
+    else {
+      value = typeof value[key] === 'function' ? value[key]() : value[key]
+    }
   return value
 }
 
@@ -63,7 +65,7 @@ const call = (value, methods) => {
  * @param {string} type
  * @returns
  */
-const replaceToFile = type => {
+function replaceToFile(type) {
   if (!temp) return
   types[type] = temp.slice()
 
@@ -207,9 +209,10 @@ if (custom.has('ScreenName') || custom.has('ScreenClass')) {
 const Registry = Java.type('net.minecraft.class_2378')
 const Registries = Java.type('net.minecraft.class_7923')
 const RegistryKeys = Java.type('net.minecraft.class_7924')
+const world = Client.getMinecraft().field_1687
 // this is why you need to be in a world
 // mc.world.getRegistryManager()
-const RegistryManager = Client.getMinecraft().field_1687.method_30349()
+const RegistryManager = world.method_30349()
 
 log('fetching from Eval')
 for (const [type, code] of Object.entries(fromEval)) {

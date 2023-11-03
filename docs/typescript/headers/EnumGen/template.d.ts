@@ -21,7 +21,7 @@ type BlockId = string
 type BlockTag = string
 //@RegistryHelper getEntityTypeIds
 type EntityId = string
-//@Eval Client.getMinecraft().field_1687.method_8433().method_8126().toArray().map(r => r.toString())
+//@Eval world.method_8433().method_8126().toArray().map(r => r.toString())
 type RecipeId = string
 //@Enum class_1934.method_8381
 type Gamemode = string
@@ -35,7 +35,7 @@ type ScreenName = string
 type ScreenClass = string
 //@Enum class_1269.toString
 type ActionResult = string
-//@Eval const DamageSource = Java.type('net.minecraft.class_1282');const sources = Client.getMinecraft().field_1687.method_48963();sources.getClass().getDeclaredFields().filter(f => f.getType().equals(DamageSource)).map(f => {f.setAccessible(true);return f.get(sources)}).filter(s => s && s instanceof DamageSource).map(s => s.method_5525())
+//@Eval const DamageSource = Java.type('net.minecraft.class_1282');const sources = world.method_48963();sources.getClass().getDeclaredFields().filter(f => f.getType().equals(DamageSource)).map(f => {f.setAccessible(true);return f.get(sources)}).filter(s => s && s instanceof DamageSource).map(s => s.method_5525())
 type DamageSource = string
 //@RegistryHelper getStatusEffectIds
 type StatusEffectId = string
@@ -107,14 +107,14 @@ type EnchantmentRarity = string
 type EnchantmentTargetType = string
 //@Eval Java.from(Client.createPacketByteBuffer().getPacketNames())
 type PacketName = string
-//@Eval Java.from(World.createParticleAccessor().getParticleNames())
+//\@Eval Java.from(World.createParticleAccessor().getParticleNames())
 type ParticleName = string
 
 //@Enum class_1767.method_7792
 type DyeColorName = string
 //@Eval const PhaseType = Java.type('net.minecraft.class_1527');const F = PhaseType.class.getDeclaredField('field_7070');F.setAccessible(true);Object.values(PhaseType).filter(f => f instanceof PhaseType).map(p => F.get(p))
 type DragonPhase = string
-//@Eval new Packages.net.minecraft.class_1510(null, Client.getMinecraft().field_1687).method_5690().map(p => p.field_7006)
+//@Eval new Packages.net.minecraft.class_1510(null, world).method_5690().map(p => p.field_7006)
 type DragonBodyPart = string
 //@Enum class_5762$class_5767.method_33238
 type AxolotlVariant = string
@@ -134,3 +134,15 @@ type TropicalVariant = string
 type TropicalSize = string
 //@Enum class_1690$class_1692.method_15434
 type BoatType = string
+//@Enum class_4081.name
+type StatusEffectCategory = string
+//@Enum class_5421.name
+type RecipeBookCategory = string
+//@Eval Java.type('net.minecraft.class_2580').field_11801.flat().map(e => Registries.field_41174.method_10221(e).toString())
+type BeaconStatusEffect = string
+//@Eval Java.from(Java.type('net.minecraft.class_124').method_540(true, false))
+type FormattingColorName = string
+//@Enum class_270$class_271.field_1436
+type TeamCollisionRule = string
+//@Enum class_270$class_272.field_1445
+type TeamVisibilityRule = string
