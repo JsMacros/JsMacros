@@ -164,7 +164,13 @@ class MixinClientPlayNetworkHandler {
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenHandler;setCursorStack(Lnet/minecraft/item/ItemStack;)V"))
     public void onHeldSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci) {
-        new EventSlotUpdate((HandledScreen<?>) this.client.currentScreen, "HELD", -999, this.client.player.currentScreenHandler.getCursorStack(), packet.getItemStack()).trigger();
+        HandledScreen<?> screen;
+        if (this.client.currentScreen instanceof HandledScreen<?>) {
+            screen = (HandledScreen<?>) this.client.currentScreen;
+        } else {
+            screen = new InventoryScreen(this.client.player);
+        }
+        new EventSlotUpdate(screen, "HELD", -999, this.client.player.currentScreenHandler.getCursorStack(), packet.getItemStack()).trigger();
     }
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;setStack(ILnet/minecraft/item/ItemStack;)V"))
