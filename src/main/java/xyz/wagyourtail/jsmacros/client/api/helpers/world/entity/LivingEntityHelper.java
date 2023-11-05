@@ -8,7 +8,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.BowItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -72,6 +75,18 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     public boolean hasStatusEffect(String id) {
         StatusEffect effect = Registries.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
         return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));
+    }
+
+    /**
+     * @return {@code true} if the entity is holding the specified item
+     * @since 1.9.0
+     */
+    @DocletReplaceParams("item: ItemId")
+    public boolean isHolding(String item) {
+        Identifier id = new Identifier(item);
+        if (id.equals(Registries.ITEM.getDefaultId())) return base.isHolding(Items.AIR);
+        Item it = Registries.ITEM.get(id);
+        return it != Items.AIR && base.isHolding(it);
     }
 
     /**
