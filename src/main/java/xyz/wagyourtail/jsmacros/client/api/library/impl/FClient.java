@@ -311,10 +311,7 @@ public class FClient extends PerExecLibrary {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
         ctx.wrapSleep(() -> {
-            int i2 = i;
-            while (--i2 >= 0) {
-                tickSynchronizer.waitTick();
-            }
+            tickSynchronizer.waitTicks(i);
         });
     }
 

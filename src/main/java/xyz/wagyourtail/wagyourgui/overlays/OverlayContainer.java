@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
