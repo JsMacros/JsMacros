@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.ApiStatus;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
+import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
 import java.util.*;
 
@@ -24,7 +25,9 @@ public abstract class BaseEventRegistry {
     }
 
     public synchronized void clearMacros() {
-        listeners.clear();
+        for (Set<IEventListener> value : listeners.values()) {
+            value.removeIf(listener -> !(listener instanceof FJsMacros.ScriptEventListener));
+        }
     }
 
     /**

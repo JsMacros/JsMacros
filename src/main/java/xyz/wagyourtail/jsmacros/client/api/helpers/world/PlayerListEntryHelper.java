@@ -59,7 +59,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @since 1.1.9
      */
     public TextHelper getDisplayText() {
-        return new TextHelper(base.getDisplayName());
+        return TextHelper.wrap(base.getDisplayName());
     }
 
     /**

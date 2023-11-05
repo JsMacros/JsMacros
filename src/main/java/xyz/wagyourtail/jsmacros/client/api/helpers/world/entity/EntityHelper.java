@@ -145,7 +145,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.0.8 [citation needed], returned string until 1.6.4
      */
     public TextHelper getName() {
-        return new TextHelper(base.getName());
+        return TextHelper.wrap(base.getName());
     }
 
     /**

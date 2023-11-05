@@ -7,7 +7,6 @@ import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
-import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
@@ -42,8 +41,8 @@ public abstract class AbstractParser {
         "java.lang.Number",    "number"
     );
 
-    private static Set<String> loggedTypes = new HashSet<>();
-    private String path;
+    private static final Set<String> loggedTypes = new HashSet<>();
+    private final String path;
     protected TypeElement type;
     public boolean isPackage = true;
 
@@ -174,7 +173,7 @@ public abstract class AbstractParser {
         // diamondOperator
         DocletReplaceTypeParams replace = e.getAnnotation(DocletReplaceTypeParams.class);
         if (replace != null) {
-            if (replace.value().length() > 0) s.append("<").append(replace.value()).append(">");
+            if (!replace.value().isEmpty()) s.append("<").append(replace.value()).append(">");
         } else {
             List<? extends TypeParameterElement> typeParams = isConstructor ? type.getTypeParameters() : e.getTypeParameters();
             if (typeParams != null && !typeParams.isEmpty()) {
@@ -285,7 +284,7 @@ public abstract class AbstractParser {
 
                 boolean shortified = false;
                 String classpath = ((PackageElement) typeElement).getQualifiedName().toString();
-                if (javaShortifies.contains(classpath + "." + rawType.toString())) {
+                if (javaShortifies.contains(classpath + "." + rawType)) {
                     shortified = true;
                     rawType.insert(0, "Java");
                     if (isParamType && rawType.toString().equals("JavaClass")) rawType.append("Arg");
@@ -376,52 +375,57 @@ public abstract class AbstractParser {
         throw new UnsupportedOperationException(String.valueOf(type.getKind()));
     }
 
-    public String genComment(Element comment) {
-        checkEnumType(comment);
+    public String genComment(Element element) {
+        checkEnumType(element);
 
-        DocCommentTree tree = Main.treeUtils.getDocCommentTree(comment);
+        DocCommentTree tree = Main.treeUtils.getDocCommentTree(element);
         if (tree == null) {
-            return Main.elementUtils.isDeprecated(comment) ? "/** @deprecated */\n" : "";
+            return Main.elementUtils.isDeprecated(element) ? "/** @deprecated */\n" : "";
         }
-        final StringBuilder a = new StringBuilder();
         final StringBuilder b = new StringBuilder();
-        for (DocTree docTree : tree.getFullBody()) {
-            switch (docTree.getKind()) {
-                case LINK, LINK_PLAIN -> {
-                    a.append("{@link ")
-                        .append(((LinkTree) docTree).getReference().getSignature().split("\\(", 2)[0])
-                    .append("}");
-                }
-                case CODE -> a.append("`").append(((LiteralTree)docTree).getBody()).append("`");
-                default -> a.append(docTree);
-            }
-        }
 
         for (DocTree blockTag : tree.getBlockTags()) {
-            if (blockTag.getKind() == DocTree.Kind.SEE) {
-                List<? extends DocTree> sees = ((SeeTree) blockTag).getReference();
-                for (DocTree see : sees) {
-                    if (see.getKind() == DocTree.Kind.REFERENCE) {
-                        b.append("\n@see ").append(((ReferenceTree) see).getSignature());
-                    } else {
-                        b.append("\n@see ").append(see);
+            switch (blockTag.getKind()) {
+                case SEE -> {
+                    for (DocTree see : ((SeeTree) blockTag).getReference()) {
+                        b.append("\n@see ");
+                        if (see.getKind() == DocTree.Kind.REFERENCE) {
+                            b.append(convertSignature(((ReferenceTree) see).getSignature()));
+                        } else {
+                            b.append(see);
+                        }
                     }
                 }
-            } else {
-                b.append("\n").append(blockTag);
+                case PARAM -> {
+                    ParamTree param = (ParamTree) blockTag;
+                    if (!param.getDescription().isEmpty()) {
+                        b.append(param.isTypeParameter() ? "\n@template " : "\n@param ")
+                                .append(param.getName().getName()).append(" ")
+                                .append(genCommentDesc(param.getDescription()));
+                    }
+                }
+                case RETURN -> {
+                    if (!((ReturnTree) blockTag).getDescription().isEmpty()) {
+                        String desc = genCommentDesc(((ReturnTree) blockTag).getDescription());
+                        b.append("\n@return ").append(desc.startsWith("{") ? "{*} " : "").append(desc);
+                    }
+                }
+                case SINCE -> b.append("\n@since ").append(genCommentDesc(((SinceTree) blockTag).getBody()));
+                case DEPRECATED -> b.append("\n@deprecated ").append(genCommentDesc(((DeprecatedTree) blockTag).getBody()));
+                default -> b.append("\n").append(blockTag);
             }
         }
 
-        String fin = (a.toString().replaceAll("(?<=[\\.,:;>]) ?\n", "  \n") + b.toString()).trim()
+        String fin = (genCommentDesc(tree.getFullBody()).replaceAll("(?<=[.,:;>]) ?\n", "  \n") + b).trim()
             .replaceAll("\n <p>", "\n")
-            .replaceAll("<\\/?pre>", "```")
+            .replaceAll("</?pre>", "```")
+            // is there any better way to parse html tag?
             .replaceAll("<a (?:\n|.)*?href=\"([^\"]*)\"(?:\n|.)*?>((?:\n|.)*?)</a>", "[$2]($1)")
-            .replaceAll("\n@param <\\w>(?! )", "")
             .replaceAll("&lt;", "<")
             .replaceAll("&gt;", ">");
-        if (fin.isBlank()) return Main.elementUtils.isDeprecated(comment) ? "/** @deprecated */\n" : "";
+        if (fin.isBlank()) return Main.elementUtils.isDeprecated(element) ? "/** @deprecated */\n" : "";
 
-        if (Main.elementUtils.isDeprecated(comment) && !b.toString().contains("@deprecated")) {
+        if (Main.elementUtils.isDeprecated(element) && !b.toString().contains("@deprecated")) {
             fin += "\n@deprecated";
         }
 
@@ -430,6 +434,33 @@ public abstract class AbstractParser {
         return ("\n/**\n" +
             StringHelpers.addToLineStarts(fin, " * ") +
             "\n */\n").replaceAll("\n \\* +\n", "\n *\n");
+    }
+
+    private String genCommentDesc(List<? extends DocTree> desc) {
+        final StringBuilder s = new StringBuilder();
+        for (DocTree docTree : desc) {
+            switch (docTree.getKind()) {
+                case LINK, LINK_PLAIN -> {
+                    String sig = ((LinkTree) docTree).getReference().getSignature();
+                    if (javaNumberType.containsKey(sig)) s.append(javaNumberType.get(sig));
+                    else if (sig.equals("java.lang.String")) s.append("string");
+                    else if (sig.equals("java.lang.Boolean")) s.append("boolean");
+                    else s.append("{@link ").append(convertSignature(sig)).append("}");
+                }
+                case CODE -> s.append("`").append(((LiteralTree) docTree).getBody()).append("`");
+                default -> s.append(docTree);
+            }
+        }
+        return s.toString();
+    }
+
+    private String convertSignature(String sig) {
+        if (sig.matches("^xyz\\.wagyourtail\\.[^#]+\\w$")) return sig.replaceFirst("^.+\\.(?=[^.]+$)", "");
+        if (sig.matches("^\\w+\\.(?:\\w+\\.)+[\\w$_]+$")) return "Packages." + sig;
+        sig = sig.replaceFirst("(?<=\\S)(?=[<(])", " ");
+        return sig.startsWith("#")
+            ? sig.substring(1)
+            : sig.replaceFirst("^(?:xyz\\.wagyourtail\\.jsmacros\\.(?:client\\.api|core)\\.library\\.impl\\.)?F([A-Z]\\w+)#", "$1.");
     }
 
     public abstract String genTSInterface();
@@ -445,9 +476,10 @@ public abstract class AbstractParser {
     public static void checkEnumType(Element element) {
         DocletEnumType enumType = element.getAnnotation(DocletEnumType.class);
         if (enumType != null) {
-            if (Main.enumTypes.containsKey(enumType.name()) &&
-                !loggedTypes.contains(enumType.name()) &&
-                Main.enumTypes.get(enumType.name()) != enumType.type()) {
+            if (Main.enumTypes.containsKey(enumType.name())
+                && !loggedTypes.contains(enumType.name())
+                && !Objects.equals(Main.enumTypes.get(enumType.name()), enumType.type())
+            ) {
                 System.out.println("Duplicate enum type name: " + enumType.name());
                 loggedTypes.add(enumType.name());
             }

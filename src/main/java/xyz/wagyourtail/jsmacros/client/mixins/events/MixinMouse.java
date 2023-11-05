@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventKey;
+import xyz.wagyourtail.jsmacros.client.api.event.impl.EventMouseScroll;
 
 @Mixin(Mouse.class)
 class MixinMouse {
@@ -28,6 +29,16 @@ class MixinMouse {
         if (EventKey.parse(key, -1, action, mods)) {
             info.cancel();
         }
+    }
+
+    @Inject(at = @At("HEAD"), method = "onMouseScroll", cancellable = true)
+    private void onMouseScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
+        if (window != client.getWindow().getHandle()) return;
+        if (client.getOverlay() != null || client.currentScreen != null || client.player == null) return;
+        if (vertical == 0.0 && horizontal == 0.0) return;
+        EventMouseScroll event = new EventMouseScroll(horizontal, vertical);
+        event.trigger();
+        if (event.isCanceled()) ci.cancel();
     }
 
 }

@@ -703,7 +703,7 @@ public class ClassBuilder<T> {
             return new AnnotationBuilder<>(annotation, constPool, this, null);
         }
 
-        public AnnotationArrayBuilder<AnnotationBuilder<T>> putArray(String key, Class<?> annotationClass) {
+        public AnnotationArrayBuilder<AnnotationBuilder<T>> putArray(String key) {
             AnnotationArrayBuilder ab = new AnnotationArrayBuilder<>(this, constPool);
             annotationInstance.addMemberValue(key, ab.arrayMemberValue);
             return ab;
@@ -799,8 +799,7 @@ public class ClassBuilder<T> {
             }
 
             public U finish() {
-                ArrayMemberValue arrayMemberValue = new ArrayMemberValue(constPool);
-                arrayMemberValue.setValue(mv.toArray(new MemberValue[0]));
+                this.arrayMemberValue.setValue((MemberValue[])this.mv.toArray(new MemberValue[0]));
                 return parent;
             }
 

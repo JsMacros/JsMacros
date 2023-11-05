@@ -735,7 +735,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @since 1.8.4
      */
     public TextHelper readText() {
-        return new TextHelper(base.readText());
+        return TextHelper.wrap(base.readText());
     }
 
     /**

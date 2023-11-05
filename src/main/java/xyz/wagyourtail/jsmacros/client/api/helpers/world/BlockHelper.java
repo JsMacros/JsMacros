@@ -120,7 +120,7 @@ public class BlockHelper extends BaseHelper<Block> {
      * @since 1.8.4
      */
     public TextHelper getName() {
-        return new TextHelper(base.getName());
+        return TextHelper.wrap(base.getName());
     }
 
     @Override

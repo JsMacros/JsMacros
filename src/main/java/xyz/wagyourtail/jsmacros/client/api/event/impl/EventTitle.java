@@ -20,7 +20,7 @@ public class EventTitle extends BaseEvent {
 
     public EventTitle(String type, Text message) {
         this.type = type;
-        this.message = new TextHelper(message);
+        this.message = TextHelper.wrap(message);
     }
 
     @Override

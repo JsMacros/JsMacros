@@ -200,7 +200,7 @@ public class FJavaUtils extends BaseLibrary {
         } else if (raw instanceof Team) {
             return new TeamHelper(((Team) raw));
         } else if (raw instanceof Text) {
-            return new TextHelper(((Text) raw));
+            return TextHelper.wrap(((Text) raw));
         } else if (raw instanceof Formatting) {
             return new FormattingHelper(((Formatting) raw));
         }

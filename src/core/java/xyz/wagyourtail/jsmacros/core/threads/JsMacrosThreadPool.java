@@ -73,7 +73,7 @@ public class JsMacrosThreadPool {
         return t;
     }
 
-    public class PoolThread extends Thread {
+    public static class PoolThread extends Thread {
         private Runnable task;
 
         public PoolThread() {
@@ -99,7 +99,6 @@ public class JsMacrosThreadPool {
                 }
                 task.run();
             } catch (Throwable ignored) {
-                interrupted();
             }
         }
     }

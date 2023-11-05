@@ -466,7 +466,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.5
      */
-    public BlockDataHelper rayTraceBlock(int x1, int y1, int z1, int x2, int y2, int z2, boolean fluid) {
+    public BlockDataHelper rayTraceBlock(double x1, double y1, double z1, double x2, double y2, double z2, boolean fluid) {
         BlockHitResult result = mc.world.raycast(new RaycastContext(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), RaycastContext.ShapeType.COLLIDER, fluid ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE, mc.player));
         if (result.getType() != BlockHitResult.Type.MISS) {
             return new BlockDataHelper(mc.world.getBlockState(result.getBlockPos()), mc.world.getBlockEntity(result.getBlockPos()), result.getBlockPos());
@@ -486,7 +486,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.8.3
      */
-    public EntityHelper<?> rayTraceEntity(int x1, int y1, int z1, int x2, int y2, int z2) {
+    public EntityHelper<?> rayTraceEntity(double x1, double y1, double z1, double x2, double y2, double z2) {
         TargetPredicate target = TargetPredicate.createNonAttackable();
         target.setPredicate((e) -> e.getBoundingBox().raycast(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2)).isPresent());
         List<LivingEntity> entities = (List) StreamSupport.stream(mc.world.getEntities().spliterator(), false).filter(e -> e instanceof LivingEntity).collect(Collectors.toList());
@@ -516,6 +516,8 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
+     * ticks processed since world was started.
+     *
      * @return the current world time.
      * @since 1.1.5
      */
@@ -525,7 +527,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * This is supposed to be time of day, but it appears to be the same as {@link FWorld#getTime()} to me...
+     * icks passed since world was started INCLUDING those skipped when nights were cut short with sleeping.
      *
      * @return the current world time of day.
      * @since 1.1.5
@@ -811,7 +813,7 @@ public class FWorld extends BaseLibrary {
     public TextHelper getTabListHeader() {
         Text header = ((IPlayerListHud) mc.inGameHud.getPlayerListHud()).jsmacros_getHeader();
         if (header != null) {
-            return new TextHelper(header);
+            return TextHelper.wrap(header);
         }
         return null;
     }
@@ -823,7 +825,7 @@ public class FWorld extends BaseLibrary {
     public TextHelper getTabListFooter() {
         Text footer = ((IPlayerListHud) mc.inGameHud.getPlayerListHud()).jsmacros_getFooter();
         if (footer != null) {
-            return new TextHelper(footer);
+            return TextHelper.wrap(footer);
         }
         return null;
     }

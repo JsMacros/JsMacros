@@ -21,6 +21,14 @@ public class TextHelper extends BaseHelper<Text> {
         super(t);
     }
 
+    public static TextHelper wrap(Text t) {
+        if (t != null) {
+            return new TextHelper(t);
+        } else {
+            return null;
+        }
+    }
+
     /**
      * replace the text in this class with JSON data.
      *
@@ -78,7 +86,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @since 1.8.4
      */
     public TextHelper withoutFormatting() {
-        return new TextHelper(Text.literal(getStringStripFormatting()));
+        return TextHelper.wrap(Text.literal(getStringStripFormatting()));
     }
 
     /**
