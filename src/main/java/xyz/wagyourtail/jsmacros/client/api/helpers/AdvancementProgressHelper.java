@@ -41,10 +41,10 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @return a map of all criteria and their completion date.
      * @since 1.8.4
      */
-    public Map<String, Date> getCriteria() {
+    public Map<String, Long> getCriteria() {
         return ((MixinAdvancementProgress) base).getCriteriaProgresses().entrySet().stream().filter(e -> e.getValue().getObtainedDate() != null).collect(Collectors.toMap(
                 Map.Entry::getKey,
-                criterionProgressEntry -> criterionProgressEntry.getValue().getObtainedDate()
+                criterionProgressEntry -> criterionProgressEntry.getValue().getObtainedDate().toEpochMilli()
         ));
     }
 
@@ -53,7 +53,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @since 1.8.4
      */
     public String[][] getRequirements() {
-        return ((MixinAdvancementProgress) base).getRequirements();
+        return ((MixinAdvancementProgress) base).getRequirements().requirements();
     }
 
     /**
@@ -68,8 +68,8 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @return the fraction of finished requirements to total requirements.
      * @since 1.8.4
      */
-    public String getFraction() {
-        return base.getProgressBarFraction();
+    public TextHelper getFraction() {
+        return TextHelper.wrap(base.getProgressBarFraction());
     }
 
     /**
@@ -81,7 +81,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
     }
 
     /**
-     * @return the amount of missing criteria.
+     * @return the amount/values of missing criteria.
      * @since 1.8.4
      */
     public String[] getUnobtainedCriteria() {
@@ -100,8 +100,8 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @return the earliest completion date of all criteria.
      * @since 1.8.4
      */
-    public Date getEarliestProgressObtainDate() {
-        return base.getEarliestProgressObtainDate();
+    public long getEarliestProgressObtainDate() {
+        return base.getEarliestProgressObtainDate().toEpochMilli();
     }
 
     /**
@@ -110,9 +110,9 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * yet.
      * @since 1.8.4
      */
-    public Date getCriterionProgress(String criteria) {
+    public long getCriterionProgress(String criteria) {
         CriterionProgress progress = base.getCriterionProgress(criteria);
-        return progress == null ? null : progress.getObtainedDate();
+        return progress == null ? -1 : progress.getObtainedDate().toEpochMilli();
     }
 
     /**

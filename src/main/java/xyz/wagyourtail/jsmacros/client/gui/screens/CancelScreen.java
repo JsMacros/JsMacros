@@ -87,9 +87,9 @@ public class CancelScreen extends BaseScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        s.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
-        return super.mouseScrolled(mouseX, mouseY, amount);
+    public boolean mouseScrolled(double mouseX, double mouseY, double horiz, double vert) {
+        s.mouseDragged(mouseX, mouseY, 0, 0, -vert * 2);
+        return super.mouseScrolled(mouseX, mouseY, horiz, vert);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class CancelScreen extends BaseScreen {
         if (drawContext == null) {
             return;
         }
-        this.renderBackground(drawContext);
+        this.renderBackground(drawContext, mouseX, mouseY, delta);
         List<BaseScriptContext<?>> tl = new ArrayList<>(Core.getInstance().getContexts());
 
         for (RunningContextContainer r : ImmutableList.copyOf(this.running)) {

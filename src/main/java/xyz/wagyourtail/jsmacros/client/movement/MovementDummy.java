@@ -90,7 +90,7 @@ public class MovementDummy extends LivingEntity {
         this.setVelocity(velX, velY, velZ);
 
         /** Sneaking start **/
-        if (this.isSneaking() && this.wouldPoseNotCollide(EntityPose.CROUCHING)) {
+        if (this.isSneaking() && this.canChangeIntoPose(EntityPose.CROUCHING)) {
             // Yeah this looks dumb, but that is the way minecraft does it
             currentInput.movementSideways = (float) ((double) currentInput.movementSideways * 0.3D);
             currentInput.movementForward = (float) ((double) currentInput.movementForward * 0.3D);
@@ -193,4 +193,7 @@ public class MovementDummy extends LivingEntity {
         return new MovementDummy(this);
     }
 
+    protected boolean canChangeIntoPose(EntityPose pose) {
+        return this.getWorld().isSpaceEmpty(this, this.getDimensions(pose).getBoxAt(this.getPos()).contract(1.0E-7));
+    }
 }

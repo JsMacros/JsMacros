@@ -6,6 +6,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementManager;
 import net.minecraft.advancement.AdvancementProgress;
+import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -29,6 +30,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
@@ -181,8 +183,8 @@ public class FJavaUtils extends BaseLibrary {
             return new PlayerAbilitiesHelper(((PlayerAbilities) raw));
         } else if (raw instanceof PlayerListEntry) {
             return new PlayerListEntryHelper(((PlayerListEntry) raw));
-        } else if (raw instanceof Recipe<?>) {
-            return new RecipeHelper(((Recipe<?>) raw), -1);
+        } else if (raw instanceof RecipeEntry<?>) {
+            return new RecipeHelper(((RecipeEntry<?>) raw), -1);
         } else if (raw instanceof ScoreboardObjective) {
             return new ScoreboardObjectiveHelper(((ScoreboardObjective) raw));
         } else if (raw instanceof Scoreboard) {
@@ -205,8 +207,8 @@ public class FJavaUtils extends BaseLibrary {
             return new FormattingHelper(((Formatting) raw));
         }
 
-        if (raw instanceof Advancement) {
-            return new AdvancementHelper(((Advancement) raw));
+        if (raw instanceof PlacedAdvancement) {
+            return new AdvancementHelper(((PlacedAdvancement) raw));
         } else if (raw instanceof AdvancementManager) {
             return new AdvancementManagerHelper(((AdvancementManager) raw));
         } else if (raw instanceof AdvancementProgress) {

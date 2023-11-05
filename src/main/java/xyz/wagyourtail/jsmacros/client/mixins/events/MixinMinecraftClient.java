@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.util.Session;
+import net.minecraft.client.session.Session;
 import net.minecraft.client.world.ClientWorld;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
@@ -50,17 +50,18 @@ public abstract class MixinMinecraftClient {
     }
 
     @Unique
-    private Screen prevScreen;
+    private Screen jsmacros$prevScreen;
 
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;currentScreen:Lnet/minecraft/client/gui/screen/Screen;", opcode = Opcodes.PUTFIELD), method = "setScreen")
     public void onOpenScreen(Screen screen, CallbackInfo info) {
         if (screen != currentScreen) {
+            assert interactionManager != null;
             if (screen instanceof AbstractInventoryScreen && interactionManager.hasCreativeInventory()) {
                 if (!(screen instanceof CreativeInventoryScreen)) {
-                    prevScreen = currentScreen;
+                    jsmacros$prevScreen = currentScreen;
                 }
             } else {
-                prevScreen = currentScreen;
+                jsmacros$prevScreen = currentScreen;
             }
             new EventOpenScreen(screen).trigger();
         }
@@ -69,16 +70,17 @@ public abstract class MixinMinecraftClient {
     @Inject(at = @At("TAIL"), method = "setScreen")
     public void afterOpenScreen(Screen screen, CallbackInfo info) {
         if (screen instanceof HandledScreen<?>) {
+            assert interactionManager != null;
             if (interactionManager.hasCreativeInventory() && !(screen instanceof CreativeInventoryScreen)) {
                 return;
             }
             EventOpenContainer event = new EventOpenContainer(((HandledScreen<?>) screen));
             event.trigger();
             if (event.isCanceled()) {
-                setScreen(prevScreen);
+                setScreen(jsmacros$prevScreen);
             }
         }
-        prevScreen = null;
+        jsmacros$prevScreen = null;
     }
 
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;integratedServerRunning:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V")

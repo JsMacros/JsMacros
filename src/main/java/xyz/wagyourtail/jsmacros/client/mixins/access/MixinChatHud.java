@@ -6,6 +6,7 @@ import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.text.Text;
+import net.minecraft.util.collection.ArrayListDeque;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,19 +32,9 @@ public abstract class MixinChatHud implements IChatHud {
 
 //    @Shadow protected abstract void removeMessage(int messageId);
 
-    @Mutable
-    @Shadow
-    @Final
-    private List<String> messageHistory;
-
     @Shadow
     @Final
     private MinecraftClient client;
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    public void onInit(MinecraftClient client, CallbackInfo ci) {
-        messageHistory = Collections.synchronizedList(messageHistory);
-    }
 
     @Override
     public void jsmacros_addMessageBypass(Text message) {
@@ -61,18 +52,18 @@ public abstract class MixinChatHud implements IChatHud {
     }
 
     @Unique
-    ThreadLocal<Integer> positionOverride = ThreadLocal.withInitial(() -> 0);
+    ThreadLocal<Integer> jsmacros$positionOverride = ThreadLocal.withInitial(() -> 0);
 
     @Override
     public void jsmacros_addMessageAtIndexBypass(Text message, int index, int time) {
-        positionOverride.set(index);
+        jsmacros$positionOverride.set(index);
         addMessage(message, null, time, MessageIndicator.system(), false);
-        positionOverride.set(0);
+        jsmacros$positionOverride.set(0);
     }
 
     @ModifyArg(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V", remap = false))
     public int overrideMessagePos(int pos) {
-        return positionOverride.get();
+        return jsmacros$positionOverride.get();
     }
 
     @Override

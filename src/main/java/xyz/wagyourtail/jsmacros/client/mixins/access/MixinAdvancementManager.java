@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementManager;
+import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -17,9 +18,9 @@ import java.util.Set;
 public interface MixinAdvancementManager {
 
     @Accessor
-    Map<Identifier, Advancement> getAdvancements();
+    Map<Identifier, PlacedAdvancement> getAdvancements();
 
     @Accessor
-    Set<Advancement> getDependents();
+    Set<PlacedAdvancement> getDependents();
 
 }
