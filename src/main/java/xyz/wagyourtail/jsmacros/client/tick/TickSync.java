@@ -43,7 +43,13 @@ public class TickSync {
         }
     }
 
-    public record TickSyncInt(int tick) implements Comparable<TickSyncInt> {
+    public static class TickSyncInt implements Comparable<TickSyncInt> {
+        public final int tick;
+
+        public TickSyncInt(int tick) {
+            this.tick = tick;
+        }
+
         @Override
         public int compareTo(TickSyncInt o) {
             return Integer.compare(tick, o.tick);
