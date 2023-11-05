@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -11,7 +11,6 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -20,9 +19,9 @@ import java.util.stream.StreamSupport;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class AdvancementHelper extends BaseHelper<Advancement> {
+public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
 
-    public AdvancementHelper(Advancement base) {
+    public AdvancementHelper(PlacedAdvancement base) {
         super(base);
     }
 
@@ -47,7 +46,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public String[][] getRequirements() {
-        return base.getRequirements();
+        return base.getAdvancement().requirements().requirements();
     }
 
     /**
@@ -55,7 +54,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public int getRequirementCount() {
-        return base.getRequirementCount();
+        return base.getAdvancement().requirements().getLength();
     }
 
     /**
@@ -64,15 +63,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      */
     @DocletReplaceReturn("AdvancementId")
     public String getId() {
-        return base.getId().toString();
-    }
-
-    /**
-     * @return a map of all criteria and their criterion of this advancement.
-     * @since 1.8.4
-     */
-    public Map<String, String> getCriteria() {
-        return base.getCriteria().entrySet().stream().filter(e -> e.getValue().getConditions() != null).collect(Collectors.toMap(Map.Entry::getKey, advancementCriterionEntry -> advancementCriterionEntry.getValue().getConditions().getId().toString()));
+        return base.getAdvancementEntry().id().toString();
     }
 
     /**
@@ -80,7 +71,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public int getExperience() {
-        return ((MixinAdvancementRewards) base.getRewards()).getExperience();
+        return ((MixinAdvancementRewards) base.getAdvancement().rewards()).getExperience();
     }
 
     /**
@@ -88,7 +79,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @since 1.8.4
      */
     public String[] getLoot() {
-        return Arrays.stream(((MixinAdvancementRewards) base.getRewards()).getLoot()).map(Identifier::toString).toArray(String[]::new);
+        return Arrays.stream(((MixinAdvancementRewards) base.getAdvancement().rewards()).getLoot()).map(Identifier::toString).toArray(String[]::new);
     }
 
     /**
@@ -97,7 +88,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      */
     @DocletReplaceReturn("JavaArray<RecipeId>")
     public String[] getRecipes() {
-        return (String[]) Arrays.stream(base.getRewards().getRecipes()).map(Identifier::toString).toArray();
+        return (String[]) Arrays.stream(base.getAdvancement().rewards().getRecipes()).map(Identifier::toString).toArray();
     }
 
     /**
@@ -107,7 +98,15 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
     public AdvancementProgressHelper getProgress() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
-        return new AdvancementProgressHelper(((MixinClientAdvancementManager) player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base));
+        return new AdvancementProgressHelper(((MixinClientAdvancementManager) player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base.getAdvancementEntry()));
+    }
+
+    /**
+     * @since 1.9.0
+     * @return the json string of this advancement.
+     */
+    public String toJson() {
+        return base.getAdvancement().toJson().toString();
     }
 
     @Override

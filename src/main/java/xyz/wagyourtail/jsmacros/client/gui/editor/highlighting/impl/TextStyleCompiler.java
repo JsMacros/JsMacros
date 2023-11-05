@@ -9,6 +9,7 @@ import net.minecraft.text.TextColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -65,8 +66,7 @@ public class TextStyleCompiler extends AbsVisitor {
         return result;
     }
 
-    @Nullable
-    protected TextColor getColorForToken(@Nullable String name) {
+    protected TextColor getColorForToken(String name) {
         if (!themeData.containsKey(name)) {
             return null;
         }

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
     }
 
     @Override
-    public void setFocused(@Nullable Element focused) {
+    public void setFocused(Element focused) {
         parent.setFocused(focused);
     }
 

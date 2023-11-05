@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @author Etheradon
  * @since 1.8.4
  */
-@Mixin(targets = "net.minecraft.network.NetworkState$PacketHandler")
+@Mixin(targets = "net.minecraft.network.NetworkState$InternalPacketHandler")
 public class MixinPacketHandler<T extends PacketListener> {
 
     @Inject(method = "register", at = @At("HEAD"))

@@ -653,17 +653,17 @@ public class EditorScreen extends BaseScreen {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horiz, double vert) {
         if (overlay == null && scrollbar != null) {
-            scrollbar.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
+            scrollbar.mouseDragged(mouseX, mouseY, 0, 0, -vert * 2);
         }
-        return super.mouseScrolled(mouseX, mouseY, amount);
+        return super.mouseScrolled(mouseX, mouseY, horiz, vert);
     }
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         assert client != null;
-        renderBackground(drawContext);
+        renderBackground(drawContext, mouseX, mouseY, delta);
 
         drawContext.drawTextWithShadow(textRenderer, fileName, 2, 2, 0xFFFFFF);
 

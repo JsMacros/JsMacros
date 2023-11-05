@@ -30,11 +30,11 @@ public abstract class MixinLivingEntity extends Entity {
     public abstract float getMaxHealth();
 
     @Unique
-    private float lastHealth;
+    private float jsmacros$lastHealth;
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void onInit(CallbackInfo ci) {
-        lastHealth = getMaxHealth();
+        jsmacros$lastHealth = getMaxHealth();
     }
 
     @Inject(at = @At("HEAD"), method = "setHealth")
@@ -44,7 +44,7 @@ public abstract class MixinLivingEntity extends Entity {
             return;
         }
 
-        float difference = lastHealth - health;
+        float difference = jsmacros$lastHealth - health;
 
         if (difference > 0) {
             if ((Object) this instanceof ClientPlayerEntity) {
@@ -62,7 +62,7 @@ public abstract class MixinLivingEntity extends Entity {
             }
             new EventEntityHealed((Entity) (Object) this, health, difference).trigger();
         }
-        lastHealth = health;
+        jsmacros$lastHealth = health;
     }
 
 }

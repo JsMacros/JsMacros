@@ -188,74 +188,6 @@ public interface IScreen extends IDraw2D<IScreen> {
     SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback);
 
     /**
-     * @param x             the x position of the textured button
-     * @param y             the y position of the textured button
-     * @param width         the width of the textured button
-     * @param height        the height of the textured button
-     * @param textureStartX the x position in the texture to start drawing from
-     * @param textureStartY the y position in the texture to start drawing from
-     * @param hoverOffset   the offset to add to the textureStartY when the button is hovered
-     * @param texture       the identifier of the texture to use
-     * @param textureWidth  the width of the texture
-     * @param textureHeight the height of the texture
-     * @param callback      calls your method as a
-     *                      {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
-     * @return a {@link ButtonWidgetHelper} for the given input.
-     * @since 1.8.4
-     */
-    ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
-
-    /**
-     * @param x             the x position of the textured button
-     * @param y             the y position of the textured button
-     * @param width         the width of the textured button
-     * @param height        the height of the textured button
-     * @param zIndex        the z-index of the textured button
-     * @param textureStartX the x position in the texture to start drawing from
-     * @param textureStartY the y position in the texture to start drawing from
-     * @param hoverOffset   the offset to add to the textureStartY when the button is hovered
-     * @param texture       the identifier of the texture to use
-     * @param textureWidth  the width of the texture
-     * @param textureHeight the height of the texture
-     * @param callback      calls your method as a
-     *                      {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
-     * @return a {@link ButtonWidgetHelper} for the given input.
-     * @since 1.8.4
-     */
-    ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int zIndex, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
-
-    /**
-     * @param x             the x position of the textured button
-     * @param y             the y position of the textured button
-     * @param width         the width of the textured button
-     * @param height        the height of the textured button
-     * @param textureStartX the x position in the texture to start drawing from
-     * @param textureStartY the y position in the texture to start drawing from
-     * @param texture       the identifier of the texture to use
-     * @param callback      calls your method as a
-     *                      {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
-     * @return a {@link ButtonWidgetHelper} for the given input.
-     * @since 1.8.4
-     */
-    ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, String texture, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
-
-    /**
-     * @param x             the x position of the textured button
-     * @param y             the y position of the textured button
-     * @param width         the width of the textured button
-     * @param height        the height of the textured button
-     * @param zIndex        the z-index of the textured button
-     * @param textureStartX the x position in the texture to start drawing from
-     * @param textureStartY the y position in the texture to start drawing from
-     * @param texture       the identifier of the texture to use
-     * @param callback      calls your method as a
-     *                      {@link Consumer}&lt;{@link ButtonWidgetHelper}&gt;
-     * @return a {@link ButtonWidgetHelper} for the given input.
-     * @since 1.8.4
-     */
-    ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int zIndex, int textureStartX, int textureStartY, String texture, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback);
-
-    /**
      * @param x        the x position of the lock button
      * @param y        the y position of the lock button
      * @param callback calls your method as a
@@ -408,7 +340,7 @@ public interface IScreen extends IDraw2D<IScreen> {
      * @return
      * @since 1.2.7
      */
-    IScreen setOnScroll(MethodWrapper<Pos2D, Double, Object, ?> onScroll);
+    IScreen setOnScroll(MethodWrapper<Pos2D, Pos2D, Object, ?> onScroll);
 
     /**
      * @param onKeyPressed calls your method as a {@link BiConsumer}&lt;{@link Integer}, {@link Integer}&gt;
