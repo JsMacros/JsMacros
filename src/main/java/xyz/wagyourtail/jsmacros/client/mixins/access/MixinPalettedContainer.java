@@ -18,20 +18,19 @@ public class MixinPalettedContainer<T> implements IPalettedContainer<T> {
     @Override
     public IPalettedContainerData<T> jsmacros_getData() {
         if (dataField != null) {
-            return (IPalettedContainerData<T>) jsmacros$getField(dataField);
+            return (IPalettedContainerData<T>) getField(dataField);
         }
 
         for (Field f : PalettedContainer.class.getDeclaredFields()) {
             if (IPalettedContainerData.class.isAssignableFrom(f.getType())) {
                 dataField = f;
-                return (IPalettedContainerData<T>) jsmacros$getField(f);
+                return (IPalettedContainerData<T>) getField(f);
             }
         }
         throw new RuntimeException(Arrays.toString(PalettedContainer.class.getDeclaredFields()));
     }
 
-    @Unique
-    private Object jsmacros$getField(Field f) {
+    private Object getField(Field f) {
         try {
             return f.get(this);
         } catch (IllegalAccessException e) {

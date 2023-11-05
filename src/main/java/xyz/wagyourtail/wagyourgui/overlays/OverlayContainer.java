@@ -79,7 +79,7 @@ public abstract class OverlayContainer extends MultiElementContainer<IOverlayPar
     }
 
     @Override
-    public void setFocused(Element focused) {
+    public void setFocused(@Nullable Element focused) {
         parent.setFocused(focused);
     }
 

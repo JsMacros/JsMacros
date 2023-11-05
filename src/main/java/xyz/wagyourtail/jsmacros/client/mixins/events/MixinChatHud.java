@@ -19,9 +19,9 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 @Mixin(ChatHud.class)
 class MixinChatHud {
     @Unique
-    private EventRecvMessage jsmacros$eventRecvMessage;
+    private EventRecvMessage eventRecvMessage;
     @Unique
-    private Text jsmacros$originalMessage;
+    private Text originalMessage;
 
     @Inject(
             method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V",
@@ -29,16 +29,16 @@ class MixinChatHud {
             cancellable = true
     )
     private void onAddMessage1(Text message, MessageSignatureData signature, MessageIndicator indicator, CallbackInfo ci) {
-        jsmacros$originalMessage = message;
-        jsmacros$eventRecvMessage = new EventRecvMessage(message, signature, indicator);
-        jsmacros$eventRecvMessage.trigger();
-        if (jsmacros$eventRecvMessage.isCanceled()) {
+        originalMessage = message;
+        eventRecvMessage = new EventRecvMessage(message, signature, indicator);
+        eventRecvMessage.trigger();
+        if (eventRecvMessage.isCanceled()) {
             ci.cancel();
         }
     }
 
     @Unique
-    private boolean jsmacros$modifiedEventRecieve;
+    private boolean modifiedEventRecieve;
 
     @ModifyVariable(
             method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V",
@@ -46,16 +46,16 @@ class MixinChatHud {
             argsOnly = true
     )
     private Text modifyChatMessage(Text text) {
-        jsmacros$modifiedEventRecieve = false;
+        modifiedEventRecieve = false;
         if (text == null) {
             return null;
         }
-        final TextHelper result = jsmacros$eventRecvMessage.text;
+        final TextHelper result = eventRecvMessage.text;
         if (result == null) {
             return null;
         }
         if (!result.getRaw().equals(text)) {
-            jsmacros$modifiedEventRecieve = true;
+            modifiedEventRecieve = true;
             return result.getRaw();
         } else {
             return text;
@@ -71,12 +71,12 @@ class MixinChatHud {
             argsOnly = true
     )
     private MessageIndicator modifyChatMessageSignature(MessageIndicator signature) {
-        if (jsmacros$modifiedEventRecieve) {
+        if (modifiedEventRecieve) {
             MutableText text2 = Text.empty().append(MODIFIED_TEXT).append(ScreenTexts.LINE_BREAK);
             if (signature != null && signature.text() != null) {
-                text2.append(jsmacros$originalMessage).append(ScreenTexts.LINE_BREAK).append(signature.text());
+                text2.append(originalMessage).append(ScreenTexts.LINE_BREAK).append(signature.text());
             } else {
-                text2.append(jsmacros$originalMessage);
+                text2.append(originalMessage);
             }
             return new MessageIndicator(15386724, MessageIndicator.Icon.CHAT_MODIFIED, text2, "Modified");
         } else {

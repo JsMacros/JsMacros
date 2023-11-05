@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.registry.Registries;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -19,10 +18,10 @@ import java.util.stream.Collectors;
  * @since 1.3.1
  */
 @SuppressWarnings("unused")
-public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
+public class RecipeHelper extends BaseHelper<Recipe<?>> {
     protected int syncId;
 
-    public RecipeHelper(RecipeEntry<?> base, int syncId) {
+    public RecipeHelper(Recipe<?> base, int syncId) {
         super(base);
         this.syncId = syncId;
     }
@@ -32,7 +31,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.3.1
      */
     public String getId() {
-        return base.id().toString();
+        return base.getId().toString();
     }
 
     /**
@@ -43,7 +42,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      */
     public List<List<ItemStackHelper>> getIngredients() {
         List<List<ItemStackHelper>> ingredients = new ArrayList<>();
-        for (Ingredient in : base.value().getIngredients()) {
+        for (Ingredient in : base.getIngredients()) {
             ingredients.add(Arrays.stream(in.getMatchingStacks()).map(ItemStackHelper::new).collect(Collectors.toList()));
         }
         return ingredients;
@@ -54,7 +53,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.3.1
      */
     public ItemStackHelper getOutput() {
-        return new ItemStackHelper(base.value().getResult(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager()));
+        return new ItemStackHelper(base.getOutput(MinecraftClient.getInstance().getNetworkHandler().getRegistryManager()));
     }
 
     /**
@@ -78,7 +77,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.8.4
      */
     public String getGroup() {
-        return base.value().getGroup();
+        return base.getGroup();
     }
 
     /**
@@ -89,7 +88,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.8.4
      */
     public boolean hasRecipeRemainders() {
-        return base.value().getIngredients().stream().anyMatch(ingredient -> ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder());
+        return base.getIngredients().stream().anyMatch(ingredient -> ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder());
     }
 
     /**
@@ -97,7 +96,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.8.4
      */
     public List<List<ItemStackHelper>> getRecipeRemainders() {
-        return base.value().getIngredients().stream()
+        return base.getIngredients().stream()
                 .filter(ingredient -> ingredient.getMatchingStacks().length > 0 && ingredient.getMatchingStacks()[0].getItem().hasRecipeRemainder())
                 .map(ingredient -> Arrays.stream(ingredient.getMatchingStacks()).map(ItemStackHelper::new).collect(Collectors.toList()))
                 .collect(Collectors.toList());
@@ -108,7 +107,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @since 1.8.4
      */
     public String getType() {
-        return Registries.RECIPE_TYPE.getId(base.value().getType()).toString();
+        return Registries.RECIPE_TYPE.getId(base.getType()).toString();
     }
 
     /**
@@ -119,7 +118,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
     public boolean canCraft() {
         RecipeMatcher matcher = new RecipeMatcher();
         MinecraftClient.getInstance().player.getInventory().populateRecipeFinder(matcher);
-        return matcher.match(base.value(), null);
+        return matcher.match(base, null);
     }
 
     /**
@@ -144,7 +143,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
 
     @Override
     public String toString() {
-        return String.format("RecipeHelper:{\"id\": \"%s\"}", base.id().toString());
+        return String.format("RecipeHelper:{\"id\": \"%s\"}", base.getId().toString());
     }
 
 }

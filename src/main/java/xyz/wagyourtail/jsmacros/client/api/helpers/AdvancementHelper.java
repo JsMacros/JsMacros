@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
-import net.minecraft.advancement.PlacedAdvancement;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -11,6 +11,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -19,9 +20,9 @@ import java.util.stream.StreamSupport;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
+public class AdvancementHelper extends BaseHelper<Advancement> {
 
-    public AdvancementHelper(PlacedAdvancement base) {
+    public AdvancementHelper(Advancement base) {
         super(base);
     }
 
@@ -46,7 +47,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @since 1.8.4
      */
     public String[][] getRequirements() {
-        return base.getAdvancement().requirements().requirements();
+        return base.getRequirements();
     }
 
     /**
@@ -54,7 +55,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @since 1.8.4
      */
     public int getRequirementCount() {
-        return base.getAdvancement().requirements().getLength();
+        return base.getRequirementCount();
     }
 
     /**
@@ -63,7 +64,15 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      */
     @DocletReplaceReturn("AdvancementId")
     public String getId() {
-        return base.getAdvancementEntry().id().toString();
+        return base.getId().toString();
+    }
+
+    /**
+     * @return a map of all criteria and their criterion of this advancement.
+     * @since 1.8.4
+     */
+    public Map<String, String> getCriteria() {
+        return base.getCriteria().entrySet().stream().filter(e -> e.getValue().getConditions() != null).collect(Collectors.toMap(Map.Entry::getKey, advancementCriterionEntry -> advancementCriterionEntry.getValue().getConditions().getId().toString()));
     }
 
     /**
@@ -71,7 +80,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @since 1.8.4
      */
     public int getExperience() {
-        return ((MixinAdvancementRewards) base.getAdvancement().rewards()).getExperience();
+        return ((MixinAdvancementRewards) base.getRewards()).getExperience();
     }
 
     /**
@@ -79,7 +88,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @since 1.8.4
      */
     public String[] getLoot() {
-        return Arrays.stream(((MixinAdvancementRewards) base.getAdvancement().rewards()).getLoot()).map(Identifier::toString).toArray(String[]::new);
+        return Arrays.stream(((MixinAdvancementRewards) base.getRewards()).getLoot()).map(Identifier::toString).toArray(String[]::new);
     }
 
     /**
@@ -88,7 +97,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      */
     @DocletReplaceReturn("JavaArray<RecipeId>")
     public String[] getRecipes() {
-        return (String[]) Arrays.stream(base.getAdvancement().rewards().getRecipes()).map(Identifier::toString).toArray();
+        return (String[]) Arrays.stream(base.getRewards().getRecipes()).map(Identifier::toString).toArray();
     }
 
     /**
@@ -98,15 +107,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
     public AdvancementProgressHelper getProgress() {
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         assert player != null;
-        return new AdvancementProgressHelper(((MixinClientAdvancementManager) player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base.getAdvancementEntry()));
-    }
-
-    /**
-     * @since 1.9.0
-     * @return the json string of this advancement.
-     */
-    public String toJson() {
-        return base.getAdvancement().toJson().toString();
+        return new AdvancementProgressHelper(((MixinClientAdvancementManager) player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base));
     }
 
     @Override

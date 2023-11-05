@@ -213,7 +213,7 @@ public class FClient extends PerExecLibrary {
             } else {
                 mc.disconnect();
             }
-            ConnectScreen.connect(null, mc, new ServerAddress(ip, port), new ServerInfo("server", new ServerAddress(ip, port).toString(), ServerInfo.ServerType.OTHER), false);
+            ConnectScreen.connect(null, mc, new ServerAddress(ip, port), new ServerInfo("server", new ServerAddress(ip, port).toString(), false), false);
         });
     }
 
@@ -237,6 +237,7 @@ public class FClient extends PerExecLibrary {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
             boolean isInSingleplayer = mc.isInSingleplayer();
+            boolean isInRealm = mc.isConnectedToRealms();
             if (isWorld) {
                 // logic in death screen disconnect button
                 if (mc.world != null) {
@@ -247,12 +248,10 @@ public class FClient extends PerExecLibrary {
             }
             if (isInSingleplayer) {
                 mc.setScreen(new TitleScreen());
-            } else if (mc.getCurrentServerEntry() != null) {
-                if (mc.getCurrentServerEntry().isRealm()) {
-                    mc.setScreen(new RealmsMainScreen(new TitleScreen()));
-                } else {
-                    mc.setScreen(new MultiplayerScreen(new TitleScreen()));
-                }
+            } else if (isInRealm) {
+                mc.setScreen(new RealmsMainScreen(new TitleScreen()));
+            } else {
+                mc.setScreen(new MultiplayerScreen(new TitleScreen()));
             }
             try {
                 if (callback != null) {
@@ -323,7 +322,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.6.5
      */
     public ServerInfoHelper ping(String ip) throws UnknownHostException, InterruptedException {
-        ServerInfo info = new ServerInfo("", ip, ServerInfo.ServerType.OTHER);
+        ServerInfo info = new ServerInfo("", ip, false);
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("pinging from main thread is not supported!");
         }
@@ -341,7 +340,7 @@ public class FClient extends PerExecLibrary {
      */
     public void pingAsync(String ip, MethodWrapper<ServerInfoHelper, IOException, Object, ?> callback) {
         CompletableFuture.runAsync(() -> {
-            ServerInfo info = new ServerInfo("", ip, ServerInfo.ServerType.OTHER);
+            ServerInfo info = new ServerInfo("", ip, false);
             try {
                 TickBasedEvents.serverListPinger.add(info, () -> callback.accept(new ServerInfoHelper(info), null));
             } catch (IOException e) {

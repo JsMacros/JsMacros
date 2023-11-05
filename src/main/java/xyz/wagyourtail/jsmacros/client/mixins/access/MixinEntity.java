@@ -12,39 +12,39 @@ import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 public abstract class MixinEntity implements IMixinEntity {
 
     @Unique
-    private int jsmacros$glowingColor = -1;
+    private int glowingColor = -1;
 
     @Unique
-    private int jsmacros$forceGlowing = 1;
+    private int forceGlowing = 1;
 
     @Override
     public void jsmacros_setGlowingColor(int glowingColor) {
-        this.jsmacros$glowingColor = glowingColor & 0xFFFFFF;
+        this.glowingColor = glowingColor & 0xFFFFFF;
     }
 
     @Override
     public void jsmacros_resetColor() {
-        jsmacros$glowingColor = -1;
+        glowingColor = -1;
     }
 
     @Inject(method = "getTeamColorValue()I", cancellable = true, at = @At("HEAD"))
     public void getTeamColorValue(CallbackInfoReturnable<Integer> ci) {
-        if (jsmacros$glowingColor != -1) {
-            ci.setReturnValue(jsmacros$glowingColor);
+        if (glowingColor != -1) {
+            ci.setReturnValue(glowingColor);
             ci.cancel();
         }
     }
 
     @Override
     public void jsmacros_setForceGlowing(int glowing) {
-        jsmacros$forceGlowing = glowing;
+        forceGlowing = glowing;
     }
 
     @Inject(method = "isGlowing", at = @At("RETURN"), cancellable = true)
     public void isGlowing(CallbackInfoReturnable<Boolean> cir) {
-        if (jsmacros$forceGlowing == 0) {
+        if (forceGlowing == 0) {
             cir.setReturnValue(false);
-        } else if (jsmacros$forceGlowing == 2) {
+        } else if (forceGlowing == 2) {
             cir.setReturnValue(true);
         }
     }

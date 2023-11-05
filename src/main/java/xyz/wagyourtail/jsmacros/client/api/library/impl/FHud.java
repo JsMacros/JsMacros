@@ -59,7 +59,9 @@ public class FHud extends BaseLibrary {
      */
     public void openScreen(IScreen s) {
         net.minecraft.client.gui.screen.Screen screen = (net.minecraft.client.gui.screen.Screen) s;
-        mc.execute(() -> mc.setScreen(screen));
+        mc.execute(() -> {
+            mc.setScreen(screen);
+        });
     }
 
     /**

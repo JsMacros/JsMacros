@@ -9,7 +9,7 @@ public interface IOverlayParent extends IContainerParent {
 
     void closeOverlay(OverlayContainer overlay);
 
-    void setFocused(Element focused);
+    void setFocused(@Nullable Element focused);
 
     OverlayContainer getChildOverlay();
 

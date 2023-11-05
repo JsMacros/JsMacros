@@ -49,7 +49,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Unique
     private MethodWrapper<Pos2D, Integer, Object, ?> onMouseUp;
     @Unique
-    private MethodWrapper<Pos2D, Pos2D, Object, ?> onScroll;
+    private MethodWrapper<Pos2D, Double, Object, ?> onScroll;
     @Unique
     private MethodWrapper<Integer, Integer, Object, ?> onKeyPressed;
     @Unique
@@ -643,6 +643,41 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
+    public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, String texture, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
+        return addTexturedButton(x, y, width, height, 0, textureStartX, textureStartY, height, texture, 256, 256, callback);
+    }
+
+    @Override
+    public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int zIndex, int textureStartX, int textureStartY, String texture, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
+        return addTexturedButton(x, y, width, height, zIndex, textureStartX, textureStartY, height, texture, 256, 256, callback);
+    }
+
+    @Override
+    public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
+        return addTexturedButton(x, y, width, height, 0, textureStartX, textureStartY, hoverOffset, texture, textureWidth, textureHeight, callback);
+    }
+
+    @Override
+    public ButtonWidgetHelper<TexturedButtonWidget> addTexturedButton(int x, int y, int width, int height, int zIndex, int textureStartX, int textureStartY, int hoverOffset, String texture, int textureWidth, int textureHeight, MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> callback) {
+        AtomicReference<ButtonWidgetHelper<TexturedButtonWidget>> ref = new AtomicReference<>(null);
+
+        TexturedButtonWidget texturedButton = new TexturedButtonWidget(x, y, width, height, textureStartX, textureStartY, hoverOffset, new Identifier(texture), textureWidth, textureHeight, (btn) -> {
+            try {
+                callback.accept(ref.get(), this);
+            } catch (Exception e) {
+                Core.getInstance().profile.logError(e);
+            }
+        });
+
+        ref.set(new ButtonWidgetHelper<>(texturedButton, zIndex));
+        synchronized (elements) {
+            elements.add(ref.get());
+            children.add(texturedButton);
+        }
+        return ref.get();
+    }
+
+    @Override
     public LockButtonWidgetHelper addLockButton(int x, int y, MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> callback) {
         return addLockButton(x, y, 0, callback);
     }
@@ -780,7 +815,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public IScreen setOnScroll(MethodWrapper<Pos2D, Pos2D, Object, ?> onScroll) {
+    public IScreen setOnScroll(MethodWrapper<Pos2D, Double, Object, ?> onScroll) {
         this.onScroll = onScroll;
         return this;
     }
@@ -965,10 +1000,10 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public void jsmacros_mouseScrolled(double mouseX, double mouseY, double horiz, double vert) {
+    public void jsmacros_mouseScrolled(double mouseX, double mouseY, double amount) {
         if (onScroll != null) {
             try {
-                onScroll.accept(new Pos2D(mouseX, mouseY), new Pos2D(horiz, vert));
+                onScroll.accept(new Pos2D(mouseX, mouseY), amount);
             } catch (Throwable e) {
                 Core.getInstance().profile.logError(e);
             }

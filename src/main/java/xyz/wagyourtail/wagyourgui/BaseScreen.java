@@ -135,11 +135,11 @@ public abstract class BaseScreen extends Screen implements IOverlayParent {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double horiz, double vert) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         if (overlay != null && overlay.scroll != null) {
-            overlay.scroll.mouseDragged(mouseX, mouseY, 0, 0, -vert * 2);
+            overlay.scroll.mouseDragged(mouseX, mouseY, 0, 0, -amount * 2);
         }
-        return super.mouseScrolled(mouseX, mouseY, horiz, vert);
+        return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
     @Override

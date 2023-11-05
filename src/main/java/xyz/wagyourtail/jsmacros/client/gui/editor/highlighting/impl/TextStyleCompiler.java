@@ -66,7 +66,8 @@ public class TextStyleCompiler extends AbsVisitor {
         return result;
     }
 
-    protected TextColor getColorForToken(String name) {
+    @Nullable
+    protected TextColor getColorForToken(@Nullable String name) {
         if (!themeData.containsKey(name)) {
             return null;
         }

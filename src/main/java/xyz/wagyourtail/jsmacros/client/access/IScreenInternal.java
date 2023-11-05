@@ -11,7 +11,7 @@ public interface IScreenInternal {
 
     void jsmacros_mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY);
 
-    void jsmacros_mouseScrolled(double mouseX, double mouseY, double horiz, double vert);
+    void jsmacros_mouseScrolled(double mouseX, double mouseY, double amount);
 
     void jsmacros_keyPressed(int keyCode, int scanCode, int modifiers);
 

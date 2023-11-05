@@ -25,7 +25,6 @@ public abstract class MixinChatScreen extends Screen {
             cir.setReturnValue(true);
         } else if (!event.message.equals(chatText)) {
             cir.setReturnValue(true);
-            assert this.client != null;
             assert this.client.player != null;
             if (event.message.startsWith("/")) {
                 this.client.player.networkHandler.sendChatCommand(event.message.substring(1));
