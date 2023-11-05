@@ -170,7 +170,7 @@ class MixinClientPlayNetworkHandler {
         } else {
             screen = new InventoryScreen(this.client.player);
         }
-        new EventSlotUpdate(screen, "HELD", -999, this.client.player.currentScreenHandler.getCursorStack(), packet.getStack()).trigger();
+        new EventSlotUpdate(screen, "HELD", -999, this.client.player.currentScreenHandler.getCursorStack(), packet.getItemStack()).trigger();
     }
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;setStack(ILnet/minecraft/item/ItemStack;)V"))
@@ -189,15 +189,15 @@ class MixinClientPlayNetworkHandler {
     public void onScreenSlotUpdate2(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci) {
         assert client.player != null;
         if (packet.getSyncId() == 0) {
-            new EventSlotUpdate(new InventoryScreen(this.client.player), "INVENTORY", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
+            new EventSlotUpdate(new InventoryScreen(this.client.player), "INVENTORY", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getItemStack()).trigger();
             return;
         } else if (this.client.currentScreen instanceof HandledScreen<?>) {
             if (packet.getSyncId() == ((HandledScreen<?>) this.client.currentScreen).getScreenHandler().syncId) {
-                new EventSlotUpdate((HandledScreen<?>) this.client.currentScreen, "CONTAINER", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
+                new EventSlotUpdate((HandledScreen<?>) this.client.currentScreen, "CONTAINER", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getItemStack()).trigger();
                 return;
             }
         }
-        new EventSlotUpdate(new InventoryScreen(this.client.player), "UNKNOWN", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
+        new EventSlotUpdate(new InventoryScreen(this.client.player), "UNKNOWN", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getItemStack()).trigger();
     }
 
     @Inject(method = "onInventory", at = @At("TAIL"))
