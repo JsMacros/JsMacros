@@ -193,11 +193,21 @@ public abstract class AbstractParser {
             if (!params.isEmpty()) {
                 VariableElement restParam = e.isVarArgs() ? params.get(params.size() - 1) : null;
                 for (VariableElement param : params) {
-                    if (restParam == param) s.append("...");
                     String name = param.getSimpleName().toString();
-                    if (tsReservedWords.contains(name)) s.append("_");
-                    s.append(name).append(": ").append(transformType(param, true));
-                    if (isNullable(param)) s.append(" | null");
+                    if (restParam == param) {
+                        s.append("...");
+                        if (tsReservedWords.contains(name)) s.append("_");
+                        s.append(name).append(": ").append("JavaVarArgs<").append(transformType(param, true));
+                        int sl2 = s.length() - 2;
+                        if (s.substring(sl2).equals("[]")) s.setLength(sl2);
+                        else System.out.println("varargs type is not array?? " + type.getSimpleName() + "." + e.getSimpleName());
+                        if (isNullable(param)) s.append(" | null");
+                        s.append(">");
+                    } else {
+                        if (tsReservedWords.contains(name)) s.append("_");
+                        s.append(name).append(": ").append(transformType(param, true));
+                        if (isNullable(param)) s.append(" | null");
+                    }
                     s.append(", ");
                 }
                 s.setLength(s.length() - 2);

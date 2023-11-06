@@ -222,17 +222,17 @@ declare namespace Packages {
                 getClasses(): JavaArray<Class<any>>;
                 getClassLoader(): ClassLoader;
                 getComponentType(): T extends JavaArray<infer C> ? Class<C> : null;
-                getConstructor(...parameterTypes: JavaClassArg[]): reflect.Constructor<T>;
+                getConstructor(...parameterTypes: JavaVarArgs<JavaClassArg>): reflect.Constructor<T>;
                 getConstructors(): JavaArray<reflect.Constructor<any>>;
                 getDeclaredAnnotation<A extends annotation.Annotation>(annotationClass: Class<A>): A?;
                 getDeclaredAnnotations(): JavaArray<annotation.Annotation>;
                 getDeclaredAnnotationsByType<A extends annotation.Annotation>(annotationClass: Class<A>): JavaArray<A>;
                 getDeclaredClasses(): JavaArray<Class<any>>;
-                getDeclaredConstructor(...parameterTypes: JavaClassArg[]): reflect.Constructor<T>;
+                getDeclaredConstructor(...parameterTypes: JavaVarArgs<JavaClassArg>): reflect.Constructor<T>;
                 getDeclaredConstructors(): JavaArray<reflect.Constructor<any>>;
                 getDeclaredField(name: string): reflect.Field;
                 getDeclaredFields(): JavaArray<reflect.Field>;
-                getDeclaredMethod(name: string, ...parameterTypes: JavaClassArg[]): reflect.Method;
+                getDeclaredMethod(name: string, ...parameterTypes: JavaVarArgs<JavaClassArg>): reflect.Method;
                 getDeclaredMethods(): JavaArray<reflect.Method>;
                 getDeclaringClass(): Class<any>;
                 getEnclosingClass(): Class<any>;
@@ -244,7 +244,7 @@ declare namespace Packages {
                 getGenericInterfaces(): JavaArray<reflect.Type>;
                 getGenericSuperclass(): reflect.Type;
                 getInterfaces(): JavaArray<Class<any>>;
-                getMethod(name: string, ...parameterTypes: JavaClassArg[]): reflect.Method;
+                getMethod(name: string, ...parameterTypes: JavaVarArgs<JavaClassArg>): reflect.Method;
                 getMethods(): JavaArray<reflect.Method>;
                 getModifiers(): number;
                 getModule(): Module;
@@ -427,7 +427,7 @@ declare namespace Packages {
                 /** @deprecated */ static prototype: undefined;
 
                 static copyOf<E>(coll: Collection<E>): JavaList<E>;
-                static of<E>(...elements: E[]): JavaList<E>;
+                static of<E>(...elements: JavaVarArgs<E>): JavaList<E>;
 
             }
             interface List<E> extends Collection<E>, lang.Iterable<E> {
@@ -461,7 +461,7 @@ declare namespace Packages {
 
                 static copyOf<K, V>(map: Map<K, V>): Map<K, V>;
                 static entry<K, V>(k: K, v: V): Map$Entry<K, V>;
-                static ofEntries<K, V>(...entries: Map$Entry<K, V>[]): Map<K, V>;
+                static ofEntries<K, V>(...entries: JavaVarArgs<Map$Entry<K, V>>): Map<K, V>;
                 static of<K, V>(k1: K, v1: V): Map<K, V>;
                 static of<K, V>(k1: K, v1: V, k2: K, v2: V): Map<K, V>;
                 static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V): Map<K, V>;
@@ -515,7 +515,7 @@ declare namespace Packages {
                 /** @deprecated */ static prototype: undefined;
 
                 static copyOf<T>(coll: JavaCollection<T>): Set<T>;
-                static of<T>(...elements: T[]): Set<T>;
+                static of<T>(...elements: JavaVarArgs<T>): Set<T>;
 
             }
             interface Set<E> extends Collection<E> {}
@@ -686,6 +686,7 @@ type float  = number & {};
 type double = number & {};
 
 type JavaClassArg<T = any> = JavaClass<T> | { readonly class: JavaClass<T> };
+type JavaVarArgs<T> = T[] | [T[]];
 
 type JavaObject                = Packages.java.lang.Object;
 type JavaClass<T = any>        = Packages.java.lang.Class<T>;
