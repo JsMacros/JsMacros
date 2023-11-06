@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.network.packet.Packet;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -16,10 +17,12 @@ import xyz.wagyourtail.jsmacros.core.library.impl.FReflection;
 public class EventSendPacket extends BaseEvent {
 
     private static final FReflection REFLECTION = new FReflection(null);
+    @Nullable
     public Packet<?> packet;
     @DocletReplaceReturn("PacketName")
     public final String type;
 
+    @SuppressWarnings("NullableProblems")
     public EventSendPacket(Packet<?> packet) {
         this.packet = packet;
         this.type = PacketByteBufferHelper.getPacketName(packet);
@@ -30,9 +33,11 @@ public class EventSendPacket extends BaseEvent {
      * arguments. It's recommended to use {@link #getPacketBuffer()} to modify the packet instead.
      *
      * @param args the arguments to pass to the packet's constructor
+     * @throws NullPointerException if this.packet is null
      * @since 1.8.4
      */
     public void replacePacket(Object... args) {
+        //noinspection DataFlowIssue
         packet = REFLECTION.newInstance(packet.getClass(), args);
     }
 

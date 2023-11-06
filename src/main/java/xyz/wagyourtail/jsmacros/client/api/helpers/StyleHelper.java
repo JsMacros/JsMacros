@@ -4,6 +4,7 @@ import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -38,6 +39,7 @@ public class StyleHelper extends BaseHelper<Style> {
      * @return the formatting of this style, or {@code null} if no formatting was found.
      * @since 1.8.4
      */
+    @Nullable
     public FormattingHelper getFormatting() {
         Formatting f = Formatting.byName(base.getColor().getName());
         return f == null ? null : new FormattingHelper(f);
@@ -71,6 +73,7 @@ public class StyleHelper extends BaseHelper<Style> {
      * @return the color name of this style or {@code null} if it has no color.
      * @since 1.8.4
      */
+    @Nullable
     public String getColorName() {
         return base.getColor() == null ? null : base.getColor().getName();
     }
@@ -103,7 +106,8 @@ public class StyleHelper extends BaseHelper<Style> {
         return base.isObfuscated();
     }
 
-    @DocletReplaceReturn("TextClickAction")
+    @DocletReplaceReturn("TextClickAction | 'custom' | null")
+    @Nullable
     public String getClickAction() {
         if (base.getClickEvent() == null) {
             return null;
@@ -114,10 +118,12 @@ public class StyleHelper extends BaseHelper<Style> {
         return base.getClickEvent().getAction().getName();
     }
 
+    @Nullable
     public String getClickValue() {
         return base.getClickEvent() == null ? null : base.getClickEvent().getValue();
     }
 
+    @Nullable
     public Runnable getCustomClickValue() {
         if (base.getClickEvent() == null) {
             return null;
@@ -128,11 +134,13 @@ public class StyleHelper extends BaseHelper<Style> {
         return null;
     }
 
-    @DocletReplaceReturn("TextHoverAction")
+    @DocletReplaceReturn("TextHoverAction | null")
+    @Nullable
     public String getHoverAction() {
         return base.getHoverEvent() == null ? null : base.getHoverEvent().getAction().getName();
     }
 
+    @Nullable
     public Object getHoverValue() {
         if (base.getHoverEvent() == null) {
             return null;

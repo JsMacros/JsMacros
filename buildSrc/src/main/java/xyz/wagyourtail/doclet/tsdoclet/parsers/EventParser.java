@@ -14,11 +14,13 @@ import java.util.Map;
 
 public class EventParser extends AbstractParser {
     protected String name;
+    protected final boolean cancellable;
 
-    public EventParser(TypeElement type, String name) {
+    public EventParser(TypeElement type, String name, boolean cancellable) {
         super(type);
         this.name = name;
         this.isPackage = false;
+        this.cancellable = cancellable;
     }
 
     public String getName() {
@@ -54,8 +56,9 @@ public class EventParser extends AbstractParser {
             methods.removeAll(methodMap.get(name));
         }
 
-        StringBuilder s = new StringBuilder("interface ").append(name).append(" extends BaseEvent {\n")
-            .append(StringHelpers.tabIn(genFields(fields)));
+        StringBuilder s = new StringBuilder("interface ").append(name).append(" extends BaseEvent");
+        if (cancellable) s.append(", Cancellable");
+        s.append(" {\n").append(StringHelpers.tabIn(genFields(fields)));
         String m = genMethods(methods);
         if (!m.isEmpty()) s.append("\n").append(StringHelpers.tabIn(m)).append("\n");
         s.append("}");

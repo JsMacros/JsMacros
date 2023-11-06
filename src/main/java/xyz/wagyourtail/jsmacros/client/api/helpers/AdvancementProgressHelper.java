@@ -106,7 +106,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @param criteria the criteria
-     * @return the completion date of the given criteria or {@code null} if the criteria is not met
+     * @return the completion date of the given criteria or {@code -1} if the criteria is not met
      * yet.
      * @since 1.8.4
      */

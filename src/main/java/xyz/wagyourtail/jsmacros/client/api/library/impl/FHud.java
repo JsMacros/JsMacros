@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -57,7 +58,7 @@ public class FHud extends BaseLibrary {
      * @see IScreen
      * @since 1.0.5
      */
-    public void openScreen(IScreen s) {
+    public void openScreen(@Nullable IScreen s) {
         net.minecraft.client.gui.screen.Screen screen = (net.minecraft.client.gui.screen.Screen) s;
         mc.execute(() -> mc.setScreen(screen));
     }
@@ -67,7 +68,7 @@ public class FHud extends BaseLibrary {
      * @see IScreen
      * @since 1.2.7
      */
-
+    @Nullable
     public IScreen getOpenScreen() {
         return (IScreen) mc.currentScreen;
     }
@@ -79,7 +80,7 @@ public class FHud extends BaseLibrary {
      * images, etc.
      * @since 1.8.4
      */
-    public CustomImage createTexture(int width, int height, String name) {
+    public CustomImage createTexture(int width, int height, @Nullable String name) {
         return CustomImage.createWidget(width, height, name);
     }
 
@@ -89,7 +90,7 @@ public class FHud extends BaseLibrary {
      * images, etc.
      * @since 1.8.4
      */
-    public CustomImage createTexture(String path, String name) {
+    public CustomImage createTexture(String path, @Nullable String name) {
         return CustomImage.createWidget(path, name);
     }
 
@@ -113,7 +114,7 @@ public class FHud extends BaseLibrary {
      * @return The name of the currently open screen.
      * @since 1.0.5, renamed from {@code getOpenScreen} in 1.2.7
      */
-    @DocletReplaceReturn("ScreenName")
+    @DocletReplaceReturn("ScreenName | null")
     @DocletEnumType(name = "HandledScreenName", type =
             """
             | `${ 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 } Row Chest`
@@ -141,6 +142,7 @@ public class FHud extends BaseLibrary {
             | 'unknown'
             """
     )
+    @Nullable
     public String getOpenScreenName() {
         return JsMacros.getScreenName(mc.currentScreen);
     }

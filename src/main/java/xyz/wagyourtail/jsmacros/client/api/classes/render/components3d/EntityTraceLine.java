@@ -4,6 +4,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
@@ -16,16 +17,17 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 public class EntityTraceLine extends TraceLine {
     public static boolean dirty = false;
 
+    @Nullable
     public Entity entity;
     public double yOffset = 0.5;
     public boolean shouldRemove = false;
 
-    public EntityTraceLine(EntityHelper<?> entity, int color, double yOffset) {
+    public EntityTraceLine(@Nullable EntityHelper<?> entity, int color, double yOffset) {
         super(0, 0, 0, color);
         setEntity(entity).setYOffset(yOffset);
     }
 
-    public EntityTraceLine(EntityHelper<?> entity, int color, int alpha, double yOffset) {
+    public EntityTraceLine(@Nullable EntityHelper<?> entity, int color, int alpha, double yOffset) {
         super(0, 0, 0, color, alpha);
         setEntity(entity).setYOffset(yOffset);
     }
@@ -34,7 +36,7 @@ public class EntityTraceLine extends TraceLine {
      * @return self for chaining
      * @since 1.9.0
      */
-    public EntityTraceLine setEntity(EntityHelper<?> entity) {
+    public EntityTraceLine setEntity(@Nullable EntityHelper<?> entity) {
         if (entity == null) return this;
         this.entity = entity.getRaw();
         shouldRemove = false;
@@ -71,6 +73,7 @@ public class EntityTraceLine extends TraceLine {
         private final Draw3D parent;
 
         public Pos2D screenPos = new Pos2D(0.0, 0.0);
+        @Nullable
         private EntityHelper<?> entity = null;
         private double yOffset = 0.5;
         private int color = 0xFFFFFF;
@@ -85,7 +88,7 @@ public class EntityTraceLine extends TraceLine {
          * @return self for chaining
          * @since 1.9.0
          */
-        public Builder entity(EntityHelper<?> entity) {
+        public Builder entity(@Nullable EntityHelper<?> entity) {
             this.entity = entity;
             return this;
         }
@@ -94,6 +97,7 @@ public class EntityTraceLine extends TraceLine {
          * @return the target entity
          * @since 1.9.0
          */
+        @Nullable
         public EntityHelper<?> getEntity() {
             return entity;
         }
@@ -197,7 +201,7 @@ public class EntityTraceLine extends TraceLine {
          * @return the build line
          * @since 1.9.0
          */
-        public EntityTraceLine buildAndAdd(EntityHelper<?> entity) {
+        public EntityTraceLine buildAndAdd(@Nullable EntityHelper<?> entity) {
             return entity(entity).buildAndAdd();
         }
 
@@ -220,7 +224,7 @@ public class EntityTraceLine extends TraceLine {
          * @return the build line
          * @since 1.9.0
          */
-        public EntityTraceLine build(EntityHelper<?> entity) {
+        public EntityTraceLine build(@Nullable EntityHelper<?> entity) {
             return entity(entity).build();
         }
 
