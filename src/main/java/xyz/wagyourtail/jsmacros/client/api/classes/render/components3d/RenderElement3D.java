@@ -13,8 +13,8 @@ public interface RenderElement3D extends Comparable<RenderElement3D> {
     @Override
     default int compareTo(@NotNull RenderElement3D o) {
         int i = this.getClass().getCanonicalName().compareTo(o.getClass().getCanonicalName());
-        if (i == 0 && !this.equals(o)) {
-            return -1;
+        if (i == 0) {
+            i = this.hashCode() - o.hashCode();
         }
         return i;
     }
