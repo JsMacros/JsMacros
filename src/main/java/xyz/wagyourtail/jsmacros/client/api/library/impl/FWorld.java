@@ -36,6 +36,7 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.RaycastContext;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -194,6 +195,7 @@ public class FWorld extends BaseLibrary {
      * @return a builder to create a WorldScanner.
      * @since 1.6.5
      */
+    @DocletReplaceReturn("TypedWorldScannerBuilder.Initial")
     public WorldScannerBuilder getWorldScanner() {
         return new WorldScannerBuilder();
     }

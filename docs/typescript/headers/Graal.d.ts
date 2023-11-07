@@ -143,10 +143,6 @@ namespace GetJava {
 
 }
 
-type BooStrNumMethod<T> = // Used in worldscanner
-    { [K in keyof T]: ReturnType<T[K]> extends infer R extends boolean | string | number ?
-    IsStrictAny<R> extends false ? K : never : never }[keyof T];
-
 type CanOmitNamespace<T extends string> = T extends `minecraft:${infer P}` ? T | P : T;
 
 type IsStrictAny<T> = 0 | 1 extends (T extends never ? 1 : 0) ? true : false;
@@ -677,7 +673,7 @@ declare namespace Packages {
 
 }
 
-type char   = number & {};
+type char   = number | string;
 type byte   = number & {};
 type short  = number & {};
 type int    = number & {};
