@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -40,7 +41,7 @@ public class FChat extends BaseLibrary {
      * @param message
      * @since 1.1.3
      */
-    public void log(Object message) throws InterruptedException {
+    public void log(@Nullable Object message) throws InterruptedException {
         log(message, false);
     }
 
@@ -49,7 +50,7 @@ public class FChat extends BaseLibrary {
      * @param await   should wait for message to actually be sent to chat to continue.
      * @throws InterruptedException
      */
-    public void log(Object message, boolean await) throws InterruptedException {
+    public void log(@Nullable Object message, boolean await) throws InterruptedException {
         if (message == null) {
             return;
         }
@@ -122,7 +123,7 @@ public class FChat extends BaseLibrary {
      * @param message
      * @since 1.0.0
      */
-    public void say(String message) throws InterruptedException {
+    public void say(@Nullable String message) throws InterruptedException {
         say(message, false);
     }
 
@@ -134,7 +135,7 @@ public class FChat extends BaseLibrary {
      * @throws InterruptedException
      * @since 1.3.1
      */
-    public void say(String message, boolean await) throws InterruptedException {
+    public void say(@Nullable String message, boolean await) throws InterruptedException {
         if (message == null) {
             return;
         }
@@ -193,7 +194,7 @@ public class FChat extends BaseLibrary {
      * @param message the message to start the chat screen with
      * @since 1.6.4
      */
-    public void open(String message) throws InterruptedException {
+    public void open(@Nullable String message) throws InterruptedException {
         open(message, false);
     }
 
@@ -207,7 +208,7 @@ public class FChat extends BaseLibrary {
      * @param await
      * @since 1.6.4
      */
-    public void open(String message, boolean await) throws InterruptedException {
+    public void open(@Nullable String message, boolean await) throws InterruptedException {
         if (message == null) {
             message = "";
         }
@@ -352,6 +353,7 @@ public class FChat extends BaseLibrary {
      * @see xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper
      * @since 1.1.3
      */
+    @Nullable
     public TextHelper createTextHelperFromJSON(String json) {
         TextHelper t = TextHelper.wrap(Text.Serializer.fromJson(json));
         return t;
@@ -418,7 +420,7 @@ public class FChat extends BaseLibrary {
      * @return the width of the given text in pixels.
      * @since 1.8.4
      */
-    public int getTextWidth(String text) {
+    public int getTextWidth(@Nullable String text) {
         return mc.textRenderer.getWidth(text);
     }
 

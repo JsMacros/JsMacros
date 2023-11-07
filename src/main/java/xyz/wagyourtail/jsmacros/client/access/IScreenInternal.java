@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.access;
 
 import net.minecraft.client.util.math.MatrixStack;
+import xyz.wagyourtail.doclet.DocletIgnore;
 
+@DocletIgnore
 public interface IScreenInternal {
     void jsmacros_render(MatrixStack stack, int mouseX, int mouseY, float delta);
 

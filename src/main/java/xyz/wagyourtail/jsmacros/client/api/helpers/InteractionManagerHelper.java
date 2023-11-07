@@ -157,7 +157,8 @@ public class InteractionManagerHelper {
      * @return targeted block pos, null if not targeting block
      * @since 1.9.0
      */
-    public @Nullable BlockPosHelper getTargetedBlock() {
+    @Nullable
+    public BlockPosHelper getTargetedBlock() {
         if (mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
             return new BlockPosHelper(((BlockHitResult) mc.crosshairTarget).getBlockPos());
         }
@@ -168,7 +169,8 @@ public class InteractionManagerHelper {
      * @return targeted entity, null if not targeting entity
      * @since 1.9.0
      */
-    public @Nullable EntityHelper<?> getTargetedEntity() {
+    @Nullable
+    public EntityHelper<?> getTargetedEntity() {
         if (mc.targetedEntity != null) {
             return EntityHelper.create(mc.targetedEntity);
         }
@@ -431,7 +433,8 @@ public class InteractionManagerHelper {
      * @throws InterruptedException
      * @since 1.9.0
      */
-    public @Nullable InteractionProxy.Break.BreakBlockResult breakBlock(int x, int y, int z) throws InterruptedException {
+    @Nullable
+    public InteractionProxy.Break.BreakBlockResult breakBlock(int x, int y, int z) throws InterruptedException {
         return breakBlock(new BlockPos(x, y, z));
     }
 
@@ -449,11 +452,13 @@ public class InteractionManagerHelper {
      * @throws InterruptedException
      * @since 1.9.0
      */
-    public @Nullable InteractionProxy.Break.BreakBlockResult breakBlock(BlockPosHelper pos) throws InterruptedException {
+    @Nullable
+    public InteractionProxy.Break.BreakBlockResult breakBlock(BlockPosHelper pos) throws InterruptedException {
         return breakBlock(pos.getRaw());
     }
 
-    private @Nullable InteractionProxy.Break.BreakBlockResult breakBlock(BlockPos pos) throws InterruptedException {
+    @Nullable
+    private InteractionProxy.Break.BreakBlockResult breakBlock(BlockPos pos) throws InterruptedException {
         InteractionProxy.Break.BreakBlockResult insta = checkInstaBreak(pos);
         if (insta != null) return insta;
         InteractionProxy.Target.setTargetBlock(pos, 0);
@@ -483,12 +488,14 @@ public class InteractionManagerHelper {
         return this;
     }
 
-    private @Nullable InteractionProxy.Break.BreakBlockResult checkInstaBreak() throws InterruptedException {
+    @Nullable
+    private InteractionProxy.Break.BreakBlockResult checkInstaBreak() throws InterruptedException {
         if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) return null;
         return checkInstaBreak(((BlockHitResult) mc.crosshairTarget).getBlockPos());
     }
 
-    private @Nullable InteractionProxy.Break.BreakBlockResult checkInstaBreak(BlockPos pos) throws InterruptedException {
+    @Nullable
+    private InteractionProxy.Break.BreakBlockResult checkInstaBreak(BlockPos pos) throws InterruptedException {
         if (mc.world == null || mc.player == null || mc.interactionManager == null
         ||  ((IClientPlayerInteractionManager) mc.interactionManager).jsmacros_getBlockBreakingCooldown() != 0
         ||  mc.world.getBlockState(pos).calcBlockBreakingDelta(mc.player, mc.player.getWorld(), pos) < 1.0F

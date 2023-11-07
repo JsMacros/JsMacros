@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 import com.google.common.collect.ImmutableList;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
+import org.jetbrains.annotations.Nullable;
 import org.joor.Reflect;
 import xyz.wagyourtail.Util;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
@@ -428,6 +429,7 @@ public class FReflection extends PerExecLibrary {
      * @return the previous mapping helper generated with {@link #loadMappingHelper(String)}
      * @since 1.3.1
      */
+    @Nullable
     public Mappings loadCurrentMappingHelper() {
         return remapper;
     }

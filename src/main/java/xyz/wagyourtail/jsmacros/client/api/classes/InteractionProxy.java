@@ -39,8 +39,10 @@ public class InteractionProxy {
     public static class Target {
         private static final BlockHitResult MISSED = BlockHitResult.createMissed(Vec3d.ZERO, Direction.DOWN, BlockPos.ORIGIN);
 
-        private static @Nullable HitResult override = null;
-        private static @Nullable Entity overrideEntity = null;
+        @Nullable
+        private static HitResult override = null;
+        @Nullable
+        private static Entity overrideEntity = null;
         public static boolean checkDistance = true;
         public static boolean clearIfOutOfRange = true;
         public static boolean checkAir = false;
@@ -153,7 +155,8 @@ public class InteractionProxy {
     public static class Break {
         private static boolean override = false;
         private static final List<Consumer<BreakBlockResult>> callbacks = new ArrayList<>();
-        private static @Nullable BlockPos lastTarget = null;
+        @Nullable
+        private static BlockPos lastTarget = null;
 
         public static void setOverride(boolean value) {
             setOverride(value, null, null);
@@ -231,8 +234,10 @@ public class InteractionProxy {
         public static class BreakBlockResult {
             @DocletReplaceReturn("BreakBlockResult$Reason | null")
             @DocletEnumType(name = "BreakBlockResult$Reason", type = "'SUCCESS' | 'CANCELLED' | 'INTERRUPTED' | 'NOT_BREAKING' | 'RESET' | 'NO_OVERRIDE' | 'IS_AIR' | 'NO_SHAPE' | 'NO_TARGET' | 'TARGET_LOST' | 'TARGET_CHANGE'")
-            public final @Nullable String reason;
-            public final @Nullable BlockPosHelper pos;
+            @Nullable
+            public final String reason;
+            @Nullable
+            public final BlockPosHelper pos;
 
             public BreakBlockResult(@Nullable String reason, @Nullable BlockPosHelper pos) {
                 this.reason = reason;

@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.event.impl;
 
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -141,6 +143,8 @@ public class EventCustom extends BaseEvent {
      * @return
      * @since 1.2.8
      */
+    @DocletReplaceReturn("'Int' | 'String' | 'Double' | 'Boolean' | 'Object' | null")
+    @Nullable
     public String getType(String name) {
         Object i = args.get(name);
         if (i == null) {
@@ -165,6 +169,7 @@ public class EventCustom extends BaseEvent {
      * @return
      * @since 1.2.8
      */
+    @Nullable
     public Integer getInt(String name) {
         Object i = args.get(name);
         if (i instanceof Integer) {
@@ -181,6 +186,7 @@ public class EventCustom extends BaseEvent {
      * @return
      * @since 1.2.8
      */
+    @Nullable
     public String getString(String name) {
         Object i = args.get(name);
         if (i instanceof String) {
@@ -197,6 +203,7 @@ public class EventCustom extends BaseEvent {
      * @return
      * @since 1.2.8
      */
+    @Nullable
     public Double getDouble(String name) {
         Object i = args.get(name);
         if (i instanceof Double) {
@@ -213,6 +220,7 @@ public class EventCustom extends BaseEvent {
      * @return
      * @since 1.2.8
      */
+    @Nullable
     public Boolean getBoolean(String name) {
         Object i = args.get(name);
         if (i instanceof Boolean) {
@@ -229,6 +237,7 @@ public class EventCustom extends BaseEvent {
      * @return
      * @since 1.2.8
      */
+    @Nullable
     public Object getObject(String name) {
         return args.get(name);
     }

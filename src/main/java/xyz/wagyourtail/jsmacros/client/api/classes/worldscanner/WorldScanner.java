@@ -11,6 +11,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.Palette;
 import net.minecraft.world.chunk.PalettedContainer;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.access.IPackedIntegerArray;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainer;
 import xyz.wagyourtail.jsmacros.client.access.IPalettedContainerData;
@@ -45,6 +46,7 @@ public class WorldScanner {
     private final World world;
     private final Map<BlockState, Boolean> cachedFilterStates;
 
+    @Nullable
     private final Function<BlockState, Boolean> filter;
 
     private final boolean useParallelStream;
@@ -57,7 +59,7 @@ public class WorldScanner {
      * @param blockFilter a filter method for the blocks
      * @param stateFilter a filter method for the block states
      */
-    public WorldScanner(World world, Function<BlockHelper, Boolean> blockFilter, Function<BlockStateHelper, Boolean> stateFilter) {
+    public WorldScanner(World world, @Nullable Function<BlockHelper, Boolean> blockFilter, @Nullable Function<BlockStateHelper, Boolean> stateFilter) {
         this.world = world;
         this.useParallelStream = isParallelStreamAllowed(blockFilter) && isParallelStreamAllowed(stateFilter);
         this.filter = combineFilter(blockFilter, stateFilter);

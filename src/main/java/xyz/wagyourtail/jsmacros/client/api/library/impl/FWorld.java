@@ -34,6 +34,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.RaycastContext;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
@@ -128,6 +129,7 @@ public class FWorld extends BaseLibrary {
      * @return player entry for the given player's name or {@code null} if not found.
      * @since 1.8.4
      */
+    @Nullable
     public PlayerListEntryHelper getPlayerEntry(String name) {
         ClientPlayNetworkHandler handler = mc.getNetworkHandler();
         assert handler != null;
@@ -141,6 +143,7 @@ public class FWorld extends BaseLibrary {
      * @param z
      * @return The block at that position.
      */
+    @Nullable
     public BlockDataHelper getBlock(int x, int y, int z) {
         assert mc.world != null;
         BlockPos bp = new BlockPos(x, y, z);
@@ -152,10 +155,12 @@ public class FWorld extends BaseLibrary {
         return new BlockDataHelper(b, t, bp);
     }
 
+    @Nullable
     public BlockDataHelper getBlock(Pos3D pos) {
         return getBlock((int) Math.floor(pos.x), (int) Math.floor(pos.y), (int) Math.floor(pos.z));
     }
 
+    @Nullable
     public BlockDataHelper getBlock(BlockPosHelper pos) {
         return getBlock(pos.getX(), pos.getY(), pos.getZ());
     }
@@ -197,7 +202,7 @@ public class FWorld extends BaseLibrary {
      * @return a scanner for the current world.
      * @since 1.6.5
      */
-    public WorldScanner getWorldScanner(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter) {
+    public WorldScanner getWorldScanner(@Nullable MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, @Nullable MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter) {
         return new WorldScanner(mc.world, blockFilter, stateFilter);
     }
 
@@ -264,7 +269,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.4
      */
-    public List<Pos3D> findBlocksMatching(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
+    public List<Pos3D> findBlocksMatching(MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, @Nullable MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
         if (blockFilter == null) {
             throw new IllegalArgumentException("idFilter cannot be null");
         }
@@ -283,7 +288,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.4
      */
-    public List<Pos3D> findBlocksMatching(int chunkX, int chunkZ, MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
+    public List<Pos3D> findBlocksMatching(int chunkX, int chunkZ, MethodWrapper<BlockHelper, Object, Boolean, ?> blockFilter, @Nullable MethodWrapper<BlockStateHelper, Object, Boolean, ?> stateFilter, int chunkrange) {
         if (blockFilter == null) {
             throw new IllegalArgumentException("block filter cannot be null");
         }
@@ -466,6 +471,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public BlockDataHelper rayTraceBlock(double x1, double y1, double z1, double x2, double y2, double z2, boolean fluid) {
         BlockHitResult result = mc.world.raycast(new RaycastContext(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2), RaycastContext.ShapeType.COLLIDER, fluid ? RaycastContext.FluidHandling.ANY : RaycastContext.FluidHandling.NONE, mc.player));
         if (result.getType() != BlockHitResult.Type.MISS) {
@@ -486,6 +492,7 @@ public class FWorld extends BaseLibrary {
      * @return
      * @since 1.8.3
      */
+    @Nullable
     public EntityHelper<?> rayTraceEntity(double x1, double y1, double z1, double x2, double y2, double z2) {
         TargetPredicate target = TargetPredicate.createNonAttackable();
         target.setPredicate((e) -> e.getBoundingBox().raycast(new Vec3d(x1, y1, z1), new Vec3d(x2, y2, z2)).isPresent());
@@ -763,6 +770,7 @@ public class FWorld extends BaseLibrary {
      * @return the current server address as a string ({@code server.address/server.ip:port}).
      * @since 1.2.2
      */
+    @Nullable
     public String getCurrentServerAddress() {
         ClientPlayNetworkHandler h = mc.getNetworkHandler();
         if (h == null) {
@@ -810,6 +818,7 @@ public class FWorld extends BaseLibrary {
      * @return text helper for the top part of the tab list (above the players)
      * @since 1.3.1
      */
+    @Nullable
     public TextHelper getTabListHeader() {
         Text header = ((IPlayerListHud) mc.inGameHud.getPlayerListHud()).jsmacros_getHeader();
         if (header != null) {
@@ -822,6 +831,7 @@ public class FWorld extends BaseLibrary {
      * @return text helper for the bottom part of the tab list (below the players)
      * @since 1.3.1
      */
+    @Nullable
     public TextHelper getTabListFooter() {
         Text footer = ((IPlayerListHud) mc.inGameHud.getPlayerListHud()).jsmacros_getFooter();
         if (footer != null) {

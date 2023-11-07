@@ -44,7 +44,7 @@ public class FileHandler {
      * writes a string to the file. this is a destructive operation that replaces the file contents.
      *
      * @param s
-     * @return
+     * @return self
      * @throws IOException
      * @since 1.1.8
      */
@@ -59,7 +59,7 @@ public class FileHandler {
      * writes a byte array to the file. this is a destructive operation that replaces the file contents.
      *
      * @param b
-     * @return
+     * @return self
      * @throws IOException
      * @since 1.1.8
      */
@@ -127,7 +127,7 @@ public class FileHandler {
 
     /**
      * @param s
-     * @return
+     * @return self
      * @throws IOException
      * @since 1.1.8
      */
@@ -140,7 +140,7 @@ public class FileHandler {
 
     /**
      * @param b
-     * @return
+     * @return self
      * @throws IOException
      * @since 1.2.6
      */

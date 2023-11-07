@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import net.minecraft.client.util.math.MatrixStack;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
@@ -766,6 +767,7 @@ public interface IDraw2D<T> {
      *
      * @param drawContext
      */
+    @DocletIgnore
     void render(MatrixStack drawContext);
 
     /**

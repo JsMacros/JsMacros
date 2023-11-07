@@ -4,8 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.util.math.MatrixStack;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
@@ -25,6 +27,7 @@ import java.util.Iterator;
 public class Surface extends Draw2D implements RenderElement, RenderElement3D {
     public boolean rotateToPlayer;
     public boolean rotateCenter;
+    @Nullable
     public EntityHelper<?> boundEntity;
     public Pos3D boundOffset;
     public final Pos3D pos;
@@ -91,7 +94,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
      * @return self for chaining.
      * @since 1.8.4
      */
-    public Surface bindToEntity(EntityHelper<?> boundEntity) {
+    public Surface bindToEntity(@Nullable EntityHelper<?> boundEntity) {
         this.boundEntity = boundEntity;
         return this;
     }
@@ -101,6 +104,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
      * entity.
      * @since 1.8.4
      */
+    @Nullable
     public EntityHelper<?> getBoundEntity() {
         return boundEntity;
     }
@@ -220,6 +224,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
     }
 
     @Override
+    @DocletIgnore
     public void render(MatrixStack matrixStack, BufferBuilder builder, float delta) {
         matrixStack.push();
         if (boundEntity != null && boundEntity.isAlive()) {
@@ -360,6 +365,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
         private final Draw3D parent;
 
         private Pos3D pos = new Pos3D(0, 0, 0);
+        @Nullable
         private EntityHelper<?> boundEntity;
         private Pos3D boundOffset = Pos3D.ZERO;
         private double xRot = 0;
@@ -425,7 +431,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
          * @return self for chaining.
          * @since 1.8.4
          */
-        public Builder bindToEntity(EntityHelper<?> boundEntity) {
+        public Builder bindToEntity(@Nullable EntityHelper<?> boundEntity) {
             this.boundEntity = boundEntity;
             return this;
         }
@@ -435,6 +441,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
          * entity.
          * @since 1.8.4
          */
+        @Nullable
         public EntityHelper<?> getBoundEntity() {
             return boundEntity;
         }

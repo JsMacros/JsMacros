@@ -7,6 +7,7 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
@@ -146,6 +147,7 @@ public class Box implements RenderElement3D {
     }
 
     @Override
+    @DocletIgnore
     public void render(MatrixStack matrixStack, BufferBuilder builder, float tickDelta) {
         final boolean cull = !this.cull;
         int a = (color >> 24) & 0xFF;
