@@ -1566,7 +1566,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return a list of all keybinding catehories.
+         * @return a list of all keybinding categories.
          * @since 1.8.4
          */
         @DocletReplaceReturn("JavaList<KeyCategory>")

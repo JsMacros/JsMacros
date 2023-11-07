@@ -527,7 +527,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
-     * icks passed since world was started INCLUDING those skipped when nights were cut short with sleeping.
+     * ticks passed since world was started INCLUDING those skipped when nights were cut short with sleeping.
      *
      * @return the current world time of day.
      * @since 1.1.5

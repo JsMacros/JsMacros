@@ -117,7 +117,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return the current eye height offset for the entitye.
+     * @return the current eye height offset for the entity.
      * @since 1.2.8
      */
     public double getEyeHeight() {

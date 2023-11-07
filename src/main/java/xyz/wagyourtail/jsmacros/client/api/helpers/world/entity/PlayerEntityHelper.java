@@ -122,7 +122,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
     }
 
     /**
-     * @return if the player has slept the minimum ammount of time to pass the night.
+     * @return if the player has slept the minimum amount of time to pass the night.
      * @since 1.2.5 [citation needed]
      */
     public boolean isSleepingLongEnough() {
