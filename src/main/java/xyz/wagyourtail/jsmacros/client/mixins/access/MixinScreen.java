@@ -54,7 +54,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     private MethodWrapper<Pos2D, Integer, Object, ?> onMouseUp;
     @Unique
     @Nullable
-    private MethodWrapper<Pos2D, Pos2D, Object, ?> onScroll;
+    private MethodWrapper<Pos2D, Double, Object, ?> onScroll;
     @Unique
     @Nullable
     private MethodWrapper<Integer, Integer, Object, ?> onKeyPressed;
@@ -825,7 +825,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public IScreen setOnScroll(@Nullable MethodWrapper<Pos2D, Pos2D, Object, ?> onScroll) {
+    public IScreen setOnScroll(@Nullable MethodWrapper<Pos2D, Double, Object, ?> onScroll) {
         this.onScroll = onScroll;
         return this;
     }
