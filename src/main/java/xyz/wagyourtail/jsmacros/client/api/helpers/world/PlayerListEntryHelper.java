@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.world.GameMode;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -22,6 +23,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @return
      * @since 1.1.9
      */
+    @Nullable
     public String getUUID() {
         GameProfile prof = base.getProfile();
         return prof == null ? null : prof.getId().toString();
@@ -31,6 +33,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @return
      * @since 1.0.2
      */
+    @Nullable
     public String getName() {
         GameProfile prof = base.getProfile();
         return prof == null ? null : prof.getName();
@@ -49,6 +52,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @since 1.6.5
      */
     @DocletReplaceReturn("Gamemode")
+    @Nullable
     public String getGamemode() {
         GameMode gm = base.getGameMode();
         return gm == null ? null : gm.getName();
@@ -97,9 +101,18 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     }
 
     /**
+     * @since 1.9.0
+     */
+    @Nullable
+    public String getSkinUrl() {
+        return base.getSkinTextures().textureUrl();
+    }
+
+    /**
      * @return the identifier of the player's cape texture or {@code null} if it's unknown.
      * @since 1.8.4
      */
+    @Nullable
     public String getCapeTexture() {
         return base.getCapeTexture() == null ? null : base.getCapeTexture().toString();
     }
@@ -108,6 +121,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @return the identifier of the player's elytra texture or {@code null} if it's unknown.
      * @since 1.8.4
      */
+    @Nullable
     public String getElytraTexture() {
         return base.getElytraTexture() == null ? null : base.getElytraTexture().toString();
     }
@@ -116,6 +130,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
      * @return the team of the player or {@code null} if the player is not in a team.
      * @since 1.8.4
      */
+    @Nullable
     public TeamHelper getTeam() {
         return base.getScoreboardTeam() == null ? null : new TeamHelper(base.getScoreboardTeam());
     }

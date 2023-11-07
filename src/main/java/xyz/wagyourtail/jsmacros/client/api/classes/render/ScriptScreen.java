@@ -5,6 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
@@ -32,6 +33,7 @@ public class ScriptScreen extends BaseScreen {
      */
     public boolean shouldPause = true;
     private final int bgStyle;
+    @Nullable
     private MethodWrapper<Pos3D, DrawContext, Object, ?> onRender;
 
     public ScriptScreen(String title, boolean dirt) {
@@ -61,7 +63,7 @@ public class ScriptScreen extends BaseScreen {
      * @param onRender pos3d elements are mousex, mousey, tickDelta
      * @since 1.4.0
      */
-    public void setOnRender(MethodWrapper<Pos3D, DrawContext, Object, ?> onRender) {
+    public void setOnRender(@Nullable MethodWrapper<Pos3D, DrawContext, Object, ?> onRender) {
         this.onRender = onRender;
     }
 

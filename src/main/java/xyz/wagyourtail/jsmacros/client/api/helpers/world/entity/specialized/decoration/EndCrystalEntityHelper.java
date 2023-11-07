@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.decoration;
 
 import net.minecraft.entity.decoration.EndCrystalEntity;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
@@ -30,6 +31,7 @@ public class EndCrystalEntityHelper extends EntityHelper<EndCrystalEntity> {
      * @return the target of the crystal's beam, or {@code null} if there is none.
      * @since 1.8.4
      */
+    @Nullable
     public BlockPosHelper getBeamTarget() {
         return base.getBeamTarget() == null ? null : new BlockPosHelper(base.getBeamTarget());
     }

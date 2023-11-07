@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.EndermanEntity;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
@@ -43,6 +44,7 @@ public class EndermanEntityHelper extends MobEntityHelper<EndermanEntity> {
      * @return the held block of this enderman, or {@code null} if it is not holding a block.
      * @since 1.8.4
      */
+    @Nullable
     public BlockStateHelper getHeldBlock() {
         return isHoldingBlock() ? new BlockStateHelper(base.getCarriedBlock()) : null;
     }

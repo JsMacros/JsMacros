@@ -14,6 +14,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -233,7 +235,7 @@ public class FClient extends PerExecLibrary {
      * <p>
      * {@code callback} defaults to {@code null}
      */
-    public void disconnect(MethodWrapper<Boolean, Object, Object, ?> callback) {
+    public void disconnect(@Nullable MethodWrapper<Boolean, Object, Object, ?> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
             boolean isInSingleplayer = mc.isInSingleplayer();
@@ -338,6 +340,7 @@ public class FClient extends PerExecLibrary {
      * @throws UnknownHostException
      * @since 1.6.5
      */
+    @DocletReplaceParams("ip: string, callback: MethodWrapper<ServerInfoHelper | null, java.io.IOException | null>")
     public void pingAsync(String ip, MethodWrapper<ServerInfoHelper, IOException, Object, ?> callback) {
         CompletableFuture.runAsync(() -> {
             ServerInfo info = new ServerInfo("", ip, false);
@@ -378,6 +381,7 @@ public class FClient extends PerExecLibrary {
      * @return the mod container for the given modId or {@code null} if the mod is not loaded.
      * @since 1.8.4
      */
+    @Nullable
     public ModContainerHelper<?> getMod(String modId) {
         return JsMacros.getModLoader().getMod(modId);
     }
@@ -431,7 +435,6 @@ public class FClient extends PerExecLibrary {
      *
      * @since 1.8.4
      */
-    @DocletReplaceReturn("never")
     public void exitGamePeacefully() {
         mc.scheduleStop();
     }

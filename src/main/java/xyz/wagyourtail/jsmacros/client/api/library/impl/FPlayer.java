@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
@@ -104,6 +105,7 @@ public class FPlayer extends BaseLibrary {
      * @see BlockDataHelper
      * @since 1.0.5
      */
+    @Nullable
     public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
         assert mc.world != null;
         assert mc.player != null;
@@ -126,6 +128,7 @@ public class FPlayer extends BaseLibrary {
      * @since 1.0.5
      */
     @Deprecated
+    @Nullable
     public EntityHelper<?> rayTraceEntity() {
         if (mc.targetedEntity != null) {
             return EntityHelper.create(mc.targetedEntity);
@@ -139,6 +142,7 @@ public class FPlayer extends BaseLibrary {
      * @return entity the player entity is currently looking at (if any).
      * @since 1.8.3
      */
+    @Nullable
     public EntityHelper<?> rayTraceEntity(int distance) {
         return DebugRenderer.getTargetedEntity(mc.player, distance).map(EntityHelper::create).orElse(null);
     }
@@ -170,7 +174,7 @@ public class FPlayer extends BaseLibrary {
      * @see #takeScreenshot(String, String, MethodWrapper)
      * @since 1.2.6
      */
-    public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object, ?> callback) {
+    public void takeScreenshot(String folder, @Nullable MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), mc.getFramebuffer(),
                 (text) -> {
@@ -190,7 +194,7 @@ public class FPlayer extends BaseLibrary {
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      * @since 1.2.6
      */
-    public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object, ?> callback) {
+    public void takeScreenshot(String folder, String file, @Nullable MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null && file != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), file, mc.getFramebuffer(),
                 (text) -> {
@@ -207,7 +211,7 @@ public class FPlayer extends BaseLibrary {
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      * @since 1.8.4
      */
-    public void takePanorama(String folder, int width, int height, MethodWrapper<TextHelper, Object, Object, ?> callback) {
+    public void takePanorama(String folder, int width, int height, @Nullable MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
         Text result = mc.takePanorama(new File(Core.getInstance().config.macroFolder, folder), width, height);
         if (callback != null) {

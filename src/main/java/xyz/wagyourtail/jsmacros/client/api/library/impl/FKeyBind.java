@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
@@ -63,11 +64,11 @@ public class FKeyBind extends BaseLibrary {
      * @param key
      * @since 1.2.2
      */
-    @DocletReplaceParams("bind: Bind, key: Key")
-    public void setKeyBind(String bind, String key) {
+    @DocletReplaceParams("bind: Bind, key: Key | null")
+    public void setKeyBind(String bind, @Nullable String key) {
         for (KeyBinding keybind : mc.options.allKeys) {
             if (keybind.getTranslationKey().equals(bind)) {
-                keybind.setBoundKey(InputUtil.fromTranslationKey(key));
+                keybind.setBoundKey(key != null ? InputUtil.fromTranslationKey(key) : InputUtil.UNKNOWN_KEY);
                 KeyBinding.updateKeysByCode();
                 return;
             }

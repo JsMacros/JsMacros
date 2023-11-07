@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -157,7 +158,7 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
      * @return self for chaining.
      * @since 1.8.4
      */
-    public B message(String message) {
+    public B message(@Nullable String message) {
         if (message != null) {
             this.message = Text.literal(message);
         }
@@ -169,7 +170,7 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
      * @return self for chaining.
      * @since 1.8.4
      */
-    public B message(TextHelper message) {
+    public B message(@Nullable TextHelper message) {
         if (message != null) {
             this.message = message.getRaw();
         }
