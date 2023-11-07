@@ -101,14 +101,6 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     }
 
     /**
-     * @since 1.9.0
-     */
-    @Nullable
-    public String getSkinUrl() {
-        return base.getSkinTextures().textureUrl();
-    }
-
-    /**
      * @return the identifier of the player's cape texture or {@code null} if it's unknown.
      * @since 1.8.4
      */
