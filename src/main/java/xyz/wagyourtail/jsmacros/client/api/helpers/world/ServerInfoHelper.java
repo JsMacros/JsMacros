@@ -55,8 +55,8 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
         return ((TranslatableTextContent) base.getResourcePackPolicy().getName().getContent()).getKey();
     }
 
-    public String getIcon() {
-        return getIcon();
+    public byte[] getIcon() {
+        return base.getFavicon();
     }
 
     public boolean isOnline() {

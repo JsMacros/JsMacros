@@ -1844,7 +1844,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatWidth(double val) {
-            base.getChatWidth().setValue(val);
+            getBase(base.getChatWidth()).forceSetValue(val);
             return this;
         }
 
@@ -1862,7 +1862,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatFocusedHeight(double val) {
-            base.getChatHeightFocused().setValue(val);
+            getBase(base.getChatHeightFocused()).forceSetValue(val);
             return this;
         }
 
