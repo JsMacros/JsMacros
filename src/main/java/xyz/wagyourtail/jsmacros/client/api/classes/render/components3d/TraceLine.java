@@ -13,12 +13,14 @@ import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 
+import java.util.Objects;
+
 /**
  * @author aMelonRind
  * @since 1.9.0
  */
 @SuppressWarnings("unused")
-public class TraceLine implements RenderElement3D {
+public class TraceLine implements RenderElement3D<TraceLine> {
     /**
      * this is not meant to be exposed because it works in a poor way<br>
      * it needs fov and aspect ratio info to render normally when not on center<br>
@@ -92,6 +94,23 @@ public class TraceLine implements RenderElement3D {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TraceLine traceLine = (TraceLine) o;
+        return Objects.equals(pos, traceLine.pos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pos);
+    }
+
+    @Override
+    public int compareToSame(TraceLine other) {
+        return pos.compareTo(other.pos);
+    }
+
     public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
         MatrixStack matrixStack = drawContext.getMatrices();
         RenderSystem.disableDepthTest();

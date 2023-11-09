@@ -6,6 +6,8 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -17,6 +19,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 @SuppressWarnings("unused")
 public class Text implements RenderElement, Alignable<Text> {
 
+    @Nullable
     public IDraw2D<?> parent;
 
     public net.minecraft.text.Text text;
@@ -265,6 +268,7 @@ public class Text implements RenderElement, Alignable<Text> {
     }
 
     @Override
+    @DocletIgnore
     public void render3D(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         MatrixStack matrices = drawContext.getMatrices();
         matrices.push();

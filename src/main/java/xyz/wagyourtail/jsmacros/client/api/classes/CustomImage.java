@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.core.Core;
 
@@ -67,6 +68,7 @@ public class CustomImage {
      * @see #drawImage(Image, int, int, int, int, int, int, int, int)
      * @since 1.8.4
      */
+    @Nullable
     public BufferedImage loadImage(String path) {
         try {
             return ImageIO.read(JsMacros.core.config.configFolder.toPath().resolve(path).toFile());
@@ -624,6 +626,7 @@ public class CustomImage {
         return new CustomImage(img, name);
     }
 
+    @Nullable
     public static CustomImage createWidget(String path, String name) {
         try {
             File file = JsMacros.core.config.configFolder.toPath().resolve(path).toFile();

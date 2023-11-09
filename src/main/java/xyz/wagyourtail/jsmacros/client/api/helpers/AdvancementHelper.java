@@ -4,6 +4,7 @@ import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementRewards;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
@@ -29,6 +30,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @return the parent advancement or {@code null} if there is none.
      * @since 1.8.4
      */
+    @Nullable
     public AdvancementHelper getParent() {
         return base.getParent() == null ? null : new AdvancementHelper(base.getParent());
     }
