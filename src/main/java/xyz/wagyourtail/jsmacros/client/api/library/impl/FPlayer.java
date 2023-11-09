@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.GameMode;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.ISignEditScreen;
@@ -71,9 +72,18 @@ public class FPlayer extends BaseLibrary {
     /**
      * @since 1.9.0
      */
+    @Nullable
     public InteractionManagerHelper getInteractionManager() {
-        assert mc.interactionManager != null;
-        return new InteractionManagerHelper();
+        return mc.interactionManager == null ? null : new InteractionManagerHelper(mc.interactionManager);
+    }
+
+    /**
+     * alias for {@link FPlayer#getInteractionManager()}
+     * @since 1.9.0
+     */
+    @Nullable
+    public InteractionManagerHelper interactions() {
+        return getInteractionManager();
     }
 
     /**
