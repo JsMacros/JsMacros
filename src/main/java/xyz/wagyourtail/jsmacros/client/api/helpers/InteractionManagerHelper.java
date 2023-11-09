@@ -515,7 +515,6 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     }
 
     private @Nullable InteractionProxy.Break.BreakBlockResult checkInstaBreak() throws InterruptedException {
-        if (!checkBase(autoUpdateBase)) return InteractionProxy.Break.BreakBlockResult.UNAVAILABLE;
         if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) return null;
         return checkInstaBreak(((BlockHitResult) mc.crosshairTarget).getBlockPos());
     }
