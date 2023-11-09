@@ -48,9 +48,12 @@ public class PackageTree {
             for (int i = pkg.length - 1; i >= 0; --i) {
                 if (!pkg[i].isEmpty()) enclosing.push(pkg[i]);
             }
-            if (predefinedClasses.contains(String.join(".", pkg) + "." + clazz.getSimpleName())) {
+            String path = String.join(".", pkg);
+            if (predefinedClasses.contains(path + "." + clazz.getSimpleName())) {
                 return;
             }
+            //noinspection SpellCheckingInspection
+            if (path.startsWith("org.joml")) return;
         }
         addClassInternal(enclosing, clazz);
     }
