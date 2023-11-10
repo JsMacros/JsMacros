@@ -173,6 +173,30 @@ public class WorldScanner {
 
     /**
      * scan area in blocks
+     * @param pos1 first pos, inclusive
+     * @param pos2 second pos, inclusive
+     * @since 1.9.0
+     */
+    public List<Pos3D> scanCubeAreaInclusive(BlockPosHelper pos1, BlockPosHelper pos2) {
+        return scanCubeAreaInclusive(pos1.getX(), pos1.getY(), pos1.getZ(), pos2.getX(), pos2.getY(), pos2.getZ());
+    }
+
+    /**
+     * scan area in blocks
+     * @param x1 first x coordinate, inclusive
+     * @param y1 first y coordinate, inclusive
+     * @param z1 first z coordinate, inclusive
+     * @param x2 second x coordinate, inclusive
+     * @param y2 second y coordinate, inclusive
+     * @param z2 second z coordinate, inclusive
+     * @since 1.9.0
+     */
+    public List<Pos3D> scanCubeAreaInclusive(int x1, int y1, int z1, int x2, int y2, int z2) {
+        return scanCubeAreaInternal(x1, y1, z1, x2, y2, z2).collect(Collectors.toList());
+    }
+
+    /**
+     * scan area in blocks
      * @since 1.9.0
      */
     public List<Pos3D> scanSphereArea(Pos3D pos, double radius) {
