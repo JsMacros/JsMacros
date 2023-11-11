@@ -120,6 +120,22 @@ for (const [type, method] of Object.entries(fromRegistryHelper)) {
 
 log('fetching custom')
 
+{
+  const ids = Java.from(RegistryHelper.getEntityTypeIds())
+    .sort()
+    .filter((v, i, a) => v && v !== a[i - 1])
+  log(`fetched ${ids.length} ids for EntityId`)
+  types['EntityId'] = ids
+
+  const map = ids.map(id => `\n  '${id}': ${RegistryHelper.getEntity(id).getClass().getSimpleName() || 'EntityHelper'}`).join('')
+  enumFile = enumFile.replace( // type EntityIdToTypeMap = { [id: string]: EntityHelper }
+    /type EntityIdToTypeMap = \{ \[id: string\]: EntityHelper \}/,
+    `type EntityIdToTypeMap = {${map}\n}\n`
+  )
+  log('created EntityIdToTypeMap')
+  temp = undefined
+}
+
 if (custom.has('Key')) {
   custom.delete('Key')
   const InputUtil = Java.type('net.minecraft.class_3675')

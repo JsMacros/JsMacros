@@ -37,6 +37,7 @@ import net.minecraft.world.RaycastContext;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -399,7 +400,9 @@ public class FWorld extends BaseLibrary {
      * @return all entities in the render distance, that match the specified entity type.
      * @since 1.8.4
      */
-    @DocletReplaceParams("...types: CanOmitNamespace<EntityId>[]")
+    @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
+    @DocletReplaceParams("...types: E[]")
+    @DocletReplaceReturn("JavaList<EntityTypeFromId<E>>")
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registries.ENTITY_TYPE.getId(entity.getType()).toString());
@@ -423,7 +426,9 @@ public class FWorld extends BaseLibrary {
      * @return a list of entities within the specified distance to the player, that match the specified entity type.
      * @since 1.8.4
      */
-    @DocletReplaceParams("distance: double, ...types: CanOmitNamespace<EntityId>[]")
+    @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
+    @DocletReplaceParams("distance: double, ...types: E[]")
+    @DocletReplaceReturn("JavaList<EntityTypeFromId<E>>")
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         assert mc.player != null;

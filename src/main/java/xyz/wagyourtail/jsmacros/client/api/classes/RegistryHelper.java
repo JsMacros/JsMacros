@@ -11,6 +11,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.CreativeItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
@@ -192,7 +193,9 @@ public class RegistryHelper {
      * @return an {@link EntityHelper} for the given entity.
      * @since 1.8.4
      */
-    @DocletReplaceParams("type: CanOmitNamespace<EntityId>")
+    @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
+    @DocletReplaceParams("type: E")
+    @DocletReplaceReturn("EntityTypeFromId<E>")
     public EntityHelper<?> getEntity(String type) {
         return EntityHelper.create(Registries.ENTITY_TYPE.get(parseIdentifier(type)).create(MinecraftClient.getInstance().world));
     }

@@ -19,8 +19,11 @@ type FluidId = string
 type BlockId = string
 //@Eval Java.from(RegistryHelper.getBlocks()).flatMap(b => b.getTags())
 type BlockTag = string
-//@RegistryHelper getEntityTypeIds
-type EntityId = string
+//@Custom
+type EntityId = keyof EntityIdToTypeMap;
+type EntityTypeFromId<E extends EntityId> = EntityIdToTypeMap[CompleteNamespace<E>] extends infer R ?
+  EntityIdToTypeMap[EntityId] extends R ? EntityHelper : R : never;
+type EntityIdToTypeMap = { [id: string]: EntityHelper }
 //@Eval world.method_8433().method_8126().toArray().map(r => r.toString())
 type RecipeId = string
 //@Enum class_1934.method_8381
