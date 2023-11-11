@@ -127,7 +127,7 @@ log('fetching custom')
   log(`fetched ${ids.length} ids for EntityId`)
   types['EntityId'] = ids
 
-  const map = ids.map(id => `\n  '${id}': ${RegistryHelper.getEntity(id).getClass().getSimpleName() || 'EntityHelper'}`).join('')
+  const map = ids.map(id => `\n  '${id}': ${id === 'minecraft:player' ? 'PlayerEntityHelper' : RegistryHelper.getEntity(id).getClass().getSimpleName() || 'EntityHelper'}`).join('')
   enumFile = enumFile.replace( // type EntityIdToTypeMap = { [id: string]: EntityHelper }
     /type EntityIdToTypeMap = \{ \[id: string\]: EntityHelper \}/,
     `type EntityIdToTypeMap = {${map}\n}\n`
