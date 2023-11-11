@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.forge.client;
 
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLEnvironment;
 import xyz.wagyourtail.jsmacros.client.ModLoader;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.ForgeModContainer;
 

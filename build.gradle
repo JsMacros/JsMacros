@@ -112,7 +112,11 @@ if (enabled_loaders.contains("forge")) {
             devFallbackNamespace "intermediary"
         }
 
-        minecraftForge {
+        minecraftRemapper.config {
+            ignoreConflicts(true)
+        }
+
+        neoForged {
             loader project.forge_version
 
             mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
