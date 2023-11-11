@@ -510,6 +510,7 @@ public class FWorld extends BaseLibrary {
      * @return the current dimension.
      * @since 1.1.2
      */
+    @DocletReplaceReturn("Dimension")
     public String getDimension() {
         assert mc.world != null;
         return mc.world.getRegistryKey().getValue().toString();
@@ -519,6 +520,7 @@ public class FWorld extends BaseLibrary {
      * @return the current biome.
      * @since 1.1.5
      */
+    @DocletReplaceReturn("Biome")
     public String getBiome() {
         assert mc.world != null;
         return mc.world.getRegistryManager().get(RegistryKeys.BIOME).getId(mc.world.getBiome(mc.player.getBlockPos()).value()).toString();
@@ -791,6 +793,7 @@ public class FWorld extends BaseLibrary {
      * @return biome at specified location, only works if the block/chunk is loaded.
      * @since 1.2.2 [Citation Needed]
      */
+    @DocletReplaceReturn("Biome")
     public String getBiomeAt(int x, int z) {
         assert mc.world != null;
         return mc.world.getRegistryManager().get(RegistryKeys.BIOME).getId(mc.world.getBiome(new BlockPos(x, 10, z)).value()).toString();
@@ -803,6 +806,7 @@ public class FWorld extends BaseLibrary {
      * @return biome at specified location, only works if the block/chunk is loaded.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("Biome")
     public String getBiomeAt(int x, int y, int z) {
         assert mc.world != null;
         return mc.world.getRegistryManager().get(RegistryKeys.BIOME).getId(mc.world.getBiome(new BlockPos(x, y, z)).value()).toString();
@@ -812,6 +816,7 @@ public class FWorld extends BaseLibrary {
      * @return best attempt to measure and give the server tps with various timings.
      * @since 1.2.7
      */
+    @DocletReplaceReturn("`${number}, 1M: ${number}, 5M: ${number}, 15M: ${number}`")
     public String getServerTPS() {
         return String.format("%.2f, 1M: %.1f, 5M: %.1f, 15M: %.1f", serverInstantTPS, server1MAverageTPS, server5MAverageTPS, server15MAverageTPS);
     }
