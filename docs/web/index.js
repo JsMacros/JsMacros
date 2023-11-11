@@ -83,6 +83,7 @@ async function searchBox(val) {
     if (mainContent.getAttribute("class") != "searchMain") {
         await openMain("./search.html");
     }
+    await loadingSearchMap
     await searchF(val);
     for (const resultItem of document.getElementsByClassName("resultItem")) {
         frameLink(resultItem.getElementsByTagName("a")[0]);
