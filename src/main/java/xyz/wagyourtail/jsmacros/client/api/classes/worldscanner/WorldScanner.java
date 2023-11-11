@@ -99,7 +99,7 @@ public class WorldScanner {
      * @return a list of all matching block positions.
      */
     public List<Pos3D> scanAroundPlayer(int chunkRange) {
-        assert mc.player != null;
+        if (mc.player == null) return new ArrayList<>();
         return scanChunkRange(mc.player.getChunkPos().x, mc.player.getChunkPos().z, chunkRange);
     }
 
@@ -247,8 +247,8 @@ public class WorldScanner {
      * @since 1.9.0
      */
     public List<Pos3D> scanReachable() {
-        assert mc.player != null;
-        return scanReachable(new Pos3D(mc.player.getEyePos()));
+        if (mc.player == null) return new ArrayList<>();
+        return scanReachable(new Pos3D(mc.player.getEyePos()), getReach(), true);
     }
 
     /**
@@ -258,9 +258,8 @@ public class WorldScanner {
      * @since 1.9.0
      */
     public List<Pos3D> scanReachable(boolean strict) {
-        assert mc.player != null;
-        assert mc.interactionManager != null;
-        return scanReachable(new Pos3D(mc.player.getEyePos()), mc.interactionManager.getReachDistance(), strict);
+        if (mc.player == null) return new ArrayList<>();
+        return scanReachable(new Pos3D(mc.player.getEyePos()), getReach(), strict);
     }
 
     /**
@@ -269,8 +268,7 @@ public class WorldScanner {
      * @since 1.9.0
      */
     public List<Pos3D> scanReachable(Pos3D pos) {
-        assert mc.interactionManager != null;
-        return scanReachable(pos, mc.interactionManager.getReachDistance(), true);
+        return scanReachable(pos, getReach(), true);
     }
 
     /**
@@ -301,9 +299,8 @@ public class WorldScanner {
      */
     @Nullable
     public Pos3D scanClosestReachable() {
-        assert mc.player != null;
-        assert mc.interactionManager != null;
-        return scanClosestReachable(new Pos3D(mc.player.getEyePos()), mc.interactionManager.getReachDistance(), true);
+        if (mc.player == null) return null;
+        return scanClosestReachable(new Pos3D(mc.player.getEyePos()), getReach(), true);
     }
 
     /**
@@ -313,7 +310,7 @@ public class WorldScanner {
      */
     @Nullable
     public Pos3D scanClosestReachable(boolean strict) {
-        assert mc.player != null;
+        if (mc.player == null) return null;
         return scanClosestReachable(new Pos3D(mc.player.getEyePos()), getReach(), strict);
     }
 
@@ -329,6 +326,10 @@ public class WorldScanner {
         return scanReachableInternal(vec, reach, strict)
                 .min(Comparator.comparingDouble(p -> centered.squaredDistanceTo(p.x, p.y, p.z)))
                 .orElse(null);
+    }
+
+    private double getReach() {
+        return mc.interactionManager != null ? mc.interactionManager.getReachDistance() : 4.5;
     }
 
     /**
