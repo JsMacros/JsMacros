@@ -187,8 +187,9 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @Nullable
     public BlockPosHelper getTargetedBlock() {
-        if (mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
-            return new BlockPosHelper(((BlockHitResult) mc.crosshairTarget).getBlockPos());
+        HitResult target = mc.crosshairTarget;
+        if (target != null && target.getType() == HitResult.Type.BLOCK) {
+            return new BlockPosHelper(((BlockHitResult) target).getBlockPos());
         }
         return null;
     }
@@ -521,8 +522,9 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
 
     @Nullable
     private InteractionProxy.Break.BreakBlockResult checkInstaBreak() throws InterruptedException {
-        if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) return null;
-        return checkInstaBreak(((BlockHitResult) mc.crosshairTarget).getBlockPos());
+        HitResult target = mc.crosshairTarget;
+        if (target == null || target.getType() != HitResult.Type.BLOCK) return null;
+        return checkInstaBreak(((BlockHitResult) target).getBlockPos());
     }
 
     @Nullable
@@ -533,8 +535,9 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         ||  mc.world.getBlockState(pos).calcBlockBreakingDelta(mc.player, mc.player.getWorld(), pos) < 1.0F
         ) return null;
         int side = 0;
-        if (mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
-            side = ((BlockHitResult) mc.crosshairTarget).getSide().getId();
+        HitResult target = mc.crosshairTarget;
+        if (target != null && target.getType() == HitResult.Type.BLOCK) {
+            side = ((BlockHitResult) target).getSide().getId();
         }
         attack(pos.getX(), pos.getY(), pos.getZ(), side, true);
         return new InteractionProxy.Break.BreakBlockResult("SUCCESS", new BlockPosHelper(pos));
@@ -542,10 +545,10 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
 
     private void preBreakBlock() throws InterruptedException {
         if (((IClientPlayerInteractionManager) base).jsmacros_getBlockBreakingCooldown() == 0) {
-            if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) return;
-            BlockHitResult target = (BlockHitResult) mc.crosshairTarget;
-            BlockPos pos = target.getBlockPos();
-            attack(pos.getX(), pos.getY(), pos.getZ(), target.getSide().getId(), true);
+            HitResult target = mc.crosshairTarget;
+            if (target == null || target.getType() != HitResult.Type.BLOCK) return;
+            BlockPos pos = ((BlockHitResult) target).getBlockPos();
+            attack(pos.getX(), pos.getY(), pos.getZ(), ((BlockHitResult) target).getSide().getId(), true);
         }
     }
 
