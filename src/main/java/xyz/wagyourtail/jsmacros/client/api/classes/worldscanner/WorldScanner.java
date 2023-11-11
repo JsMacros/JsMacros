@@ -252,6 +252,18 @@ public class WorldScanner {
     }
 
     /**
+     * scan around with player pos and player reach.<br>
+     * this doesn't filter out positions that has obstacle.
+     * @param strict if it should check for block outline instead of full cube, default is true
+     * @since 1.9.0
+     */
+    public List<Pos3D> scanReachable(boolean strict) {
+        assert mc.player != null;
+        assert mc.interactionManager != null;
+        return scanReachable(new Pos3D(mc.player.getEyePos()), mc.interactionManager.getReachDistance(), strict);
+    }
+
+    /**
      * scan around with the given pos and player reach.<br>
      * this doesn't filter out positions that has obstacle.
      * @since 1.9.0
@@ -292,6 +304,17 @@ public class WorldScanner {
         assert mc.player != null;
         assert mc.interactionManager != null;
         return scanClosestReachable(new Pos3D(mc.player.getEyePos()), mc.interactionManager.getReachDistance(), true);
+    }
+
+    /**
+     * scan around with player pos and player reach, and return the closest one.<br>
+     * this doesn't filter out positions that has obstacle.
+     * @since 1.9.0
+     */
+    @Nullable
+    public Pos3D scanClosestReachable(boolean strict) {
+        assert mc.player != null;
+        return scanClosestReachable(new Pos3D(mc.player.getEyePos()), getReach(), strict);
     }
 
     /**
