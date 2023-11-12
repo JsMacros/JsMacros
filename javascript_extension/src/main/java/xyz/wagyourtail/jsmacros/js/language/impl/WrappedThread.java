@@ -1,29 +1,30 @@
 package xyz.wagyourtail.jsmacros.js.language.impl;
 
+import java.util.concurrent.locks.LockSupport;
+
 public class WrappedThread {
     public final Thread thread;
     public final int priority;
-    private boolean notDone = true;
+    private boolean ready = false;
 
     public WrappedThread(Thread thread, int priority) {
         this.thread = thread;
         this.priority = priority;
     }
 
-    public synchronized void waitFor() throws InterruptedException {
-        if (this.notDone) {
-            this.wait();
+    public void waitUntilReady() throws InterruptedException {
+        if (Thread.currentThread() != thread) throw new AssertionError("not the same thread");
+        while (!ready) {
+            LockSupport.park();
+            if (Thread.interrupted()) {
+                throw new InterruptedException();
+            }
         }
     }
 
-    public synchronized int release() {
-        this.notDone = false;
-        this.notifyAll();
-        return priority;
-    }
-
-    public boolean isNotDone() {
-        return this.notDone;
+    public void notifyReady() {
+        ready = true;
+        LockSupport.unpark(thread);
     }
 
 }

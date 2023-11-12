@@ -49,22 +49,28 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
         try {
             assert tasks.peek() != null;
             // remove self from queue
-            int prio = tasks.poll().release();
+            WrappedThread current = tasks.poll();
+            WrappedThread next = tasks.peek();
+            if (next != null) {
+                next.notifyReady();
+            }
 
             try {
                 sleep.run();
             } finally {
-                // put self at back of the queue
-                tasks.add(new WrappedThread(Thread.currentThread(), prio + changePriority));
+                    // put self at back of the queue
+                    WrappedThread wt = new WrappedThread(Thread.currentThread(), current.priority + changePriority);
+                    tasks.add(wt);
 
-                // wait to be at the front of the queue again
-                WrappedThread joinable = tasks.peek();
-                assert joinable != null;
-                while (joinable.thread != Thread.currentThread()) {
-                    joinable.waitFor();
-                    joinable = tasks.peek();
-                    assert joinable != null;
-                }
+                    // wait to be at the front of the queue again
+                    while (true) {
+                        synchronized (tasks) {
+                            assert tasks.peek() != null;
+                            if (tasks.peek().thread == Thread.currentThread()) break;
+                        }
+                        wt.waitUntilReady();
+                        break;
+                    }
             }
         } finally {
             getContext().enter();

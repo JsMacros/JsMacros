@@ -154,21 +154,27 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
 
             Core.getInstance().threadPool.runTask(() -> {
                 try {
-                    ctx.tasks.add(new WrappedThread(Thread.currentThread(), priority));
+                    WrappedThread wt = new WrappedThread(Thread.currentThread(), priority);
+                    ctx.tasks.add(wt);
                     ctx.bindThread(Thread.currentThread());
 
-                    WrappedThread joinable = ctx.tasks.peek();
-                    assert joinable != null;
-                    while (joinable.thread != Thread.currentThread()) {
-                        joinable.waitFor();
-                        joinable = ctx.tasks.peek();
-                        assert joinable != null;
+                    while (true) {
+                        synchronized (ctx.tasks) {
+                            assert ctx.tasks.peek() != null;
+                            if (ctx.tasks.peek().thread == Thread.currentThread()) break;
+                        }
+                        wt.waitUntilReady();
+                        break;
                     }
 
                     if (ctx.isContextClosed()) {
                         ctx.unbindThread(Thread.currentThread());
                         assert ctx.tasks.peek() != null;
-                        ctx.tasks.poll().release();
+                        ctx.tasks.poll();
+                        WrappedThread next = ctx.tasks.peek();
+                        if (next != null) {
+                            next.notifyReady();
+                        }
                         throw new BaseScriptContext.ScriptAssertionError("Context closed");
                     }
 
@@ -187,8 +193,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                     throw new RuntimeException(e);
                 } finally {
                     ctx.unbindThread(Thread.currentThread());
-                    assert ctx.tasks.peek() != null;
-                    ctx.tasks.poll().release();
+                    ctx.tasks.poll();
+                    WrappedThread next = ctx.tasks.peek();
+                    if (next != null) {
+                        next.notifyReady();
+                    }
                 }
             });
         }
@@ -206,18 +215,26 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                 ctx.bindThread(Thread.currentThread());
                 ctx.tasks.add(new WrappedThread(Thread.currentThread(), priority));
 
-                WrappedThread joinable = ctx.tasks.peek();
-                assert joinable != null;
-                while (joinable.thread != Thread.currentThread()) {
-                    joinable.waitFor();
-                    joinable = ctx.tasks.peek();
-                    assert joinable != null;
+                WrappedThread wt = new WrappedThread(Thread.currentThread(), priority);
+                ctx.tasks.add(wt);
+                ctx.bindThread(Thread.currentThread());
+
+                while (true) {
+                    synchronized (ctx.tasks) {
+                        assert ctx.tasks.peek() != null;
+                        if (ctx.tasks.peek().thread == Thread.currentThread()) break;
+                    }
+                    wt.waitUntilReady();
+                    break;
                 }
 
                 if (ctx.isContextClosed()) {
                     ctx.unbindThread(Thread.currentThread());
-                    assert ctx.tasks.peek() != null;
-                    ctx.tasks.poll().release();
+                    ctx.tasks.poll();
+                    WrappedThread next = ctx.tasks.peek();
+                    if (next != null) {
+                        next.notifyReady();
+                    }
                     throw new BaseScriptContext.ScriptAssertionError("Context closed");
                 }
 
@@ -239,8 +256,11 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                 throw new RuntimeException(e);
             } finally {
                 ctx.unbindThread(Thread.currentThread());
-                assert ctx.tasks.peek() != null;
-                ctx.tasks.poll().release();
+                ctx.tasks.poll();
+                WrappedThread next = ctx.tasks.peek();
+                if (next != null) {
+                    next.notifyReady();
+                }
             }
         }
 
