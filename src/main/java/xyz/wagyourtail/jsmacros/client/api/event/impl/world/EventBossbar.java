@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
 import net.minecraft.client.gui.hud.ClientBossBar;
-import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.BossBarHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -18,7 +18,7 @@ public class EventBossbar extends BaseEvent {
     public final BossBarHelper bossBar;
     public final String uuid;
     @DocletReplaceReturn("BossBarUpdateType")
-    @DocletEnumType(name = "BossBarUpdateType", type =
+    @DocletDeclareType(name = "BossBarUpdateType", type =
             """
             'ADD' | 'REMOVE' | 'UPDATE_PERCENT'
             | 'UPDATE_NAME' | 'UPDATE_STYLE' | 'UPDATE_PROPERTIES'

@@ -12,7 +12,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IClientPlayerInteractionManager;
@@ -92,7 +92,7 @@ public class InteractionManagerHelper {
      * @since 1.9.0
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
-    @DocletEnumType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
+    @DocletDeclareType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
     public InteractionManagerHelper setTarget(int x, int y, int z, String direction) {
         setTarget(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
         return this;

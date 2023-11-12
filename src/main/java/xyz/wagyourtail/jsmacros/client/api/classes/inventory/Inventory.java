@@ -16,7 +16,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
@@ -531,7 +531,7 @@ public class Inventory<T extends HandledScreen<?>> {
     @DocletReplaceTypeParams("T extends ScreenName")
     @DocletReplaceParams("...types: T[]")
     @DocletReplaceReturn("this is T extends keyof InvNameToTypeMap ? InvNameToTypeMap[keyof InvNameToTypeMap] extends InvNameToTypeMap[T] ? Inventory : InvNameToTypeMap[T] : this")
-    @DocletEnumType(name = "InvNameToTypeMap", type =
+    @DocletDeclareType(name = "InvNameToTypeMap", type =
             """
             {
                 '1 Row Chest': ContainerInventory;
@@ -576,7 +576,7 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     @SuppressWarnings("SpellCheckingInspection")
     @DocletReplaceReturn("JavaMap<InvMapId, JavaArray<number>>")
-    @DocletEnumType(name = "InvMapId", type =
+    @DocletDeclareType(name = "InvMapId", type =
             """
             InvMapType.All;
             declare namespace InvMapType {

@@ -510,7 +510,7 @@ public abstract class AbstractParser {
     }
 
     public static void checkEnumType(Element element) {
-        DocletEnumType enumType = element.getAnnotation(DocletEnumType.class);
+        DocletDeclareType enumType = element.getAnnotation(DocletDeclareType.class);
         if (enumType != null) {
             if (Main.enumTypes.containsKey(enumType.name())
                 && !loggedTypes.contains(enumType.name())
