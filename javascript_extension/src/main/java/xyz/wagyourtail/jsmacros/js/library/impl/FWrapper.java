@@ -158,13 +158,10 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                     ctx.tasks.add(wt);
                     ctx.bindThread(Thread.currentThread());
 
-                    while (true) {
-                        synchronized (ctx.tasks) {
-                            assert ctx.tasks.peek() != null;
-                            if (ctx.tasks.peek().thread == Thread.currentThread()) break;
-                        }
+                    // wait to be at the front of the queue again
+                    assert ctx.tasks.peek() != null;
+                    if (ctx.tasks.peek().thread != Thread.currentThread()) {
                         wt.waitUntilReady();
-                        break;
                     }
 
                     if (ctx.isContextClosed()) {
@@ -219,13 +216,10 @@ public class FWrapper extends PerExecLanguageLibrary<Context, GraalScriptContext
                 ctx.tasks.add(wt);
                 ctx.bindThread(Thread.currentThread());
 
-                while (true) {
-                    synchronized (ctx.tasks) {
-                        assert ctx.tasks.peek() != null;
-                        if (ctx.tasks.peek().thread == Thread.currentThread()) break;
-                    }
+                // wait to be at the front of the queue again
+                assert ctx.tasks.peek() != null;
+                if (ctx.tasks.peek().thread != Thread.currentThread()) {
                     wt.waitUntilReady();
-                    break;
                 }
 
                 if (ctx.isContextClosed()) {

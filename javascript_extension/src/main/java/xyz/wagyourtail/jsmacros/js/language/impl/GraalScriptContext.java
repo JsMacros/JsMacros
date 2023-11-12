@@ -58,19 +58,15 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
             try {
                 sleep.run();
             } finally {
-                    // put self at back of the queue
-                    WrappedThread wt = new WrappedThread(Thread.currentThread(), current.priority + changePriority);
-                    tasks.add(wt);
+                // put self at back of the queue
+                WrappedThread wt = new WrappedThread(Thread.currentThread(), current.priority + changePriority);
+                tasks.add(wt);
 
-                    // wait to be at the front of the queue again
-                    while (true) {
-                        synchronized (tasks) {
-                            assert tasks.peek() != null;
-                            if (tasks.peek().thread == Thread.currentThread()) break;
-                        }
-                        wt.waitUntilReady();
-                        break;
-                    }
+                // wait to be at the front of the queue again
+                assert tasks.peek() != null;
+                if (tasks.peek().thread != Thread.currentThread()) {
+                    wt.waitUntilReady();
+                }
             }
         } finally {
             getContext().enter();
