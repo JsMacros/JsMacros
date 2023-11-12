@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
@@ -520,6 +521,53 @@ public class Inventory<T extends HandledScreen<?>> {
     @DocletReplaceReturn("ScreenName")
     public String getType() {
         return JsMacros.getScreenName(this.inventory);
+    }
+
+    /**
+     * checks if this inventory type equals to any of the specified types<br>
+     * @since 1.9.0
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    @DocletReplaceTypeParams("T extends ScreenName")
+    @DocletReplaceParams("...types: T[]")
+    @DocletReplaceReturn("this is T extends keyof InvNameToTypeMap ? InvNameToTypeMap[keyof InvNameToTypeMap] extends InvNameToTypeMap[T] ? Inventory : InvNameToTypeMap[T] : this")
+    @DocletEnumType(name = "InvNameToTypeMap", type =
+            """
+            {
+                '1 Row Chest': ContainerInventory;
+                '2 Row Chest': ContainerInventory;
+                '3 Row Chest': ContainerInventory;
+                '4 Row Chest': ContainerInventory;
+                '5 Row Chest': ContainerInventory;
+                '6 Row Chest': ContainerInventory;
+                '7 Row Chest': ContainerInventory;
+                '8 Row Chest': ContainerInventory;
+                '9 Row Chest': ContainerInventory;
+                '3x3 Container': ContainerInventory;
+                'Anvil': AnvilInventory;
+                'Beacon': BeaconInventory;
+                'Blast Furnace': FurnaceInventory;
+                'Brewing Stand': BrewingStandInventory;
+                'Crafting Table': CraftingInventory;
+                'Enchanting Table': EnchantInventory;
+                'Furnace': FurnaceInventory;
+                'Grindstone': GrindStoneInventory;
+                'Hopper': ContainerInventory;
+                'Loom': LoomInventory;
+                'Villager': VillagerInventory;
+                'Shulker Box': ContainerInventory;
+                'Smithing Table': SmithingInventory;
+                'Smoker': FurnaceInventory;
+                'Cartography Table': CartographyInventory;
+                'Stonecutter': StoneCutterInventory;
+                'Survival Inventory': PlayerInventory;
+                'Horse': HorseInventory;
+                'Creative Inventory': CreativeInventory;
+            }
+            """
+    )
+    public boolean is(String ...types) {
+        return Arrays.asList(types).contains(getType());
     }
 
     /**
