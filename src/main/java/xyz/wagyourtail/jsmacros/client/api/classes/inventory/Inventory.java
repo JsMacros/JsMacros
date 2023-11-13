@@ -529,7 +529,7 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     @SuppressWarnings("SpellCheckingInspection")
     @DocletReplaceTypeParams("T extends ScreenName")
-    @DocletReplaceParams("...types: T[]")
+    @DocletReplaceParams("...anyOf: T[]")
     @DocletReplaceReturn("this is T extends keyof InvNameToTypeMap ? InvNameToTypeMap[keyof InvNameToTypeMap] extends InvNameToTypeMap[T] ? Inventory : InvNameToTypeMap[T] : this")
     @DocletDeclareType(name = "InvNameToTypeMap", type =
             """

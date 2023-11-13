@@ -49,9 +49,9 @@ declare namespace TypedWorldScannerBuilder {
       R extends boolean ? BooleanFilter
     : never : never : never;
 
-  type BlockToString = `BlockHelper:{"id": "${BlockId}"}`;
+  type BlockToString = `BlockHelper:{"id": "${BlockId}"}` | never;
 
-  type StateToString = `BlockStateHelper:{"id": "${BlockId}", "properties": {${string}}}`;
+  type StateToString = `BlockStateHelper:{"id": "${BlockId}", "properties": {${string}}}` | never;
 
   interface StringFunctionFilter<T extends string = string> {
 
