@@ -140,6 +140,7 @@ public class FHud extends BaseLibrary {
             | 'Horse'
             | 'Creative Inventory'
             | 'Chat'
+            | string & {}
             | 'unknown'
             """
     )
