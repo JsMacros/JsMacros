@@ -5,7 +5,7 @@ import java.util.concurrent.locks.LockSupport;
 public class WrappedThread {
     public final Thread thread;
     public final int priority;
-    private boolean ready = false;
+    private volatile boolean ready = false;
 
     public WrappedThread(Thread thread, int priority) {
         this.thread = thread;

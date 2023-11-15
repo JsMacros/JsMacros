@@ -7,10 +7,10 @@ import java.util.*;
 import java.util.function.Function;
 
 public class PrioryFiFoTaskQueue<E> implements Queue<E> {
-    E currentTask;
-    Int2ObjectOpenHashMap<List<E>> tasks = new Int2ObjectOpenHashMap<>();
-    Set<E> taskSet = new HashSet<>();
-    Function<E, Integer> priorityFunction;
+    volatile E currentTask;
+    final Int2ObjectOpenHashMap<List<E>> tasks = new Int2ObjectOpenHashMap<>();
+    final Set<E> taskSet = new HashSet<>();
+    final Function<E, Integer> priorityFunction;
 
     public PrioryFiFoTaskQueue(Function<E, Integer> priorityFunction) {
         this.priorityFunction = priorityFunction;
