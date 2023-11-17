@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.forge.client.api.classes;
 
-import net.minecraftforge.forgespi.language.IModInfo;
+import net.neoforged.neoforgespi.language.IModInfo;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
 
 import java.util.List;

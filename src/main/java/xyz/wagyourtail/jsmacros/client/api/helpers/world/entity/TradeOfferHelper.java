@@ -95,8 +95,8 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     /**
      * @return trade offer as nbt tag
      */
-    public NBTElementHelper<?> getNBT() {
-        return NBTElementHelper.resolve(base.toNbt());
+    public NBTElementHelper.NBTCompoundHelper getNBT() {
+        return NBTElementHelper.wrapCompound(base.toNbt());
     }
 
     /**

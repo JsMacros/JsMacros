@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientCommonNetworkHandler;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Final;
@@ -160,8 +162,13 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenHandler;setCursorStack(Lnet/minecraft/item/ItemStack;)V"))
     public void onHeldSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci) {
-        assert this.client.player != null;
-        new EventSlotUpdate((HandledScreen<?>) this.client.currentScreen, "HELD", -999, this.client.player.currentScreenHandler.getCursorStack(), packet.getStack()).trigger();
+        HandledScreen<?> screen;
+        if (this.client.currentScreen instanceof HandledScreen<?>) {
+            screen = (HandledScreen<?>) this.client.currentScreen;
+        } else {
+            screen = new InventoryScreen(this.client.player);
+        }
+        new EventSlotUpdate(screen, "HELD", -999, this.client.player.currentScreenHandler.getCursorStack(), packet.getStack()).trigger();
     }
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;setStack(ILnet/minecraft/item/ItemStack;)V"))
@@ -178,8 +185,17 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenHandler;setStackInSlot(IILnet/minecraft/item/ItemStack;)V"))
     public void onScreenSlotUpdate2(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci) {
-        assert this.client.player != null;
-        new EventSlotUpdate((HandledScreen<?>) this.client.currentScreen, "SCREEN", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
+        assert client.player != null;
+        if (packet.getSyncId() == 0) {
+            new EventSlotUpdate(new InventoryScreen(this.client.player), "INVENTORY", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
+            return;
+        } else if (this.client.currentScreen instanceof HandledScreen<?>) {
+            if (packet.getSyncId() == ((HandledScreen<?>) this.client.currentScreen).getScreenHandler().syncId) {
+                new EventSlotUpdate((HandledScreen<?>) this.client.currentScreen, "CONTAINER", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
+                return;
+            }
+        }
+        new EventSlotUpdate(new InventoryScreen(this.client.player), "UNKNOWN", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
     }
 
     @Inject(method = "onInventory", at = @At("TAIL"))

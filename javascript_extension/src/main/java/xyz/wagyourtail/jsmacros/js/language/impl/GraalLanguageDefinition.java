@@ -98,7 +98,11 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
         } finally {
             try {
                 con.leave();
-                ctx.getCtx().tasks.poll().release();
+                ctx.getCtx().tasks.poll();
+                WrappedThread next = ctx.getCtx().tasks.peek();
+                if (next != null) {
+                    next.notifyReady();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -139,7 +143,11 @@ public class GraalLanguageDefinition extends BaseLanguage<Context, GraalScriptCo
         } finally {
             try {
                 con.leave();
-                ctx.getCtx().tasks.poll().release();
+                ctx.getCtx().tasks.poll();
+                WrappedThread next = ctx.getCtx().tasks.peek();
+                if (next != null) {
+                    next.notifyReady();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

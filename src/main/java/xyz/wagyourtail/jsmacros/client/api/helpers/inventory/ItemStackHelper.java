@@ -15,6 +15,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -52,7 +53,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * You may want to use {@link ItemStackHelper#copy()} first.
      *
      * @param damage
-     * @return
+     * @return self
      * @since 1.2.0
      */
     @Deprecated
@@ -112,6 +113,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     @DocletReplaceParams("id: EnchantmentId")
+    @Nullable
     public EnchantmentHelper getEnchantment(String id) {
         return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getName().equals(id)).findFirst().orElse(null);
     }
@@ -280,13 +282,9 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return
      * @since 1.1.6, was a {@link String} until 1.5.1
      */
-    public NBTElementHelper<?> getNBT() {
-        NbtCompound tag = base.getNbt();
-        if (tag != null) {
-            return NBTElementHelper.resolve(tag);
-        } else {
-            return null;
-        }
+    @Nullable
+    public NBTElementHelper.NBTCompoundHelper getNBT() {
+        return NBTElementHelper.wrapCompound(base.getNbt());
     }
 
     /**

@@ -37,28 +37,38 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 
+@SuppressWarnings("AddedMixinMembersNamePattern")
 @Mixin(Screen.class)
 @Implements(@Interface(iface = IScreen.class, prefix = "soft$"))
 public abstract class MixinScreen extends AbstractParentElement implements IScreen, IScreenInternal {
     @Unique
     private final Set<RenderElement> elements = new LinkedHashSet<>();
     @Unique
+    @Nullable
     private MethodWrapper<Pos2D, Integer, Object, ?> onMouseDown;
     @Unique
+    @Nullable
     private MethodWrapper<Vec2D, Integer, Object, ?> onMouseDrag;
     @Unique
+    @Nullable
     private MethodWrapper<Pos2D, Integer, Object, ?> onMouseUp;
     @Unique
+    @Nullable
     private MethodWrapper<Pos2D, Pos2D, Object, ?> onScroll;
     @Unique
+    @Nullable
     private MethodWrapper<Integer, Integer, Object, ?> onKeyPressed;
     @Unique
+    @Nullable
     private MethodWrapper<Character, Integer, Object, ?> onCharTyped;
     @Unique
+    @Nullable
     private MethodWrapper<IScreen, Object, Object, ?> onInit;
     @Unique
+    @Nullable
     private MethodWrapper<String, Object, Object, ?> catchInit;
     @Unique
+    @Nullable
     private MethodWrapper<IScreen, Object, Object, ?> onClose;
 
     @Shadow
@@ -762,55 +772,55 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public IScreen setOnMouseDown(MethodWrapper<Pos2D, Integer, Object, ?> onMouseDown) {
+    public IScreen setOnMouseDown(@Nullable MethodWrapper<Pos2D, Integer, Object, ?> onMouseDown) {
         this.onMouseDown = onMouseDown;
         return this;
     }
 
     @Override
-    public IScreen setOnMouseDrag(MethodWrapper<Vec2D, Integer, Object, ?> onMouseDrag) {
+    public IScreen setOnMouseDrag(@Nullable MethodWrapper<Vec2D, Integer, Object, ?> onMouseDrag) {
         this.onMouseDrag = onMouseDrag;
         return this;
     }
 
     @Override
-    public IScreen setOnMouseUp(MethodWrapper<Pos2D, Integer, Object, ?> onMouseUp) {
+    public IScreen setOnMouseUp(@Nullable MethodWrapper<Pos2D, Integer, Object, ?> onMouseUp) {
         this.onMouseUp = onMouseUp;
         return this;
     }
 
     @Override
-    public IScreen setOnScroll(MethodWrapper<Pos2D, Pos2D, Object, ?> onScroll) {
+    public IScreen setOnScroll(@Nullable MethodWrapper<Pos2D, Pos2D, Object, ?> onScroll) {
         this.onScroll = onScroll;
         return this;
     }
 
     @Override
-    public IScreen setOnKeyPressed(MethodWrapper<Integer, Integer, Object, ?> onKeyPressed) {
+    public IScreen setOnKeyPressed(@Nullable MethodWrapper<Integer, Integer, Object, ?> onKeyPressed) {
         this.onKeyPressed = onKeyPressed;
         return this;
     }
 
     @Override
-    public IScreen setOnCharTyped(MethodWrapper<Character, Integer, Object, ?> onCharTyped) {
+    public IScreen setOnCharTyped(@Nullable MethodWrapper<Character, Integer, Object, ?> onCharTyped) {
         this.onCharTyped = onCharTyped;
         return this;
     }
 
     @Override
-    public IScreen setOnInit(MethodWrapper<IScreen, Object, Object, ?> onInit) {
+    public IScreen setOnInit(@Nullable MethodWrapper<IScreen, Object, Object, ?> onInit) {
         this.onInit = onInit;
         return this;
     }
 
     @Override
-    public IScreen setOnFailInit(MethodWrapper<String, Object, Object, ?> catchInit) {
+    public IScreen setOnFailInit(@Nullable MethodWrapper<String, Object, Object, ?> catchInit) {
         this.catchInit = catchInit;
         return this;
     }
 
     @Override
-    public IScreen setOnClose(MethodWrapper<IScreen, Object, Object, ?> onClose) {
+    public IScreen setOnClose(@Nullable MethodWrapper<IScreen, Object, Object, ?> onClose) {
         this.onClose = onClose;
         return this;
     }

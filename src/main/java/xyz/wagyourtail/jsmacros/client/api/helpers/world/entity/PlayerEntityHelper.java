@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
 import net.minecraft.entity.player.PlayerEntity;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.projectile.FishingBobberEntityHelper;
 
@@ -133,6 +134,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
      * @return the fishing bobber of the player, or {@code null} if the player is not fishing.
      * @since 1.8.4
      */
+    @Nullable
     public FishingBobberEntityHelper getFishingBobber() {
         return base.fishHook == null ? null : new FishingBobberEntityHelper(base.fishHook);
     }

@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.projectile;
 
 import net.minecraft.entity.projectile.FishingBobberEntity;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinFishingBobberEntity;
 
@@ -45,6 +46,7 @@ public class FishingBobberEntityHelper extends EntityHelper<FishingBobberEntity>
      * @return the hooked entity, or {@code null} if there is no entity hooked.
      * @since 1.8.4
      */
+    @Nullable
     public EntityHelper<?> getHookedEntity() {
         return hasEntityHooked() ? EntityHelper.create(base.getHookedEntity()) : null;
     }

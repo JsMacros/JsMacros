@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import net.minecraft.client.gui.DrawContext;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -766,6 +767,7 @@ public interface IDraw2D<T> {
      *
      * @param drawContext
      */
+    @DocletIgnore
     void render(DrawContext drawContext);
 
     /**

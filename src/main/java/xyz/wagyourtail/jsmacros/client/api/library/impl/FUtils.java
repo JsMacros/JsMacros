@@ -5,6 +5,7 @@ import net.minecraft.client.util.SelectionManager;
 import net.minecraft.util.Util;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.util.NameUtil;
@@ -119,7 +120,7 @@ public class FUtils extends BaseLibrary {
      * @return the hashed message.
      * @since 1.8.4
      */
-    public String hashString(String message) {
+    public String hashString(@Nullable String message) {
         return DigestUtils.sha256Hex(message);
     }
 
@@ -131,7 +132,8 @@ public class FUtils extends BaseLibrary {
      * @return the hashed message.
      * @since 1.8.4
      */
-    public String hashString(String message, String algorithm) {
+    @Nullable
+    public String hashString(@Nullable String message, String algorithm) {
         switch (algorithm) {
             case "sha256":
                 return DigestUtils.sha256Hex(message);

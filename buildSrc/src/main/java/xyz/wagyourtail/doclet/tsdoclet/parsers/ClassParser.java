@@ -1,6 +1,5 @@
 package xyz.wagyourtail.doclet.tsdoclet.parsers;
 
-import xyz.wagyourtail.doclet.DocletTypescriptExtends;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
 import xyz.wagyourtail.StringHelpers;
 
@@ -9,13 +8,13 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import java.lang.Override;
-import java.util.stream.Collectors;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ClassParser extends AbstractParser {
+    public static Map<TypeElement, Set<TypeElement>> mixinInterfaceMap = new LinkedHashMap<>();
     private Set<TypeElement> superMcClasses;
+    private boolean doesDirectExtendMc = false;
+    private Set<TypeElement> mixinInterfaces;
 
     public ClassParser(TypeElement type) {
         super(type);
@@ -60,18 +59,23 @@ public class ClassParser extends AbstractParser {
         if (sup.equals("void") || sup.equals("any")) {
             s.append("JavaObject");
         } else if (sup.startsWith("/* net.minecraft")) {
-            s.append(sup.substring(0, sup.length() - 3)).append("JavaObject");
+            s.append(sup, 0, sup.length() - 3).append("JavaObject");
         } else {
             s.append(sup);
         }
 
-        List<? extends TypeMirror> iface = type.getInterfaces();
-        if (iface != null && !iface.isEmpty()) {
+
+        Set<TypeMirror> iface = new HashSet<>(type.getInterfaces());
+        if (doesDirectExtendMc) for (TypeElement e : mixinInterfaces) {
+            iface.add(e.asType());
+            System.out.println("Added mixin interface " + e.getSimpleName() + " on class " + type.getSimpleName());
+        }
+        if (!iface.isEmpty()) {
             for (TypeMirror ifa : iface) {
                 sup = transformType(ifa, false, true);
                 s.append(", ");
                 if (sup.startsWith("/* net.minecraft")) {
-                    s.append(sup.substring(0, sup.length() - 3)).append("JavaObject");
+                    s.append(sup, 0, sup.length() - 3).append("JavaObject");
                 } else {
                     s.append(sup);
                 }
@@ -79,9 +83,6 @@ public class ClassParser extends AbstractParser {
         }
 
         if (s.toString().startsWith(" extends JavaObject, ")) s.delete(9, 21);
-
-        DocletTypescriptExtends ext = type.getAnnotation(DocletTypescriptExtends.class);
-        if (ext != null) s.append(", ").append(ext.value());
 
         return s.toString();
     }
@@ -93,6 +94,11 @@ public class ClassParser extends AbstractParser {
                 TypeElement supe = (TypeElement) ((DeclaredType) sup).asElement();
                 if (transformType(sup).startsWith("/* net.minecraft")) {
                     superMcClasses.add(supe);
+                    if (doesDirectExtendMc && mixinInterfaceMap.containsKey(supe)) {
+                        Set<TypeElement> ifs = mixinInterfaceMap.get(supe);
+                        set.addAll(ifs);
+                        mixinInterfaces.addAll(ifs);
+                    }
                 } else {
                     set.add(supe);
                 }
@@ -146,6 +152,10 @@ public class ClassParser extends AbstractParser {
         Set<Element> methods = new LinkedHashSet<>();
         Set<Element> constructors = new LinkedHashSet<>();
 
+        if (transformType(type.getSuperclass()).startsWith("/* net.minecraft")) {
+            doesDirectExtendMc = true;
+            mixinInterfaces = new LinkedHashSet<>();
+        }
         getSuperMcClasses(superClasses, type);
 
         for (Element el : type.getEnclosedElements()) {
