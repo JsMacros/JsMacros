@@ -470,7 +470,7 @@ public class FChat extends BaseLibrary {
         return sb.toString();
     }
 
-    private static final Pattern AMPERSAND_PATTERN = Pattern.compile("&.");
+    private static final Pattern AMPERSAND_PATTERN = Pattern.compile("&(.)");
 
     /**
      * escapes &amp;&amp; to &amp; since 1.9.0
