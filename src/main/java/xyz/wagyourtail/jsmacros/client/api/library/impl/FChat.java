@@ -485,7 +485,7 @@ public class FChat extends BaseLibrary {
             if (m.group().equals("&&"))
                 m.appendReplacement(sb, "&");
             else
-                m.appendReplacement(sb, "§");
+                m.appendReplacement(sb, "§$1");
         }
         m.appendTail(sb);
         return sb.toString();
