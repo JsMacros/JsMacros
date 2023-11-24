@@ -27,19 +27,19 @@ public class ForgeEvents {
     private static final MinecraftClient client = MinecraftClient.getInstance();
 
     public static void init() {
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onTick);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onRegisterCommands);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onTick);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onRegisterCommands);
 
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenDraw);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenDraw);
 
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenKeyPressed);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenCharTyped);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenKeyPressed);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenCharTyped);
 
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseClicked);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseReleased);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseScroll);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseDragged);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseClicked);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseReleased);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseScroll);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseDragged);
     }
 
     public static void onScreenKeyPressed(ScreenEvent.KeyPressed.Pre event) {
@@ -65,7 +65,7 @@ public class ForgeEvents {
     }
 
     public static void onScreenMouseScroll(ScreenEvent.MouseScrolled.Pre event) {
-        ((IScreenInternal) event.getScreen()).jsmacros_mouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDelta());
+        ((IScreenInternal) event.getScreen()).jsmacros_mouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY());
     }
 
     public static void onScreenMouseDragged(ScreenEvent.MouseDragged.Pre event) {
@@ -82,7 +82,7 @@ public class ForgeEvents {
     }
 
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent ev) {
-        ev.registerBelow(VanillaGuiOverlay.DEBUG_TEXT.id(), "jsmacros_hud", ForgeEvents::renderHudListener);
+        ev.registerBelow(VanillaGuiOverlay.DEBUG_SCREEN.id(), "jsmacros_hud", ForgeEvents::renderHudListener);
     }
 
     @SuppressWarnings("removal")

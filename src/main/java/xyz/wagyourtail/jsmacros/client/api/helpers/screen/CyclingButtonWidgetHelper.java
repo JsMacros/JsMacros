@@ -129,7 +129,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
         }
 
         /**
-         * The option text is a prefix of all values, seperated by a colon.
+         * The option text is a prefix of all values, separated by a colon.
          *
          * @return the option text of the button or an empty text if it is omitted.
          * @since 1.8.4

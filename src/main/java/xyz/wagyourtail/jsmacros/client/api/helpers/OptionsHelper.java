@@ -1565,7 +1565,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         }
 
         /**
-         * @return a list of all keybinding catehories.
+         * @return a list of all keybinding categories.
          * @since 1.8.4
          */
         @DocletReplaceReturn("JavaList<KeyCategory>")
@@ -1843,7 +1843,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatWidth(double val) {
-            base.getChatWidth().setValue(val);
+            getBase(base.getChatWidth()).forceSetValue(val);
             return this;
         }
 
@@ -1861,7 +1861,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatFocusedHeight(double val) {
-            base.getChatHeightFocused().setValue(val);
+            getBase(base.getChatHeightFocused()).forceSetValue(val);
             return this;
         }
 

@@ -18,13 +18,14 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * @author Wagyourtail
  * @since 1.6.5
  */
 @SuppressWarnings("unused")
-public class Surface extends Draw2D implements RenderElement, RenderElement3D {
+public class Surface extends Draw2D implements RenderElement, RenderElement3D<Surface> {
     public boolean rotateToPlayer;
     public boolean rotateCenter;
     @Nullable
@@ -221,6 +222,31 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D {
     @Override
     public int getZIndex() {
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Surface surface = (Surface) o;
+        return Objects.equals(pos, surface.pos) && Objects.equals(rotations, surface.rotations) && Objects.equals(sizes, surface.sizes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pos, rotations, sizes);
+    }
+
+    @Override
+    public int compareToSame(Surface other) {
+        int i = pos.compareTo(other.pos);
+        if (i == 0) {
+            i = rotations.compareTo(other.rotations);
+            if (i == 0) {
+                i = sizes.compareTo(other.sizes);
+            }
+        }
+        return i;
     }
 
     @Override

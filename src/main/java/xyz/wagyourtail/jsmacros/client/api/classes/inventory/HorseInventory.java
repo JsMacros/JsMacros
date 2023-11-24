@@ -50,7 +50,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
     }
 
     /**
-     * @return {@code true} if the horse can eqiup armor, {@code false} otherwise.
+     * @return {@code true} if the horse can equip armor, {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean hasArmorSlot() {
