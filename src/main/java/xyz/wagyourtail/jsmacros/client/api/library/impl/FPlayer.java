@@ -72,9 +72,18 @@ public class FPlayer extends BaseLibrary {
     /**
      * @since 1.9.0
      */
+    @Nullable
     public InteractionManagerHelper getInteractionManager() {
-        assert mc.interactionManager != null;
-        return new InteractionManagerHelper();
+        return mc.interactionManager == null ? null : new InteractionManagerHelper(mc.interactionManager);
+    }
+
+    /**
+     * alias for {@link FPlayer#getInteractionManager()}
+     * @since 1.9.0
+     */
+    @Nullable
+    public InteractionManagerHelper interactions() {
+        return getInteractionManager();
     }
 
     /**
