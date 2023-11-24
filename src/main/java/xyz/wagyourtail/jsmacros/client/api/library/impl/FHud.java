@@ -260,7 +260,7 @@ public class FHud extends BaseLibrary {
      * @see Draw3D
      * @since 1.0.6
      * <p>
-     * clears the Draw2D render list.
+     * clears the Draw3D render list.
      */
     public void clearDraw3Ds() {
         renders.clear();

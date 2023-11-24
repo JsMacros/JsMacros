@@ -112,7 +112,11 @@ if (enabled_loaders.contains("forge")) {
             devFallbackNamespace "intermediary"
         }
 
-        minecraftForge {
+        minecraftRemapper.config {
+            ignoreConflicts(true)
+        }
+
+        neoForged {
             loader project.forge_version
 
             mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
@@ -232,6 +236,7 @@ if (enabled_loaders.contains("forge")) {
 
 
     forgeJar {
+        dependsOn(":javascript_extension:jar")
         archiveClassifier = "forge-dev"
         from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
 
@@ -282,6 +287,7 @@ if (enabled_loaders.contains("fabric")) {
     }
 
     fabricJar {
+        dependsOn(":javascript_extension:jar")
         from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
 
         preserveFileTimestamps = false

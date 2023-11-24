@@ -14,11 +14,13 @@ import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 
+import java.util.Objects;
+
 /**
  * @author Wagyourtail
  */
 @SuppressWarnings("unused")
-public class Box implements RenderElement3D {
+public class Box implements RenderElement3D<Box> {
     public Vec3D pos;
     public int color;
     public int fillColor;
@@ -145,6 +147,27 @@ public class Box implements RenderElement3D {
      */
     public void setFill(boolean fill) {
         this.fill = fill;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Box box = (Box) o;
+        return Objects.equals(pos, box.pos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pos);
+    }
+
+    @Override
+    public int compareToSame(Box other) {
+        if (other instanceof Box) {
+            return pos.compareTo(((Box) other).pos);
+        }
+        return 0;
     }
 
     @Override

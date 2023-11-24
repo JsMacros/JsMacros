@@ -50,7 +50,6 @@ jobs:
 
       - name: Build
         run: |
-          ./gradlew :javascript_extension:build
           ./gradlew build
 
       - name: Upload To Artifacts

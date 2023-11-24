@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.Objects;
@@ -239,4 +240,11 @@ public class Vec3D extends Vec2D {
         return Objects.hash(super.hashCode(), z1, z2);
     }
 
+    public int compareTo(@NotNull Vec3D o) {
+        int i = getStart().compareTo(o.getStart());
+        if (i == 0) {
+            i = getEnd().compareTo(o.getEnd());
+        }
+        return i;
+    }
 }
