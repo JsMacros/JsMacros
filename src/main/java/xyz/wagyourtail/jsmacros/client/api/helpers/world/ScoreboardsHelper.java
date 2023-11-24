@@ -100,7 +100,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
 
     /**
      * @param player the player to get the team color for
-     * @return the color of the speicifed player's team or {@code -1} if the player is not in a team.
+     * @return the color of the specified player's team or {@code -1} if the player is not in a team.
      * @since 1.8.4
      */
     public int getTeamColor(PlayerEntityHelper<PlayerEntity> player) {
@@ -119,7 +119,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
 
     /**
      * @param player the player to get the team color's name for
-     * @return the name of the speicifed player's team color or {@code null} if the player is not in
+     * @return the name of the specified player's team color or {@code null} if the player is not in
      * a team.
      * @since 1.8.4
      */

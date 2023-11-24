@@ -30,7 +30,7 @@ public class AnvilInventory extends Inventory<AnvilScreen> {
      * @return self for chaining.
      * @since 1.8.4
      */
-    public AnvilInventory seName(String name) {
+    public AnvilInventory setName(String name) {
         ((MixinAnvilScreen) inventory).getNameField().setText(name);
         return this;
     }
