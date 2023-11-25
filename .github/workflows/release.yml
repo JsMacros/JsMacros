@@ -11,11 +11,13 @@ on:
 jobs:
 
   build_latest:
+    needs: build_backports
     uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
     with:
       branch: main
       GITHUB_REF: ${{ github.ref }}
       upload_docs: true
+      forge: neoforge
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
@@ -24,12 +26,14 @@ jobs:
   build_backports:
     strategy:
       matrix:
-        branch: [ 'backports/1.19.4' ]
+        branch: [ 'backports/1.19.4', 'backports/1.20.1' ]
+      max-parallel: 1
     uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
     with:
       branch: ${{ matrix.branch }}
       GITHUB_REF: ${{ github.ref }}
       upload_docs: false
+      forge: forge
     secrets:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
