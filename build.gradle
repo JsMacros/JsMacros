@@ -26,6 +26,7 @@ repositories {
         url 'https://files.minecraftforge.net/maven/'
     }
     maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.neoforged.net/releases' }
     mavenCentral()
 }
 
@@ -116,7 +117,7 @@ if (enabled_loaders.contains("forge")) {
             ignoreConflicts(true)
         }
 
-        neoForged {
+        minecraftForge {
             loader project.forge_version
 
             mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
