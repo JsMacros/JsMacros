@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.forge.client.forgeevents;
 
 import com.google.common.collect.ImmutableSet;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
@@ -12,7 +11,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
@@ -27,19 +25,19 @@ public class ForgeEvents {
     private static final MinecraftClient client = MinecraftClient.getInstance();
 
     public static void init() {
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::onTick);
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::onRegisterCommands);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onTick);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onRegisterCommands);
 
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenDraw);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenDraw);
 
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenKeyPressed);
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenCharTyped);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenKeyPressed);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenCharTyped);
 
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseClicked);
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseReleased);
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseScroll);
-        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseDragged);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseClicked);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseReleased);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseScroll);
+        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseDragged);
     }
 
     public static void onScreenKeyPressed(ScreenEvent.KeyPressed.Pre event) {
@@ -65,7 +63,7 @@ public class ForgeEvents {
     }
 
     public static void onScreenMouseScroll(ScreenEvent.MouseScrolled.Pre event) {
-        ((IScreenInternal) event.getScreen()).jsmacros_mouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY());
+        ((IScreenInternal) event.getScreen()).jsmacros_mouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDelta());
     }
 
     public static void onScreenMouseDragged(ScreenEvent.MouseDragged.Pre event) {
@@ -82,7 +80,7 @@ public class ForgeEvents {
     }
 
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent ev) {
-        ev.registerBelow(VanillaGuiOverlay.DEBUG_SCREEN.id(), "jsmacros_hud", ForgeEvents::renderHudListener);
+        ev.registerBelow(VanillaGuiOverlay.DEBUG_TEXT.id(), "jsmacros_hud", ForgeEvents::renderHudListener);
     }
 
     @SuppressWarnings("removal")
