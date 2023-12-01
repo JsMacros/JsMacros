@@ -8,6 +8,8 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 /**
  * @author Wagyourtail
  * @since 1.0.8
@@ -53,7 +55,7 @@ public class TextHelper extends BaseHelper<Text> {
      */
     @Deprecated
     public TextHelper replaceFromString(String content) {
-        base = Text.literal(content);
+        base = literal(content);
         return this;
     }
 
@@ -86,7 +88,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @since 1.8.4
      */
     public TextHelper withoutFormatting() {
-        return TextHelper.wrap(Text.literal(getStringStripFormatting()));
+        return TextHelper.wrap(literal(getStringStripFormatting()));
     }
 
     /**

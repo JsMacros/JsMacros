@@ -7,6 +7,8 @@ import xyz.wagyourtail.wagyourgui.elements.Button;
 
 import java.util.function.Consumer;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
     private boolean state;
     private Button checkBox;
@@ -25,12 +27,12 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
     public void init() {
         super.init();
 
-        checkBox = this.addDrawableChild(new Button(x, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(state ? "\u2713" : ""), btn -> {
+        checkBox = this.addDrawableChild(new Button(x, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal(state ? "\u2713" : ""), btn -> {
             state = !state;
             if (setState != null) {
                 setState.accept(state);
             }
-            btn.setMessage(Text.literal(state ? "\u2713" : ""));
+            btn.setMessage(literal(state ? "\u2713" : ""));
         }));
     }
 
@@ -42,7 +44,7 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
     @Override
     public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
-            textRenderer.drawTrimmed(drawContext, message, x + height, y + 2, width - height - 2, 0xFFFFFF);
+            textRenderer.drawTrimmed(message, x + height, y + 2, width - height - 2, 0xFFFFFF);
         }
     }
 

@@ -19,7 +19,7 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
      */
     @DocletReplaceReturn("VillagerProfession")
     public String getProfession() {
-        return base.getVillagerData().getProfession().id();
+        return base.getVillagerData().getProfession().toString();
     }
 
     /**

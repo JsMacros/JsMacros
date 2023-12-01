@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.vehicle;
 
 import net.minecraft.entity.vehicle.BoatEntity;
-import net.minecraft.entity.vehicle.ChestBoatEntity;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinBoatEntity;
@@ -18,19 +17,11 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
     }
 
     /**
-     * @return {@code true} if the boat is a chest boat, {@code false} otherwise.
-     * @since 1.8.4
-     */
-    public boolean isChestBoat() {
-        return base instanceof ChestBoatEntity;
-    }
-
-    /**
      * @return the boat's plank type.
      * @since 1.8.4
      */
     public BlockHelper getBoatBlockType() {
-        return new BlockHelper(base.getVariant().getBaseBlock());
+        return new BlockHelper(base.getBoatType().getBaseBlock());
     }
 
     /**
@@ -38,7 +29,7 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
      * @since 1.8.4
      */
     public String getBoatType() {
-        return base.getVariant().getName();
+        return base.getBoatType().getName();
     }
 
     /**

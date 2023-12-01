@@ -10,11 +10,11 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.RaycastContext;
 import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
@@ -73,7 +73,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      */
     @DocletReplaceParams("id: StatusEffectId")
     public boolean hasStatusEffect(String id) {
-        StatusEffect effect = Registries.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
+        StatusEffect effect = Registry.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
         return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));
     }
 
@@ -84,8 +84,8 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     @DocletReplaceParams("item: ItemId")
     public boolean isHolding(String item) {
         Identifier id = new Identifier(item);
-        if (id.equals(Registries.ITEM.getDefaultId())) return base.isHolding(Items.AIR);
-        Item it = Registries.ITEM.get(id);
+        if (id.equals(Registry.ITEM.getDefaultId())) return base.isHolding(Items.AIR);
+        Item it = Registry.ITEM.get(id);
         return it != Items.AIR && base.isHolding(it);
     }
 

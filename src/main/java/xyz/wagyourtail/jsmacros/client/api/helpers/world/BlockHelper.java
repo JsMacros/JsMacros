@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.block.Block;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -112,7 +112,7 @@ public class BlockHelper extends BaseHelper<Block> {
      */
     @DocletReplaceReturn("BlockId")
     public String getId() {
-        return Registries.BLOCK.getId(base).toString();
+        return Registry.BLOCK.getId(base).toString();
     }
 
     /**

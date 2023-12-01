@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
+
 public class CancelScreen extends BaseScreen {
     private int topScroll;
     private Scrollbar s;
@@ -29,7 +32,7 @@ public class CancelScreen extends BaseScreen {
     private final List<RunningContextContainer> running = new ArrayList<>();
 
     public CancelScreen(Screen parent) {
-        super(Text.literal("Cancel"), parent);
+        super(literal("Cancel"), parent);
     }
 
     @Override
@@ -41,8 +44,8 @@ public class CancelScreen extends BaseScreen {
         running.clear();
         s = this.addDrawableChild(new Scrollbar(width - 12, 5, 8, height - 10, 0xFFFFFFFF, 0xFF000000, 0x7FFFFFFF, 1, this::onScrollbar));
 
-        this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.back"), (btn) -> this.close()));
-        services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.showservices"), Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices, btn -> Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices = ((AnnotatedCheckBox) btn).value));
+        this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.back"), (btn) -> this.close()));
+        services = this.addDrawableChild(new AnnotatedCheckBox(this.width / 12 + 5, this.height - 12, 200, 12, textRenderer, 0xFFFFFFFF, 0xFF000000, 0xFFFFFFFF, 0xFFFFFF, translatable("jsmacros.showservices"), Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices, btn -> Core.getInstance().config.getOptions(ClientConfigV2.class).showRunningServices = ((AnnotatedCheckBox) btn).value));
     }
 
     public void addContainer(BaseScriptContext<?> t) {

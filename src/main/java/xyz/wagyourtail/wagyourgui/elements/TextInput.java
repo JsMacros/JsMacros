@@ -4,10 +4,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
+
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
 
 public class TextInput extends Button {
     public Consumer<String> onChange;
@@ -21,7 +22,7 @@ public class TextInput extends Button {
     protected int arrowCursor;
 
     public TextInput(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int highlightColor, int textColor, String message, Consumer<Button> onClick, Consumer<String> onChange) {
-        super(x, y, width, height, textRenderer, color, borderColor, color, textColor, Text.literal(""), onClick);
+        super(x, y, width, height, textRenderer, color, borderColor, color, textColor, literal(""), onClick);
         this.selColor = highlightColor;
         this.content = message;
         this.onChange = onChange;
@@ -37,18 +38,18 @@ public class TextInput extends Button {
     public void updateSelStart(int startIndex) {
         selStartIndex = startIndex;
         if (startIndex == 0) {
-            selStart = getX() + 1;
+            selStart = x + 1;
         } else {
-            selStart = getX() + 2 + textRenderer.getWidth(content.substring(0, startIndex));
+            selStart = x + 2 + textRenderer.getWidth(content.substring(0, startIndex));
         }
     }
 
     public void updateSelEnd(int endIndex) {
         selEndIndex = endIndex;
         if (endIndex == 0) {
-            selEnd = getX() + 2;
+            selEnd = x + 2;
         } else {
-            selEnd = getX() + 3 + textRenderer.getWidth(content.substring(0, endIndex));
+            selEnd = x + 3 + textRenderer.getWidth(content.substring(0, endIndex));
         }
     }
 
@@ -56,7 +57,7 @@ public class TextInput extends Button {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.clicked(mouseX, mouseY);
         if (this.isFocused()) {
-            int pos = textRenderer.trimToWidth(content, (int) (mouseX - getX() - 2)).length();
+            int pos = textRenderer.trimToWidth(content, (int) (mouseX - x - 2)).length();
             updateSelStart(pos);
             updateSelEnd(pos);
             arrowCursor = pos;
@@ -67,7 +68,7 @@ public class TextInput extends Button {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.isFocused()) {
-            int pos = textRenderer.trimToWidth(content, (int) (mouseX - getX() - 2)).length();
+            int pos = textRenderer.trimToWidth(content, (int) (mouseX - x - 2)).length();
             updateSelEnd(pos);
             arrowCursor = pos;
         }
@@ -212,9 +213,9 @@ public class TextInput extends Button {
 
     @Override
     protected void renderMessage(MatrixStack drawContext) {
-        fill(drawContext, selStart, height > 9 ? getY() + 2 : getY(), Math.min(selEnd, getX() + width - 2), (height > 9 ? getY() + 2 : getY()) + textRenderer.fontHeight, selColor);
-        textRenderer.drawWithShadow(drawContext, textRenderer.trimToWidth(content, width - 4), getX() + 2, height > 9 ? getY() + 2 :
-                getY(), textColor);
+        fill(drawContext, selStart, height > 9 ? y + 2 : y, Math.min(selEnd, x + width - 2), (height > 9 ? y + 2 : y) + textRenderer.fontHeight, selColor);
+        textRenderer.drawWithShadow(drawContext, textRenderer.trimToWidth(content, width - 4), x + 2, height > 9 ? y + 2 :
+                y, textColor);
     }
 
 }

@@ -1,8 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 
@@ -227,7 +227,7 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
         if (rotateCenter) {
             matrices.translate(width.getAsInt() / 2d, height.getAsInt() / 2d, 0);
         }
-        matrices.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotation)));
+        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
         if (rotateCenter) {
             matrices.translate(-width.getAsInt() / 2d, -height.getAsInt() / 2d, 0);
         }

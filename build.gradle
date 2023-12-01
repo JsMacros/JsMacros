@@ -97,12 +97,6 @@ sourceSets {
 
 if (enabled_loaders.contains("forge")) {
 
-    tasks.register("forgeJar", Jar) {
-        from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
-
-        archiveClassifier = "forge"
-    }
-
     unimined.minecraft(sourceSets.forge) {
         version project.minecraft_version
 
@@ -130,12 +124,6 @@ if (enabled_loaders.contains("forge")) {
 }
 
 if (enabled_loaders.contains("fabric")) {
-
-    tasks.register("fabricJar", Jar) {
-        from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
-
-        archiveClassifier = "fabric"
-    }
 
     unimined.minecraft(sourceSets.fabric) {
         version project.minecraft_version
@@ -169,13 +157,13 @@ dependencies {
     fabricModImplementation fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
     fabricModImplementation fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
     fabricModImplementation fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
-    fabricModImplementation fabricApi.module("fabric-command-api-v2", project.fapi_version)
+    fabricModImplementation fabricApi.module("fabric-command-api-v1", project.fapi_version)
 
     fabricInclude fabricApi.module("fabric-api-base", project.fapi_version)
     fabricInclude fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
     fabricInclude fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
     fabricInclude fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
-    fabricInclude fabricApi.module("fabric-command-api-v2", project.fapi_version)
+    fabricInclude fabricApi.module("fabric-command-api-v1", project.fapi_version)
 
     fabricInclude "io.noties:prism4j:${project.prism_version}"
     fabricInclude "com.neovisionaries:nv-websocket-client:2.10"

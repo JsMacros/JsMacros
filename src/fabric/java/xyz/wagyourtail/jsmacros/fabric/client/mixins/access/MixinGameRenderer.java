@@ -24,7 +24,7 @@ public class MixinGameRenderer {
     @Final
     private MinecraftClient client;
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;renderWithTooltip(Lnet/minecraft/client/util/math/MatrixStack;IIF)V"))
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V"))
     private void onRender(Screen instance, MatrixStack matrices, int mouseX, int mouseY, float delta) {
         instance.render(matrices, mouseX, mouseY, delta);
         if (!(client.currentScreen instanceof ScriptScreen)) {

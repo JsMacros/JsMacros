@@ -19,12 +19,14 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 /**
  * @author Wagyourtail
  */
 public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
     private final ScriptTrigger scriptTrigger;
-    private Text[] compiledText = new Text[]{Text.literal("")};
+    private Text[] compiledText = new Text[]{literal("")};
     private MethodWrapper<Integer, Object, Map<String, MethodWrapper<Object, Object, Object, ?>>, ?> getRClickActions = null;
     private List<AutoCompleteSuggestion> suggestions = new LinkedList<>();
 
@@ -40,7 +42,7 @@ public class ScriptCodeCompiler extends AbstractRenderCodeCompiler {
             TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
             StringWriter st = new StringWriter();
             ex.printStackTrace(new PrintWriter(st));
-            Text error = Text.literal(st.toString().replaceAll("\r", "").replaceAll("\t", "    ")).setStyle(EditorScreen.defaultStyle);
+            Text error = literal(st.toString().replaceAll("\r", "").replaceAll("\t", "    ")).setStyle(EditorScreen.defaultStyle);
             screen.openOverlay(new ConfirmOverlay(screen.width / 4, screen.height / 4, screen.width / 2, screen.height / 2, false, renderer, error, screen, (e) -> screen.openParent()));
         });
         if (t != null) {

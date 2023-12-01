@@ -12,6 +12,8 @@ import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 import java.util.List;
 
 import static net.minecraft.client.gui.DrawableHelper.fill;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
 
 public class AboutOverlay extends OverlayContainer {
     private List<OrderedText> text;
@@ -26,15 +28,15 @@ public class AboutOverlay extends OverlayContainer {
     public void init() {
         super.init();
         int w = width - 4;
-        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.literal("X"), (btn) -> this.close()));
+        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, literal("X"), (btn) -> this.close()));
 
-        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.literal("Website"), (btn) -> Util.getOperatingSystem().open("https://jsmacros.wagyourtail.xyz")));
+        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, literal("Website"), (btn) -> Util.getOperatingSystem().open("https://jsmacros.wagyourtail.xyz")));
 
-        this.addDrawableChild(new Button(x + w / 3 + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.literal("Discord"), (btn) -> Util.getOperatingSystem().open("https://discord.gg/P6W58J8")));
+        this.addDrawableChild(new Button(x + w / 3 + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, literal("Discord"), (btn) -> Util.getOperatingSystem().open("https://discord.gg/P6W58J8")));
 
-        this.addDrawableChild(new Button(x + w * 2 / 3 + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.literal("CurseForge"), (btn) -> Util.getOperatingSystem().open("https://www.curseforge.com/minecraft/mc-mods/jsmacros")));
+        this.addDrawableChild(new Button(x + w * 2 / 3 + 2, y + height - 14, w / 3, 12, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, literal("CurseForge"), (btn) -> Util.getOperatingSystem().open("https://www.curseforge.com/minecraft/mc-mods/jsmacros")));
 
-        this.setMessage(Text.translatable("jsmacros.aboutinfo"));
+        this.setMessage(translatable("jsmacros.aboutinfo"));
     }
 
     public void setMessage(Text message) {
@@ -54,7 +56,7 @@ public class AboutOverlay extends OverlayContainer {
     public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         renderBackground(drawContext);
 
-        textRenderer.drawTrimmed(drawContext, Text.translatable("jsmacros.about"), x + 3, y + 3, width - 14, 0xFFFFFF);
+        textRenderer.drawTrimmed(translatable("jsmacros.about"), x + 3, y + 3, width - 14, 0xFFFFFF);
         renderMessage(drawContext);
 
         fill(drawContext, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);

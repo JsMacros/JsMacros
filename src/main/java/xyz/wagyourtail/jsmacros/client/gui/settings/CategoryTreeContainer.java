@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
+
 public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreeParent> implements ICategoryTreeParent {
     public final String category;
     public Scrollbar scroll;
@@ -80,7 +83,7 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
     private int updateOffsets(int y, int minShow, int maxShow, boolean parentShowChildren) {
         this.y = y;
         if (this.expandBtn != null) {
-            this.expandBtn.setY(y);
+            this.expandBtn.y = y;
             if (y < minShow || y + btnHeight > maxShow) {
                 this.expandBtn.visible = false;
             } else {
@@ -88,7 +91,7 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
             }
         }
         if (this.showBtn != null) {
-            this.showBtn.setY(y);
+            this.showBtn.y = y;
             if (y < minShow || y + btnHeight > maxShow) {
                 this.showBtn.visible = false;
             } else {
@@ -130,10 +133,10 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
 
     private void initChild(boolean show) {
         if (children.size() > 0) {
-            expandBtn = addDrawableChild(new Button(x, y, btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(">"), (btn) -> this.toggleExpand()));
+            expandBtn = addDrawableChild(new Button(x, y, btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal(">"), (btn) -> this.toggleExpand()));
             expandBtn.visible = show;
         }
-        showBtn = addDrawableChild(new Button(x + btnHeight, y, width - btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable(category), (btn) -> this.selectCategory()));
+        showBtn = addDrawableChild(new Button(x + btnHeight, y, width - btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable(category), (btn) -> this.selectCategory()));
         showBtn.visible = show;
         showBtn.horizCenter = false;
 
@@ -144,7 +147,7 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
 
     private void toggleExpand() {
         showChildren = !showChildren;
-        expandBtn.setMessage(Text.literal(showChildren ? "<" : ">"));
+        expandBtn.setMessage(literal(showChildren ? "<" : ">"));
         updateOffsets();
     }
 

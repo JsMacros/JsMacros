@@ -24,9 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 import static net.minecraft.client.gui.DrawableHelper.fill;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
 
 public class SettingsOverlay extends OverlayContainer implements ICategoryTreeParent {
-    private final Text title = Text.translatable("jsmacros.settings");
+    private final Text title = translatable("jsmacros.settings");
     private CategoryTreeContainer sections;
     private AbstractSettingContainer category;
     private final SettingTree settings = new SettingTree();
@@ -76,10 +78,10 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
         super.init();
         int w = width - 4;
 
-        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.literal("X"), (btn) -> this.close()));
+        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, literal("X"), (btn) -> this.close()));
         sections = new CategoryTreeContainer(x + 2, y + 13, w / 3, height - 17, textRenderer, this);
 
-        this.addDrawableChild(new Button(x + width / 2, y + 2, width / 2 - 12, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.reloadconfig"), (btn) -> {
+        this.addDrawableChild(new Button(x + width / 2, y + 2, width / 2 - 12, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.reloadconfig"), (btn) -> {
             try {
                 Core.getInstance().config.loadConfig();
             } catch (IllegalAccessException | InstantiationException | IOException e) {
@@ -131,7 +133,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
                 this.category.addSetting(field);
             }
         } else {
-            openOverlay(new ConfirmOverlay(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, Text.translatable("jsmacros.failedsettinggroup"), this, null));
+            openOverlay(new ConfirmOverlay(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, translatable("jsmacros.failedsettinggroup"), this, null));
         }
     }
 
@@ -148,7 +150,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
 
         sections.render(drawContext, mouseX, mouseY, delta);
 
-        textRenderer.drawTrimmed(drawContext, title, x + 3, y + 3, width - 14, 0xFFFFFF);
+        textRenderer.drawTrimmed(title, x + 3, y + 3, width - 14, 0xFFFFFF);
         fill(drawContext, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
 
         //sep

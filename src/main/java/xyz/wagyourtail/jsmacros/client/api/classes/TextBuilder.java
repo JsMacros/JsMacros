@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 /**
  * usage: {@code builder.append("hello,").withColor(0xc).append(" World!").withColor(0x6)}
  *
@@ -26,7 +28,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class TextBuilder {
-    private final MutableText head = Text.literal("");
+    private final MutableText head = literal("");
     private MutableText self = head;
 
     public TextBuilder() {
@@ -52,7 +54,7 @@ public class TextBuilder {
     }
 
     private void appendInternal(String text) {
-        head.append(self = Text.literal(text));
+        head.append(self = literal(text));
     }
 
     private void appendInternal(TextHelper helper) {

@@ -3,8 +3,6 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.client.gui.hud.MessageIndicator;
-import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -21,13 +19,16 @@ import java.util.function.Predicate;
 @Mixin(ChatHud.class)
 public abstract class MixinChatHud implements IChatHud {
 
+
     @Shadow
-    private void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh) {
-    }
+    private void addMessage(Text message, int messageId) {}
+
+    @Shadow
+    private void addMessage(Text message, int messageId, int timestamp, boolean refresh) {}
 
     @Shadow
     @Final
-    private List<ChatHudLine> messages;
+    private List<ChatHudLine<Text>> messages;
 
 //    @Shadow protected abstract void removeMessage(int messageId);
 
@@ -47,11 +48,11 @@ public abstract class MixinChatHud implements IChatHud {
 
     @Override
     public void jsmacros_addMessageBypass(Text message) {
-        addMessage(message, null, client.inGameHud.getTicks(), MessageIndicator.system(), false);
+        addMessage(message, 0);
     }
 
     @Override
-    public List<ChatHudLine> jsmacros_getMessages() {
+    public List<ChatHudLine<Text>> jsmacros_getMessages() {
         return messages;
     }
 
@@ -66,11 +67,11 @@ public abstract class MixinChatHud implements IChatHud {
     @Override
     public void jsmacros_addMessageAtIndexBypass(Text message, int index, int time) {
         positionOverride.set(index);
-        addMessage(message, null, time, MessageIndicator.system(), false);
+        addMessage(message, 0, time, false);
         positionOverride.set(0);
     }
 
-    @ModifyArg(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V", remap = false))
+    @ModifyArg(method = "addMessage(Lnet/minecraft/text/Text;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V", ordinal = 1, remap = false))
     public int overrideMessagePos(int pos) {
         return positionOverride.get();
     }
@@ -82,11 +83,11 @@ public abstract class MixinChatHud implements IChatHud {
 
     @Override
     public void jsmacros_removeMessageByText(Text text) {
-        messages.removeIf((c) -> c.content().equals(text));
+        messages.removeIf((c) -> c.getText().equals(text));
     }
 
     @Override
-    public void jsmacros_removeMessagePredicate(Predicate<ChatHudLine> textfilter) {
+    public void jsmacros_removeMessagePredicate(Predicate<ChatHudLine<Text>> textfilter) {
         messages.removeIf(textfilter);
     }
 

@@ -19,6 +19,7 @@ import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
+import xyz.wagyourtail.jsmacros.client.backport.TextBackport;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.editor.History;
 import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
@@ -41,8 +42,11 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
+
 public class EditorScreen extends BaseScreen {
-    private static final OrderedText ellipses = Text.literal("...").formatted(Formatting.DARK_GRAY).asOrderedText();
+    private static final OrderedText ellipses = literal("...").formatted(Formatting.DARK_GRAY).asOrderedText();
     public static final List<String> langs = Lists.newArrayList(
             "javascript",
             "lua",
@@ -63,7 +67,7 @@ public class EditorScreen extends BaseScreen {
     public final SelectCursor cursor;
     private int ellipsesWidth;
     protected String savedString;
-    protected Text fileName = Text.literal("");
+    protected Text fileName = literal("");
     protected String lineCol = "";
     protected Scrollbar scrollbar;
     protected Button saveBtn;
@@ -78,7 +82,7 @@ public class EditorScreen extends BaseScreen {
     public AbstractRenderCodeCompiler codeCompiler;
 
     public EditorScreen(Screen parent, @NotNull File file) {
-        super(Text.literal("Editor"), parent);
+        super(literal("Editor"), parent);
         this.file = file;
         FileHandler handler = new FileHandler(file);
         String content;
@@ -230,9 +234,9 @@ public class EditorScreen extends BaseScreen {
         int width = this.width - 10;
 
         scrollbar = addDrawableChild(new Scrollbar(width, 12, 10, height - 24, 0, 0xFF000000, 0xFFFFFFFF, 1, this::setScroll));
-        saveBtn = this.addDrawableChild(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, Text.translatable("jsmacros.save"), (btn) -> save()));
-        this.addDrawableChild(new Button(width * 4 / 6, 0, width / 6, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.close"), (btn) -> openParent()));
-        this.addDrawableChild(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(client.world == null ? "X" : "-"), (btn) -> close()));
+        saveBtn = this.addDrawableChild(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, translatable("jsmacros.save"), (btn) -> save()));
+        this.addDrawableChild(new Button(width * 4 / 6, 0, width / 6, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.close"), (btn) -> openParent()));
+        this.addDrawableChild(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal(client.world == null ? "X" : "-"), (btn) -> close()));
 
         if (language == null) {
             setLanguage(getDefaultLanguage());
@@ -259,19 +263,19 @@ public class EditorScreen extends BaseScreen {
             }
         };
 
-        this.addDrawableChild(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(language), (btn) -> {
+        this.addDrawableChild(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal(language), (btn) -> {
             int height = langs.size() * (textRenderer.fontHeight + 1) + 4;
-            openOverlay(new SelectorDropdownOverlay(btn.getX(), btn.getY() - height, btn.getWidth(), height, langs.stream().map(Text::literal).collect(Collectors.toList()), textRenderer, this, (i) -> {
+            openOverlay(new SelectorDropdownOverlay(btn.x, btn.y - height, btn.getWidth(), height, langs.stream().map(TextBackport::literal).collect(Collectors.toList()), textRenderer, this, (i) -> {
                 setLanguage(langs.get(i));
-                btn.setMessage(Text.literal(langs.get(i)));
+                btn.setMessage(literal(langs.get(i)));
             }));
         }));
 
-        this.addDrawableChild(new Button(this.width - width / 4, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.settings"), (btn) -> {
+        this.addDrawableChild(new Button(this.width - width / 4, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.settings"), (btn) -> {
             openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
         }));
 
-        this.fileName = Text.literal(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
+        this.fileName = literal(textRenderer.trimToWidth(file.getName(), (width - 10) / 2));
 
         setScroll(0);
         scrollToCursor();
@@ -592,7 +596,7 @@ public class EditorScreen extends BaseScreen {
                 displayList.add(sug.displayText);
             }
             String[] lines = history.current.substring(0, startIndex).split("\n", -1);
-            int startCol = textRenderer.getWidth(Text.literal(lines[lines.length - 1]).setStyle(defaultStyle));
+            int startCol = textRenderer.getWidth(literal(lines[lines.length - 1]).setStyle(defaultStyle));
             int add = lineSpread - scroll % lineSpread;
             if (add == lineSpread) {
                 add = 0;
@@ -643,7 +647,7 @@ public class EditorScreen extends BaseScreen {
                 saveBtn.setColor(0xFF00A000);
                 saveBtn.setHighlightColor(0xFF707000);
             } catch (IOException e) {
-                openOverlay(new ConfirmOverlay(this.width / 4, height / 4, this.width / 2, height / 2, textRenderer, Text.translatable("jsmacros.errorsaving").append(Text.literal("\n\n" + e.getMessage())), this, null));
+                openOverlay(new ConfirmOverlay(this.width / 4, height / 4, this.width / 2, height / 2, textRenderer, translatable("jsmacros.errorsaving").append(literal("\n\n" + e.getMessage())), this, null));
             }
         }
     }
@@ -696,7 +700,7 @@ public class EditorScreen extends BaseScreen {
             } else if (cursor.endLine == j) {
                 fill(drawContext, 29, y + add + i * lineSpread, 30 + cursor.endCol, y + add + (i + 1) * lineSpread, 0xFF33508F);
             }
-            Text lineNum = Text.literal(String.format("%d.", j + 1)).setStyle(lineNumStyle);
+            Text lineNum = literal(String.format("%d.", j + 1)).setStyle(lineNumStyle);
             client.textRenderer.draw(drawContext, lineNum, 28 - client.textRenderer.getWidth(lineNum), y + add + i * lineSpread, 0xFFFFFF);
             client.textRenderer.draw(drawContext, trim(renderedText[j]), 30, y + add + i * lineSpread, 0xFFFFFF);
         }
@@ -723,7 +727,7 @@ public class EditorScreen extends BaseScreen {
     @Override
     public void openParent() {
         if (needSave()) {
-            openOverlay(new ConfirmOverlay(width / 4, height / 4, width / 2, height / 2, textRenderer, Text.translatable("jsmacros.nosave"), this, (container) -> super.openParent()));
+            openOverlay(new ConfirmOverlay(width / 4, height / 4, width / 2, height / 2, textRenderer, translatable("jsmacros.nosave"), this, (container) -> super.openParent()));
         } else {
             super.openParent();
         }
@@ -775,7 +779,7 @@ public class EditorScreen extends BaseScreen {
         }
         options.put("paste", this::pasteFromClipboard);
         options.putAll(codeCompiler.getRightClickOptions(index));
-        openOverlay(new SelectorDropdownOverlay(mouseX, mouseY, 100, (textRenderer.fontHeight + 1) * options.size() + 4, options.keySet().stream().map(Text::literal).collect(Collectors.toList()), textRenderer, this, i -> options.values().toArray(new Runnable[0])[i].run()));
+        openOverlay(new SelectorDropdownOverlay(mouseX, mouseY, 100, (textRenderer.fontHeight + 1) * options.size() + 4, options.keySet().stream().map(TextBackport::literal).collect(Collectors.toList()), textRenderer, this, i -> options.values().toArray(new Runnable[0])[i].run()));
     }
 
     private int getIndexPosition(double x, double y) {

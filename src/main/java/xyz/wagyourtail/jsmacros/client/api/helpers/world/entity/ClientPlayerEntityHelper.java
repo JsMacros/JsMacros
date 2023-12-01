@@ -12,13 +12,13 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.RaycastContext;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
@@ -80,7 +80,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.8.4
      */
     private ClientPlayerEntityHelper<T> addVelocity(Vec3d velocity) {
-        base.addVelocity(velocity);
+        base.addVelocity(velocity.x, velocity.y, velocity.z);
         return this;
     }
 
@@ -500,7 +500,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
+            ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
             assert mc.player != null;
             if (result.isAccepted()) {
                 mc.player.swingHand(hand);
@@ -508,7 +508,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
+                ActionResult result = mc.interactionManager.interactItem(mc.player, mc.world, hand);
                 assert mc.player != null;
                 if (result.isAccepted()) {
                     mc.player.swingHand(hand);
@@ -583,7 +583,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactBlock(mc.player, hand,
+            ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
                     new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
             );
             assert mc.player != null;
@@ -593,7 +593,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactBlock(mc.player, hand,
+                ActionResult result = mc.interactionManager.interactBlock(mc.player, mc.world, hand,
                         new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
                 );
                 assert mc.player != null;
@@ -719,7 +719,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public int getItemCooldownRemainingTicks(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
-        IItemCooldownEntry entry = map.get(Registries.ITEM.get(RegistryHelper.parseIdentifier(item)));
+        IItemCooldownEntry entry = map.get(Registry.ITEM.get(RegistryHelper.parseIdentifier(item)));
         if (entry == null) {
             return -1;
         }
@@ -746,7 +746,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     public int getTicksSinceCooldownStart(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
-        IItemCooldownEntry entry = map.get(Registries.ITEM.get(RegistryHelper.parseIdentifier(item)));
+        IItemCooldownEntry entry = map.get(Registry.ITEM.get(RegistryHelper.parseIdentifier(item)));
         if (entry == null) {
             return -1;
         }

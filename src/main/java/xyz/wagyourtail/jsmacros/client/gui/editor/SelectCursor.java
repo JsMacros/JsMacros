@@ -7,6 +7,8 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.function.Consumer;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 public class SelectCursor {
     private final MinecraftClient mc = MinecraftClient.getInstance();
     public Consumer<SelectCursor> onChange;
@@ -36,7 +38,7 @@ public class SelectCursor {
         this.startIndex = MathHelper.clamp(startIndex, 0, current.length());
         String[] prev = current.substring(0, this.startIndex).split("\n", -1);
         startLine = prev.length - 1;
-        startCol = mc.textRenderer.getWidth(Text.literal(prev[startLine]).setStyle(defaultStyle)) - 1;
+        startCol = mc.textRenderer.getWidth(literal(prev[startLine]).setStyle(defaultStyle)) - 1;
         startLineIndex = prev[startLine].length();
         if (onChange != null) {
             onChange.accept(this);
@@ -47,7 +49,7 @@ public class SelectCursor {
         this.endIndex = MathHelper.clamp(endIndex, 0, current.length());
         String[] prev = current.substring(0, this.endIndex).split("\n", -1);
         endLine = prev.length - 1;
-        endCol = mc.textRenderer.getWidth(Text.literal(prev[endLine]).setStyle(defaultStyle));
+        endCol = mc.textRenderer.getWidth(literal(prev[endLine]).setStyle(defaultStyle));
         endLineIndex = prev[endLine].length();
         if (onChange != null) {
             onChange.accept(this);

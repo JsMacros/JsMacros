@@ -40,7 +40,7 @@ public class LongField extends AbstractSettingField<Long> {
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
         for (ClickableWidget btn : buttons) {
-            btn.setY(y);
+            btn.y = y;
         }
     }
 

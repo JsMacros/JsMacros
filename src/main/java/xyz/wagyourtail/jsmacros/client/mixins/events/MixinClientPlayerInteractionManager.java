@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.mixins.events;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -31,7 +32,7 @@ public class MixinClientPlayerInteractionManager {
     private MinecraftClient client;
 
     @Inject(at = @At("RETURN"), method = "interactBlock")
-    public void onInteractBlock(ClientPlayerEntity player, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
+    public void onInteractBlock(ClientPlayerEntity player, ClientWorld world, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
         if (cir.getReturnValue() != ActionResult.FAIL) {
             BlockPos pos = hitResult.getBlockPos();
             new EventInteractBlock(

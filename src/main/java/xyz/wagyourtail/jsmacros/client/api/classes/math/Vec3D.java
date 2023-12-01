@@ -1,8 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
+import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 import java.util.Objects;
 
@@ -218,8 +219,8 @@ public class Vec3D extends Vec2D {
      * @return
      * @since 1.6.5
      */
-    public Vector3f toMojangFloatVector() {
-        return new Vector3f((float) (x2 - x1), (float) (y2 - y1), (float) (z2 - z1));
+    public Vec3f toMojangFloatVector() {
+        return new Vec3f((float) (x2 - x1), (float) (y2 - y1), (float) (z2 - z1));
     }
 
     @Override

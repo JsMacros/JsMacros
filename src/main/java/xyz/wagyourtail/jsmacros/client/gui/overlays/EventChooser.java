@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static net.minecraft.client.gui.DrawableHelper.fill;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
 
 public class EventChooser extends OverlayContainer {
     private String selected;
@@ -30,7 +32,7 @@ public class EventChooser extends OverlayContainer {
         super(x, y, width, height, textRenderer, parent);
         this.selected = selected;
         this.setEvent = setEvent;
-        this.eventText = Text.translatable("jsmacros.events");
+        this.eventText = translatable("jsmacros.events");
     }
 
     public void selectEvent(String event) {
@@ -49,14 +51,14 @@ public class EventChooser extends OverlayContainer {
         super.init();
         int w = width - 4;
         topScroll = y + 13;
-        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.literal("X"), (btn) -> {
+        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, literal("X"), (btn) -> {
             this.close();
         }));
         scroll = this.addDrawableChild(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("gui.cancel"), (btn) -> {
+        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, translatable("gui.cancel"), (btn) -> {
             this.close();
         }));
-        this.addDrawableChild(new Button(x + w / 2 + 3, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.select"), (btn) -> {
+        this.addDrawableChild(new Button(x + w / 2 + 3, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.select"), (btn) -> {
             if (this.selected != null && this.setEvent != null) {
                 this.setEvent.accept(this.selected);
                 this.close();
@@ -104,7 +106,7 @@ public class EventChooser extends OverlayContainer {
     public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         renderBackground(drawContext);
 
-        textRenderer.drawTrimmed(drawContext, eventText, x + 3, y + 3, width - 14, 0xFFFFFF);
+        textRenderer.drawTrimmed(eventText, x + 3, y + 3, width - 14, 0xFFFFFF);
 
         fill(drawContext, x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
         fill(drawContext, x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);

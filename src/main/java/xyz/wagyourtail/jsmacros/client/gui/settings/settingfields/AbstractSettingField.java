@@ -6,6 +6,8 @@ import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.AbstractSettingContainer;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
+
 public abstract class AbstractSettingField<T> extends MultiElementContainer<AbstractSettingContainer> {
     protected final SettingsOverlay.SettingField<T> setting;
     protected final Text settingName;
@@ -13,7 +15,7 @@ public abstract class AbstractSettingField<T> extends MultiElementContainer<Abst
     public AbstractSettingField(int x, int y, int width, int height, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<T> field) {
         super(x, y, width, height, textRenderer, parent);
         setting = field;
-        settingName = Text.translatable(field.option.translationKey());
+        settingName = translatable(field.option.translationKey());
         init();
     }
 

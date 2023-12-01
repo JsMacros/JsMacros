@@ -1,11 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -15,6 +15,8 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
 
 /**
  * @author Etheradon
@@ -36,7 +38,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     @DocletReplaceParams("enchantment: EnchantmentId")
     public EnchantmentHelper(String enchantment) {
-        this(Registries.ENCHANTMENT.get(new Identifier(enchantment)));
+        this(Registry.ENCHANTMENT.get(new Identifier(enchantment)));
     }
 
     /**
@@ -92,7 +94,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public TextHelper getRomanLevelName(int level) {
-        MutableText mutableText = Text.translatable(base.getTranslationKey());
+        MutableText mutableText = translatable(base.getTranslationKey());
         mutableText.formatted(base.isCursed() ? Formatting.RED : Formatting.GRAY);
         if (level != 1 || this.getMaxLevel() != 1) {
             mutableText.append(" ").append(getRomanNumeral(level));
@@ -121,7 +123,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public String getName() {
-        return Text.translatable(base.getTranslationKey()).getString();
+        return translatable(base.getTranslationKey()).getString();
     }
 
     /**
@@ -130,7 +132,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      */
     @DocletReplaceReturn("EnchantmentId")
     public String getId() {
-        return Registries.ENCHANTMENT.getId(base).toString();
+        return Registry.ENCHANTMENT.getId(base).toString();
     }
 
     /**
@@ -170,7 +172,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments(boolean ignoreType) {
-        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.target == base.target) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -190,7 +192,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments(boolean ignoreType) {
-        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.target == base.target) && e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registry.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.type == base.type) && e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -199,7 +201,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      */
     @DocletReplaceReturn("EnchantmentTargetType")
     public String getTargetType() {
-        switch (base.target) {
+        switch (base.type) {
             case ARMOR:
                 return "ARMOR";
             case ARMOR_FEET:
@@ -294,7 +296,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<ItemHelper> getAcceptableItems() {
-        return Registries.ITEM.stream().filter(item -> base.target.isAcceptableItem(item)).map(ItemHelper::new).collect(Collectors.toList());
+        return Registry.ITEM.stream().filter(item -> base.type.isAcceptableItem(item)).map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -305,7 +307,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      */
     @DocletReplaceParams("enchantment: EnchantmentId")
     public boolean isCompatible(String enchantment) {
-        return base.canCombine(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
+        return base.canCombine(Registry.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
     }
 
     /**

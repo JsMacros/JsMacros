@@ -4,7 +4,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.*;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -28,7 +28,7 @@ public class ItemHelper extends BaseHelper<Item> {
     }
 
     private Stream<ItemGroup> getGroups() {
-        return ItemGroups.getGroups().parallelStream().filter(group -> !group.isSpecial() && group.getDisplayStacks().parallelStream().anyMatch(e -> e.isOf(base)));
+        return Stream.ofNullable(base.getGroup());
     }
 
     /**
@@ -46,7 +46,8 @@ public class ItemHelper extends BaseHelper<Item> {
      */
     @Nullable
     public List<ItemStackHelper> getGroupIcon() {
-        return getGroups() == null ? null : getGroups().map(ItemGroup::getIcon).map(ItemStackHelper::new).collect(Collectors.toList());
+        getGroups();
+        return getGroups().map(ItemGroup::getIcon).map(ItemStackHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -162,7 +163,7 @@ public class ItemHelper extends BaseHelper<Item> {
      */
     @DocletReplaceReturn("ItemId")
     public String getId() {
-        return Registries.ITEM.getId(base).toString();
+        return Registry.ITEM.getId(base).toString();
     }
 
     /**
@@ -204,7 +205,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isWearable() {
-        return base instanceof Equipment && ((Equipment) base).getSlotType().isArmorSlot();
+        return base instanceof Wearable;
     }
 
     /**
@@ -251,8 +252,9 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public ItemStackHelper getStackWithNbt(String nbt) throws CommandSyntaxException {
-        ItemStringReader.ItemResult itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(getId() + nbt));
-        return new ItemStackHelper(new ItemStack(itemResult.item()));
+        ItemStringReader itemResult = new ItemStringReader(new StringReader(getId() + nbt), true);
+        itemResult.readItem();
+        return new ItemStackHelper(new ItemStack(itemResult.getItem()));
     }
 
     @Override

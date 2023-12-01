@@ -27,6 +27,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
+
 public class MacroScreen extends BaseScreen {
     protected MultiElementContainer<MacroScreen> topbar;
     protected Scrollbar macroScroll;
@@ -39,35 +42,35 @@ public class MacroScreen extends BaseScreen {
     protected Button aboutBtn;
 
     public MacroScreen(Screen parent) {
-        super(Text.translatable("jsmacros.title"), parent);
+        super(translatable("jsmacros.title"), parent);
     }
 
     @Override
     protected void init() {
         super.init();
         macros.clear();
-        keyScreen = this.addDrawableChild(new Button(0, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.keys"), btn -> {
+        keyScreen = this.addDrawableChild(new Button(0, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.keys"), btn -> {
             assert client != null;
             if (client.currentScreen.getClass() != KeyMacrosScreen.class) {
                 client.setScreen(new KeyMacrosScreen(this));
             }
         }));
 
-        eventScreen = this.addDrawableChild(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.events"), btn -> {
+        eventScreen = this.addDrawableChild(new Button(this.width / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.events"), btn -> {
             assert client != null;
             if (client.currentScreen.getClass() != EventMacrosScreen.class) {
                 client.setScreen(new EventMacrosScreen(this));
             }
         }));
 
-        serviceScreen = this.addDrawableChild(new Button(2 * this.width / 6 + 2, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.services"), btn -> {
+        serviceScreen = this.addDrawableChild(new Button(2 * this.width / 6 + 2, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.services"), btn -> {
             assert client != null;
             if (client.currentScreen.getClass() != ServiceScreen.class) {
                 client.setScreen(new ServiceScreen(this));
             }
         }));
 
-        this.addDrawableChild(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.settings"), (btn) -> {
+        this.addDrawableChild(new Button(this.width * 5 / 6 + 1, 0, this.width / 6 - 1, 20, textRenderer, 0x00FFFFFF, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.settings"), (btn) -> {
             openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
         }));
 
@@ -76,12 +79,12 @@ public class MacroScreen extends BaseScreen {
         topScroll = 40;
         macroScroll = this.addDrawableChild(new Scrollbar(this.width * 23 / 24 - 4, 50, 8, this.height - 75, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
 
-        runningBtn = this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.running"), (btn) -> {
+        runningBtn = this.addDrawableChild(new Button(0, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.running"), (btn) -> {
             assert client != null;
             client.setScreen(new CancelScreen(this));
         }));
 
-        aboutBtn = this.addDrawableChild(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
+        aboutBtn = this.addDrawableChild(new Button(this.width * 11 / 12, this.height - 12, this.width / 12, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.about"), (btn) -> this.openOverlay(new AboutOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this))));
     }
 
     protected MultiElementContainer<MacroScreen> createTopbar() {
@@ -121,7 +124,7 @@ public class MacroScreen extends BaseScreen {
     }
 
     public void confirmRemoveMacro(MultiElementContainer<MacroScreen> macro) {
-        openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, Text.translatable("jsmacros.confirmdeletemacro"), this, (conf) -> removeMacro(macro)));
+        openOverlay(new ConfirmOverlay(width / 2 - 100, height / 2 - 50, 200, 100, this.textRenderer, translatable("jsmacros.confirmdeletemacro"), this, (conf) -> removeMacro(macro)));
     }
 
     public void removeMacro(MultiElementContainer<MacroScreen> macro) {
@@ -206,7 +209,7 @@ public class MacroScreen extends BaseScreen {
             macro.render(drawContext, mouseX, mouseY, delta);
         }
 
-        drawCenteredTextWithShadow(drawContext, this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0x7F7F7F);
+        drawCenteredTextWithShadow(drawContext, this.textRenderer, literal(Core.getInstance().profile.getCurrentProfileName()).asOrderedText(), this.width * 8 / 12, 5, 0x7F7F7F);
 
         fill(drawContext, this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         fill(drawContext, this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);

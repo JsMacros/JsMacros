@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -11,6 +10,9 @@ import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.empty;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
 
 /**
  * @author Wagyourtail
@@ -34,7 +36,7 @@ public class Text implements RenderElement, Alignable<Text> {
     public int zIndex;
 
     public Text(String text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
-        this(TextHelper.wrap(net.minecraft.text.Text.literal(text)), x, y, color, zIndex, shadow, scale, rotation);
+        this(TextHelper.wrap(literal(text)), x, y, color, zIndex, shadow, scale, rotation);
     }
 
     public Text(TextHelper text, int x, int y, int color, int zIndex, boolean shadow, double scale, float rotation) {
@@ -103,7 +105,7 @@ public class Text implements RenderElement, Alignable<Text> {
      * @since 1.0.5
      */
     public Text setText(String text) {
-        this.text = net.minecraft.text.Text.literal(text);
+        this.text = literal(text);
         this.width = mc.textRenderer.getWidth(text);
         return this;
     }
@@ -281,7 +283,7 @@ public class Text implements RenderElement, Alignable<Text> {
                 shadow,
                 matrices.peek().getPositionMatrix(),
                 buffer,
-                TextRenderer.TextLayerType.NORMAL,
+                true,
                 0,
                 0xF000F0
         );
@@ -336,7 +338,7 @@ public class Text implements RenderElement, Alignable<Text> {
     public static class Builder extends RenderElementBuilder<Text> implements Alignable<Builder> {
         private int x = 0;
         private int y = 0;
-        private net.minecraft.text.Text text = net.minecraft.text.Text.empty();
+        private net.minecraft.text.Text text = empty();
         private int color = 0xFFFFFFFF;
         private double scale = 1;
         private float rotation = 0;
@@ -379,7 +381,7 @@ public class Text implements RenderElement, Alignable<Text> {
          */
         public Builder text(String text) {
             if (text != null) {
-                this.text = net.minecraft.text.Text.literal(text);
+                this.text = literal(text);
             }
             return this;
         }

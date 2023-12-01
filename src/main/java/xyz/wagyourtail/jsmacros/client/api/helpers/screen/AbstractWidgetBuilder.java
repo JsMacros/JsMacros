@@ -8,6 +8,9 @@ import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.empty;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 /**
  * @author Etheradon
  * @since 1.8.4
@@ -22,7 +25,7 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
     private int height = 20;
     private int x;
     private int y;
-    private Text message = Text.empty();
+    private Text message = empty();
     private boolean active = true;
     private boolean visible = true;
     private float alpha = 1.0F;
@@ -160,7 +163,7 @@ public abstract class AbstractWidgetBuilder<B extends AbstractWidgetBuilder<B, T
      */
     public B message(@Nullable String message) {
         if (message != null) {
-            this.message = Text.literal(message);
+            this.message = literal(message);
         }
         return (B) this;
     }

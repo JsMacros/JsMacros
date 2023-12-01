@@ -29,6 +29,8 @@ import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.*;
+import xyz.wagyourtail.jsmacros.client.backport.ButtonBuilderBackport;
+import xyz.wagyourtail.jsmacros.client.backport.TextBackport;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.wagyourgui.elements.CheckBox;
@@ -37,6 +39,8 @@ import xyz.wagyourtail.wagyourgui.elements.Slider;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
+
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
 
 @SuppressWarnings("AddedMixinMembersNamePattern")
 @Mixin(Screen.class)
@@ -570,7 +574,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Override
     public ClickableWidgetHelper<?, ?> addButton(int x, int y, int width, int height, int zIndex, String text, MethodWrapper<ClickableWidgetHelper<?, ?>, IScreen, Object, ?> callback) {
         AtomicReference<ClickableWidgetHelper<?, ?>> b = new AtomicReference<>(null);
-        ButtonWidget button = ButtonWidget.builder(Text.literal(text), (btn) -> {
+        ButtonWidget button = ButtonBuilderBackport.builder(literal(text), (btn) -> {
             try {
                 callback.accept(b.get(), this);
             } catch (Throwable e) {
@@ -604,7 +608,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback) {
         AtomicReference<CheckBoxWidgetHelper> ref = new AtomicReference<>(null);
 
-        CheckBox checkbox = new CheckBox(x, y, width, height, net.minecraft.text.Text.literal(text), checked, showMessage, (btn) -> {
+        CheckBox checkbox = new CheckBox(x, y, width, height, literal(text), checked, showMessage, (btn) -> {
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
@@ -639,7 +643,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public SliderWidgetHelper addSlider(int x, int y, int width, int height, int zIndex, String text, double value, int steps, MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> callback) {
         AtomicReference<SliderWidgetHelper> ref = new AtomicReference<>(null);
 
-        Slider slider = new Slider(x, y, width, height, net.minecraft.text.Text.literal(text), value, (btn) -> {
+        Slider slider = new Slider(x, y, width, height, literal(text), value, (btn) -> {
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
@@ -732,7 +736,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<?, ?, Boolean, ?> alternateToggle, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback) {
         AtomicReference<CyclingButtonWidgetHelper<?>> ref = new AtomicReference<>(null);
         CyclingButtonWidget<String> cyclingButton;
-        CyclingButtonWidget.Builder<String> builder = CyclingButtonWidget.builder(net.minecraft.text.Text::literal);
+        CyclingButtonWidget.Builder<String> builder = CyclingButtonWidget.builder(TextBackport::literal);
         if (alternatives != null) {
             BooleanSupplier supplier = alternateToggle == null ? Screen::hasAltDown : alternateToggle::get;
             builder.values(supplier, Arrays.asList(values), Arrays.asList(alternatives));
@@ -745,7 +749,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             builder.omitKeyText();
         }
 
-        cyclingButton = builder.build(x, y, width, height, net.minecraft.text.Text.literal(prefix), (btn, val) -> {
+        cyclingButton = builder.build(x, y, width, height, literal(prefix), (btn, val) -> {
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
@@ -777,7 +781,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public TextFieldWidgetHelper addTextInput(int x, int y, int width, int height, int zIndex, String message, MethodWrapper<String, IScreen, Object, ?> onChange) {
-        TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, net.minecraft.text.Text.literal(message));
+        TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, height, literal(message));
         if (onChange != null) {
             field.setChangedListener(str -> {
                 try {

@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 public class NoStyleCodeCompiler extends AbstractRenderCodeCompiler {
     private Text[] compiledText = new Text[0];
 
@@ -21,12 +23,12 @@ public class NoStyleCodeCompiler extends AbstractRenderCodeCompiler {
     @Override
     public void recompileRenderedText(@NotNull String text) {
         if (text.length() == 0) {
-            compiledText = new Text[]{Text.literal("")};
+            compiledText = new Text[]{literal("")};
         } else {
             String[] t2 = text.split("\n");
             compiledText = new Text[t2.length];
             for (int i = 0; i < t2.length; i++) {
-                compiledText[i] = Text.literal(t2[i]).setStyle(EditorScreen.defaultStyle);
+                compiledText[i] = literal(t2[i]).setStyle(EditorScreen.defaultStyle);
             }
         }
     }

@@ -175,7 +175,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      * @since 1.9.0
      */
     public InteractionManagerHelper setTarget(EntityHelper<?> entity) {
-        if (!entity.getRaw().canHit()) throw new AssertionError(String.format("Can't target not-hittable entity! (%s)", entity.getType()));
+        if (!entity.getRaw().isAttackable()) throw new AssertionError(String.format("Can't target not-hittable entity! (%s)", entity.getType()));
         if (entity.getRaw() == mc.player) throw new AssertionError("Can't target self!");
         InteractionProxy.Target.setTarget(new EntityHitResult(entity.getRaw()));
         return this;
@@ -669,7 +669,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = base.interactItem(mc.player, hand);
+            ActionResult result = base.interactItem(mc.player, mc.world, hand);
             assert mc.player != null;
             if (result.isAccepted()) {
                 mc.player.swingHand(hand);
@@ -677,7 +677,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = base.interactItem(mc.player, hand);
+                ActionResult result = base.interactItem(mc.player, mc.world, hand);
                 assert mc.player != null;
                 if (result.isAccepted()) {
                     mc.player.swingHand(hand);
@@ -746,7 +746,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = base.interactBlock(mc.player, hand,
+            ActionResult result = base.interactBlock(mc.player, mc.world, hand,
                     new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
             );
             assert mc.player != null;
@@ -756,7 +756,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = base.interactBlock(mc.player, hand,
+                ActionResult result = base.interactBlock(mc.player, mc.world, hand,
                         new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
                 );
                 assert mc.player != null;

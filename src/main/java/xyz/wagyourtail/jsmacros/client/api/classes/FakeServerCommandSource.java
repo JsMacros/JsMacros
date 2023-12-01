@@ -5,11 +5,11 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.DynamicRegistryManager;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
 import java.util.Collection;
@@ -37,11 +37,6 @@ public class FakeServerCommandSource extends ServerCommandSource {
     }
 
     @Override
-    public Collection<String> getChatSuggestions() {
-        return source.getChatSuggestions();
-    }
-
-    @Override
     public Collection<String> getPlayerNames() {
         return source.getPlayerNames();
     }
@@ -52,7 +47,7 @@ public class FakeServerCommandSource extends ServerCommandSource {
     }
 
     @Override
-    public Stream<Identifier> getSoundIds() {
+    public Collection<Identifier> getSoundIds() {
         return source.getSoundIds();
     }
 
@@ -87,7 +82,7 @@ public class FakeServerCommandSource extends ServerCommandSource {
     }
 
     public void sendFeedback(Supplier<Text> feedbackSupplier, boolean broadcastToOps) {
-        MinecraftClient.getInstance().player.sendMessage(feedbackSupplier.get());
+        MinecraftClient.getInstance().player.sendMessage(feedbackSupplier.get(), false);
     }
 
     @Override

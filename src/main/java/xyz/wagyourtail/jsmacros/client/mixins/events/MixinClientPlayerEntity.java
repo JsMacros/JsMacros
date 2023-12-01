@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 @Mixin(ClientPlayerEntity.class)
 abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
@@ -74,7 +76,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         if (lines == null) lines = Arrays.asList("", "", "", "");
         if (event.closeScreen || event.isCanceled()) {
             for (int i = 0; i < 4; ++i) {
-                sign.setTextOnRow(i, Text.literal(lines.get(i)));
+                sign.setTextOnRow(i, literal(lines.get(i)));
             }
             sign.markDirty();
             networkHandler.sendPacket(new UpdateSignC2SPacket(sign.getPos(), lines.get(0), lines.get(1), lines.get(2), lines.get(3)));

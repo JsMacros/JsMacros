@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 
@@ -31,7 +31,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      */
     @DocletReplaceReturn("BlockId")
     public String getId() {
-        return Registries.BLOCK.getId(base.getBlock()).toString();
+        return Registry.BLOCK.getId(base.getBlock()).toString();
     }
 
     /**
@@ -184,7 +184,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean isReplaceable() {
-        return base.isReplaceable();
+        return base.getMaterial().isReplaceable();
     }
 
     /**
@@ -195,7 +195,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * @since 1.6.5
      */
     public boolean allowsSpawning(BlockPosHelper pos, String entity) {
-        return base.allowsSpawning(MinecraftClient.getInstance().world, pos.getRaw(), Registries.ENTITY_TYPE.get(RegistryHelper.parseIdentifier(entity)));
+        return base.allowsSpawning(MinecraftClient.getInstance().world, pos.getRaw(), Registry.ENTITY_TYPE.get(RegistryHelper.parseIdentifier(entity)));
     }
 
     /**

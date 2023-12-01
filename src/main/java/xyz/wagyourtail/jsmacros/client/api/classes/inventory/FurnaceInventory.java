@@ -5,8 +5,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
 import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractFurnaceScreenHandler;
 
@@ -74,7 +74,7 @@ public class FurnaceInventory extends RecipeInventory<AbstractFurnaceScreen<?>> 
     public Map<String, Integer> getFuelValues() {
         Object2IntMap<String> fuelMap = new Object2IntOpenHashMap<>();
         for (Map.Entry<Item, Integer> entry : FurnaceBlockEntity.createFuelTimeMap().entrySet()) {
-            fuelMap.put(Registries.ITEM.getId(entry.getKey()).toString(), entry.getValue().intValue());
+            fuelMap.put(Registry.ITEM.getId(entry.getKey()).toString(), entry.getValue().intValue());
         }
         return fuelMap;
     }

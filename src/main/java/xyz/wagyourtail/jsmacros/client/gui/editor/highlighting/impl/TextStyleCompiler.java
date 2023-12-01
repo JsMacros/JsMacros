@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 public class TextStyleCompiler extends AbsVisitor {
     private final Style defaultStyle;
     private final Map<String, short[]> themeData;
@@ -22,7 +24,7 @@ public class TextStyleCompiler extends AbsVisitor {
     public TextStyleCompiler(Style defaultStyle, Map<String, short[]> themeData) {
         this.defaultStyle = defaultStyle;
         this.themeData = themeData;
-        result.add((MutableText) Text.literal("").setStyle(defaultStyle));
+        result.add((MutableText) literal("").setStyle(defaultStyle));
     }
 
     @Override
@@ -30,9 +32,9 @@ public class TextStyleCompiler extends AbsVisitor {
         String[] lines = text.literal().replaceAll("\t", "    ").split("\r\n|\n", -1);
         int i = 0;
         while (i < lines.length) {
-            result.get(result.size() - 1).append(Text.literal(lines[i]).setStyle(defaultStyle));
+            result.get(result.size() - 1).append(literal(lines[i]).setStyle(defaultStyle));
             if (++i < lines.length) {
-                result.add((MutableText) Text.literal("").setStyle(defaultStyle));
+                result.add((MutableText) literal("").setStyle(defaultStyle));
             }
         }
     }

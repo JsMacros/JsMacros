@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 
@@ -22,7 +22,7 @@ public class FluidStateHelper extends StateHelper<FluidState> {
      * @since 1.8.4
      */
     public String getId() {
-        return Registries.FLUID.getId(base.getFluid()).toString();
+        return Registry.FLUID.getId(base.getFluid()).toString();
     }
 
     /**

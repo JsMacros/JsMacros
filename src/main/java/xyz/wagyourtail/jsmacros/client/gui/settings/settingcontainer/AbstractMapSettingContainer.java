@@ -5,6 +5,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.backport.TextBackport;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
@@ -22,6 +23,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static net.minecraft.client.gui.DrawableHelper.fill;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
 
 public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettingContainer.MapSettingEntry<T>> extends AbstractSettingContainer {
     public SettingsOverlay.SettingField<Map<String, T>> setting;
@@ -40,11 +43,11 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
     public void init() {
         super.init();
         scroll = addDrawableChild(new Scrollbar(x + width - 10, y + 12, 10, height - 12, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        addDrawableChild(new Button(x, y, 40, 10, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.add"), (btn) -> {
+        addDrawableChild(new Button(x, y, 40, 10, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.add"), (btn) -> {
             if (setting.hasOptions()) {
                 try {
                     List<String> options = ((List<String>) (List) setting.getOptions()).stream().filter(e -> !map.containsKey(e)).collect(Collectors.toList());
-                    openOverlay(new SelectorDropdownOverlay(x, y + 10, width / 2, options.size() * textRenderer.fontHeight + 4, options.stream().map(Text::literal).collect(Collectors.toList()), textRenderer, getFirstOverlayParent(), (i) -> {
+                    openOverlay(new SelectorDropdownOverlay(x, y + 10, width / 2, options.size() * textRenderer.fontHeight + 4, options.stream().map(TextBackport::literal).collect(Collectors.toList()), textRenderer, getFirstOverlayParent(), (i) -> {
                         try {
                             newField(options.get(i));
                         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -113,7 +116,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
     @SuppressWarnings("unchecked")
     public void addSetting(SettingsOverlay.SettingField<?> setting) {
         this.setting = (SettingsOverlay.SettingField<Map<String, T>>) setting;
-        this.settingName = BaseScreen.trimmed(textRenderer, Text.translatable(setting.option.translationKey()), width - 40);
+        this.settingName = BaseScreen.trimmed(textRenderer, translatable(setting.option.translationKey()), width - 40);
         map.clear();
         try {
             this.setting.get().forEach(this::addField);
@@ -145,11 +148,11 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
         public void init() {
             super.init();
             int w = width - height;
-            keyBtn = addDrawableChild(new Button(x, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(key), (btn) -> {
+            keyBtn = addDrawableChild(new Button(x, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal(key), (btn) -> {
                 if (parent.setting.hasOptions()) {
                     try {
                         List<String> options = ((List<String>) (List) parent.setting.getOptions()).stream().filter(e -> !parent.map.containsKey(e)).collect(Collectors.toList());
-                        openOverlay(new SelectorDropdownOverlay(x, y + height, w / 2, options.size() * textRenderer.fontHeight + 4, options.stream().map(Text::literal).collect(Collectors.toList()), textRenderer, getFirstOverlayParent(), (i) -> setKey(options.get(i))));
+                        openOverlay(new SelectorDropdownOverlay(x, y + height, w / 2, options.size() * textRenderer.fontHeight + 4, options.stream().map(TextBackport::literal).collect(Collectors.toList()), textRenderer, getFirstOverlayParent(), (i) -> setKey(options.get(i))));
                     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
@@ -158,7 +161,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
                     int y = parent.y;
                     int width = parent.width;
                     int height = parent.height;
-                    openOverlay(new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, Text.translatable("jsmacros.setprofilename"), key, getFirstOverlayParent(), (newKey) -> {
+                    openOverlay(new TextPrompt(x + width / 4, y + height / 4, width / 2, height / 2, textRenderer, translatable("jsmacros.setprofilename"), key, getFirstOverlayParent(), (newKey) -> {
                         try {
                             parent.changeKey(key, newKey);
                         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -167,7 +170,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
                     }));
                 }
             }));
-            addDrawableChild(new Button(x + w, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal("X"), (btn) -> {
+            addDrawableChild(new Button(x + w, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal("X"), (btn) -> {
                 try {
                     parent.removeField(key);
                 } catch (InvocationTargetException | IllegalAccessException e) {
@@ -180,14 +183,14 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
         public void setPos(int x, int y, int width, int height) {
             super.setPos(x, y, width, height);
             for (ClickableWidget btn : buttons) {
-                btn.setY(y);
+                btn.y = y;
             }
         }
 
         public void setKey(String newKey) {
             parent.map.remove(key);
             this.key = newKey;
-            keyBtn.setMessage(Text.literal(this.key));
+            keyBtn.setMessage(literal(this.key));
             parent.map.put(key, this);
         }
 

@@ -35,7 +35,7 @@ public class AnnotatedCheckBox extends Button {
         int width = this.width - height;
         for (int i = 0; i < visibleLines; ++i) {
             int w = textRenderer.getWidth(textLines.get(i));
-            textRenderer.draw(drawContext, textLines.get(i), (int) (horizCenter ? getX() + width / 2F - w / 2F : getX() + 1), getY() + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            textRenderer.draw(drawContext, textLines.get(i), (int) (horizCenter ? x + width / 2F - w / 2F : x + 1), y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
         }
     }
 
@@ -45,20 +45,20 @@ public class AnnotatedCheckBox extends Button {
             this.renderMessage(drawContext);
 
             // fill
-            if (mouseX - getX() >= 0 && mouseX - getX() - width <= 0 && mouseY - getY() >= 0 && mouseY - getY() - height <= 0 && this.active || forceHover) {
+            if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
                 hovering = true;
-                fill(drawContext, getX() + width - height + 1, getY() + 1, getX() + width - 1, getY() + height - 1, highlightColor);
+                fill(drawContext, x + width - height + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
             } else {
                 hovering = false;
                 if (value) {
-                    fill(drawContext, getX() + width - height + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
+                    fill(drawContext, x + width - height + 1, y + 1, x + width - 1, y + height - 1, color);
                 }
             }
             // outline
-            fill(drawContext, getX() + width - height, getY(), getX() + width - height + 1, getY() + height, borderColor);
-            fill(drawContext, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
-            fill(drawContext, getX() + width - height + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
-            fill(drawContext, getX() + width - height + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
+            fill(drawContext, x + width - height, y, x + width - height + 1, y + height, borderColor);
+            fill(drawContext, x + width - 1, y, x + width, y + height, borderColor);
+            fill(drawContext, x + width - height + 1, y, x + width - 1, y + 1, borderColor);
+            fill(drawContext, x + width - height + 1, y + height - 1, x + width - 1, y + height, borderColor);
         }
     }
 

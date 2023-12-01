@@ -9,6 +9,8 @@ import xyz.wagyourtail.wagyourgui.elements.TextInput;
 
 import java.util.function.Consumer;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
+
 public class TextPrompt extends OverlayContainer {
     private final Text message;
     private final Consumer<String> accept;
@@ -29,9 +31,9 @@ public class TextPrompt extends OverlayContainer {
 
         ti = this.addDrawableChild(new TextInput(x + 3, y + 25, w - 2, 14, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, defText, null, null));
 
-        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("gui.cancel"), (btn) -> close()));
+        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, translatable("gui.cancel"), (btn) -> close()));
 
-        this.addDrawableChild(new Button(x + w / 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
+        this.addDrawableChild(new Button(x + w / 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.confirm"), (btn) -> {
             if (this.accept != null) {
                 this.accept.accept(ti.content);
             }

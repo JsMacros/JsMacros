@@ -185,7 +185,7 @@ public class Pos3D extends Pos2D {
      * @since 1.8.0
      */
     public BlockPosHelper toBlockPos() {
-        return new BlockPosHelper(BlockPos.ofFloored(x, y, z));
+        return new BlockPosHelper(new BlockPos(x, y, z));
     }
 
     /**
@@ -193,7 +193,7 @@ public class Pos3D extends Pos2D {
      * @since 1.8.0
      */
     public BlockPos toRawBlockPos() {
-        return BlockPos.ofFloored(x, y, z);
+        return new BlockPos(x, y, z);
     }
 
     /**

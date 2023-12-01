@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
+import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.resource.ResourceManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,11 +19,11 @@ import java.util.stream.Collectors;
 @Mixin(TranslationStorage.class)
 public class MixinTranslationStorage {
 
-    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;", remap = false), method = "load(Lnet/minecraft/resource/ResourceManager;Ljava/util/List;Z)Lnet/minecraft/client/resource/language/TranslationStorage;", locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void insertFabricLanguageData(ResourceManager resourceManager, List<String> definitions, boolean rightToLeft, CallbackInfoReturnable<TranslationStorage> cir, Map<String, String> map) {
+    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;", remap = false), method = "load(Lnet/minecraft/resource/ResourceManager;Ljava/util/List;)Lnet/minecraft/client/resource/language/TranslationStorage;", locals = LocalCapture.CAPTURE_FAILHARD)
+    private static void insertFabricLanguageData(ResourceManager p_239497_0_, List<LanguageDefinition> p_239497_1_, CallbackInfoReturnable<TranslationStorage> cir, Map<String, String> map) {
         Map<String, String> translations = new LinkedHashMap<>();
-        for (String lang : definitions) {
-            Set<Map<String, String>> res = Core.getInstance().extensions.getAllExtensions().stream().map(e -> e.getTranslations(lang)).collect(Collectors.toSet());
+        for (LanguageDefinition lang : p_239497_1_) {
+            Set<Map<String, String>> res = Core.getInstance().extensions.getAllExtensions().stream().map(e -> e.getTranslations(lang.getCode())).collect(Collectors.toSet());
             for (Map<String, String> r : res) {
                 translations.putAll(r);
             }

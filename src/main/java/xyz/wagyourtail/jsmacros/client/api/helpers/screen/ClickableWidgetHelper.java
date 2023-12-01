@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 /**
  * @author Wagyourtail
  * @since 1.0.5
@@ -40,7 +42,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @since 1.0.5
      */
     public int getX() {
-        return base.getX();
+        return base.x;
     }
 
     /**
@@ -48,7 +50,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @since 1.0.5
      */
     public int getY() {
-        return base.getY();
+        return base.y;
     }
 
     /**
@@ -60,7 +62,8 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      * @since 1.0.5
      */
     public B setPos(int x, int y) {
-        base.setPosition(x, y);
+        base.x = x;
+        base.y = y;
         return (B) this;
     }
 
@@ -90,7 +93,7 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      */
     @Deprecated
     public B setLabel(String label) {
-        base.setMessage(Text.literal(label));
+        base.setMessage(literal(label));
         return (B) this;
     }
 
@@ -164,13 +167,13 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
      */
     public B click(boolean await) throws InterruptedException {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
-            base.mouseClicked(base.getX(), base.getY(), 0);
-            base.mouseReleased(base.getX(), base.getY(), 0);
+            base.mouseClicked(base.x, base.y, 0);
+            base.mouseReleased(base.x, base.y, 0);
         } else {
             final Semaphore waiter = new Semaphore(await ? 0 : 1);
             MinecraftClient.getInstance().execute(() -> {
-                base.mouseClicked(base.getX(), base.getY(), 0);
-                base.mouseReleased(base.getX(), base.getY(), 0);
+                base.mouseClicked(base.x, base.y, 0);
+                base.mouseReleased(base.x, base.y, 0);
                 waiter.release();
             });
             waiter.acquire();
@@ -202,9 +205,9 @@ public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T exte
         } else if (tooltip instanceof TextHelper) {
             tooltips.add(((TextHelper) tooltip).getRaw());
         } else if (tooltip instanceof String) {
-            tooltips.add(Text.literal((String) tooltip));
+            tooltips.add(literal((String) tooltip));
         } else {
-            tooltips.add(Text.literal(tooltip.toString()));
+            tooltips.add(literal(tooltip.toString()));
         }
         return (B) this;
     }

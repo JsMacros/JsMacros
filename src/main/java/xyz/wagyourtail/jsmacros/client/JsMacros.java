@@ -24,6 +24,8 @@ import xyz.wagyourtail.wagyourgui.BaseScreen;
 import java.io.File;
 import java.util.ServiceLoader;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 public class JsMacros {
     public static final String MOD_ID = "jsmacros";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -65,7 +67,7 @@ public class JsMacros {
         try {
             return InputUtil.fromTranslationKey(translationKey).getLocalizedText();
         } catch (Exception e) {
-            return Text.literal(translationKey);
+            return literal(translationKey);
         }
     }
 

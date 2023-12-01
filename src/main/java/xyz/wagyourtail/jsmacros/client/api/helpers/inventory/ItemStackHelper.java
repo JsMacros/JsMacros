@@ -9,12 +9,12 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -26,9 +26,12 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
 
 /**
  * @author Wagyourtail
@@ -40,7 +43,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
 
     @DocletReplaceParams("id: ItemId, count: int")
     public ItemStackHelper(String id, int count) {
-        super(new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
+        super(new ItemStack(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
     }
 
     public ItemStackHelper(ItemStack i) {
@@ -155,7 +158,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantments() {
-        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.isAcceptableItem(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.isAcceptableItem(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -163,7 +166,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
-        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.target.isAcceptableItem(base.getItem()) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registry.ENCHANTMENT.stream().filter(enchantment -> enchantment.type.isAcceptableItem(base.getItem()) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -292,7 +295,11 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.3
      */
     public List<TextHelper> getCreativeTab() {
-        return ItemGroups.getGroups().parallelStream().filter(group -> !group.isSpecial() && group.getDisplayStacks().parallelStream().anyMatch(e -> ItemStack.areItemsEqual(e, base))).map(ItemGroup::getDisplayName).map(TextHelper::wrap).collect(Collectors.toList());
+        ItemGroup g = base.getItem().getGroup();
+        if (g != null)
+            return Arrays.asList(new TextHelper(literal(g.getName())));
+        else
+            return null;
     }
 
     /**
@@ -310,7 +317,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     @DocletReplaceReturn("ItemId")
     public String getItemId() {
-        return Registries.ITEM.getId(base.getItem()).toString();
+        return Registry.ITEM.getId(base.getItem()).toString();
     }
 
     /**
@@ -319,7 +326,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     @DocletReplaceReturn("JavaList<ItemTag>")
     public List<String> getTags() {
-        return base.getRegistryEntry().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
+        return Registry.ITEM.getEntry(Registry.ITEM.getKey(base.getItem()).get()).get().streamTags().map(t -> t.id().toString()).collect(Collectors.toList());
     }
 
     /**
@@ -343,7 +350,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.2
      */
     public boolean isWearable() {
-        return base.getItem() instanceof Equipment && ((Equipment) base.getItem()).getSlotType().isArmorSlot();
+        return base.getItem() instanceof Wearable;
     }
 
     /**

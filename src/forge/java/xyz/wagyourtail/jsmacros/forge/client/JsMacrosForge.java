@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.forge.client;
 
-import net.minecraftforge.client.ConfigScreenHandler;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.ClientRegistry;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -23,9 +23,7 @@ public class JsMacrosForge {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         modBus.addListener(this::onInitialize);
         modBus.addListener(this::onInitializeClient);
-        modBus.addListener(this::onRegisterKeyMappings);
-        modBus.addListener(ForgeEvents::onRegisterGuiOverlays);
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, parent) -> {
+        ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory((mc, parent) -> {
             JsMacros.prevScreen.setParent(parent);
             return JsMacros.prevScreen;
         }));
@@ -38,14 +36,12 @@ public class JsMacrosForge {
         CommandManager.instance = new CommandManagerForge();
 
         ForgeEvents.init();
+
+        ClientRegistry.registerKeyBinding(JsMacros.keyBinding);
     }
 
     public void onInitializeClient(FMLClientSetupEvent event) {
         JsMacros.onInitializeClient();
-    }
-
-    public void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(JsMacros.keyBinding);
     }
 
 }

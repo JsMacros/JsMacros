@@ -36,8 +36,8 @@ public class Button extends PressableWidget {
     }
 
     public Button setPos(int x, int y, int width, int height) {
-        this.setX(x);
-        this.setY(y);
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
         return this;
@@ -70,7 +70,7 @@ public class Button extends PressableWidget {
     protected void renderMessage(MatrixStack drawContext) {
         for (int i = 0; i < visibleLines; ++i) {
             int w = textRenderer.getWidth(textLines.get(i));
-            textRenderer.draw(drawContext, textLines.get(i), (int) (horizCenter ? getX() + width / 2F - w / 2F : getX() + 1), getY() + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
+            textRenderer.draw(drawContext, textLines.get(i), (int) (horizCenter ? x + width / 2F - w / 2F : x + 1), y + 2 + verticalCenter + (i * textRenderer.fontHeight), textColor);
         }
     }
 
@@ -78,18 +78,18 @@ public class Button extends PressableWidget {
     public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
             // fill
-            if (mouseX - getX() >= 0 && mouseX - getX() - width <= 0 && mouseY - getY() >= 0 && mouseY - getY() - height <= 0 && this.active || forceHover) {
+            if (mouseX - x >= 0 && mouseX - x - width <= 0 && mouseY - y >= 0 && mouseY - y - height <= 0 && this.active || forceHover) {
                 hovering = true;
-                fill(drawContext, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, highlightColor);
+                fill(drawContext, x + 1, y + 1, x + width - 1, y + height - 1, highlightColor);
             } else {
                 hovering = false;
-                fill(drawContext, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
+                fill(drawContext, x + 1, y + 1, x + width - 1, y + height - 1, color);
             }
             // outline
-            fill(drawContext, getX(), getY(), getX() + 1, getY() + height, borderColor);
-            fill(drawContext, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
-            fill(drawContext, getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
-            fill(drawContext, getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
+            fill(drawContext, x, y, x + 1, y + height, borderColor);
+            fill(drawContext, x + width - 1, y, x + width, y + height, borderColor);
+            fill(drawContext, x + 1, y, x + width - 1, y + 1, borderColor);
+            fill(drawContext, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
             this.renderMessage(drawContext);
         }
     }
@@ -113,7 +113,7 @@ public class Button extends PressableWidget {
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+    public void appendNarrations(NarrationMessageBuilder builder) {
 
     }
 

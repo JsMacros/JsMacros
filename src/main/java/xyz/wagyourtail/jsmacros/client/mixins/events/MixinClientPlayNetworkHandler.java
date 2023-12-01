@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -10,12 +9,12 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Final;
@@ -26,7 +25,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import xyz.wagyourtail.jsmacros.client.access.BossBarConsumer;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventTitle;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventContainerUpdate;
@@ -37,7 +35,10 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventStatusEffectUp
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @Mixin(ClientPlayNetworkHandler.class)
 class MixinClientPlayNetworkHandler {
@@ -63,14 +64,53 @@ class MixinClientPlayNetworkHandler {
     @Unique
     private final Set<UUID> newPlayerEntries = new HashSet<>();
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/SocialInteractionsManager;setPlayerOnline(Lnet/minecraft/client/network/PlayerListEntry;)V"), method = "onPlayerList", locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo ci, Iterator var2, Entry entry, PlayerListEntry playerListEntry) {
-        new EventPlayerJoin(entry.profileId(), playerListEntry).trigger();
+    @Inject(at = @At("HEAD"), method = "onPlayerList")
+    public void onPlayerList(PlayerListS2CPacket packet, CallbackInfo info) {
+        if (this.client.isOnThread()) {
+            PlayerListS2CPacket.Action action = packet.getAction();
+            if (action == PlayerListS2CPacket.Action.ADD_PLAYER) {
+                for (Entry e : packet.getEntries()) {
+                    synchronized (newPlayerEntries) {
+                        if (playerListEntries.get(e.getProfile().getId()) == null) {
+                            newPlayerEntries.add(e.getProfile().getId());
+                        }
+                    }
+                }
+            } else if (action == PlayerListS2CPacket.Action.REMOVE_PLAYER) {
+                for (Entry e : packet.getEntries()) {
+                    if (playerListEntries.get(e.getProfile().getId()) != null) {
+                        PlayerListEntry p = playerListEntries.get(e.getProfile().getId());
+                        new EventPlayerLeave(e.getProfile().getId(), p);
+                    }
+                }
+            }
+        }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Ljava/util/Set;remove(Ljava/lang/Object;)Z", remap = false), method = "onPlayerRemove", locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onPlayerListEnd(PlayerRemoveS2CPacket packet, CallbackInfo ci, Iterator var2, UUID uUID, PlayerListEntry playerListEntry) {
-        new EventPlayerLeave(uUID, playerListEntry).trigger();
+    @Inject(at = @At("TAIL"), method = "onPlayerList")
+    public void onPlayerListEnd(PlayerListS2CPacket packet, CallbackInfo info) {
+        if (packet.getAction() == PlayerListS2CPacket.Action.ADD_PLAYER) {
+            for (Entry e : packet.getEntries()) {
+                synchronized (newPlayerEntries) {
+                    if (newPlayerEntries.contains(e.getProfile().getId())) {
+                        new EventPlayerJoin(e.getProfile().getId(), playerListEntries.get(e.getProfile().getId()));
+                        newPlayerEntries.remove(e.getProfile().getId());
+                    }
+                }
+            }
+        }
+    }
+
+
+    @ModifyArg(method = "onOverlayMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setOverlayMessage(Lnet/minecraft/text/Text;Z)V"))
+    private Text modifyOverlayMessage(Text text) {
+        EventTitle et = new EventTitle("ACTIONBAR", text);
+        et.trigger();
+        if (et.message == null || et.isCanceled()) {
+            return null;
+        } else {
+            return et.message.getRaw();
+        }
     }
 
     @ModifyArg(method = "onTitle", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setTitle(Lnet/minecraft/text/Text;)V"))
@@ -146,16 +186,16 @@ class MixinClientPlayNetworkHandler {
         new EventChunkUnload(packet.getX(), packet.getZ()).trigger();
     }
 
-    @Inject(method = "onEntityStatusEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
+    @Inject(method = "onEntityStatusEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
     public void onEntityStatusEffect(EntityStatusEffectS2CPacket packet, CallbackInfo info) {
         if (packet.getEntityId() == client.player.getId()) {
-            StatusEffectInstance newEffect = new StatusEffectInstance(packet.getEffectId(), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), (StatusEffectInstance) null, Optional.ofNullable(packet.getFactorCalculationData()));
-            StatusEffectInstance oldEffect = client.player.getStatusEffect(packet.getEffectId());
+            StatusEffectInstance newEffect = new StatusEffectInstance(StatusEffect.byRawId(packet.getEffectId()), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), (StatusEffectInstance) null);
+            StatusEffectInstance oldEffect = client.player.getStatusEffect(StatusEffect.byRawId(packet.getEffectId()));
             new EventStatusEffectUpdate(oldEffect == null ? null : new StatusEffectHelper(oldEffect), new StatusEffectHelper(newEffect), true).trigger();
         }
     }
 
-    @Inject(method = "onRemoveEntityStatusEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
+    @Inject(method = "onRemoveEntityStatusEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/NetworkThreadUtils;forceMainThread(Lnet/minecraft/network/Packet;Lnet/minecraft/network/listener/PacketListener;Lnet/minecraft/util/thread/ThreadExecutor;)V", shift = At.Shift.AFTER))
     public void onEntityStatusEffect(RemoveEntityStatusEffectS2CPacket packet, CallbackInfo info) {
         if (packet.getEntity(client.world) == client.player) {
             new EventStatusEffectUpdate(new StatusEffectHelper(client.player.getStatusEffect(packet.getEffectType())), null, false).trigger();

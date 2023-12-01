@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.util.math.MatrixStack;
-import org.joml.Quaternionf;
+import net.minecraft.util.math.Vec3f;
 import xyz.wagyourtail.doclet.DocletIgnore;
 
 /**
@@ -32,7 +32,7 @@ public interface RenderElement extends Drawable {
         if (rotateAroundCenter) {
             matrices.translate(width / 2, height / 2, 0);
         }
-        matrices.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotation)));
+        matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(rotation));
         if (rotateAroundCenter) {
             matrices.translate(-width / 2, -height / 2, 0);
         }

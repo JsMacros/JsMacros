@@ -786,7 +786,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
             Properties.AGE_1,
             Properties.AGE_2,
             Properties.AGE_3,
-            Properties.AGE_4,
             Properties.AGE_5,
             Properties.AGE_7,
             Properties.AGE_15,
@@ -938,37 +937,10 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @return
      * @since 1.8.4
      */
-    public boolean isShrieking() {
-        return base.get(Properties.SHRIEKING);
-    }
-
-    /**
-     * Used on sculk sensors.
-     *
-     * @return
-     * @since 1.8.4
-     */
-    public boolean canSummon() {
-        return base.get(Properties.CAN_SUMMON);
-    }
-
-    /**
-     * Used on sculk sensors.
-     *
-     * @return
-     * @since 1.8.4
-     */
     public String getSculkSensorPhase() {
         return base.get(Properties.SCULK_SENSOR_PHASE).asString();
     }
 
-    /**
-     * @return
-     * @since 1.8.4
-     */
-    public boolean isBloom() {
-        return base.get(Properties.BLOOM);
-    }
 
     /**
      * @return
@@ -976,54 +948,6 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      */
     public int getRotation() {
         return base.get(Properties.ROTATION);
-    }
-
-    /**
-     * @return
-     * @since 1.8.4
-     */
-    public boolean isSlot0Occupied() {
-        return base.get(Properties.SLOT_0_OCCUPIED);
-    }
-
-    /**
-     * @return
-     * @since 1.8.4
-     */
-    public boolean isSlot1Occupied() {
-        return base.get(Properties.SLOT_1_OCCUPIED);
-    }
-
-    /**
-     * @return
-     * @since 1.8.4
-     */
-    public boolean isSlot2Occupied() {
-        return base.get(Properties.SLOT_2_OCCUPIED);
-    }
-
-    /**
-     * @return
-     * @since 1.8.4
-     */
-    public boolean isSlot3Occupied() {
-        return base.get(Properties.SLOT_3_OCCUPIED);
-    }
-
-    /**
-     * @return
-     * @since 1.8.4
-     */
-    public boolean isSlot4Occupied() {
-        return base.get(Properties.SLOT_4_OCCUPIED);
-    }
-
-    /**
-     * @return
-     * @since 1.8.4
-     */
-    public boolean isSlot5Occupied() {
-        return base.get(Properties.SLOT_5_OCCUPIED);
     }
 
     @Ignore

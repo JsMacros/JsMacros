@@ -52,7 +52,7 @@ public class MovementDummy extends LivingEntity {
         this.setBoundingBox(hitBox);
         this.setSprinting(isSprinting);
         this.setSneaking(isSneaking);
-        this.setStepHeight(0.6F);
+        this.stepHeight = 0.6F;
         this.setOnGround(onGround);
         this.coordsHistory.add(this.getPos());
 

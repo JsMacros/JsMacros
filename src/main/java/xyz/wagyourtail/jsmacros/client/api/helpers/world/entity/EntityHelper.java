@@ -24,10 +24,10 @@ import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.entity.vehicle.FurnaceMinecartEntity;
 import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
@@ -445,7 +445,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     @DocletReplaceReturn("Biome")
     public String getBiome() {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
+        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
     }
 
     @Override
@@ -529,15 +529,13 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
                 return new SpiderEntityHelper(((SpiderEntity) e));
             } else if (e instanceof VexEntity) {
                 return new VexEntityHelper(((VexEntity) e));
-            } else if (e instanceof WardenEntity) {
-                return new WardenEntityHelper(((WardenEntity) e));
             } else if (e instanceof WitchEntity) {
                 return new WitchEntityHelper(((WitchEntity) e));
             }
 
             // Animals
             if (e instanceof AnimalEntity) {
-                if (e instanceof AbstractHorseEntity) {
+                if (e instanceof HorseBaseEntity) {
                     if (e instanceof HorseEntity) {
                         return new HorseEntityHelper(((HorseEntity) e));
                     } else if (e instanceof AbstractDonkeyEntity) {
@@ -547,7 +545,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
                             return new DonkeyEntityHelper<>(((AbstractDonkeyEntity) e));
                         }
                     } else {
-                        return new AbstractHorseEntityHelper<>(((AbstractHorseEntity) e));
+                        return new AbstractHorseEntityHelper<>(((HorseBaseEntity) e));
                     }
                 } else if (e instanceof AxolotlEntity) {
                     return new AxolotlEntityHelper(((AxolotlEntity) e));
@@ -555,8 +553,6 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
                     return new BeeEntityHelper(((BeeEntity) e));
                 } else if (e instanceof FoxEntity) {
                     return new FoxEntityHelper(((FoxEntity) e));
-                } else if (e instanceof FrogEntity) {
-                    return new FrogEntityHelper(((FrogEntity) e));
                 } else if (e instanceof GoatEntity) {
                     return new GoatEntityHelper(((GoatEntity) e));
                 } else if (e instanceof MooshroomEntity) {
@@ -591,9 +587,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
             }
 
             // Neutral mobs
-            if (e instanceof AllayEntity) {
-                return new AllayEntityHelper(((AllayEntity) e));
-            } else if (e instanceof BatEntity) {
+            if (e instanceof BatEntity) {
                 return new BatEntityHelper(((BatEntity) e));
             } else if (e instanceof DolphinEntity) {
                 return new DolphinEntityHelper(((DolphinEntity) e));

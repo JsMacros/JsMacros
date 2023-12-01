@@ -26,7 +26,7 @@ public class MooshroomEntityHelper extends AnimalEntityHelper<MooshroomEntity> {
      * @since 1.8.4
      */
     public boolean isRed() {
-        return base.getVariant() == MooshroomEntity.Type.RED;
+        return base.getMooshroomType() == MooshroomEntity.Type.RED;
     }
 
     /**
@@ -34,7 +34,7 @@ public class MooshroomEntityHelper extends AnimalEntityHelper<MooshroomEntity> {
      * @since 1.8.4
      */
     public boolean isBrown() {
-        return base.getVariant() == MooshroomEntity.Type.BROWN;
+        return base.getMooshroomType() == MooshroomEntity.Type.BROWN;
     }
 
 }

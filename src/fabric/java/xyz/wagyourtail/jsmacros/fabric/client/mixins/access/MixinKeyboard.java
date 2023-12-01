@@ -12,7 +12,7 @@ import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 public class MixinKeyboard {
 
     @Redirect(method = "method_1454", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;keyPressed(III)Z"))
-    private static boolean onKeyPressed(Screen instance, int keyCode, int scanCode, int modifiers) {
+    private boolean onKeyPressed(Screen instance, int keyCode, int scanCode, int modifiers) {
         ((IScreenInternal) instance).jsmacros_keyPressed(keyCode, scanCode, modifiers);
         return instance.keyPressed(keyCode, scanCode, modifiers);
     }

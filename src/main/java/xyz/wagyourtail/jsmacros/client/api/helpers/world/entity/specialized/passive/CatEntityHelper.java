@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.CatEntity;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.helpers.DyeColorHelper;
 
 /**
@@ -35,8 +35,8 @@ public class CatEntityHelper extends TameableEntityHelper<CatEntity> {
      * @return the variant of this cat.
      * @since 1.8.4
      */
-    public String getVariant() {
-        return Registries.CAT_VARIANT.getId(base.getVariant()).toString();
+    public int getVariant() {
+        return base.getCatType();
     }
 
 }

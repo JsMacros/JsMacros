@@ -12,11 +12,11 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.registry.Registries;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.jsmacros.client.api.classes.FakeServerCommandSource;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -25,7 +25,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -85,12 +84,12 @@ public class CommandContextHelper extends BaseEvent {
             arg = new FormattingHelper((Formatting) arg);
         } else if (arg instanceof AngleArgumentType.Angle) {
             arg = ((AngleArgumentType.Angle) arg).getAngle(fakeServerSource);
-        } else if (arg instanceof ItemPredicateArgumentType.ItemStackPredicateArgument) {
-            ItemPredicateArgumentType.ItemStackPredicateArgument itemPredicate = (ItemPredicateArgumentType.ItemStackPredicateArgument) arg;
-            arg = (Predicate<ItemStackHelper>) item -> itemPredicate.test(item.getRaw());
+        } else if (arg instanceof ItemPredicateArgumentType.ItemPredicateArgument) {
+            ItemPredicateArgumentType.ItemPredicateArgument itemPredicate = (ItemPredicateArgumentType.ItemPredicateArgument) arg;
+            arg = itemPredicate.create(null);
         } else if (arg instanceof BlockPredicateArgumentType.BlockPredicate) {
             BlockPredicateArgumentType.BlockPredicate blockPredicate = (BlockPredicateArgumentType.BlockPredicate) arg;
-            arg = (Predicate<BlockPosHelper>) block -> blockPredicate.test(new CachedBlockPosition(MinecraftClient.getInstance().world, block.getRaw(), false));
+            arg = blockPredicate.create(Registry.BLOCK);
         } else if (arg instanceof PosArgument) {
             arg = new BlockPosHelper(((PosArgument) arg).toAbsoluteBlockPos(fakeServerSource));
         } else if (arg instanceof Enchantment) {
@@ -98,9 +97,9 @@ public class CommandContextHelper extends BaseEvent {
         } else if (arg instanceof EntitySelector) {
             arg = ((EntitySelector) arg).getEntities(fakeServerSource).stream().map(EntityHelper::create).collect(Collectors.toList());
         } else if (arg instanceof ParticleEffect) {
-            arg = Registries.PARTICLE_TYPE.getId(((ParticleEffect) arg).getType()).toString();
+            arg = Registry.PARTICLE_TYPE.getId(((ParticleEffect) arg).getType()).toString();
         } else if (arg instanceof StatusEffect) {
-            arg = Registries.STATUS_EFFECT.getId(((StatusEffect) arg)).toString();
+            arg = Registry.STATUS_EFFECT.getId(((StatusEffect) arg)).toString();
         }
         return arg;
     }

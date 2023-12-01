@@ -7,6 +7,8 @@ import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 public class Scrollbar extends ClickableWidget {
     protected double scrollPages = 1;
     protected double scrollAmount = 0;
@@ -18,7 +20,7 @@ public class Scrollbar extends ClickableWidget {
     protected Consumer<Double> onChange;
 
     public Scrollbar(int x, int y, int width, int height, int color, int borderColor, int highlightColor, double scrollPages, Consumer<Double> onChange) {
-        super(x, y, width, height, Text.literal(""));
+        super(x, y, width, height, literal(""));
         this.color = color;
         this.borderColor = borderColor;
         this.highlightColor = highlightColor;
@@ -27,8 +29,8 @@ public class Scrollbar extends ClickableWidget {
     }
 
     public Scrollbar setPos(int x, int y, int width, int height) {
-        this.setX(x);
-        this.setY(y);
+        this.x = x;
+        this.y = y;
         this.width = width;
         this.height = height;
         this.scrollbarHeight = (height - 2) / (scrollPages + 1);
@@ -61,7 +63,7 @@ public class Scrollbar extends ClickableWidget {
     @Override
     public void onClick(double mouseX, double mouseY) {
         if (this.active) {
-            double mpos = mouseY - getY() - 1;
+            double mpos = mouseY - y - 1;
             if (mpos < scrollAmount) {
                 scrollAmount = Math.max(mpos - (scrollbarHeight / 2), 0);
                 onChange();
@@ -95,19 +97,18 @@ public class Scrollbar extends ClickableWidget {
     @Override
     public void renderButton(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         // mainpart
-        fill(drawContext, getX() + 1, (int) (getY() + 1 + scrollAmount), getX() + width - 1, (int) (getY() + 1 + scrollAmount + scrollbarHeight), highlightColor);
+        fill(drawContext, x + 1, (int) (y + 1 + scrollAmount), x + width - 1, (int) (y + 1 + scrollAmount + scrollbarHeight), highlightColor);
 
         // outline and back
-        fill(drawContext, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, color);
-        fill(drawContext, getX(), getY(), getX() + 1, getY() + height, borderColor);
-        fill(drawContext, getX() + width - 1, getY(), getX() + width, getY() + height, borderColor);
-        fill(drawContext, getX() + 1, getY(), getX() + width - 1, getY() + 1, borderColor);
-        fill(drawContext, getX() + 1, getY() + height - 1, getX() + width - 1, getY() + height, borderColor);
+        fill(drawContext, x + 1, y + 1, x + width - 1, y + height - 1, color);
+        fill(drawContext, x, y, x + 1, y + height, borderColor);
+        fill(drawContext, x + width - 1, y, x + width, y + height, borderColor);
+        fill(drawContext, x + 1, y, x + width - 1, y + 1, borderColor);
+        fill(drawContext, x + 1, y + height - 1, x + width - 1, y + height, borderColor);
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+    public void appendNarrations(NarrationMessageBuilder builder) {
 
     }
-
 }

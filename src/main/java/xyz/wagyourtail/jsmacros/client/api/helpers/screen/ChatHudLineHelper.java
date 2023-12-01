@@ -2,12 +2,13 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
+import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 @SuppressWarnings("unused")
-public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
+public class ChatHudLineHelper extends BaseHelper<ChatHudLine<Text>> {
     private ChatHud hud;
 
     public ChatHudLineHelper(ChatHudLine base, ChatHud hud) {
@@ -16,7 +17,7 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
     }
 
     public TextHelper getText() {
-        return TextHelper.wrap(base.content());
+        return TextHelper.wrap(base.getText());
     }
 
 //    public int getId() {
@@ -24,7 +25,7 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
 //    }
 
     public int getCreationTick() {
-        return base.creationTick();
+        return base.getCreationTick();
     }
 
     public ChatHudLineHelper deleteById() {
@@ -34,7 +35,7 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
 
     @Override
     public String toString() {
-        return String.format("ChatHudLineHelper:{\"text\": \"%s\", \"creationTick\": %d}", base.content().getString(), base.creationTick());
+        return String.format("ChatHudLineHelper:{\"text\": \"%s\", \"creationTick\": %d}", base.getText().getString(), base.getCreationTick());
     }
 
 }

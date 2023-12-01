@@ -60,7 +60,7 @@ public class InteractionProxy {
         }
 
         public static void setTargetBlock(@Nullable BlockPos pos, int direction) {
-            setTarget(pos == null ? null : new BlockHitResult(pos.toCenterPos(), Direction.values()[direction], pos, false));
+            setTarget(pos == null ? null : new BlockHitResult(new Vec3d(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f), Direction.values()[direction], pos, false));
         }
 
         public static void setTarget(@Nullable HitResult value) {

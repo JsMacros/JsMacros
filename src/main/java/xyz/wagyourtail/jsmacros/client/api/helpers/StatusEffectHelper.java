@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.registry.Registries;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -38,7 +38,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      */
     @DocletReplaceReturn("StatusEffectId")
     public String getId() {
-        return Registries.STATUS_EFFECT.getId(base.getEffectType()).toString();
+        return Registry.STATUS_EFFECT.getId(base.getEffectType()).toString();
     }
 
     /**

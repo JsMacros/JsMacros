@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.passive.AbstractHorseEntity;
+import net.minecraft.entity.passive.HorseBaseEntity;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractHorseEntity;
 
@@ -10,7 +10,7 @@ import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAbstractHorseEntity;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends AnimalEntityHelper<T> {
+public class AbstractHorseEntityHelper<T extends HorseBaseEntity> extends AnimalEntityHelper<T> {
 
     public AbstractHorseEntityHelper(T base) {
         super(base);

@@ -2,18 +2,20 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
-import net.minecraft.client.gui.screen.MessageScreen;
+import net.minecraft.client.gui.screen.SaveLevelScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
+import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
+import net.minecraft.world.level.storage.LevelSummary;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -166,24 +168,20 @@ public class FClient extends PerExecLibrary {
      * @since 1.6.6
      */
     public void loadWorld(String folderName) throws LevelStorageException {
-
         LevelStorage levelstoragesource = mc.getLevelStorage();
-        List<LevelStorage.LevelSave> levels = levelstoragesource.getLevelList().levels();
-        if (levels.stream().noneMatch(e -> e.getRootPath().equals(folderName))) {
-            throw new RuntimeException("Level Not Found!");
-        }
+        List<LevelSummary> levels = levelstoragesource.getLevelList();
+        if (levels.stream().noneMatch(e -> e.getName().equals(folderName))) throw new RuntimeException("Level Not Found!");
 
         mc.execute(() -> {
             boolean bl = mc.isInSingleplayer();
-            if (mc.world != null) {
-                mc.world.disconnect();
-            }
+            if (mc.world != null) mc.world.disconnect();
             if (bl) {
-                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
             } else {
                 mc.disconnect();
             }
-            mc.createIntegratedServerLoader().start(null, folderName);
+            mc.setScreenAndRender(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
+            mc.startIntegratedServer(folderName);
         });
     }
 
@@ -207,11 +205,9 @@ public class FClient extends PerExecLibrary {
     public void connect(String ip, int port) {
         mc.execute(() -> {
             boolean bl = mc.isInSingleplayer();
-            if (mc.world != null) {
-                mc.world.disconnect();
-            }
+            if (mc.world != null) mc.world.disconnect();
             if (bl) {
-                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
             } else {
                 mc.disconnect();
             }
@@ -242,10 +238,8 @@ public class FClient extends PerExecLibrary {
             boolean isInRealm = mc.isConnectedToRealms();
             if (isWorld) {
                 // logic in death screen disconnect button
-                if (mc.world != null) {
-                    mc.world.disconnect();
-                }
-                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                if (mc.world != null) mc.world.disconnect();
+                mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
                 mc.setScreen(new TitleScreen());
             }
             if (isInSingleplayer) {
@@ -256,9 +250,8 @@ public class FClient extends PerExecLibrary {
                 mc.setScreen(new MultiplayerScreen(new TitleScreen()));
             }
             try {
-                if (callback != null) {
+                if (callback != null)
                     callback.accept(isWorld);
-                }
             } catch (Throwable e) {
                 Core.getInstance().profile.logError(e);
             }
@@ -419,7 +412,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.8.4
      */
     public List<BlockHelper> getRegisteredBlocks() {
-        return Registries.BLOCK.stream().map(BlockHelper::new).collect(Collectors.toList());
+        return Registry.BLOCK.stream().map(BlockHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -427,7 +420,7 @@ public class FClient extends PerExecLibrary {
      * @since 1.8.4
      */
     public List<ItemHelper> getRegisteredItems() {
-        return Registries.ITEM.stream().map(ItemHelper::new).collect(Collectors.toList());
+        return Registry.ITEM.stream().map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**

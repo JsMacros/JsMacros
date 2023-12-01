@@ -15,6 +15,8 @@ import xyz.wagyourtail.wagyourgui.elements.Button;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 public class FileField extends AbstractSettingField<String> {
 
     public FileField(int x, int y, int width, TextRenderer textRenderer, AbstractSettingContainer parent, SettingsOverlay.SettingField<String> field) {
@@ -48,7 +50,7 @@ public class FileField extends AbstractSettingField<String> {
     public void init() {
         super.init();
         try {
-            this.addDrawableChild(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(setting.get()), (btn) -> {
+            this.addDrawableChild(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal(setting.get()), (btn) -> {
                 try {
                     File current = new File(getTopLevel(setting), setting.get());
                     FileChooser fc = new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, current.getParentFile(), current, getFirstOverlayParent(), (file) -> {
@@ -74,7 +76,7 @@ public class FileField extends AbstractSettingField<String> {
     public void setPos(int x, int y, int width, int height) {
         super.setPos(x, y, width, height);
         for (ClickableWidget btn : buttons) {
-            btn.setY(y);
+            btn.y = y;
         }
     }
 

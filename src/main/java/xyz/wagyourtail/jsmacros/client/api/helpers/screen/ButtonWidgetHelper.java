@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.backport.ButtonBuilderBackport;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -83,7 +84,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         @Override
         public ButtonWidgetHelper<ButtonWidget> createWidget() {
             AtomicReference<ButtonWidgetHelper<ButtonWidget>> b = new AtomicReference<>(null);
-            ButtonWidget button = ButtonWidget.builder(getMessage().getRaw(), btn -> {
+            ButtonWidget button = ButtonBuilderBackport.builder(getMessage().getRaw(), btn -> {
                 try {
                     if (action != null) {
                         action.accept(b.get(), screen);

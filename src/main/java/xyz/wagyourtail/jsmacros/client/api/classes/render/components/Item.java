@@ -1,12 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
@@ -78,7 +79,7 @@ public class Item implements RenderElement, Alignable<Item> {
      */
     @DocletReplaceParams("id: ItemId, count: int")
     public Item setItem(String id, int count) {
-        this.item = new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
+        this.item = new ItemStack(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
         return this;
     }
 
@@ -267,6 +268,9 @@ public class Item implements RenderElement, Alignable<Item> {
         }
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
+        MatrixStack ms = RenderSystem.getModelViewStack();
+        ms.push();
+        ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         ItemRenderer i = mc.getItemRenderer();
         if (is3dRender) {
@@ -277,17 +281,19 @@ public class Item implements RenderElement, Alignable<Item> {
             // Don't make this to small, otherwise there will be z-fighting for items like anvils
             final float scaleZ = 0.001f;
             matrices.scale(1, 1, scaleZ);
-            i.renderGuiItemIcon(matrices, item, x, y);
+            i.renderGuiItemIcon(item, x, y);
             matrices.scale(1, 1, 1 / scaleZ);
         } else {
-            i.renderGuiItemIcon(matrices, item, x, y);
+            i.renderGuiItemIcon(item, x, y);
         }
         if (overlay) {
             if (is3dRender) {
                 matrices.translate(0, 0, -199.5);
             }
-            i.renderGuiItemOverlay(matrices, mc.textRenderer, item, x, y, ovText);
+            i.renderGuiItemOverlay(mc.textRenderer, item, x, y, ovText);
         }
+        ms.pop();
+        RenderSystem.applyModelViewMatrix();
         matrices.pop();
     }
 
@@ -417,7 +423,7 @@ public class Item implements RenderElement, Alignable<Item> {
          */
         @DocletReplaceParams("id: ItemId")
         public Builder item(String id) {
-            this.itemStack = new ItemStackHelper(Registries.ITEM.get(RegistryHelper.parseIdentifier(id))
+            this.itemStack = new ItemStackHelper(Registry.ITEM.get(RegistryHelper.parseIdentifier(id))
                     .getDefaultStack());
             return this;
         }

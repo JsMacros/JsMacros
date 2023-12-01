@@ -3,14 +3,13 @@ package xyz.wagyourtail.jsmacros.client.api.helpers;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.stat.StatType;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinStatHandler;
@@ -81,7 +80,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      */
     @DocletReplaceParams("id: EntityId")
     public int getEntityKilled(String id) {
-        return getStat(Stats.KILLED, Registries.ENTITY_TYPE, id);
+        return getStat(Stats.KILLED, Registry.ENTITY_TYPE, id);
     }
 
     /**
@@ -91,7 +90,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      */
     @DocletReplaceParams("id: EntityId")
     public int getKilledByEntity(String id) {
-        return getStat(Stats.KILLED_BY, Registries.ENTITY_TYPE, id);
+        return getStat(Stats.KILLED_BY, Registry.ENTITY_TYPE, id);
     }
 
     /**
@@ -101,7 +100,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      */
     @DocletReplaceParams("id: BlockId")
     public int getBlockMined(String id) {
-        return getStat(Stats.MINED, Registries.BLOCK, id);
+        return getStat(Stats.MINED, Registry.BLOCK, id);
     }
 
     /**
@@ -111,7 +110,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      */
     @DocletReplaceParams("id: ItemId")
     public int getItemBroken(String id) {
-        return getStat(Stats.BROKEN, Registries.ITEM, id);
+        return getStat(Stats.BROKEN, Registry.ITEM, id);
     }
 
     /**
@@ -121,7 +120,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      */
     @DocletReplaceParams("id: ItemId")
     public int getItemCrafted(String id) {
-        return getStat(Stats.CRAFTED, Registries.ITEM, id);
+        return getStat(Stats.CRAFTED, Registry.ITEM, id);
     }
 
     /**
@@ -131,7 +130,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      */
     @DocletReplaceParams("id: ItemId")
     public int getItemUsed(String id) {
-        return getStat(Stats.USED, Registries.ITEM, id);
+        return getStat(Stats.USED, Registry.ITEM, id);
     }
 
     /**
@@ -141,7 +140,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      */
     @DocletReplaceParams("id: ItemId")
     public int getItemPickedUp(String id) {
-        return getStat(Stats.PICKED_UP, Registries.ITEM, id);
+        return getStat(Stats.PICKED_UP, Registry.ITEM, id);
     }
 
     /**
@@ -151,7 +150,7 @@ public class StatsHelper extends BaseHelper<StatHandler> {
      */
     @DocletReplaceParams("id: ItemId")
     public int getItemDropped(String id) {
-        return getStat(Stats.DROPPED, Registries.ITEM, id);
+        return getStat(Stats.DROPPED, Registry.ITEM, id);
     }
 
     /**

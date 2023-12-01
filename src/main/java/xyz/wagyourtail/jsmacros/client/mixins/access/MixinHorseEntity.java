@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface MixinHorseEntity {
 
     @Invoker
-    int invokeGetHorseVariant();
+    int invokeGetVariant();
 
 }

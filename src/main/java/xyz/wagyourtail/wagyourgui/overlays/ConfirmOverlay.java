@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static net.minecraft.client.gui.DrawableHelper.fill;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
 
 public class ConfirmOverlay extends OverlayContainer {
     private final Consumer<ConfirmOverlay> accept;
@@ -39,11 +40,11 @@ public class ConfirmOverlay extends OverlayContainer {
     public void init() {
         super.init();
 
-        this.addDrawableChild(new Button(x + 2, y + height - 12, (width - 4) / 2, 10, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("gui.cancel"), (btn) -> {
+        this.addDrawableChild(new Button(x + 2, y + height - 12, (width - 4) / 2, 10, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, translatable("gui.cancel"), (btn) -> {
             this.close();
         }));
 
-        this.addDrawableChild(new Button(x + (width - 4) / 2 + 2, y + height - 12, (width - 4) / 2, 10, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
+        this.addDrawableChild(new Button(x + (width - 4) / 2 + 2, y + height - 12, (width - 4) / 2, 10, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.confirm"), (btn) -> {
             if (this.accept != null) {
                 this.accept.accept(this);
             }

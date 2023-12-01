@@ -10,6 +10,8 @@ import xyz.wagyourtail.wagyourgui.elements.Button;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 public class FileMapSetting extends AbstractMapSettingContainer<String, FileMapSetting.FileEntry> {
 
     public FileMapSetting(int x, int y, int width, int height, TextRenderer textRenderer, SettingsOverlay parent, String[] group) {
@@ -43,13 +45,13 @@ public class FileMapSetting extends AbstractMapSettingContainer<String, FileMapS
         public void init() {
             super.init();
             int w = width - height;
-            addDrawableChild(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(value), (btn) -> {
+            addDrawableChild(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal(value), (btn) -> {
                 File current = new File(FileField.getTopLevel(parent.setting), value);
                 FileChooser fc = new FileChooser(parent.x, parent.y, parent.width, parent.height, textRenderer, current.getParentFile(), current, getFirstOverlayParent(), (file) -> {
                     String newVal = "." + FileField.relativize(parent.setting, file).replaceAll("\\\\", "/");
                     try {
                         parent.changeValue(key, newVal);
-                        btn.setMessage(Text.literal(newVal));
+                        btn.setMessage(literal(newVal));
                     } catch (InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
                     }

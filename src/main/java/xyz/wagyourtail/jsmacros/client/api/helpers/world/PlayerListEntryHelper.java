@@ -67,14 +67,6 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     }
 
     /**
-     * @return
-     * @since 1.8.2
-     */
-    public byte[] getPublicKey() {
-        return base.getSession().publicKeyData().data().key().getEncoded();
-    }
-
-    /**
      * @return {@code true} if the player has a cape enabled, {@code false} otherwise.
      * @since 1.8.4
      */

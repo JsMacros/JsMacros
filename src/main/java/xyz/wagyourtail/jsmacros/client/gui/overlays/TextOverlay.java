@@ -7,6 +7,8 @@ import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
 import xyz.wagyourtail.wagyourgui.overlays.OverlayContainer;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
+
 public class TextOverlay extends OverlayContainer {
     private final Text text;
     public boolean centered = true;
@@ -20,7 +22,7 @@ public class TextOverlay extends OverlayContainer {
     public void init() {
         super.init();
 
-        addDrawableChild(new Button(x + 2, y + this.height - 12, this.width - 4, 10, this.textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
+        addDrawableChild(new Button(x + 2, y + this.height - 12, this.width - 4, 10, this.textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.confirm"), (btn) -> {
             this.close();
         }));
     }
@@ -29,7 +31,7 @@ public class TextOverlay extends OverlayContainer {
     public void render(MatrixStack drawContext, int mouseX, int mouseY, float delta) {
         renderBackground(drawContext);
         int x = this.centered ? Math.max(this.x + 3, this.x + 3 + (this.width - 6) / 2 - this.textRenderer.getWidth(this.text) / 2) : this.x + 3;
-        textRenderer.drawTrimmed(drawContext, this.text, x, this.y + 5, width - 6, 0xFFFFFF);
+        textRenderer.drawTrimmed(this.text, x, this.y + 5, width - 6, 0xFFFFFF);
         super.render(drawContext, mouseX, mouseY, delta);
     }
 

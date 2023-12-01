@@ -11,6 +11,8 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 /**
  * @author Etheradon
  * @since 1.8.4
@@ -47,7 +49,7 @@ public class Slider extends ClickableWidget {
     }
 
     private void setValueFromMouse(double mouseX) {
-        setValue((mouseX - (double) (getX() + 4)) / (double) (width - 8));
+        setValue((mouseX - (double) (x + 4)) / (double) (width - 8));
     }
 
     private void applyValue() {
@@ -79,8 +81,8 @@ public class Slider extends ClickableWidget {
         RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int offset = (isHovered() ? 2 : 1) * 20;
-        drawTexture(drawContext, getX() + (int) (value * (double) (width - 8)), getY(), 0, 46 + offset, 4, 20);
-        drawTexture(drawContext, getX() + (int) (value * (double) (width - 8)) + 4, getY(), 196, 46 + offset, 4, 20);
+        drawTexture(drawContext, x + (int) (value * (double) (width - 8)), y, 0, 46 + offset, 4, 20);
+        drawTexture(drawContext, x + (int) (value * (double) (width - 8)) + 4, y, 196, 46 + offset, 4, 20);
     }
 
     @Override
@@ -100,7 +102,7 @@ public class Slider extends ClickableWidget {
     }
 
     public void setMessage(String message) {
-        setMessage(Text.literal(message));
+        setMessage(literal(message));
     }
 
     @Override
@@ -109,7 +111,7 @@ public class Slider extends ClickableWidget {
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {
+    public void appendNarrations(NarrationMessageBuilder builder) {
 
     }
 

@@ -4,9 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
@@ -263,27 +263,23 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
         matrixStack.translate(pos.x, pos.y, pos.z);
 
         if (rotateToPlayer) {
-            Vector3f rot = toEulerDegrees(MinecraftClient.getInstance().gameRenderer.getCamera().getRotation());
-            rotations.x = -rot.x();
-            rotations.y = 180 + rot.y();
+            Vec3f rot = MinecraftClient.getInstance().gameRenderer.getCamera().getRotation().toEulerXyzDegrees();
+            rotations.x = -rot.getX();
+            rotations.y = 180 + rot.getY();
             rotations.z = 0;
         }
         if (rotateCenter) {
             matrixStack.translate(sizes.x / 2, 0, 0);
-            matrixStack.multiply(new Quaternionf().rotateLocalY((float) Math.toRadians(rotations.y)));
+            matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float) rotations.y));
             matrixStack.translate(-sizes.x / 2, 0, 0);
             matrixStack.translate(0, -sizes.y / 2, 0);
-            matrixStack.multiply(new Quaternionf().rotateLocalX((float) Math.toRadians(rotations.x)));
+            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion((float) rotations.x));
             matrixStack.translate(0, sizes.y / 2, 0);
             matrixStack.translate(sizes.x / 2, -sizes.y / 2, 0);
-            matrixStack.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotations.z)));
+            matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion((float) rotations.z));
             matrixStack.translate(-sizes.x / 2, sizes.y / 2, 0);
         } else {
-            Quaternionf q = new Quaternionf();
-            q.rotateLocalY((float) Math.toRadians(rotations.y));
-            q.rotateLocalX((float) Math.toRadians(rotations.x));
-            q.rotateLocalZ((float) Math.toRadians(rotations.z));
-            matrixStack.multiply(q);
+            matrixStack.multiply(Quaternion.fromEulerXyzDegrees(rotations.toVector().toMojangFloatVector()));
         }
         // fix it so that y-axis goes down instead of up
         matrixStack.scale(1, -1, 1);
@@ -301,33 +297,6 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
         if (renderBack) {
             RenderSystem.enableCull();
         }
-    }
-
-    private static Vector3f toEulerDegrees(Quaternionf quaternion) {
-        // The old method
-        float w = quaternion.w();
-        float x = quaternion.x();
-        float y = quaternion.y();
-        float z = quaternion.z();
-
-        float wSquared = w * w;
-        float xSquared = x * x;
-        float ySquared = y * y;
-        float zSquared = z * z;
-        float sumSquared = wSquared + xSquared + ySquared + zSquared;
-        float k = 2.0F * w * x - 2.0F * y * z;
-
-        double radianX = Math.asin(k / sumSquared);
-        double radianY;
-        double radianZ;
-        if (Math.abs(k) > 0.999F * sumSquared) {
-            radianY = 2.0F * Math.atan2(y, w);
-            radianZ = 0.0F;
-        } else {
-            radianY = Math.atan2(2.0F * x * z + 2.0F * y * w, wSquared - xSquared - ySquared + zSquared);
-            radianZ = Math.atan2(2.0F * x * y + 2.0F * w * z, wSquared - xSquared + ySquared - zSquared);
-        }
-        return new Vector3f((float) Math.toDegrees(radianX), (float) Math.toDegrees(radianY), (float) Math.toDegrees(radianZ));
     }
 
     private void renderElements3D(MatrixStack drawContext, Iterator<RenderElement> iter) {
@@ -349,7 +318,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
         if (rotateCenter) {
             matrixStack.translate(draw2DElement.width.getAsInt() / 2d, draw2DElement.height.getAsInt() / 2d, 0);
         }
-        matrixStack.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(draw2DElement.rotation)));
+        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(draw2DElement.rotation));
         if (rotateCenter) {
             matrixStack.translate(-draw2DElement.width.getAsInt() / 2d, -draw2DElement.height.getAsInt() / 2d, 0);
         }

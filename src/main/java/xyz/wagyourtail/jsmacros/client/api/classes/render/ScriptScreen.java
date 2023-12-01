@@ -13,6 +13,8 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 /**
  * just go look at {@link IScreen IScreen}
  * since all the methods are done through a mixin...
@@ -37,7 +39,7 @@ public class ScriptScreen extends BaseScreen {
     private MethodWrapper<Pos3D, MatrixStack, Object, ?> onRender;
 
     public ScriptScreen(String title, boolean dirt) {
-        super(Text.literal(title), null);
+        super(literal(title), null);
         this.bgStyle = dirt ? 0 : 1;
         this.drawTitle = true;
     }
@@ -73,13 +75,13 @@ public class ScriptScreen extends BaseScreen {
             return;
         }
         if (bgStyle == 0) {
-            this.renderBackgroundTexture(drawContext);
+            this.renderBackgroundTexture(0);
         } else if (bgStyle == 1) {
             this.renderBackground(drawContext);
         }
 
         if (drawTitle) {
-            drawCenteredTextWithShadow(drawContext, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+            drawCenteredTextWithShadow(drawContext, this.textRenderer, this.title.asOrderedText(), this.width / 2, 20, 0xFFFFFF);
         }
 
         super.render(drawContext, mouseX, mouseY, delta);

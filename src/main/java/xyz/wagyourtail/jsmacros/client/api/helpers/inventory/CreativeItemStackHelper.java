@@ -8,15 +8,18 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import net.minecraft.util.registry.Registry;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.backport.TextBackport;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
+
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
 
 /**
  * @author Etheradon
@@ -65,7 +68,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper setName(String name) {
-        base.setCustomName(Text.literal(name));
+        base.setCustomName(literal(name));
         return this;
     }
 
@@ -87,7 +90,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      */
     @DocletReplaceParams("id: EnchantmentId, level: int")
     public CreativeItemStackHelper addEnchantment(String id, int level) {
-        return addEnchantment(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(id)), level);
+        return addEnchantment(Registry.ENCHANTMENT.get(RegistryHelper.parseIdentifier(id)), level);
     }
 
     /**
@@ -181,9 +184,9 @@ public class CreativeItemStackHelper extends ItemStackHelper {
         } else if (lore instanceof TextBuilder[] textBuilders) {
             return addLoreInternal(Arrays.stream(textBuilders).map(TextBuilder::build).map(TextHelper::getRaw).toArray(Text[]::new));
         } else if (lore instanceof String[] strings) {
-            return addLoreInternal(Arrays.stream(strings).map(Text::literal).toArray(Text[]::new));
+            return addLoreInternal(Arrays.stream(strings).map(TextBackport::literal).toArray(Text[]::new));
         } else {
-            return addLoreInternal(Arrays.stream(lore).map(Object::toString).map(Text::literal).toArray(Text[]::new));
+            return addLoreInternal(Arrays.stream(lore).map(Object::toString).map(TextBackport::literal).toArray(Text[]::new));
         }
     }
 

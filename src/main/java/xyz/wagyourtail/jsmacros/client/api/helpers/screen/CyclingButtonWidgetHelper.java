@@ -15,6 +15,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.empty;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+
 /**
  * @author Etheradon
  * @since 1.8.4
@@ -95,7 +98,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
     public static class CyclicButtonBuilder<T> extends AbstractWidgetBuilder<CyclicButtonBuilder<T>, CyclingButtonWidget<T>, CyclingButtonWidgetHelper<T>> {
 
         private T value = null;
-        private Text optionText = Text.empty();
+        private Text optionText = empty();
         @Nullable
         private MethodWrapper<CyclingButtonWidgetHelper<T>, IScreen, Object, ?> action;
         private MethodWrapper<T, ?, TextHelper, ?> valueToText;
@@ -145,7 +148,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
          */
         public CyclicButtonBuilder<T> option(String option) {
             if (option != null) {
-                optionText = Text.literal(option);
+                optionText = literal(option);
             }
             return this;
         }

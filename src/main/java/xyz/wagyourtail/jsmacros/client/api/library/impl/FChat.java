@@ -25,6 +25,9 @@ import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
+import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable;
+
 /**
  * Functions for interacting with chat.
  * <p>
@@ -132,7 +135,7 @@ public class FChat extends BaseLibrary {
 
     private static void logInternal(String message) {
         if (message != null) {
-            Text text = Text.literal(message);
+            Text text = literal(message);
             ((IChatHud) mc.inGameHud.getChatHud()).jsmacros_addMessageBypass(text);
         }
     }
@@ -179,11 +182,7 @@ public class FChat extends BaseLibrary {
     }
 
     private void sayInternal(String message) {
-        if (message.startsWith("/")) {
-            mc.getNetworkHandler().sendChatCommand(message.substring(1));
-        } else {
-            mc.getNetworkHandler().sendChatMessage(message);
-        }
+            mc.player.sendChatMessage(message);
     }
 
     /**
@@ -266,12 +265,12 @@ public class FChat extends BaseLibrary {
         if (title instanceof TextHelper) {
             titlee = ((TextHelper) title).getRaw();
         } else if (title != null) {
-            titlee = Text.literal(title.toString());
+            titlee = literal(title.toString());
         }
         if (subtitle instanceof TextHelper) {
             subtitlee = ((TextHelper) subtitle).getRaw();
         } else if (subtitle != null) {
-            subtitlee = Text.literal(subtitle.toString());
+            subtitlee = literal(subtitle.toString());
         }
         if (title != null) {
             mc.inGameHud.setTitle(titlee);
@@ -307,7 +306,7 @@ public class FChat extends BaseLibrary {
         if (text instanceof TextHelper) {
             textt = ((TextHelper) text).getRaw();
         } else if (text != null) {
-            textt = Text.literal(text.toString());
+            textt = literal(text.toString());
         }
         mc.inGameHud.setOverlayMessage(textt, tinted);
     }
@@ -322,8 +321,8 @@ public class FChat extends BaseLibrary {
     public void toast(Object title, Object desc) {
         ToastManager t = mc.getToastManager();
         if (t != null) {
-            Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? Text.literal(title.toString()) : null;
-            Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? Text.literal(desc.toString()) : null;
+            Text titlee = (title instanceof TextHelper) ? ((TextHelper) title).getRaw() : title != null ? literal(title.toString()) : null;
+            Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? literal(desc.toString()) : null;
             // There doesn't seem to be a difference in the appearance or the functionality except for the UNSECURE_SERVER_WARNING with a longer duration
             if (titlee != null) {
                 t.add(SystemToast.create(mc, SystemToast.Type.TUTORIAL_HINT, titlee, descc));
@@ -340,7 +339,7 @@ public class FChat extends BaseLibrary {
      * @since 1.1.3
      */
     public TextHelper createTextHelperFromString(String content) {
-        return TextHelper.wrap(Text.literal(content));
+        return TextHelper.wrap(literal(content));
     }
 
     /**
@@ -348,7 +347,7 @@ public class FChat extends BaseLibrary {
      * @return a new {@link xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper TextHelper}
      */
     public TextHelper createTextHelperFromTranslationKey(String key, Object... content) {
-        return TextHelper.wrap(Text.translatable(key, content));
+        return TextHelper.wrap(translatable(key, content));
     }
 
     /**

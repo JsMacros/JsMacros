@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.client.network.ServerInfo;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.text.TranslatableText;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -52,11 +52,11 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
     }
 
     public String resourcePackPolicy() {
-        return ((TranslatableTextContent) base.getResourcePackPolicy().getName().getContent()).getKey();
+        return ((TranslatableText) base.getResourcePackPolicy().getName()).getKey();
     }
 
-    public byte[] getIcon() {
-        return base.getFavicon();
+    public String getIcon() {
+        return base.getIcon();
     }
 
     public boolean isOnline() {
@@ -69,14 +69,6 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
 
     public NBTElementHelper.NBTCompoundHelper getNbt() {
         return NBTElementHelper.wrapCompound(base.toNbt());
-    }
-
-    /**
-     * @return {@code true} if the server enforces secure chat, {@code false} otherwise.
-     * @since 1.8.4
-     */
-    public boolean isSecureChatEnforced() {
-        return base.isSecureChatEnforced();
     }
 
     @Override
