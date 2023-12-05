@@ -128,7 +128,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
     }
 
     public List<TextHelper> getTabTexts() {
-        return Arrays.stream(ItemGroup.GROUPS).map(e -> TextHelper.wrap(e.getDisplayName())).collect(Collectors.toList());
+        return Arrays.stream(ItemGroup.GROUPS).map(e -> TextHelper.wrap(e.getTranslationKey())).collect(Collectors.toList());
     }
 
     private CreativeInventory selectTab(ItemGroup group) {
@@ -221,7 +221,7 @@ public class CreativeInventory extends Inventory<CreativeInventoryScreen> {
      * @since 1.8.4
      */
     public boolean isInHotbar(int slot) {
-        return PlayerScreenHandler.isInHotbar(slot);
+        return PlayerScreenHandler.method_36211(slot);
     }
 
     /**

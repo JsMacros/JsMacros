@@ -353,7 +353,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
         Vec3d vec3d3 = vec3d.add(vec3d2);
         Box box = base.getBoundingBox().stretch(vec3d2).expand(1.0);
 
-        Function<Vec3d, Boolean> canSee = pos -> base.getWorld().raycast(new RaycastContext(baseEyePos, pos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, base)).getType() == HitResult.Type.MISS;
+        Function<Vec3d, Boolean> canSee = pos -> base.getEntityWorld().raycast(new RaycastContext(baseEyePos, pos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, base)).getType() == HitResult.Type.MISS;
 
         if (canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getEyeY(), rawEntity.getZ()))
                 || canSee.apply(new Vec3d(rawEntity.getX(), rawEntity.getY() + 0.5, rawEntity.getZ()))

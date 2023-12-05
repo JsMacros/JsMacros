@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "xyz.wagyourtail.jsmacros.client.mixins",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_16",
   "client": [
     "access.MixinAbstractFurnaceScreenHandler",
     "access.MixinAbstractHorseEntity",
@@ -40,7 +40,6 @@
     "access.MixinPackedIntegerArray",
     "access.MixinPacketHandler",
     "access.MixinPalettedContainer",
-    "access.MixinPalettedContainerData",
     "access.MixinPhaseType",
     "access.MixinPlayerEntity",
     "access.MixinPlayerListHud",
@@ -79,5 +78,7 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "access.MixinNetworkState",
+    "access.MixinNetworkState$MixinPacketHandler"
   ]
 }

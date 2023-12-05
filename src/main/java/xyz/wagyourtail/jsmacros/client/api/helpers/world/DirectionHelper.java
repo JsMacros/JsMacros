@@ -121,7 +121,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
      * @since 1.8.4
      */
     public boolean pointsTo(double yaw) {
-        return base.pointsTo((float) yaw);
+        return base.method_30928((float) yaw);
     }
 
     @Override

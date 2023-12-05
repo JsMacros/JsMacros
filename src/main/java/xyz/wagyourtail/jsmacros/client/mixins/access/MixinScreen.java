@@ -869,7 +869,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
     @Override
     public IScreen reloadScreen() {
-        client.execute(() -> client.setScreen((Screen) (Object) this));
+        client.execute(() -> client.openScreen((Screen) (Object) this));
         return this;
     }
 
@@ -1051,7 +1051,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     //TODO: switch to enum extension with mixin 9.0 or whenever Mumfrey gets around to it
-    @Inject(at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
+    @Inject(at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
     public void handleCustomClickEvent(Style style, CallbackInfoReturnable<Boolean> cir) {
         ClickEvent clickEvent = style.getClickEvent();
         if (clickEvent instanceof CustomClickEvent) {

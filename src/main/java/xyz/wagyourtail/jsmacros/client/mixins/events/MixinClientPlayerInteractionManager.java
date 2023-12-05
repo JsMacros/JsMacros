@@ -38,7 +38,7 @@ public class MixinClientPlayerInteractionManager {
             new EventInteractBlock(
                     hand != Hand.MAIN_HAND,
                     cir.getReturnValue().name(),
-                    new BlockDataHelper(player.getWorld().getBlockState(pos), player.getWorld().getBlockEntity(pos), pos),
+                    new BlockDataHelper(player.getEntityWorld().getBlockState(pos), player.getEntityWorld().getBlockEntity(pos), pos),
                     hitResult.getSide().getId()
             ).trigger();
         }

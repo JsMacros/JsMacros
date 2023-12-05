@@ -53,7 +53,7 @@ public class MovementDummy extends LivingEntity {
         this.setSprinting(isSprinting);
         this.setSneaking(isSneaking);
         this.stepHeight = 0.6F;
-        this.setOnGround(onGround);
+        this.onGround = onGround;
         this.coordsHistory.add(this.getPos());
 
         for (EquipmentSlot value : EquipmentSlot.values()) {
@@ -115,7 +115,7 @@ public class MovementDummy extends LivingEntity {
         }
 
         if (currentInput.jumping) {
-            if (this.isOnGround() && this.jumpingCooldown == 0) {
+            if (this.onGround && this.jumpingCooldown == 0) {
                 this.jump();
                 this.jumpingCooldown = 10;
             }
@@ -126,9 +126,8 @@ public class MovementDummy extends LivingEntity {
 
         this.travel(new Vec3d(currentInput.movementSideways * 0.98, 0.0, currentInput.movementForward * 0.98));
 
-// TODO: fix, var was removed
-//        /* flyingSpeed only gets set after travel */
-//        this.airStrafingSpeed = this.isSprinting() ? 0.026F : 0.02F;
+        /* flyingSpeed only gets set after travel */
+        this.flyingSpeed = this.isSprinting() ? 0.026F : 0.02F;
 
         return this.getPos();
     }
@@ -139,16 +138,16 @@ public class MovementDummy extends LivingEntity {
      * so this is why we need to set the y-velocity to 0.<p>
      */
     @Override
-    public Vec3d applyMovementInput(Vec3d movementInput, float f) {
+    public Vec3d method_26318(Vec3d movementInput, float f) {
         if (this.isClimbing() && this.getVelocity().getY() < 0.0D && !this.getBlockStateAtPos().isOf(Blocks.SCAFFOLDING) && this.isHoldingOntoLadder()) {
             this.setVelocity(this.getVelocity().getX(), 0, this.getVelocity().getZ());
         }
-        return super.applyMovementInput(movementInput, f);
+        return super.method_26318(movementInput, f);
     }
 
     //TODO: relink?
     protected boolean canClimb() {
-        return !this.isOnGround() || !this.isSneaking();
+        return !this.onGround || !this.isSneaking();
     }
 
     @Override
@@ -192,5 +191,4 @@ public class MovementDummy extends LivingEntity {
     public MovementDummy clone() {
         return new MovementDummy(this);
     }
-
 }

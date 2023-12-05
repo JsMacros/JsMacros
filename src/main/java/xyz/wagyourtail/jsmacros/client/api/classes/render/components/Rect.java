@@ -326,7 +326,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
         buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
+        Matrix4f matrix = matrices.peek().getModel();
         //draw a rectangle using triangle strips
         buf.vertex(matrix, x1, y2, 0).color(fr, fg, fb, fa).next(); // Top-left
         buf.vertex(matrix, x2, y2, 0).color(fr, fg, fb, fa).next(); // Top-right

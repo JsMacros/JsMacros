@@ -180,7 +180,7 @@ public class FClient extends PerExecLibrary {
             } else {
                 mc.disconnect();
             }
-            mc.setScreenAndRender(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
+            mc.method_29970(new SaveLevelScreen(new TranslatableText("selectWorld.data_read")));
             mc.startIntegratedServer(folderName);
         });
     }
@@ -240,14 +240,14 @@ public class FClient extends PerExecLibrary {
                 // logic in death screen disconnect button
                 if (mc.world != null) mc.world.disconnect();
                 mc.disconnect(new SaveLevelScreen(new TranslatableText("menu.savingLevel")));
-                mc.setScreen(new TitleScreen());
+                mc.openScreen(new TitleScreen());
             }
             if (isInSingleplayer) {
-                mc.setScreen(new TitleScreen());
+                mc.openScreen(new TitleScreen());
             } else if (isInRealm) {
-                mc.setScreen(new RealmsMainScreen(new TitleScreen()));
+                mc.openScreen(new RealmsMainScreen(new TitleScreen()));
             } else {
-                mc.setScreen(new MultiplayerScreen(new TitleScreen()));
+                mc.openScreen(new MultiplayerScreen(new TitleScreen()));
             }
             try {
                 if (callback != null)

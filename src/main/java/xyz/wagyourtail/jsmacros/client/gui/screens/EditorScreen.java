@@ -148,7 +148,7 @@ public class EditorScreen extends BaseScreen {
                 }
                 screen.cursor.updateStartIndex(startIndex, screen.history.current);
                 screen.cursor.updateEndIndex(finalEndIndex, screen.history.current);
-                mc.setScreen(screen);
+                mc.openScreen(screen);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -185,7 +185,7 @@ public class EditorScreen extends BaseScreen {
                     startIndex = lineIndex + Math.min(lines[max].length(), endCol);
                 }
                 screen.cursor.updateEndIndex(startIndex, screen.history.current);
-                mc.setScreen(screen);
+                mc.openScreen(screen);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -236,7 +236,7 @@ public class EditorScreen extends BaseScreen {
         scrollbar = addDrawableChild(new Scrollbar(width, 12, 10, height - 24, 0, 0xFF000000, 0xFFFFFFFF, 1, this::setScroll));
         saveBtn = this.addDrawableChild(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, translatable("jsmacros.save"), (btn) -> save()));
         this.addDrawableChild(new Button(width * 4 / 6, 0, width / 6, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, translatable("jsmacros.close"), (btn) -> openParent()));
-        this.addDrawableChild(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal(client.world == null ? "X" : "-"), (btn) -> close()));
+        this.addDrawableChild(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, literal(client.world == null ? "X" : "-"), (btn) -> onClose()));
 
         if (language == null) {
             setLanguage(getDefaultLanguage());

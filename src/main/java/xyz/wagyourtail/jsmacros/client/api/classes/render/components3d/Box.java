@@ -192,7 +192,7 @@ public class Box implements RenderElement3D<Box> {
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
 
-        Matrix4f matrix = matrixStack.peek().getPositionMatrix();
+        Matrix4f matrix = matrixStack.peek().getModel();
 
         if (this.fill) {
             float fa = ((fillColor >> 24) & 0xFF) / 255F;

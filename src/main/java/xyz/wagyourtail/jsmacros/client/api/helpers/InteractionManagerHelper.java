@@ -532,7 +532,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         if (!checkBase(autoUpdateBase)) return InteractionProxy.Break.BreakBlockResult.UNAVAILABLE;
         if (mc.world == null || mc.player == null
         ||  ((IClientPlayerInteractionManager) base).jsmacros_getBlockBreakingCooldown() != 0
-        ||  mc.world.getBlockState(pos).calcBlockBreakingDelta(mc.player, mc.player.getWorld(), pos) < 1.0F
+        ||  mc.world.getBlockState(pos).calcBlockBreakingDelta(mc.player, mc.player.getEntityWorld(), pos) < 1.0F
         ) return null;
         int side = 0;
         HitResult target = mc.crosshairTarget;

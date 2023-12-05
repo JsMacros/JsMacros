@@ -119,7 +119,7 @@ public class TraceLine implements RenderElement3D<TraceLine> {
         int b = color & 0xFF;
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
-        Matrix4f model = matrixStack.peek().getPositionMatrix();
+        Matrix4f model = matrixStack.peek().getModel();
         RenderSystem.lineWidth(2.5F);
         buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         buf.vertex(screenPos.x, screenPos.y, -4.0).color(r, g, b, a).next();

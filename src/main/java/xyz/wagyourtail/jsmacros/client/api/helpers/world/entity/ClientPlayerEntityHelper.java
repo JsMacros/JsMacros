@@ -276,7 +276,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
                         double x = center.x + ((xc & 1) == 0 ? 1 : -1) * xOffset * (xc / 2) * 0.999;
                         double y = center.y + ((yc & 1) == 0 ? 1 : -1) * yOffset * (yc / 2) * 0.999;
                         double z = center.z + ((zc & 1) == 0 ? 1 : -1) * zOffset * (zc / 2) * 0.999;
-                        BlockHitResult result = base.getWorld().raycast(new RaycastContext(base.getEyePos(), new Vec3d(x, y, z), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, base));
+                        BlockHitResult result = base.getEntityWorld().raycast(new RaycastContext(base.getEyePos(), new Vec3d(x, y, z), RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, base));
                         if (result.getType() == HitResult.Type.BLOCK && result.getBlockPos().equals(pos.getRaw())) {
                             Vec3D vec = new Vec3D(eyePos, new Pos3D(x, y, z));
                             lookAt(vec.getYaw(), vec.getPitch());
@@ -676,9 +676,9 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     @Deprecated
     public ClientPlayerEntityHelper<T> setLongAttack(boolean stop) {
         if (!stop) {
-            KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.attackKey.getBoundKeyTranslationKey()));
+            KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.keyAttack.getBoundKeyTranslationKey()));
         } else {
-            KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.attackKey.getBoundKeyTranslationKey()), false);
+            KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.keyAttack.getBoundKeyTranslationKey()), false);
         }
         return this;
     }
@@ -692,9 +692,9 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     @Deprecated
     public ClientPlayerEntityHelper<T> setLongInteract(boolean stop) {
         if (!stop) {
-            KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()));
+            KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(mc.options.keyUse.getBoundKeyTranslationKey()));
         } else {
-            KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.useKey.getBoundKeyTranslationKey()), false);
+            KeyBinding.setKeyPressed(InputUtil.fromTranslationKey(mc.options.keyUse.getBoundKeyTranslationKey()), false);
         }
         return this;
     }

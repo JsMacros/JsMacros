@@ -7,7 +7,6 @@ import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
 import xyz.wagyourtail.jsmacros.client.access.ILoomScreen;
 
 import java.util.Arrays;

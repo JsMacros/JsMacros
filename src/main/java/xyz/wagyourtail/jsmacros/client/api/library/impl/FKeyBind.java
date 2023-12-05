@@ -51,7 +51,7 @@ public class FKeyBind extends BaseLibrary {
     @DocletReplaceReturn("JavaMap<Bind, Key>")
     public Map<String, String> getKeyBindings() {
         Map<String, String> keys = new HashMap<>();
-        for (KeyBinding key : ImmutableList.copyOf(mc.options.allKeys)) {
+        for (KeyBinding key : ImmutableList.copyOf(mc.options.keysAll)) {
             keys.put(key.getTranslationKey(), key.getBoundKeyTranslationKey());
         }
         return keys;
@@ -66,7 +66,7 @@ public class FKeyBind extends BaseLibrary {
      */
     @DocletReplaceParams("bind: Bind, key: Key | null")
     public void setKeyBind(String bind, @Nullable String key) {
-        for (KeyBinding keybind : mc.options.allKeys) {
+        for (KeyBinding keybind : mc.options.keysAll) {
             if (keybind.getTranslationKey().equals(bind)) {
                 keybind.setBoundKey(key != null ? InputUtil.fromTranslationKey(key) : InputUtil.UNKNOWN_KEY);
                 KeyBinding.updateKeysByCode();
@@ -139,7 +139,7 @@ public class FKeyBind extends BaseLibrary {
      */
     @DocletReplaceParams("keyBind: Bind, keyState: boolean")
     public void keyBind(String keyBind, boolean keyState) {
-        for (KeyBinding key : mc.options.allKeys) {
+        for (KeyBinding key : mc.options.keysAll) {
             if (key.getTranslationKey().equals(keyBind)) {
                 if (keyState) {
                     KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey()));

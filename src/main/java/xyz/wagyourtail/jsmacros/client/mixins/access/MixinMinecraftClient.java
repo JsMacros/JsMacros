@@ -43,7 +43,7 @@ class MixinMinecraftClient implements IMinecraftClient {
     protected abstract void doItemUse();
 
     @Shadow
-    protected abstract boolean doAttack();
+    protected abstract void doAttack();
 
     @Shadow
     protected abstract void handleBlockBreaking(boolean breaking);
@@ -84,7 +84,7 @@ class MixinMinecraftClient implements IMinecraftClient {
         }
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method = "setScreen")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;removed()V"), method = "openScreen")
     public void onCloseScreen(Screen screen, CallbackInfo ci) {
         Consumer<IScreen> onClose = ((IScreen) currentScreen).getOnClose();
         try {
@@ -109,7 +109,7 @@ class MixinMinecraftClient implements IMinecraftClient {
     @Inject(at = @At("HEAD"), method = "handleBlockBreaking", cancellable = true)
     private void overrideBlockBreaking(boolean breaking, CallbackInfo ci) {
         if (InteractionProxy.Break.isBreaking()) {
-            if (options.attackKey.isPressed()) {
+            if (options.keyAttack.isPressed()) {
                 InteractionProxy.Break.setOverride(false, "INTERRUPTED");
                 return;
             }
@@ -122,10 +122,9 @@ class MixinMinecraftClient implements IMinecraftClient {
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;attackBlock(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"), method = "doAttack", cancellable = true)
-    private void blockAttackBlock(CallbackInfoReturnable<Boolean> cir) {
+    private void blockAttackBlock(CallbackInfo ci) {
         if (InteractionProxy.Break.isBreaking()) {
-            cir.cancel();
-            cir.setReturnValue(false);
+            ci.cancel();
         }
     }
 

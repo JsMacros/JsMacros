@@ -110,7 +110,7 @@ public class Line3D implements RenderElement3D<Line3D> {
         int b = color & 0xFF;
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buf = tess.getBuffer();
-        Matrix4f model = matrixStack.peek().getPositionMatrix();
+        Matrix4f model = matrixStack.peek().getModel();
         RenderSystem.lineWidth(2.5F);
         buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();

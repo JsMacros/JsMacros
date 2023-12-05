@@ -105,12 +105,12 @@ public class ScriptScreen extends BaseScreen {
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         openParent();
     }
 
     @Override
-    public boolean shouldPause() {
+    public boolean isPauseScreen() {
         return shouldPause;
     }
 

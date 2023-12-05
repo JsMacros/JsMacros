@@ -283,7 +283,7 @@ public class Line implements RenderElement, Alignable<Line> {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
         buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
+        Matrix4f matrix = matrices.peek().getModel();
         //draw a line with the given width using triangle strips
 
         float halfWidth = width / 2;
@@ -295,10 +295,15 @@ public class Line implements RenderElement, Alignable<Line> {
         float px = -dy * halfWidth;
         float py = dx * halfWidth;
 
-        buf.vertex(matrix, x1 + px, y1 + py, 0).color(color).next();
-        buf.vertex(matrix, x2 + px, y2 + py, 0).color(color).next();
-        buf.vertex(matrix, x1 - px, y1 - py, 0).color(color).next();
-        buf.vertex(matrix, x2 - px, y2 - py, 0).color(color).next();
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = color & 0xFF;
+        int a = (color >> 24) & 0xFF;
+
+        buf.vertex(matrix, x1 + px, y1 + py, 0).color(r, g, b, a).next();
+        buf.vertex(matrix, x2 + px, y2 + py, 0).color(r, g, b, a).next();
+        buf.vertex(matrix, x1 - px, y1 - py, 0).color(r, g, b, a).next();
+        buf.vertex(matrix, x2 - px, y2 - py, 0).color(r, g, b, a).next();
         tess.draw();
 
         RenderSystem.disableBlend();

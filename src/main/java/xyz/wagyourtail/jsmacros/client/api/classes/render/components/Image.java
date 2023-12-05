@@ -312,7 +312,7 @@ public class Image implements RenderElement, Alignable<Image> {
         BufferBuilder buf = tess.getBuffer();
 
         buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_TEXTURE_COLOR);
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
+        Matrix4f matrix = matrices.peek().getModel();
 
         float x1 = x;
         float y1 = y;
@@ -324,11 +324,16 @@ public class Image implements RenderElement, Alignable<Image> {
         float u2 = (imageX + regionWidth) / (float) textureWidth;
         float v2 = (imageY + regionHeight) / (float) textureHeight;
 
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = color & 0xFF;
+        int a = (color >> 24) & 0xFF;
+
         //draw a rectangle using triangle strips
-        buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(color).next(); // Top-left
-        buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(color).next(); // Top-right
-        buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(color).next(); // Bottom-left
-        buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(color).next(); // Bottom-right
+        buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(r, g, b, a).next(); // Top-left
+        buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(r, g, b, a).next(); // Top-right
+        buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(r, g, b, a).next(); // Bottom-left
+        buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(r, g, b, a).next(); // Bottom-right
         tess.draw();
 
         matrices.pop();

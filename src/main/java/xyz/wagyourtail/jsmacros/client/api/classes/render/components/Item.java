@@ -270,7 +270,7 @@ public class Item implements RenderElement, Alignable<Item> {
         setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
         MatrixStack ms = RenderSystem.getModelViewStack();
         ms.push();
-        ms.multiplyPositionMatrix(matrices.peek().getPositionMatrix());
+        ms.method_34425(matrices.peek().getModel());
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         ItemRenderer i = mc.getItemRenderer();
         if (is3dRender) {

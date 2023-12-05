@@ -226,8 +226,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (h.getType() == HitResult.Type.MISS) {
             return null;
         }
-        BlockState b = base.getWorld().getBlockState(h.getBlockPos());
-        BlockEntity t = base.getWorld().getBlockEntity(h.getBlockPos());
+        BlockState b = base.getEntityWorld().getBlockState(h.getBlockPos());
+        BlockEntity t = base.getEntityWorld().getBlockEntity(h.getBlockPos());
         if (b.getBlock().equals(Blocks.VOID_AIR)) {
             return null;
         }
@@ -404,7 +404,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public double distanceTo(BlockPosHelper pos) {
-        return Math.sqrt(pos.getRaw().getSquaredDistance(base.getPos()));
+        return Math.sqrt(pos.getRaw().getSquaredDistance(base.getPos(), false));
     }
 
     /**
@@ -436,7 +436,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public ChunkHelper getChunk() {
-        return new ChunkHelper(base.getWorld().getChunk(base.getBlockPos()));
+        return new ChunkHelper(base.getEntityWorld().getChunk(base.getBlockPos()));
     }
 
     /**
@@ -445,7 +445,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     @DocletReplaceReturn("Biome")
     public String getBiome() {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
+        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos())).toString();
     }
 
     @Override
@@ -714,7 +714,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (!client.isIntegratedServerRunning()) {
             return null;
         }
-        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).getWorld().getEntity(base.getUuid());
+        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).getEntityWorld().getEntityById(base.getId());
         if (entity == null) {
             return null;
         } else {

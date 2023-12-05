@@ -199,7 +199,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.8.4
      */
     public double distanceTo(EntityHelper<?> entity) {
-        return Math.sqrt(base.getSquaredDistance(entity.getRaw().getPos()));
+        return Math.sqrt(base.getSquaredDistance(entity.getRaw().getPos(), false));
     }
 
     /**
@@ -217,7 +217,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.8.4
      */
     public double distanceTo(Pos3D pos) {
-        return Math.sqrt(base.getSquaredDistance(pos.getX(), pos.getY(), pos.getZ()));
+        return Math.sqrt(base.getSquaredDistance(pos.getX(), pos.getY(), pos.getZ(), false));
     }
 
     /**
@@ -228,7 +228,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.8.4
      */
     public double distanceTo(double x, double y, double z) {
-        return Math.sqrt(base.getSquaredDistance(x, y, z));
+        return Math.sqrt(base.getSquaredDistance(x, y, z, false));
     }
 
     /**

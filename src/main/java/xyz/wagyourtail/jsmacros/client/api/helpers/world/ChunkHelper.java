@@ -112,7 +112,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      */
     @DocletReplaceReturn("Biome")
     public String getBiome(int xOffset, int y, int zOffset) {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getPos().getBlockPos(xOffset, y, zOffset)).value()).toString();
+        return MinecraftClient.getInstance().world.getRegistryManager().get(Registry.BIOME_KEY).getId(MinecraftClient.getInstance().world.getBiome(base.getPos().getBlockPos(xOffset, y, zOffset))).toString();
     }
 
     /**

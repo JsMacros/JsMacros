@@ -37,6 +37,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.ChunkHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinNetworkState;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -1483,13 +1484,13 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     public static void init() {
         for (NetworkState state : NetworkState.values()) {
-            for (NetworkSide side : NetworkSide.values()) {
-                state.getPacketIdToPacketMap(side).forEach((id, packet) -> {
+            ((MixinNetworkState) (Object) state).getPacketHandlers().forEach((side, handler) -> {
+                handler.getPacketIds().forEach((packet, id) -> {
                     PACKET_IDS.put(packet, id);
                     PACKET_STATES.put(packet, state.getId());
                     PACKET_SIDES.put(packet, side == NetworkSide.CLIENTBOUND);
                 });
-            }
+            });
         }
 
         PACKETS.put("EntitySpawnS2CPacket", net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket.class);
@@ -1580,7 +1581,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("ItemPickupAnimationS2CPacket", net.minecraft.network.packet.s2c.play.ItemPickupAnimationS2CPacket.class);
         PACKETS.put("WorldBorderWarningTimeChangedS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderWarningTimeChangedS2CPacket.class);
         PACKETS.put("ScoreboardObjectiveUpdateS2CPacket", net.minecraft.network.packet.s2c.play.ScoreboardObjectiveUpdateS2CPacket.class);
-        PACKETS.put("SimulationDistanceS2CPacket", net.minecraft.network.packet.s2c.play.SimulationDistanceS2CPacket.class);
         PACKETS.put("EntityPositionS2CPacket", net.minecraft.network.packet.s2c.play.EntityPositionS2CPacket.class);
         PACKETS.put("SynchronizeRecipesS2CPacket", net.minecraft.network.packet.s2c.play.SynchronizeRecipesS2CPacket.class);
         PACKETS.put("EntityStatusEffectS2CPacket", net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket.class);

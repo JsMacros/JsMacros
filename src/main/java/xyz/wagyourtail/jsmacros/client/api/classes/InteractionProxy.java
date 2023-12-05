@@ -170,7 +170,7 @@ public class InteractionProxy {
             lastTarget = null;
             override = value;
             if (!value) {
-                if (mc.interactionManager != null && !mc.options.attackKey.isPressed()) mc.interactionManager.cancelBlockBreaking();
+                if (mc.interactionManager != null && !mc.options.keyAttack.isPressed()) mc.interactionManager.cancelBlockBreaking();
                 runCallback(reason, pos);
             }
         }
@@ -275,10 +275,10 @@ public class InteractionProxy {
 
         public static void ensureInteracting(int cooldown) {
             if (mc.player == null) return;
-            if (mc.options.useKey.isPressed()) override = false;
+            if (mc.options.keyUse.isPressed()) override = false;
             if (isInteracting() && cooldown == 0 && !mc.player.isUsingItem()) ((IMinecraftClient) mc).jsmacros_doItemUse();
             else if (releaseCheck) {
-                if (mc.interactionManager != null && mc.player.isUsingItem() && !mc.options.useKey.isPressed()) mc.interactionManager.stopUsingItem(mc.player);
+                if (mc.interactionManager != null && mc.player.isUsingItem() && !mc.options.keyUse.isPressed()) mc.interactionManager.stopUsingItem(mc.player);
                 releaseCheck = false;
             }
         }

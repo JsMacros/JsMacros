@@ -63,9 +63,9 @@ public class ServiceScreen extends MacroScreen {
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         Core.getInstance().services.save();
-        super.close();
+        super.onClose();
     }
 
 }

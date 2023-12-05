@@ -5,6 +5,18 @@ plugins {
 
 archivesBaseName = archivesBaseName + "-js-extension"
 
+sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+
+    var javaVersion = project.java_version.toInteger()
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release.set javaVersion
+    }
+}
+
 configurations {
     jsmacrosExtensionInclude
 }
@@ -17,7 +29,7 @@ dependencies {
     implementation "com.google.guava:guava:32.0.1-jre"
     implementation "com.google.code.gson:gson:2.8.9"
     implementation "org.slf4j:slf4j-api:1.7.32"
-    implementation "it.unimi.dsi:fastutil:8.5.6"
+    implementation "it.unimi.dsi:fastutil:8.2.1"
 
     implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
     implementation "org.graalvm.js:js:${project.graal_version}"

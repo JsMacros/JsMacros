@@ -127,7 +127,7 @@ public class PlayerEntityHelper<T extends PlayerEntity> extends LivingEntityHelp
      * @since 1.2.5 [citation needed]
      */
     public boolean isSleepingLongEnough() {
-        return base.canResetTimeBySleeping();
+        return base.isSleepingLongEnough();
     }
 
     /**

@@ -114,7 +114,7 @@ if (enabled_loaders.contains("forge")) {
         minecraftForge {
             loader project.forge_version
 
-            mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
+            mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json", "fabric-command-api-v1.mixins.json"]
         }
     }
 } else {
@@ -148,6 +148,8 @@ dependencies {
     implementation "io.noties:prism4j:${project.prism_version}"
     compileOnly "org.spongepowered:mixin:0.8.5"
     implementation "org.ow2.asm:asm:9.3"
+
+    forgeMinecraftLibraries "org.spongepowered:mixin:0.8.5"
 
     coreImplementation "org.jooq:joor:0.9.14"
     coreImplementation "com.neovisionaries:nv-websocket-client:2.10"

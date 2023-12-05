@@ -31,7 +31,7 @@ public class PlayerInventory extends RecipeInventory<InventoryScreen> {
      * @since 1.8.4
      */
     public boolean isInHotbar(int slot) {
-        return PlayerScreenHandler.isInHotbar(slot);
+        return PlayerScreenHandler.method_36211(slot);
     }
 
     /**

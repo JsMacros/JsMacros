@@ -281,7 +281,7 @@ public class Text implements RenderElement, Alignable<Text> {
                 (float) y,
                 color,
                 shadow,
-                matrices.peek().getPositionMatrix(),
+                matrices.peek().getModel(),
                 buffer,
                 true,
                 0,

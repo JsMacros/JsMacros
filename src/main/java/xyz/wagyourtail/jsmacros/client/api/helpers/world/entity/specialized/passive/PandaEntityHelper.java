@@ -90,7 +90,7 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
      * @since 1.8.4
      */
     public boolean isSitting() {
-        return base.isSitting();
+        return base.isScared();
     }
 
     /**
