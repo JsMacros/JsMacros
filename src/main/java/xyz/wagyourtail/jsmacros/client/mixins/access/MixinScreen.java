@@ -30,7 +30,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.*;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.wagyourgui.elements.CheckBox;
 import xyz.wagyourtail.wagyourgui.elements.Slider;
 
 import java.util.*;
@@ -601,13 +600,16 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback) {
         AtomicReference<CheckBoxWidgetHelper> ref = new AtomicReference<>(null);
 
-        CheckBox checkbox = new CheckBox(x, y, width, height, net.minecraft.text.Text.literal(text), checked, showMessage, (btn) -> {
+        CheckboxWidget checkbox = CheckboxWidget.builder(Text.literal(text), textRenderer).callback((btn, value) -> {
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
                 Core.getInstance().profile.logError(e);
             }
-        });
+        }).pos(x, y).checked(checked).build();
+
+        checkbox.setWidth(width);
+        checkbox.setHeight(height);
 
         ref.set(new CheckBoxWidgetHelper(checkbox, zIndex));
         synchronized (elements) {

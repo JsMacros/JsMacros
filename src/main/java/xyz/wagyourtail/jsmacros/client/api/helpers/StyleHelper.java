@@ -115,7 +115,7 @@ public class StyleHelper extends BaseHelper<Style> {
         if (base.getClickEvent() instanceof CustomClickEvent) {
             return "custom";
         }
-        return base.getClickEvent().getAction().getName();
+        return base.getClickEvent().getAction().name();
     }
 
     @Nullable
@@ -137,7 +137,7 @@ public class StyleHelper extends BaseHelper<Style> {
     @DocletReplaceReturn("TextHoverAction | null")
     @Nullable
     public String getHoverAction() {
-        return base.getHoverEvent() == null ? null : base.getHoverEvent().getAction().getName();
+        return base.getHoverEvent() == null ? null : base.getHoverEvent().getAction().asString();
     }
 
     @Nullable

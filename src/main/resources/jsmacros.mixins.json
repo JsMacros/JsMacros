@@ -8,7 +8,6 @@
     "access.MixinAbstractPiglinEntity",
     "access.MixinAdvancementManager",
     "access.MixinAdvancementProgress",
-    "access.MixinAdvancementRewards",
     "access.MixinAllayEntity",
     "access.MixinAnvilScreen",
     "access.MixinBeaconScreen",

@@ -326,7 +326,7 @@ public class FChat extends BaseLibrary {
             Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? Text.literal(desc.toString()) : null;
             // There doesn't seem to be a difference in the appearance or the functionality except for the UNSECURE_SERVER_WARNING with a longer duration
             if (titlee != null) {
-                t.add(SystemToast.create(mc, SystemToast.Type.TUTORIAL_HINT, titlee, descc));
+                t.add(SystemToast.create(mc, SystemToast.Type.PERIODIC_NOTIFICATION, titlee, descc));
             }
         }
     }
@@ -380,7 +380,7 @@ public class FChat extends BaseLibrary {
      */
     @Nullable
     public TextHelper createTextHelperFromJSON(String json) {
-        TextHelper t = TextHelper.wrap(Text.Serializer.fromJson(json));
+        TextHelper t = TextHelper.wrap(Text.Serialization.fromJson(json));
         return t;
     }
 

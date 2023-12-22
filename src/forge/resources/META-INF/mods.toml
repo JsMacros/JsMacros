@@ -14,7 +14,7 @@ description = '''
 
 [[dependencies.jsmacros]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.20.2]"
+type = "required"
+versionRange = "[1.20.4]"
 ordering = "NONE"
 side = "BOTH"

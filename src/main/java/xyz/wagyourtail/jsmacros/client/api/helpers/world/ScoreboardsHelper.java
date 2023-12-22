@@ -171,7 +171,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
      */
     @Nullable
     protected Team getPlayerTeam(PlayerEntity p) {
-        return base.getPlayerTeam(p.getEntityName());
+        return base.getTeam(p.getNameForScoreboard());
     }
 
     /**
@@ -191,7 +191,7 @@ public class ScoreboardsHelper extends BaseHelper<Scoreboard> {
      */
     @Nullable
     protected Formatting getPlayerTeamColor(PlayerEntity player) {
-        Team t = base.getPlayerTeam(player.getEntityName());
+        Team t = base.getTeam(player.getNameForScoreboard());
         if (t == null) {
             return null;
         }
