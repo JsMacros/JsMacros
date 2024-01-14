@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.scoreboard.*;
+import net.minecraft.scoreboard.ScoreboardObjective;
+import net.minecraft.scoreboard.ScoreboardPlayerScore;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -27,8 +29,8 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      */
     public Map<String, Integer> getPlayerScores() {
         Map<String, Integer> scores = new LinkedHashMap<>();
-        for (ScoreboardEntry pl : base.getScoreboard().getScoreboardEntries(base)) {
-            scores.put(pl.owner(), pl.value());
+        for (ScoreboardPlayerScore pl : base.getScoreboard().getAllPlayerScores(base)) {
+            scores.put(pl.getPlayerName(), pl.getScore());
         }
         return scores;
     }
@@ -39,9 +41,9 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      */
     public Map<Integer, TextHelper> scoreToDisplayName() {
         Map<Integer, TextHelper> scores = new LinkedHashMap<>();
-        for (ScoreboardEntry pl : base.getScoreboard().getScoreboardEntries(base)) {
-            Team team = base.getScoreboard().getTeam(pl.owner());
-            scores.put(pl.value(), TextHelper.wrap(Team.decorateName(team, pl.name())));
+        for (ScoreboardPlayerScore pl : base.getScoreboard().getAllPlayerScores(base)) {
+            Team team = base.getScoreboard().getPlayerTeam(pl.getPlayerName());
+            scores.put(pl.getScore(), TextHelper.wrap(Team.decorateName(team, Text.literal(pl.getPlayerName()))));
         }
         return scores;
     }
@@ -51,7 +53,7 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      * @since 1.7.0
      */
     public List<String> getKnownPlayers() {
-        return base.getScoreboard().getKnownScoreHolders().stream().map(ScoreHolder::getNameForScoreboard).toList();
+        return ImmutableList.copyOf(base.getScoreboard().getKnownPlayers());
     }
 
     /**
@@ -59,8 +61,8 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
      * @since 1.8.0
      */
     public List<TextHelper> getKnownPlayersDisplayNames() {
-        return ImmutableList.copyOf(base.getScoreboard().getKnownScoreHolders()).stream()
-                .map(e -> e.getDisplayName() != null ? TextHelper.wrap(e.getDisplayName()) : TextHelper.wrap(Text.literal(e.getNameForScoreboard())))
+        return ImmutableList.copyOf(base.getScoreboard().getKnownPlayers()).stream()
+                .map(e -> TextHelper.wrap(Team.decorateName(base.getScoreboard().getPlayerTeam(e), Text.literal(e))))
                 .collect(Collectors.toList());
     }
 

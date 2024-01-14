@@ -93,7 +93,7 @@ public class Scrollbar extends ClickableWidget {
     }
 
     @Override
-    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         // mainpart
         drawContext.fill(getX() + 1, (int) (getY() + 1 + scrollAmount), getX() + width - 1, (int) (getY() + 1 + scrollAmount + scrollbarHeight), highlightColor);
 

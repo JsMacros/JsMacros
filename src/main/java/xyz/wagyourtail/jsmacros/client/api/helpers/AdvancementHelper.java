@@ -4,9 +4,9 @@ import net.minecraft.advancement.Advancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementRewards;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -117,7 +117,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @return the json string of this advancement.
      */
     public String toJson() {
-        return Util.getResult(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, base.getAdvancement()), IllegalStateException::new).toString();
+        return base.getAdvancement().toJson().toString();
     }
 
     @Override

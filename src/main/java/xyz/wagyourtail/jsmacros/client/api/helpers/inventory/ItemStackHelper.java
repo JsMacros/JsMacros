@@ -185,7 +185,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
                     for (int i = 0; i < nbtList.size(); i++) {
                         String string = nbtList.getString(i);
                         try {
-                            MutableText mutableText2 = Text.Serialization.fromJson(string);
+                            MutableText mutableText2 = Text.Serializer.fromJson(string);
                             if (mutableText2 != null) {
                                 Texts.setStyleIfAbsent(mutableText2, LORE_STYLE);
                                 texts.add(TextHelper.wrap(mutableText2));
