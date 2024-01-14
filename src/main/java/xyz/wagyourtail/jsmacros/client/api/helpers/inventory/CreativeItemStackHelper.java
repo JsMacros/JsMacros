@@ -196,7 +196,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
         NbtCompound nbtCompound = base.getOrCreateSubNbt("display");
         NbtList list = nbtCompound.contains("Lore", 9) ? nbtCompound.getList("Lore", 8) : new NbtList();
         for (Text text : texts) {
-            list.add(NbtString.of(Text.Serializer.toJson(text)));
+            list.add(NbtString.of(Text.Serialization.toJsonString(text)));
         }
         nbtCompound.put("Lore", list);
 

@@ -1,16 +1,16 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.FontManager;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.option.GameOptions;
-import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -150,10 +150,12 @@ class MixinMinecraftClient implements IMinecraftClient {
         InteractionProxy.Interact.ensureInteracting(itemUseCooldown);
     }
 
-//    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleManager;addBlockBreakingParticles(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)V"), method = "handleBlockBreaking")
-//    private void catchEmptyShapeException(ParticleManager pm, BlockPos pos, Direction dir) {
-//        if (world != null && !world.getBlockState(pos).getOutlineShape(world, pos).isEmpty()) pm.addBlockBreakingParticles(pos, dir);
-//    }
+    @ModifyExpressionValue(method = "handleBlockBreaking", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isAir()Z"))
+    private boolean catchEmptyShapeException(boolean value, @Local BlockPos blockPos) {
+        if (value) return true;
+        assert world != null;
+        return world.getBlockState(blockPos).getOutlineShape(world, blockPos).isEmpty();
+    }
 
     @Override
     public FontManager jsmacros_getFontManager() {
