@@ -9,7 +9,6 @@ import net.minecraft.client.gui.widget.*;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -35,6 +34,8 @@ import xyz.wagyourtail.wagyourgui.elements.Slider;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
+
+import static net.minecraft.text.Text.literal;
 
 @SuppressWarnings("AddedMixinMembersNamePattern")
 @Mixin(Screen.class)
