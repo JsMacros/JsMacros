@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixins.access;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.FontManager;
 import net.minecraft.client.gui.screen.Overlay;
@@ -9,6 +10,8 @@ import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -70,6 +73,10 @@ class MixinMinecraftClient implements IMinecraftClient {
     @Shadow
     @Nullable
     public ClientWorld world;
+
+    @Shadow private static MinecraftClient instance;
+
+    @Shadow @Nullable public HitResult crosshairTarget;
 
     @Inject(at = @At("TAIL"), method = "onResolutionChanged")
     public void onResolutionChanged(CallbackInfo info) {
@@ -150,9 +157,12 @@ class MixinMinecraftClient implements IMinecraftClient {
         InteractionProxy.Interact.ensureInteracting(itemUseCooldown);
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/ParticleManager;addBlockBreakingParticles(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)V"), method = "handleBlockBreaking")
-    private void catchEmptyShapeException(ParticleManager pm, BlockPos pos, Direction dir) {
-        if (world != null && !world.getBlockState(pos).getOutlineShape(world, pos).isEmpty()) pm.addBlockBreakingParticles(pos, dir);
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isAir()Z"), method = "handleBlockBreaking")
+    private boolean catchEmptyShapeException(BlockState instance) {
+        if (instance.isAir()) return true;
+        assert world != null;
+        assert this.crosshairTarget != null;
+        return instance.getOutlineShape(world, ((BlockHitResult) this.crosshairTarget).getBlockPos()).isEmpty();
     }
 
     @Override
