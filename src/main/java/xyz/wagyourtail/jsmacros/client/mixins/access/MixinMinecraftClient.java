@@ -157,14 +157,6 @@ class MixinMinecraftClient implements IMinecraftClient {
         InteractionProxy.Interact.ensureInteracting(itemUseCooldown);
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isAir()Z"), method = "handleBlockBreaking")
-    private boolean catchEmptyShapeException(BlockState instance) {
-        if (instance.isAir()) return true;
-        assert world != null;
-        assert this.crosshairTarget != null;
-        return instance.getOutlineShape(world, ((BlockHitResult) this.crosshairTarget).getBlockPos()).isEmpty();
-    }
-
     @Override
     public FontManager jsmacros_getFontManager() {
         return fontManager;
