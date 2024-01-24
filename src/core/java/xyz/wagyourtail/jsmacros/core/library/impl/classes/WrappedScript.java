@@ -44,8 +44,7 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
 
     @Override
     public void accept(T t, U u) {
-        BaseEvent event = t instanceof BaseEvent ? (BaseEvent) t : new EventWrappedScript<>(t, u);
-        EventContainer<BaseScriptContext<?>> t1 = f.apply(event);
+        EventContainer<BaseScriptContext<?>> t1 = f.apply(new EventWrappedScript<>(t, u));
         if (!_async) {
             boolean joinedMain = p.checkJoinedThreadStack();
             if (joinedMain) {
