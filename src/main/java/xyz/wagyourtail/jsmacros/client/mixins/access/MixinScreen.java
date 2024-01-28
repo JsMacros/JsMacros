@@ -41,7 +41,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
 
 import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.literal;
-
 @SuppressWarnings("AddedMixinMembersNamePattern")
 @Mixin(Screen.class)
 @Implements(@Interface(iface = IScreen.class, prefix = "soft$"))
