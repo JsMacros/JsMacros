@@ -174,13 +174,13 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerInventory;setStack(ILnet/minecraft/item/ItemStack;)V"))
     public void onInventorySlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci) {
         assert client.player != null;
-        new EventSlotUpdate(new InventoryScreen(client.player), "INVENTORY", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
+        new EventSlotUpdate(new InventoryScreen(client.player), "INVENTORY", packet.getSlot(), this.client.player.playerScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
     }
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/PlayerScreenHandler;setStackInSlot(IILnet/minecraft/item/ItemStack;)V"))
     public void onScreenSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci) {
         assert client.player != null;
-        new EventSlotUpdate(new InventoryScreen(client.player), "INVENTORY", packet.getSlot(), this.client.player.currentScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
+        new EventSlotUpdate(new InventoryScreen(client.player), "INVENTORY", packet.getSlot(), this.client.player.playerScreenHandler.getSlot(packet.getSlot()).getStack(), packet.getStack()).trigger();
     }
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenHandler;setStackInSlot(IILnet/minecraft/item/ItemStack;)V"))
