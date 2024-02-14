@@ -942,6 +942,15 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
+     * @return the raw minecraft world.
+     * @since 1.9.1
+     */
+    @Nullable
+    public ClientWorld getRaw() {
+        return mc.world;
+    }
+
+    /**
      * @return best attempt to measure and give the server tps.
      * @since 1.2.7
      */
