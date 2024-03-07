@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.client.gui.widget.LockButtonWidget;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -52,6 +53,7 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
     public static class LockButtonBuilder extends AbstractWidgetBuilder<LockButtonBuilder, LockButtonWidget, LockButtonWidgetHelper> {
 
         private boolean locked = false;
+        @Nullable
         private MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> action;
 
         public LockButtonBuilder(IScreen screen) {
@@ -80,6 +82,7 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
          * @return the action to run when the button is pressed.
          * @since 1.8.4
          */
+        @Nullable
         public MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> getAction() {
             return action;
         }
@@ -89,7 +92,7 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
          * @return self for chaining.
          * @since 1.8.4
          */
-        public LockButtonBuilder action(MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> action) {
+        public LockButtonBuilder action(@Nullable MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> action) {
             this.action = action;
             return this;
         }

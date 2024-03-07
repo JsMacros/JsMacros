@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Nullable;
@@ -60,7 +61,7 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      */
     public synchronized Map<Thread, EventContainer<? extends BaseScriptContext<T>>> getBoundEvents() {
-        return ImmutableMap.copyOf(events);
+        return events;
     }
 
     /**
@@ -118,6 +119,7 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      */
     public synchronized void unbindThread(Thread t) {
+        if (!threads.remove(t)) throw new ScriptAssertionError("Cannot unbind thread that is not bound");
         EventContainer<?> container = events.get(t);
         if (container != null) {
             container.releaseLock();
@@ -129,7 +131,7 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      */
     public synchronized Set<Thread> getBoundThreads() {
-        return ImmutableSet.copyOf(threads);
+        return threads;
     }
 
     /**
@@ -170,8 +172,8 @@ public abstract class BaseScriptContext<T> {
     public synchronized void closeContext() {
         closed = true;
         // fix concurrency issue the "fun" way
-        getBoundEvents().values().forEach(EventContainer::releaseLock);
-        getBoundThreads().forEach(Thread::interrupt);
+        ImmutableList.copyOf(getBoundEvents().values()).forEach(EventContainer::releaseLock);
+        ImmutableSet.copyOf(getBoundThreads()).forEach(Thread::interrupt);
         Core.getInstance().getContexts().remove(this);
     }
 

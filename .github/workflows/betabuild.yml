@@ -47,7 +47,6 @@ jobs:
       - name: Run build with Gradle wrapper
         run: |
           chmod +x gradlew
-          ./gradlew :javascript_extension:build -x test
           ./gradlew build -x test
 
       - name: Bundle mods, documentation and source code

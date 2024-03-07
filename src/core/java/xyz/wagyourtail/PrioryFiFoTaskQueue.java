@@ -7,10 +7,10 @@ import java.util.*;
 import java.util.function.Function;
 
 public class PrioryFiFoTaskQueue<E> implements Queue<E> {
-    E currentTask;
-    Int2ObjectOpenHashMap<List<E>> tasks = new Int2ObjectOpenHashMap<>();
-    Set<E> taskSet = new HashSet<>();
-    Function<E, Integer> priorityFunction;
+    volatile E currentTask;
+    final Int2ObjectOpenHashMap<List<E>> tasks = new Int2ObjectOpenHashMap<>();
+    final Set<E> taskSet = new HashSet<>();
+    final Function<E, Integer> priorityFunction;
 
     public PrioryFiFoTaskQueue(Function<E, Integer> priorityFunction) {
         this.priorityFunction = priorityFunction;
@@ -138,15 +138,18 @@ public class PrioryFiFoTaskQueue<E> implements Queue<E> {
     }
 
     public synchronized E pollWaiting() throws InterruptedException {
-        if (taskSet.isEmpty()) {
+        while (taskSet.isEmpty()) {
             this.wait();
         }
         return remove();
     }
 
     public synchronized E pollWaiting(long timeout) throws InterruptedException {
-        if (taskSet.isEmpty()) {
-            this.wait(timeout);
+        long timeoutLeft = timeout;
+        while (taskSet.isEmpty() && timeoutLeft > 0) {
+            long start = System.currentTimeMillis();
+            this.wait(timeoutLeft);
+            timeoutLeft -= System.currentTimeMillis() - start;
         }
         return remove();
     }

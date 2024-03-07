@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner;
 
 import net.minecraft.client.MinecraftClient;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IAdvancedFilter;
@@ -58,7 +59,9 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 )
 public final class WorldScannerBuilder {
 
+    @Nullable
     private IAdvancedFilter<BlockHelper> blockFilter;
+    @Nullable
     private IAdvancedFilter<BlockStateHelper> stateFilter;
 
     private FilterCategory selectedCategory;
@@ -70,6 +73,7 @@ public final class WorldScannerBuilder {
         operation = Operation.NONE;
     }
 
+    @Nullable
     private IAdvancedFilter<?> getTargetFilter() {
         if (selectedCategory == FilterCategory.BLOCK) {
             return blockFilter;
@@ -79,7 +83,7 @@ public final class WorldScannerBuilder {
         return null;
     }
 
-    private void setTargetFilter(IAdvancedFilter<?> filter) {
+    private void setTargetFilter(@Nullable IAdvancedFilter<?> filter) {
         if (selectedCategory == FilterCategory.BLOCK) {
             blockFilter = (IAdvancedFilter<BlockHelper>) filter;
         } else if (selectedCategory == FilterCategory.STATE) {
@@ -87,7 +91,7 @@ public final class WorldScannerBuilder {
         }
     }
 
-    private <T> void composeFilters(IFilter<T> filter) {
+    private <T> void composeFilters(@Nullable IFilter<T> filter) {
         if (selectedCategory == null || selectedCategory == FilterCategory.NONE) {
             throw new IllegalStateException("No category for creating the new filter was specified.");
         } else {

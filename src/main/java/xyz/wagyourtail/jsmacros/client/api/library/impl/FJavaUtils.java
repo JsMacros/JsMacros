@@ -11,10 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.client.gui.widget.LockButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.GameOptions;
@@ -41,6 +38,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.Chunk;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.FoodComponentHelper;
@@ -54,7 +52,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.PlayerAbilitiesH
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
-import xyz.wagyourtail.wagyourgui.elements.CheckBox;
 import xyz.wagyourtail.wagyourgui.elements.Slider;
 
 import java.util.*;
@@ -139,6 +136,7 @@ public class FJavaUtils extends BaseLibrary {
      * {@code null} otherwise.
      * @since 1.8.4
      */
+    @Nullable
     public Object getHelperFromRaw(Object raw) {
         // Didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
         if (raw instanceof Entity) {
@@ -215,8 +213,8 @@ public class FJavaUtils extends BaseLibrary {
             return new AdvancementProgressHelper(((AdvancementProgress) raw));
         }
 
-        if (raw instanceof CheckBox) {
-            return new CheckBoxWidgetHelper(((CheckBox) raw));
+        if (raw instanceof CheckboxWidget) {
+            return new CheckBoxWidgetHelper(((CheckboxWidget) raw));
         } else if (raw instanceof CyclingButtonWidget<?>) {
             return new CyclingButtonWidgetHelper<>(((CyclingButtonWidget<?>) raw));
         } else if (raw instanceof LockButtonWidget) {

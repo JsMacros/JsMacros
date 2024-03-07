@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob
 
 import net.minecraft.entity.mob.ElderGuardianEntity;
 import net.minecraft.entity.mob.GuardianEntity;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 
@@ -36,6 +37,7 @@ public class GuardianEntityHelper extends MobEntityHelper<GuardianEntity> {
      * @return the target of this guardian's beam, or {@code null} if it has no target.
      * @since 1.8.4
      */
+    @Nullable
     public EntityHelper<?> getTarget() {
         return hasTarget() ? EntityHelper.create(base.getBeamTarget()) : null;
     }

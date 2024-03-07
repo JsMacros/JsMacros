@@ -30,7 +30,7 @@ public class EventContainer<T extends BaseScriptContext<?>> {
             throw new AssertionError("Cannot change lock thread of context container once assigned!");
         }
         this.lockThread = lockThread;
-        if (locked)
+        if (locked && ctx != null)
             ctx.events.put(lockThread, (EventContainer) this);
     }
 
@@ -50,7 +50,7 @@ public class EventContainer<T extends BaseScriptContext<?>> {
      * @since 1.4.0
      */
     public synchronized void awaitLock(Runnable then) throws InterruptedException {
-        if (ctx.threads.contains(Thread.currentThread())) {
+        if (ctx != null && ctx.threads.contains(Thread.currentThread())) {
             if (then != null && !(then instanceof MethodWrapper)) {
                 throw new AssertionError("For your safety, please use MethodWrapper in scripts.");
             }
@@ -86,6 +86,7 @@ public class EventContainer<T extends BaseScriptContext<?>> {
         }
         then.clear();
         this.notifyAll();
+        if (ctx == null) return;
         synchronized (ctx) {
             if (lockThread != null)
                 ctx.events.remove(lockThread);

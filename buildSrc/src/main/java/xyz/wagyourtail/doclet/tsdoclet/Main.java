@@ -6,6 +6,7 @@ import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
 import xyz.wagyourtail.FileHandler;
 import xyz.wagyourtail.StringHelpers;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.options.IgnoredItem;
 import xyz.wagyourtail.doclet.options.OutputDirectory;
 import xyz.wagyourtail.doclet.options.Version;
@@ -14,12 +15,15 @@ import xyz.wagyourtail.doclet.tsdoclet.parsers.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+
+import static xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser.mixinInterfaceMap;
 
 public class Main implements Doclet {
     public static Reporter reporter;
@@ -29,6 +33,11 @@ public class Main implements Doclet {
     public static Elements elementUtils;
     public static Map<String, String> enumTypes = new HashMap<>();
     private final Map<String, String> filterableEvents = new TreeMap<>();
+
+    public static final List<String> includedClassPath = List.of(
+            "xyz.wagyourtail.jsmacros.client.api.helpers.",
+            "xyz.wagyourtail.jsmacros.client.api.classes.inventory."
+    );
 
     @Override
     public void init(Locale locale, Reporter reporter) {
@@ -86,8 +95,10 @@ public class Main implements Doclet {
                     libraryClasses.add(new LibraryParser(e, getAnnotationValue("value", annotationMirror).toString()));
                 }
                 if (annotationName.equals("Event")) {
+                    Boolean cancellableValue = (Boolean) getAnnotationValue("cancellable", annotationMirror);
+                    boolean cancellable = cancellableValue != null && cancellableValue;
                     String name = getAnnotationValue("value", annotationMirror).toString();
-                    eventClasses.add(new EventParser(e, name));
+                    eventClasses.add(new EventParser(e, name, cancellable));
                     DeclaredType filterer = (DeclaredType) getAnnotationValue("filterer", annotationMirror);
                     if (filterer != null) {
                         String filtererName = filterer.asElement().getSimpleName().toString();
@@ -97,6 +108,31 @@ public class Main implements Doclet {
                         }
                     }
                 }
+                if (annotationName.equals("Mixin")) {
+                    List<TypeElement> interfaces = e.getInterfaces().stream()
+                            .filter(t -> t.getKind() == TypeKind.DECLARED)
+                            .map(t -> (TypeElement) ((DeclaredType) t).asElement())
+                            .filter(i -> i.getAnnotation(DocletIgnore.class) == null)
+                            .toList();
+                    if (!interfaces.isEmpty()) {
+                        @SuppressWarnings("unchecked")
+                        List<AnnotationValue> targets = (List<AnnotationValue>) getAnnotationValue("value", annotationMirror);
+                        if (targets != null && !targets.isEmpty()) {
+                            for (AnnotationValue target : targets) {
+                                TypeMirror type = (TypeMirror) target.getValue();
+                                if (type.getKind() == TypeKind.DECLARED) {
+                                    TypeElement el = (TypeElement) ((DeclaredType) type).asElement();
+                                    if (!mixinInterfaceMap.containsKey(el)) mixinInterfaceMap.put(el, new HashSet<>());
+                                    mixinInterfaceMap.get(el).addAll(interfaces);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            String qualifiedName = e.getQualifiedName().toString();
+            if (includedClassPath.stream().anyMatch(qualifiedName::startsWith)) {
+                classes.addClass(e);
             }
             if (e.getSimpleName().toString().equals("EventContainer")) {
                 classes.addClass(e);
@@ -130,6 +166,12 @@ public class Main implements Doclet {
                     interface BaseEvent extends JavaObject {
 
                         getEventName(): string;
+
+                    }
+
+                    interface Cancellable {
+
+                        cancel(): void;
 
                     }"""
             );

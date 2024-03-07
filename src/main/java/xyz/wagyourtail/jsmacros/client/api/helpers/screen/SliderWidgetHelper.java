@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -72,6 +73,7 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
 
         private int steps = 2;
         private int value = 0;
+        @Nullable
         private MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> action;
 
         public SliderBuilder(IScreen screen) {
@@ -118,6 +120,7 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
          * @return the change listener of the slider.
          * @since 1.8.4
          */
+        @Nullable
         public MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> getAction() {
             return action;
         }
@@ -126,7 +129,7 @@ public class SliderWidgetHelper extends ClickableWidgetHelper<SliderWidgetHelper
          * @param action the change listener for the slider
          * @return self for chaining.
          */
-        public SliderBuilder action(MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> action) {
+        public SliderBuilder action(@Nullable MethodWrapper<SliderWidgetHelper, IScreen, Object, ?> action) {
             this.action = action;
             return this;
         }

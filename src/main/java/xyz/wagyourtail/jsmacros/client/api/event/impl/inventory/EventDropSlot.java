@@ -24,10 +24,6 @@ public class EventDropSlot extends BaseEvent {
      * whether it's all or a single item being dropped
      */
     public final boolean all;
-    /**
-     * set to {@code true} to cancel the default action
-     */
-    public boolean cancel = false;
 
     public EventDropSlot(HandledScreen<?> screen, int slot, boolean all) {
         this.screen = screen;

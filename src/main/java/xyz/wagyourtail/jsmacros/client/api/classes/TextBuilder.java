@@ -194,7 +194,7 @@ public class TextBuilder {
      */
     @DocletReplaceParams("action: TextClickAction, value: string")
     public TextBuilder withClickEvent(String action, String value) {
-        ClickEvent.Action clickAction = ClickEvent.Action.byName(action);
+        ClickEvent.Action clickAction = ClickEvent.Action.valueOf(action);
         assert action != null;
         self.styled(style -> style.withClickEvent(new ClickEvent(clickAction, value)));
         return this;

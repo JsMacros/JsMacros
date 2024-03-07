@@ -4,6 +4,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.NbtPathArgumentType;
 import net.minecraft.nbt.*;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -135,9 +136,18 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     }
 
     /**
+     * @since 1.9.0
+     */
+    @Nullable
+    public static NBTCompoundHelper wrapCompound(@Nullable NbtCompound compound) {
+        return compound == null ? null : new NBTCompoundHelper(compound);
+    }
+
+    /**
      * @since 1.5.1
      */
-    public static NBTElementHelper<?> resolve(NbtElement element) {
+    @Nullable
+    public static NBTElementHelper<?> resolve(@Nullable NbtElement element) {
         if (element == null) {
             return null;
         }
@@ -244,6 +254,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
          * @return
          * @since 1.8.3
          */
+        @Nullable
         public UUID asUUID() {
             if (!isPossiblyUUID()) {
                 return null;
@@ -262,6 +273,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         /**
          * @since 1.5.1
          */
+        @Nullable
         public NBTElementHelper<?> get(int index) {
             return resolve(base.get(index));
         }
@@ -309,6 +321,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         /**
          * @since 1.5.1
          */
+        @Nullable
         public NBTElementHelper<?> get(String key) {
             return resolve(base.get(key));
         }

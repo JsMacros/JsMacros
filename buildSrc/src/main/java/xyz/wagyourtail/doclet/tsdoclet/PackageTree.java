@@ -1,6 +1,7 @@
 package xyz.wagyourtail.doclet.tsdoclet;
 
 import xyz.wagyourtail.StringHelpers;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
 
 import javax.lang.model.element.Element;
@@ -36,6 +37,7 @@ public class PackageTree {
     }
 
     public void addClass(Element clazz) {
+        if (clazz.getAnnotation(DocletIgnore.class) != null) return;
         Stack<String> enclosing = new Stack<>();
         Element enclose = clazz;
 

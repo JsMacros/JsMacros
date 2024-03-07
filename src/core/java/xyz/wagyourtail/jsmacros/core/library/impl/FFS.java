@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import com.google.common.io.Files;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -38,6 +39,7 @@ public class FFS extends PerExecLibrary {
      * @return An array of file names as {@link java.lang.String Strings}.
      * @since 1.1.8
      */
+    @Nullable
     public String[] list(String path) {
         return ctx.getContainedFolder().toPath().resolve(path).toFile().list();
     }

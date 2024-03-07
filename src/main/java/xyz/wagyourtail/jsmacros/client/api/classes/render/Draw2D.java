@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.*;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.Surface;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -34,12 +36,14 @@ public class Draw2D implements IDraw2D<Draw2D> {
      * @deprecated please use {@link Draw2D#setOnInit(MethodWrapper)}
      */
     @Deprecated
+    @Nullable
     public MethodWrapper<Draw2D, Object, Object, ?> onInit;
     /**
      * @since 1.1.9 [citation needed]
      * @deprecated please use {@link Draw2D#setOnFailInit(MethodWrapper)}
      */
     @Deprecated
+    @Nullable
     public MethodWrapper<String, Object, Object, ?> catchInit;
 
     protected final MinecraftClient mc;
@@ -578,6 +582,7 @@ public class Draw2D implements IDraw2D<Draw2D> {
     }
 
     @Override
+    @DocletIgnore
     public void render(DrawContext drawContext) {
         if (drawContext == null || !visible) {
             return;
@@ -604,7 +609,7 @@ public class Draw2D implements IDraw2D<Draw2D> {
      * @since 1.2.7
      */
     @Override
-    public Draw2D setOnInit(MethodWrapper<Draw2D, Object, Object, ?> onInit) {
+    public Draw2D setOnInit(@Nullable MethodWrapper<Draw2D, Object, Object, ?> onInit) {
         this.onInit = onInit;
         return this;
     }
@@ -615,7 +620,7 @@ public class Draw2D implements IDraw2D<Draw2D> {
      * @since 1.2.7
      */
     @Override
-    public Draw2D setOnFailInit(MethodWrapper<String, Object, Object, ?> catchInit) {
+    public Draw2D setOnFailInit(@Nullable MethodWrapper<String, Object, Object, ?> catchInit) {
         this.catchInit = catchInit;
         return this;
     }

@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -95,6 +96,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.0.4
      */
+    @Nullable
     public String getType(String name) {
         Object i = globalRaw.get(name);
         if (i == null) {
@@ -119,6 +121,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.0.4
      */
+    @Nullable
     public Integer getInt(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Integer) {
@@ -135,6 +138,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Integer getAndIncrementInt(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Integer) {
@@ -155,6 +159,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Integer getAndDecrementInt(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Integer) {
@@ -175,6 +180,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Integer incrementAndGetInt(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Integer) {
@@ -195,6 +201,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Integer decrementAndGetInt(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Integer) {
@@ -215,6 +222,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.0.4
      */
+    @Nullable
     public String getString(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof String) {
@@ -231,6 +239,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.0.8
      */
+    @Nullable
     public Double getDouble(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Double) {
@@ -247,6 +256,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.1.7
      */
+    @Nullable
     public Boolean getBoolean(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Boolean) {
@@ -263,6 +273,7 @@ public class FGlobalVars extends BaseLibrary {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Boolean toggleBoolean(String name) {
         Object i = globalRaw.get(name);
         if (i instanceof Boolean) {

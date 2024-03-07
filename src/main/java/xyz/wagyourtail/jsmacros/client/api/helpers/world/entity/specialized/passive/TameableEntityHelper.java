@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.TameableEntity;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.LivingEntityHelper;
 
 /**
@@ -34,6 +35,7 @@ public class TameableEntityHelper<T extends TameableEntity> extends AnimalEntity
      * @return the owner's uuid, or {@code null} if the entity is not tamed.
      * @since 1.8.4
      */
+    @Nullable
     public String getOwner() {
         return base.getOwnerUuid() == null ? null : base.getOwnerUuid().toString();
     }

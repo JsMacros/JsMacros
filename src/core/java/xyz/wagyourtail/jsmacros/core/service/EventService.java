@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.service;
 
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -11,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @since 1.6.4
  */
+@SuppressWarnings("unused")
 @Event("Service")
 public class EventService extends BaseEvent {
     public final String serviceName;
@@ -18,6 +21,7 @@ public class EventService extends BaseEvent {
     /**
      * when this service is stopped, this is run...
      */
+    @Nullable
     public MethodWrapper<Object, Object, Object, ?> stopListener;
 
     public EventService(String name) {
@@ -108,6 +112,8 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @DocletReplaceReturn("'Int' | 'String' | 'Double' | 'Boolean' | 'Object' | null")
+    @Nullable
     public String getType(String name) {
         Object i = args.get(name);
         if (i == null) {
@@ -132,6 +138,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Integer getInt(String name) {
         Object i = args.get(name);
         if (i instanceof Integer) {
@@ -148,6 +155,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Integer getAndIncrementInt(String name) {
         Object i = args.get(name);
         if (i instanceof Integer) {
@@ -165,6 +173,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Integer getAndDecrementInt(String name) {
         Object i = args.get(name);
         if (i instanceof Integer) {
@@ -182,6 +191,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Integer incrementAndGetInt(String name) {
         Object i = args.get(name);
         if (i instanceof Integer) {
@@ -199,6 +209,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Integer decrementAndGetInt(String name) {
         Object i = args.get(name);
         if (i instanceof Integer) {
@@ -216,6 +227,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public String getString(String name) {
         Object i = args.get(name);
         if (i instanceof String) {
@@ -232,6 +244,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Double getDouble(String name) {
         Object i = args.get(name);
         if (i instanceof Double) {
@@ -248,6 +261,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Boolean getBoolean(String name) {
         Object i = args.get(name);
         if (i instanceof Boolean) {
@@ -264,6 +278,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Boolean toggleBoolean(String name) {
         Object i = args.get(name);
         if (i instanceof Boolean) {
@@ -281,6 +296,7 @@ public class EventService extends BaseEvent {
      * @return
      * @since 1.6.5
      */
+    @Nullable
     public Object getObject(String name) {
         return args.get(name);
     }
