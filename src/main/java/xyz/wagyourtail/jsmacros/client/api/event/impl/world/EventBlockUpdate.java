@@ -5,7 +5,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.client.api.event.filterer.EventBlockUpdateFilterer;
+import xyz.wagyourtail.jsmacros.client.api.event.filterer.FiltererBlockUpdate;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
@@ -14,7 +14,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  * @author Wagyourtail
  * @since 1.2.7
  */
-@Event(value = "BlockUpdate", oldName = "BLOCK_UPDATE", filterer = EventBlockUpdateFilterer.class)
+@Event(value = "BlockUpdate", oldName = "BLOCK_UPDATE", filterer = FiltererBlockUpdate.class)
 public class EventBlockUpdate extends BaseEvent {
     public final BlockDataHelper block;
     @DocletReplaceReturn("BlockUpdateType")
@@ -28,7 +28,7 @@ public class EventBlockUpdate extends BaseEvent {
 
     @Override
     public String toString() {
-        return String.format("%s:{\"block\": %s}", this.getEventName(), block.toString());
+        return String.format("%s:{\"block\": %s}", this.getEventName(), block);
     }
 
 }

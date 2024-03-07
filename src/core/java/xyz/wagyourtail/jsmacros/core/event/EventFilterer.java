@@ -1,23 +1,17 @@
 package xyz.wagyourtail.jsmacros.core.event;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Predicate;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 
 /**
  * @author aMelonRind
- * @since 1.9.0
+ * @since 1.9.1
  */
-public interface EventFilterer extends Predicate<BaseEvent> {
+public interface EventFilterer {
 
-    @NotNull
-    Class<? extends BaseEvent> dedicatedFor();
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    @DocletReplaceParams("event: keyof Events")
+    boolean canFilter(String event);
 
-    @Nullable
-    default String getDedicatedEventName() {
-        Event a = dedicatedFor().getAnnotation(Event.class);
-        return a == null ? null : a.value();
-    }
+    boolean test(BaseEvent event);
 
 }

@@ -16,10 +16,10 @@ import java.util.Objects;
 
 /**
  * @author aMelonRind
- * @since 1.9.0
+ * @since 1.9.1
  */
 @SuppressWarnings("unused")
-public class EventBlockUpdateFilterer implements EventFilterer {
+public class FiltererBlockUpdate implements EventFilterer {
     @Nullable
     public BlockPosHelper pos;
     /**
@@ -37,10 +37,9 @@ public class EventBlockUpdateFilterer implements EventFilterer {
     @DocletReplaceReturn("BlockUpdateType")
     public String updateType;
 
-    @NotNull
     @Override
-    public Class<? extends BaseEvent> dedicatedFor() {
-        return EventBlockUpdate.class;
+    public boolean canFilter(String event) {
+        return "BlockUpdate".equals(event);
     }
 
     @Override
@@ -62,29 +61,31 @@ public class EventBlockUpdateFilterer implements EventFilterer {
         }
         if (blockState != null) {
             Map<String, String> states = event.block.getBlockState();
-            if (!states.keySet().containsAll(blockState.keySet())) return false;
-            for (String key : blockState.keySet()) {
-                if (!Objects.equals(states.get(key), blockState.get(key))) return false;
+            for (var ent : blockState.entrySet()) {
+                boolean contains = states.containsKey(ent.getKey());
+                if (ent.getValue() == null) {
+                    if (contains) return false;
+                } else if (!contains || !Objects.equals(states.get(ent.getKey()), ent.getValue())) return false;
             }
         }
         return true;
     }
 
-    public EventBlockUpdateFilterer setPos(int x, int y, int z) {
+    public FiltererBlockUpdate setPos(int x, int y, int z) {
         return setPos(new BlockPosHelper(x, y, z));
     }
 
-    public EventBlockUpdateFilterer setPos(@Nullable BlockPosHelper pos) {
+    public FiltererBlockUpdate setPos(@Nullable BlockPosHelper pos) {
         this.pos = pos;
         pos2 = null;
         return this;
     }
 
-    public EventBlockUpdateFilterer setArea(int x1, int y1, int z1, int x2, int y2, int z2) {
+    public FiltererBlockUpdate setArea(int x1, int y1, int z1, int x2, int y2, int z2) {
         return setArea(new BlockPosHelper(x1, y1, z1), new BlockPosHelper(x2, y2, z2));
     }
 
-    public EventBlockUpdateFilterer setArea(@NotNull BlockPosHelper pos1, @NotNull BlockPosHelper pos2) {
+    public FiltererBlockUpdate setArea(@NotNull BlockPosHelper pos1, @NotNull BlockPosHelper pos2) {
         if (pos1.getX() > pos2.getX() || pos1.getY() > pos2.getY() || pos1.getZ() > pos2.getZ()) {
             return setArea(
                     Math.min(pos1.getX(), pos2.getX()),
@@ -101,18 +102,18 @@ public class EventBlockUpdateFilterer implements EventFilterer {
     }
 
     @DocletReplaceParams("id: BlockId")
-    public EventBlockUpdateFilterer setBlockId(@Nullable String id) {
+    public FiltererBlockUpdate setBlockId(@Nullable String id) {
         blockId = id == null ? null : RegistryHelper.parseNameSpace(id);
         return this;
     }
 
     @DocletReplaceParams("type: BlockUpdateType")
-    public EventBlockUpdateFilterer setUpdateType(@Nullable String type) {
+    public FiltererBlockUpdate setUpdateType(@Nullable String type) {
         updateType = type;
         return this;
     }
 
-    public EventBlockUpdateFilterer setBlockStates(@Nullable Map<String, String> states) {
+    public FiltererBlockUpdate setBlockStates(@Nullable Map<String, String> states) {
         blockState = states;
         return this;
     }
@@ -120,7 +121,7 @@ public class EventBlockUpdateFilterer implements EventFilterer {
     /**
      * @param value setting to null will make sure the block doesn't have this property
      */
-    public EventBlockUpdateFilterer setBlockState(String property, @Nullable String value) {
+    public FiltererBlockUpdate setBlockState(String property, @Nullable String value) {
         if (blockState == null) blockState = new HashMap<>();
         blockState.put(property, value);
         return this;

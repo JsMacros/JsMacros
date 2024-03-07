@@ -13,6 +13,7 @@ import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.*;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
+import xyz.wagyourtail.jsmacros.core.event.impl.FiltererComposed;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -328,7 +329,7 @@ public class FJsMacros extends PerExecLibrary {
      * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return
      * @see IEventListener
-     * @since 1.9.0
+     * @since 1.9.1
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, filterer: EventFilterers[E], callback: MethodWrapper<Events[E], EventContainer>")
@@ -343,9 +344,8 @@ public class FJsMacros extends PerExecLibrary {
      * @param callback calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link BaseEvent}, {@link EventContainer}&gt;
      * @return
      * @see IEventListener
-     * @since 1.9.0
+     * @since 1.9.1
      */
-    @SuppressWarnings("ExtractMethodRecommender")
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, filterer: EventFilterers[E], joined: boolean, callback: MethodWrapper<Events[E], EventContainer>")
     public IEventListener on(String event, EventFilterer filterer, boolean joined, MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> callback) {
@@ -355,8 +355,8 @@ public class FJsMacros extends PerExecLibrary {
         if (!Core.getInstance().eventRegistry.events.contains(event)) {
             throw new IllegalArgumentException(String.format("Event \"%s\" not found, if it's a custom event register it with 'event.registerEvent()' first.", event));
         }
-        if (filterer != null && !event.equals(filterer.getDedicatedEventName())) {
-            throw new IllegalArgumentException(String.format("Filterer is dedicated to %s but %s is provided.", filterer.getDedicatedEventName(), event));
+        if (filterer != null && !filterer.canFilter(event)) {
+            throw new IllegalArgumentException(String.format("Provided filterer (%s) cannot be used to filter %s event!", filterer.getClass().getSimpleName(), event));
         }
         Thread th = Thread.currentThread();
         String creatorName = th.getName();
@@ -790,8 +790,9 @@ public class FJsMacros extends PerExecLibrary {
     }
 
     /**
-     * create an event filterer
-     * @since 1.9.0
+     * create an event filterer.<br>
+     * this exists to reduce lag when listening to frequently triggered events.
+     * @since 1.9.1
      */
     @DocletReplaceTypeParams("E extends keyof EventFilterers")
     @DocletReplaceParams("event: E")
@@ -810,6 +811,14 @@ public class FJsMacros extends PerExecLibrary {
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * create a composed event filterer
+     * @since 1.9.1
+     */
+    public FiltererComposed createComposedEventFilterer(EventFilterer initial) {
+        return new FiltererComposed(initial);
     }
 
     /**
