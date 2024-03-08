@@ -29,12 +29,12 @@ public class FiltererBlockUpdate implements EventFilterer {
     @Nullable
     public BlockPosHelper pos2;
     @Nullable
-    @DocletReplaceReturn("BlockId")
+    @DocletReplaceReturn("BlockId | null")
     public String blockId;
     @Nullable
     public Map<String, String> blockState;
     @Nullable
-    @DocletReplaceReturn("BlockUpdateType")
+    @DocletReplaceReturn("BlockUpdateType | null")
     public String updateType;
 
     @Override

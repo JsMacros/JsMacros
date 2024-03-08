@@ -12,8 +12,8 @@ import xyz.wagyourtail.jsmacros.core.event.EventFilterer;
  */
 @SuppressWarnings("unused")
 public class FiltererSendPacket implements EventFilterer {
-    @DocletReplaceReturn("PacketName | null")
     @Nullable
+    @DocletReplaceReturn("PacketName | null")
     public String type;
 
     @Override
