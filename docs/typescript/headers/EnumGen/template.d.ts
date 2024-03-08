@@ -46,13 +46,13 @@ type StatusEffectId = string
 type PistonBehaviour = string
 //@Enum class_1297$class_5529.toString
 type EntityUnloadReason = string
-//@Enum class_1259$class_1260.method_5421.toUpperCase
+//@Enum class_1259$class_1260.name
 type BossBarColor = string
-//@Enum class_1259$class_1261.method_5425.toUpperCase
+//@Enum class_1259$class_1261.name
 type BossBarStyle = string
-//@Enum class_2558$class_2559.method_10846
+//@Enum class_2558$class_2559.name
 type TextClickAction = string
-//@Enum class_2568$class_5247.method_27674
+//@Enum class_2568$class_5247.method_15434
 type TextHoverAction = string
 //@Enum class_3854.toString
 type VillagerStyle = string

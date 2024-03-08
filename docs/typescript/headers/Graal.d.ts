@@ -289,7 +289,7 @@ declare namespace Packages {
                 /** @deprecated */ static caller: undefined;
                 /** @deprecated */ static prototype: undefined;
 
-                equals(obj: Object): boolean;
+                equals(obj: any): boolean;
                 getClass(): Class<any>;
                 hashCode(): number;
                 notify(): void;
@@ -490,7 +490,7 @@ declare namespace Packages {
                 isEmpty(): boolean;
                 keySet(): Set<K>;
                 merge(key: K, value: V, remappingFunction: MethodWrapper<V, V, V>): V;
-                put(ket: K, value: V): V;
+                put(key: K, value: V): V;
                 putAll(m: Map<K, V>): void;
                 putIfAbsent(key: K, value: V): V?;
                 remove(key: K): V?;

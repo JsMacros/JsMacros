@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
 import net.minecraft.client.gui.hud.ClientBossBar;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.BossBarHelper;
@@ -15,6 +16,7 @@ import java.util.UUID;
  */
 @Event(value = "Bossbar", oldName = "BOSSBAR_UPDATE")
 public class EventBossbar extends BaseEvent {
+    @Nullable
     public final BossBarHelper bossBar;
     public final String uuid;
     @DocletReplaceReturn("BossBarUpdateType")
