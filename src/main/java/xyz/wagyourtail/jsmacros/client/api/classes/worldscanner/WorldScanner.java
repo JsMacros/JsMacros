@@ -124,7 +124,7 @@ public class WorldScanner {
 
     /**
      * scan area in blocks
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanCubeArea(BlockPosHelper pos, int range) {
         return scanCubeArea(pos.getX(), pos.getY(), pos.getZ(), range);
@@ -132,7 +132,7 @@ public class WorldScanner {
 
     /**
      * scan area in blocks
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanCubeArea(int x, int y, int z, int range) {
         if (range < 0) throw new IllegalArgumentException("range cannot be negative!");
@@ -146,7 +146,7 @@ public class WorldScanner {
      * scan area in blocks
      * @param pos1 first pos, inclusive
      * @param pos2 second pos, exclusive
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanCubeArea(BlockPosHelper pos1, BlockPosHelper pos2) {
         return scanCubeArea(pos1.getX(), pos1.getY(), pos1.getZ(), pos2.getX(), pos2.getY(), pos2.getZ());
@@ -160,7 +160,7 @@ public class WorldScanner {
      * @param x2 second x coordinate, exclusive
      * @param y2 second y coordinate, exclusive
      * @param z2 second z coordinate, exclusive
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanCubeArea(int x1, int y1, int z1, int x2, int y2, int z2) {
         if (x1 == x2 || y1 == y2 || z1 == z2) return new ArrayList<>();
@@ -176,7 +176,7 @@ public class WorldScanner {
      * scan area in blocks
      * @param pos1 first pos, inclusive
      * @param pos2 second pos, inclusive
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanCubeAreaInclusive(BlockPosHelper pos1, BlockPosHelper pos2) {
         return scanCubeAreaInclusive(pos1.getX(), pos1.getY(), pos1.getZ(), pos2.getX(), pos2.getY(), pos2.getZ());
@@ -190,7 +190,7 @@ public class WorldScanner {
      * @param x2 second x coordinate, inclusive
      * @param y2 second y coordinate, inclusive
      * @param z2 second z coordinate, inclusive
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanCubeAreaInclusive(int x1, int y1, int z1, int x2, int y2, int z2) {
         return scanCubeAreaInternal(x1, y1, z1, x2, y2, z2).collect(Collectors.toList());
@@ -198,7 +198,7 @@ public class WorldScanner {
 
     /**
      * scan area in blocks
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanSphereArea(Pos3D pos, double radius) {
         return scanSphereArea(pos.x, pos.y, pos.z, radius);
@@ -206,7 +206,7 @@ public class WorldScanner {
 
     /**
      * scan area in blocks
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanSphereArea(double x, double y, double z, double radius) {
         if (radius < 0) throw new IllegalArgumentException("radius cannot be negative!");
@@ -245,7 +245,7 @@ public class WorldScanner {
     /**
      * scan around with player pos and player reach.<br>
      * this doesn't filter out positions that has obstacle.
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanReachable() {
         if (mc.player == null) return new ArrayList<>();
@@ -256,7 +256,7 @@ public class WorldScanner {
      * scan around with player pos and player reach.<br>
      * this doesn't filter out positions that has obstacle.
      * @param strict if it should check for block outline instead of full cube, default is true
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanReachable(boolean strict) {
         if (mc.player == null) return new ArrayList<>();
@@ -266,7 +266,7 @@ public class WorldScanner {
     /**
      * scan around with the given pos and player reach.<br>
      * this doesn't filter out positions that has obstacle.
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanReachable(Pos3D pos) {
         return scanReachable(pos, getReach(), true);
@@ -275,7 +275,7 @@ public class WorldScanner {
     /**
      * scan around with the given pos and the given reach.<br>
      * this doesn't filter out positions that has obstacle.
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanReachable(Pos3D pos, double reach) {
         return scanReachable(pos, reach, true);
@@ -287,7 +287,7 @@ public class WorldScanner {
      * @param pos {@code Player.getPlayer().getEyePos()}
      * @param reach {@code Player.getInteractionManager().getReach()}
      * @param strict if it should check for block outline instead of full cube, default is true
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public List<Pos3D> scanReachable(Pos3D pos, double reach, boolean strict) {
         return scanReachableInternal(pos.toMojangDoubleVector(), reach, strict).collect(Collectors.toList());
@@ -296,7 +296,7 @@ public class WorldScanner {
     /**
      * scan around with player pos and player reach, and return the closest one.<br>
      * this doesn't filter out positions that has obstacle.
-     * @since 1.9.0
+     * @since 1.9.1
      */
     @Nullable
     public Pos3D scanClosestReachable() {
@@ -307,7 +307,7 @@ public class WorldScanner {
     /**
      * scan around with player pos and player reach, and return the closest one.<br>
      * this doesn't filter out positions that has obstacle.
-     * @since 1.9.0
+     * @since 1.9.1
      */
     @Nullable
     public Pos3D scanClosestReachable(boolean strict) {
@@ -318,7 +318,7 @@ public class WorldScanner {
     /**
      * scan around with player pos and player reach, and return the closest one.<br>
      * this doesn't filter out positions that has obstacle.
-     * @since 1.9.0
+     * @since 1.9.1
      */
     @Nullable
     public Pos3D scanClosestReachable(Pos3D pos, double reach, boolean strict) {
@@ -335,7 +335,7 @@ public class WorldScanner {
 
     /**
      * all inclusive
-     * @since 1.9.0
+     * @since 1.9.1
      */
     private Stream<Pos3D> scanCubeAreaInternal(int x1, int y1, int z1, int x2, int y2, int z2) {
         int worldBottom = world.getBottomY();
@@ -384,7 +384,7 @@ public class WorldScanner {
     }
 
     /**
-     * @since 1.9.0
+     * @since 1.9.1
      */
     private Stream<Pos3D> scanReachableInternal(Vec3d pos, double reach, boolean strict) {
         if (reach < 0) throw new IllegalArgumentException("reach cannot be negative!");
