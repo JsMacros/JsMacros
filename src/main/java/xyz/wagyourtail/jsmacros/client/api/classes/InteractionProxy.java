@@ -232,8 +232,9 @@ public class InteractionProxy {
         }
 
         public static class BreakBlockResult {
+            public static final BreakBlockResult UNAVAILABLE = new BreakBlockResult("UNAVAILABLE", null);
             @DocletReplaceReturn("BreakBlockResult$Reason | null")
-            @DocletDeclareType(name = "BreakBlockResult$Reason", type = "'SUCCESS' | 'CANCELLED' | 'INTERRUPTED' | 'NOT_BREAKING' | 'RESET' | 'NO_OVERRIDE' | 'IS_AIR' | 'NO_SHAPE' | 'NO_TARGET' | 'TARGET_LOST' | 'TARGET_CHANGE'")
+            @DocletDeclareType(name = "BreakBlockResult$Reason", type = "'SUCCESS' | 'CANCELLED' | 'INTERRUPTED' | 'NOT_BREAKING' | 'RESET' | 'NO_OVERRIDE' | 'IS_AIR' | 'NO_SHAPE' | 'NO_TARGET' | 'TARGET_LOST' | 'TARGET_CHANGE' | 'UNAVAILABLE'")
             @Nullable
             public final String reason;
             @Nullable

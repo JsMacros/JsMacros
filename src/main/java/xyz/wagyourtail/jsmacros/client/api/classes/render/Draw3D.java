@@ -26,7 +26,7 @@ import java.util.*;
  */
 @SuppressWarnings("unused")
 public class Draw3D {
-    private final Set<RenderElement3D> elements = new TreeSet<>();
+    private final ArrayList<RenderElement3D> elements = new ArrayList<>();
 
     /**
      * @return
@@ -709,8 +709,12 @@ public class Draw3D {
 
         EntityTraceLine.dirty = false;
 
-        //sort elements by type
+
         synchronized (elements) {
+            //sort elements by type (should be O(n) after first time)
+            Collections.sort(elements);
+
+            //TODO: pull setup out of render as they should be sorted by type
             for (RenderElement3D element : elements) {
                 element.render(drawContext, bufferBuilder, tickDelta);
             }

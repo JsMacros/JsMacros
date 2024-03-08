@@ -210,9 +210,9 @@ public interface IScreen extends IDraw2D<IScreen> {
     LockButtonWidgetHelper addLockButton(int x, int y, int zIndex, MethodWrapper<LockButtonWidgetHelper, IScreen, Object, ?> callback);
 
     /**
-     * @param x        the x position of the cylcing button
-     * @param y        the y position of the cylcing button
-     * @param width    the width of the cylcing button
+     * @param x        the x position of the cycling button
+     * @param y        the y position of the cycling button
+     * @param width    the width of the cycling button
      * @param height   the height of the cycling button
      * @param callback calls your method as a
      *                 {@link Consumer}&lt;{@link CyclingButtonWidgetHelper}&gt;
@@ -224,9 +224,9 @@ public interface IScreen extends IDraw2D<IScreen> {
     CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
 
     /**
-     * @param x        the x position of the cylcing button
-     * @param y        the y position of the cylcing button
-     * @param width    the width of the cylcing button
+     * @param x        the x position of the cycling button
+     * @param y        the y position of the cycling button
+     * @param width    the width of the cycling button
      * @param height   the height of the cycling button
      * @param zIndex   the z-index of the cycling button
      * @param callback calls your method as a
@@ -239,9 +239,9 @@ public interface IScreen extends IDraw2D<IScreen> {
     CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String initial, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
 
     /**
-     * @param x            the x position of the cylcing button
-     * @param y            the y position of the cylcing button
-     * @param width        the width of the cylcing button
+     * @param x            the x position of the cycling button
+     * @param y            the y position of the cycling button
+     * @param width        the width of the cycling button
      * @param height       the height of the cycling button
      * @param zIndex       the z-index of the cycling button
      * @param callback     calls your method as a
@@ -256,9 +256,9 @@ public interface IScreen extends IDraw2D<IScreen> {
     CyclingButtonWidgetHelper<?> addCyclingButton(int x, int y, int width, int height, int zIndex, String[] values, String[] alternatives, String initial, String prefix, MethodWrapper<CyclingButtonWidgetHelper<?>, IScreen, Object, ?> callback);
 
     /**
-     * @param x               the x position of the cylcing button
-     * @param y               the y position of the cylcing button
-     * @param width           the width of the cylcing button
+     * @param x               the x position of the cycling button
+     * @param y               the y position of the cycling button
+     * @param width           the width of the cycling button
      * @param height          the height of the cycling button
      * @param zIndex          the z-index of the cycling button
      * @param callback        calls your method as a

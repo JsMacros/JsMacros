@@ -1,7 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -21,6 +25,8 @@ import net.minecraft.entity.vehicle.FurnaceMinecartEntity;
 import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
@@ -32,6 +38,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.ChunkHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
@@ -122,7 +129,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     }
 
     /**
-     * @return the current eye height offset for the entitye.
+     * @return the current eye height offset for the entity.
      * @since 1.2.8
      */
     public double getEyeHeight() {
@@ -223,6 +230,34 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
             return EntityHelper.create(parent);
         }
         return null;
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    @Nullable
+    public BlockDataHelper rayTraceBlock(double distance, boolean fluid) {
+        BlockHitResult h = (BlockHitResult) base.raycast(distance, 0, fluid);
+        if (h.getType() == HitResult.Type.MISS) {
+            return null;
+        }
+        BlockState b = base.getWorld().getBlockState(h.getBlockPos());
+        BlockEntity t = base.getWorld().getBlockEntity(h.getBlockPos());
+        if (b.getBlock().equals(Blocks.VOID_AIR)) {
+            return null;
+        }
+        return new BlockDataHelper(b, t, h.getBlockPos());
+    }
+
+
+    /**
+     * @since 1.9.0
+     * @param distance
+     * @return
+     */
+    @Nullable
+    public EntityHelper<?> rayTraceEntity(int distance) {
+        return DebugRenderer.getTargetedEntity(base, distance).map(EntityHelper::create).orElse(null);
     }
 
     /**

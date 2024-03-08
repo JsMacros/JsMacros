@@ -22,6 +22,8 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.util.concurrent.Semaphore;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Functions for interacting with chat.
@@ -103,6 +105,29 @@ public class FChat extends BaseLibrary {
      */
     public void logf(String message, boolean await, Object... args) throws InterruptedException {
         log(String.format(message, args), await);
+    }
+
+    /**
+     * log with auto wrapping with {@link #ampersandToSectionSymbol(String)}
+     *
+     * @since 1.9.0
+     * @param message
+     * @throws InterruptedException
+     */
+    public void logColor(String message) throws InterruptedException {
+        log(ampersandToSectionSymbol(message), false);
+    }
+
+    /**
+     * log with auto wrapping with {@link #ampersandToSectionSymbol(String)}
+     *
+     * @since 1.9.0
+     * @param message
+     * @param await
+     * @throws InterruptedException
+     */
+    public void logColor(String message, boolean await) throws InterruptedException {
+        log(ampersandToSectionSymbol(message), await);
     }
 
     private static void logInternal(String message) {
@@ -301,7 +326,7 @@ public class FChat extends BaseLibrary {
             Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? Text.literal(desc.toString()) : null;
             // There doesn't seem to be a difference in the appearance or the functionality except for the UNSECURE_SERVER_WARNING with a longer duration
             if (titlee != null) {
-                t.add(SystemToast.create(mc, SystemToast.Type.TUTORIAL_HINT, titlee, descc));
+                t.add(SystemToast.create(mc, SystemToast.Type.PERIODIC_NOTIFICATION, titlee, descc));
             }
         }
     }
@@ -355,7 +380,7 @@ public class FChat extends BaseLibrary {
      */
     @Nullable
     public TextHelper createTextHelperFromJSON(String json) {
-        TextHelper t = TextHelper.wrap(Text.Serializer.fromJson(json));
+        TextHelper t = TextHelper.wrap(Text.Serialization.fromJson(json));
         return t;
     }
 
@@ -424,22 +449,46 @@ public class FChat extends BaseLibrary {
         return mc.textRenderer.getWidth(text);
     }
 
+    private static final Pattern SECTION_SYMBOL_PATTERN = Pattern.compile("[§&]");
+
     /**
+     * escapes &amp; to &amp;&amp; since 1.9.0
      * @param string
      * @return &#167; -> &amp;
      * @since 1.6.5
      */
     public String sectionSymbolToAmpersand(String string) {
-        return string.replaceAll("§", "&");
+        StringBuilder sb = new StringBuilder();
+        Matcher m = SECTION_SYMBOL_PATTERN.matcher(string);
+        while (m.find()) {
+            if (m.group().equals("§"))
+                m.appendReplacement(sb, "&");
+            else
+                m.appendReplacement(sb, "&&");
+        }
+        m.appendTail(sb);
+        return sb.toString();
     }
 
+    private static final Pattern AMPERSAND_PATTERN = Pattern.compile("&(.)");
+
     /**
+     * escapes &amp;&amp; to &amp; since 1.9.0
      * @param string
      * @return &amp; -> &#167;
      * @since 1.6.5
      */
     public String ampersandToSectionSymbol(String string) {
-        return string.replaceAll("&", "§");
+        StringBuilder sb = new StringBuilder();
+        Matcher m = AMPERSAND_PATTERN.matcher(string);
+        while (m.find()) {
+            if (m.group().equals("&&"))
+                m.appendReplacement(sb, "&");
+            else
+                m.appendReplacement(sb, "§$1");
+        }
+        m.appendTail(sb);
+        return sb.toString();
     }
 
     /**

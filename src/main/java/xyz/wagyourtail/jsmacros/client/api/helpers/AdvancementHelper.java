@@ -1,12 +1,14 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.mojang.serialization.JsonOps;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementRewards;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -47,7 +49,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @return the requirements of this advancement.
      * @since 1.8.4
      */
-    public String[][] getRequirements() {
+    public List<List<String>> getRequirements() {
         return base.getAdvancement().requirements().requirements();
     }
 
@@ -73,7 +75,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @since 1.8.4
      */
     public int getExperience() {
-        return ((MixinAdvancementRewards) base.getAdvancement().rewards()).getExperience();
+        return base.getAdvancement().rewards().experience();
     }
 
     /**
@@ -81,7 +83,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @since 1.8.4
      */
     public String[] getLoot() {
-        return Arrays.stream(((MixinAdvancementRewards) base.getAdvancement().rewards()).getLoot()).map(Identifier::toString).toArray(String[]::new);
+        return base.getAdvancement().rewards().loot().stream().map(Identifier::toString).toArray(String[]::new);
     }
 
     /**
@@ -90,7 +92,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      */
     @DocletReplaceReturn("JavaArray<RecipeId>")
     public String[] getRecipes() {
-        return (String[]) Arrays.stream(base.getAdvancement().rewards().getRecipes()).map(Identifier::toString).toArray();
+        return (String[]) base.getAdvancement().rewards().recipes().stream().map(Identifier::toString).toArray();
     }
 
     /**
@@ -108,7 +110,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @return the json string of this advancement.
      */
     public String toJson() {
-        return base.getAdvancement().toJson().toString();
+        return Util.getResult(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, base.getAdvancement()), IllegalStateException::new).toString();
     }
 
     @Override

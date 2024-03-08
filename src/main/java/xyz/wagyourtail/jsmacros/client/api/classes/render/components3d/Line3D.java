@@ -7,6 +7,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
@@ -14,11 +15,13 @@ import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 
+import java.util.Objects;
+
 /**
  * @author Wagyourtail
  */
 @SuppressWarnings("unused")
-public class Line3D implements RenderElement3D {
+public class Line3D implements RenderElement3D<Line3D> {
     public Vec3D pos;
     public int color;
     public boolean cull;
@@ -74,6 +77,24 @@ public class Line3D implements RenderElement3D {
      */
     public void setAlpha(int alpha) {
         this.color = (alpha << 24) | (color & 0xFFFFFF);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Line3D line3D = (Line3D) o;
+        return Objects.equals(pos, line3D.pos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pos);
+    }
+
+    @Override
+    public int compareToSame(Line3D o) {
+        return pos.compareTo(o.pos);
     }
 
     @Override

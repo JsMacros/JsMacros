@@ -1799,7 +1799,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("EndCombatS2CPacket", net.minecraft.network.packet.s2c.play.EndCombatS2CPacket.class);
         PACKETS.put("CustomPayloadS2CPacket", net.minecraft.network.packet.s2c.common.CustomPayloadS2CPacket.class);
         PACKETS.put("MapUpdateS2CPacket", net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket.class);
-        PACKETS.put("ScoreboardPlayerUpdateS2CPacket", net.minecraft.network.packet.s2c.play.ScoreboardPlayerUpdateS2CPacket.class);
         PACKETS.put("CustomPayloadC2SPacket", net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket.class);
         PACKETS.put("ButtonClickC2SPacket", net.minecraft.network.packet.c2s.play.ButtonClickC2SPacket.class);
         PACKETS.put("LoginSuccessS2CPacket", net.minecraft.network.packet.s2c.login.LoginSuccessS2CPacket.class);

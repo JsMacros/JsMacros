@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 /**
@@ -170,4 +172,11 @@ public class Pos2D {
         return Objects.hash(x, y);
     }
 
+    public int compareTo(@NotNull Pos2D o) {
+        int i = Double.compare(x, o.x);
+        if (i == 0) {
+            i = Double.compare(y, o.y);
+        }
+        return i;
+    }
 }
