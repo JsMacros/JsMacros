@@ -12,8 +12,7 @@ import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.ConfigManager;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.*;
-import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
-import xyz.wagyourtail.jsmacros.core.event.impl.FiltererComposed;
+import xyz.wagyourtail.jsmacros.core.event.impl.*;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -814,11 +813,31 @@ public class FJsMacros extends PerExecLibrary {
     }
 
     /**
-     * create a composed event filterer
+     * create a composed event filterer.<br>
+     * this filterer combines multiple filterers together with and/or logic.
      * @since 1.9.1
      */
     public FiltererComposed createComposedEventFilterer(EventFilterer initial) {
         return new FiltererComposed(initial);
+    }
+
+    /**
+     * create a modulus event filterer.<br>
+     * this filterer only let every nth event pass through.
+     * @since 1.9.1
+     */
+    public FiltererModulus createModulusEventFilterer(int quotient) {
+        return new FiltererModulus(quotient);
+    }
+
+    /**
+     * inverts the base filterer's result.<br>
+     * this checks if the base is already inverted.<br>
+     * e.g. {@code filterer == invert(invert(filterer))} would be {@code true}.
+     * @since 1.9.1
+     */
+    public EventFilterer invertEventFilterer(EventFilterer base) {
+        return FiltererInverted.invert(base);
     }
 
     /**

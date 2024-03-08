@@ -14,4 +14,12 @@ public interface EventFilterer {
 
     boolean test(BaseEvent event);
 
+    interface Compound extends EventFilterer {
+
+        default void checkCyclicRef(Compound base) {
+            if (this == base) throw new IllegalArgumentException("Cyclic reference detected.");
+        }
+
+    }
+
 }

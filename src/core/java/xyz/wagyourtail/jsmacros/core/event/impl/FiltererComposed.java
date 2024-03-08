@@ -10,7 +10,7 @@ import java.util.List;
  * @author aMelonRind
  * @since 1.9.1
  */
-public class FiltererComposed implements EventFilterer {
+public class FiltererComposed implements EventFilterer.Compound {
     private final LinkedList<List<EventFilterer>> components = new LinkedList<>();
 
     public FiltererComposed(EventFilterer initial) {
@@ -44,7 +44,9 @@ public class FiltererComposed implements EventFilterer {
      * @return self for chaining
      */
     public FiltererComposed and(EventFilterer filterer) {
+        if (filterer == null) throw new IllegalArgumentException("filterer cannot be null!");
         if (filterer instanceof FiltererComposed fc) fc.checkCyclicRef(this);
+
         components.getLast().add(filterer);
         return this;
     }
@@ -54,18 +56,20 @@ public class FiltererComposed implements EventFilterer {
      * @return self for chaining
      */
     public FiltererComposed or(EventFilterer filterer) {
+        if (filterer == null) throw new IllegalArgumentException("filterer cannot be null!");
         if (filterer instanceof FiltererComposed fc) fc.checkCyclicRef(this);
+
         List<EventFilterer> list = new LinkedList<>();
         list.add(filterer);
         components.add(list);
         return this;
     }
 
-    private void checkCyclicRef(FiltererComposed base) {
-        if (this == base) throw new IllegalArgumentException("Cyclic reference detected.");
+    public void checkCyclicRef(Compound base) {
+        Compound.super.checkCyclicRef(base);
         for (List<EventFilterer> c : components) {
             for (EventFilterer f : c) {
-                if (f instanceof FiltererComposed fc) fc.checkCyclicRef(base);
+                if (f instanceof Compound fc) fc.checkCyclicRef(base);
             }
         }
     }
