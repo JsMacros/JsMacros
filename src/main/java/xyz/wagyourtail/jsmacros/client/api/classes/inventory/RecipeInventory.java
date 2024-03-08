@@ -136,6 +136,7 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
      * @throws InterruptedException
      * @since 1.8.4
      */
+    @Nullable
     public List<RecipeHelper> getRecipes(boolean craftable) throws InterruptedException {
         Stream<RecipeEntry<?>> recipes;
         RecipeBookResults res;

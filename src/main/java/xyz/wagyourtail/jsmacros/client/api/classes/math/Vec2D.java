@@ -160,4 +160,12 @@ public class Vec2D {
         return Objects.hash(x1, y1, x2, y2);
     }
 
+    public int compareTo(Vec2D other) {
+        int i = getStart().compareTo(other.getStart());
+        if (i == 0) {
+            i = getEnd().compareTo(other.getEnd());
+        }
+        return i;
+    }
+
 }

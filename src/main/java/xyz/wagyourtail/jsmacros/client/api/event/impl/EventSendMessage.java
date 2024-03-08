@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -9,8 +10,10 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
 @Event(value = "SendMessage", oldName = "SEND_MESSAGE", cancellable = true)
 public class EventSendMessage extends BaseEvent {
+    @Nullable
     public String message;
 
+    @SuppressWarnings("NullableProblems")
     public EventSendMessage(String message) {
         this.message = message;
     }

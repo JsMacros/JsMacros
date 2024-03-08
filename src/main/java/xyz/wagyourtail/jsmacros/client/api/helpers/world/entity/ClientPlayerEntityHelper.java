@@ -101,37 +101,75 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
     /**
      * @since 1.8.4
      */
-    private ClientPlayerEntityHelper<T> setPos(Vec3d pos) {
-        base.setPosition(pos);
+    private ClientPlayerEntityHelper<T> setPos(Vec3d pos, boolean await) throws InterruptedException {
+        boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
+        if (joinedMain) {
+            base.setPosition(pos);
+        } else {
+            Semaphore wait = new Semaphore(await ? 0 : 1);
+            mc.execute(() -> {
+                base.setPosition(pos);
+                wait.release();
+            });
+            wait.acquire();
+        }
         return this;
     }
 
     /**
      * @since 1.8.4
      */
-    public ClientPlayerEntityHelper<T> setPos(Pos3D pos) {
-        return setPos(pos.toMojangDoubleVector());
+    public ClientPlayerEntityHelper<T> setPos(Pos3D pos) throws InterruptedException {
+        return setPos(pos, false);
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> setPos(Pos3D pos, boolean await) throws InterruptedException {
+        return setPos(pos.toMojangDoubleVector(), await);
     }
 
     /**
      * @since 1.8.4
      */
-    public ClientPlayerEntityHelper<T> setPos(double x, double y, double z) {
-        return setPos(new Vec3d(x, y, z));
+    public ClientPlayerEntityHelper<T> setPos(double x, double y, double z) throws InterruptedException {
+        return setPos(x, y, z, false);
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> setPos(double x, double y, double z, boolean await) throws InterruptedException {
+        return setPos(new Vec3d(x, y, z), await);
     }
 
     /**
      * @since 1.8.4
      */
-    public ClientPlayerEntityHelper<T> addPos(Pos3D pos) {
-        return setPos(getPos().add(pos));
+    public ClientPlayerEntityHelper<T> addPos(Pos3D pos) throws InterruptedException {
+        return addPos(pos, false);
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> addPos(Pos3D pos, boolean await) throws InterruptedException {
+        return setPos(getPos().add(pos), await);
     }
 
     /**
      * @since 1.8.4
      */
-    public ClientPlayerEntityHelper<T> addPos(double x, double y, double z) {
-        return setPos(getPos().add(new Pos3D(x, y, z)));
+    public ClientPlayerEntityHelper<T> addPos(double x, double y, double z) throws InterruptedException {
+        return addPos(x, y, z, false);
+    }
+
+    /**
+     * @since 1.9.0
+     */
+    public ClientPlayerEntityHelper<T> addPos(double x, double y, double z, boolean await) throws InterruptedException {
+        return setPos(getPos().add(x, y, z), await);
     }
 
     /**

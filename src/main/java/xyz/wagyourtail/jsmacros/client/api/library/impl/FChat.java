@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
@@ -21,6 +22,8 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.util.concurrent.Semaphore;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Functions for interacting with chat.
@@ -40,7 +43,7 @@ public class FChat extends BaseLibrary {
      * @param message
      * @since 1.1.3
      */
-    public void log(Object message) throws InterruptedException {
+    public void log(@Nullable Object message) throws InterruptedException {
         log(message, false);
     }
 
@@ -49,7 +52,7 @@ public class FChat extends BaseLibrary {
      * @param await   should wait for message to actually be sent to chat to continue.
      * @throws InterruptedException
      */
-    public void log(Object message, boolean await) throws InterruptedException {
+    public void log(@Nullable Object message, boolean await) throws InterruptedException {
         if (message == null) {
             return;
         }
@@ -104,6 +107,29 @@ public class FChat extends BaseLibrary {
         log(String.format(message, args), await);
     }
 
+    /**
+     * log with auto wrapping with {@link #ampersandToSectionSymbol(String)}
+     *
+     * @since 1.9.0
+     * @param message
+     * @throws InterruptedException
+     */
+    public void logColor(String message) throws InterruptedException {
+        log(ampersandToSectionSymbol(message), false);
+    }
+
+    /**
+     * log with auto wrapping with {@link #ampersandToSectionSymbol(String)}
+     *
+     * @since 1.9.0
+     * @param message
+     * @param await
+     * @throws InterruptedException
+     */
+    public void logColor(String message, boolean await) throws InterruptedException {
+        log(ampersandToSectionSymbol(message), await);
+    }
+
     private static void logInternal(String message) {
         if (message != null) {
             Text text = Text.literal(message);
@@ -122,7 +148,7 @@ public class FChat extends BaseLibrary {
      * @param message
      * @since 1.0.0
      */
-    public void say(String message) throws InterruptedException {
+    public void say(@Nullable String message) throws InterruptedException {
         say(message, false);
     }
 
@@ -134,7 +160,7 @@ public class FChat extends BaseLibrary {
      * @throws InterruptedException
      * @since 1.3.1
      */
-    public void say(String message, boolean await) throws InterruptedException {
+    public void say(@Nullable String message, boolean await) throws InterruptedException {
         if (message == null) {
             return;
         }
@@ -193,7 +219,7 @@ public class FChat extends BaseLibrary {
      * @param message the message to start the chat screen with
      * @since 1.6.4
      */
-    public void open(String message) throws InterruptedException {
+    public void open(@Nullable String message) throws InterruptedException {
         open(message, false);
     }
 
@@ -207,7 +233,7 @@ public class FChat extends BaseLibrary {
      * @param await
      * @since 1.6.4
      */
-    public void open(String message, boolean await) throws InterruptedException {
+    public void open(@Nullable String message, boolean await) throws InterruptedException {
         if (message == null) {
             message = "";
         }
@@ -300,7 +326,7 @@ public class FChat extends BaseLibrary {
             Text descc = (desc instanceof TextHelper) ? ((TextHelper) desc).getRaw() : desc != null ? Text.literal(desc.toString()) : null;
             // There doesn't seem to be a difference in the appearance or the functionality except for the UNSECURE_SERVER_WARNING with a longer duration
             if (titlee != null) {
-                t.add(SystemToast.create(mc, SystemToast.Type.TUTORIAL_HINT, titlee, descc));
+                t.add(SystemToast.create(mc, SystemToast.Type.PERIODIC_NOTIFICATION, titlee, descc));
             }
         }
     }
@@ -352,8 +378,9 @@ public class FChat extends BaseLibrary {
      * @see xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper
      * @since 1.1.3
      */
+    @Nullable
     public TextHelper createTextHelperFromJSON(String json) {
-        TextHelper t = TextHelper.wrap(Text.Serializer.fromJson(json));
+        TextHelper t = TextHelper.wrap(Text.Serialization.fromJson(json));
         return t;
     }
 
@@ -418,26 +445,50 @@ public class FChat extends BaseLibrary {
      * @return the width of the given text in pixels.
      * @since 1.8.4
      */
-    public int getTextWidth(String text) {
+    public int getTextWidth(@Nullable String text) {
         return mc.textRenderer.getWidth(text);
     }
 
+    private static final Pattern SECTION_SYMBOL_PATTERN = Pattern.compile("[§&]");
+
     /**
+     * escapes &amp; to &amp;&amp; since 1.9.0
      * @param string
      * @return &#167; -> &amp;
      * @since 1.6.5
      */
     public String sectionSymbolToAmpersand(String string) {
-        return string.replaceAll("§", "&");
+        StringBuilder sb = new StringBuilder();
+        Matcher m = SECTION_SYMBOL_PATTERN.matcher(string);
+        while (m.find()) {
+            if (m.group().equals("§"))
+                m.appendReplacement(sb, "&");
+            else
+                m.appendReplacement(sb, "&&");
+        }
+        m.appendTail(sb);
+        return sb.toString();
     }
 
+    private static final Pattern AMPERSAND_PATTERN = Pattern.compile("&(.)");
+
     /**
+     * escapes &amp;&amp; to &amp; since 1.9.0
      * @param string
      * @return &amp; -> &#167;
      * @since 1.6.5
      */
     public String ampersandToSectionSymbol(String string) {
-        return string.replaceAll("&", "§");
+        StringBuilder sb = new StringBuilder();
+        Matcher m = AMPERSAND_PATTERN.matcher(string);
+        while (m.find()) {
+            if (m.group().equals("&&"))
+                m.appendReplacement(sb, "&");
+            else
+                m.appendReplacement(sb, "§$1");
+        }
+        m.appendTail(sb);
+        return sb.toString();
     }
 
     /**

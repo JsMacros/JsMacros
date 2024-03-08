@@ -8,16 +8,19 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 
+import java.util.Objects;
+
 /**
  * @author Wagyourtail
  */
 @SuppressWarnings("unused")
-public class Box implements RenderElement3D {
+public class Box implements RenderElement3D<Box> {
     public Vec3D pos;
     public int color;
     public int fillColor;
@@ -51,6 +54,38 @@ public class Box implements RenderElement3D {
      */
     public void setPos(double x1, double y1, double z1, double x2, double y2, double z2) {
         pos = new Vec3D(x1, y1, z1, x2, y2, z2);
+    }
+
+    /**
+     * set this component's pos to a block
+     * @since 1.9.0
+     */
+    public void setPosToBlock(BlockPosHelper pos) {
+        setPosToBlock(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    /**
+     * set this component's pos to a block
+     * @since 1.9.0
+     */
+    public void setPosToBlock(int x, int y, int z) {
+        setPos(x, y, z, x + 1, y + 1, z + 1);
+    }
+
+    /**
+     * set this component's pos to a point
+     * @since 1.9.0
+     */
+    public void setPosToPoint(Pos3D pos, double radius) {
+        setPosToPoint(pos.getX(), pos.getY(), pos.getZ(), radius);
+    }
+
+    /**
+     * set this component's pos to a point
+     * @since 1.9.0
+     */
+    public void setPosToPoint(double x, double y, double z, double radius) {
+        setPos(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius);
     }
 
     /**
@@ -115,6 +150,28 @@ public class Box implements RenderElement3D {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Box box = (Box) o;
+        return Objects.equals(pos, box.pos);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pos);
+    }
+
+    @Override
+    public int compareToSame(Box other) {
+        if (other instanceof Box) {
+            return pos.compareTo(((Box) other).pos);
+        }
+        return 0;
+    }
+
+    @Override
+    @DocletIgnore
     public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
         MatrixStack matrixStack = drawContext.getMatrices();
         final boolean cull = !this.cull;

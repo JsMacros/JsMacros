@@ -112,7 +112,11 @@ if (enabled_loaders.contains("forge")) {
             devFallbackNamespace "intermediary"
         }
 
-        minecraftForge {
+        minecraftRemapper.config {
+            ignoreConflicts(true)
+        }
+
+        neoForged {
             loader project.forge_version
 
             mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
@@ -154,7 +158,8 @@ if (enabled_loaders.contains("fabric")) {
 dependencies {
     implementation "io.noties:prism4j:${project.prism_version}"
     compileOnly "org.spongepowered:mixin:0.8.5"
-    implementation "org.ow2.asm:asm:9.3"
+    compileOnly "io.github.llamalad7:mixinextras-common:0.3.2"
+    compileOnly "org.ow2.asm:asm:9.5"
 
     coreImplementation "org.jooq:joor:0.9.14"
     coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
@@ -232,6 +237,7 @@ if (enabled_loaders.contains("forge")) {
 
 
     forgeJar {
+        dependsOn(":javascript_extension:jar")
         archiveClassifier = "forge-dev"
         from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
 
@@ -282,6 +288,7 @@ if (enabled_loaders.contains("fabric")) {
     }
 
     fabricJar {
+        dependsOn(":javascript_extension:jar")
         from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
 
         preserveFileTimestamps = false

@@ -1,17 +1,30 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.command.argument.NbtPathArgumentType;
 import net.minecraft.nbt.*;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @since 1.5.1
  */
 @SuppressWarnings("unused")
 public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
+    private static final LinkedHashMap<String, NbtPathArgumentType.NbtPath> nbtPaths = new LinkedHashMap<>(32, 0.75f, true) {
+
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<String, NbtPathArgumentType.NbtPath> eldest) {
+            return size() > 24;
+        }
+
+    };
 
     private NBTElementHelper(T base) {
         super(base);
@@ -22,6 +35,25 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
      */
     public int getType() {
         return base.getType();
+    }
+
+    /**
+     * resolves the nbt path to elements, or null if not found.<br>
+     * <a href="https://minecraft.wiki/w/NBT_path_format">NBT path format wiki</a>
+     * @throws CommandSyntaxException if the path format is incorrect
+     * @since 1.9.0
+     */
+    @Nullable
+    public List<NBTElementHelper<?>> resolve(String nbtPath) throws CommandSyntaxException {
+        NbtPathArgumentType.NbtPath path = nbtPaths.get(nbtPath);
+        if (path == null) {
+            path = NbtPathArgumentType.nbtPath().parse(new StringReader(nbtPath));
+            nbtPaths.put(nbtPath, path);
+        }
+        try {
+            return path.get(base).stream().map(NBTElementHelper::resolve).collect(Collectors.toList());
+        } catch (CommandSyntaxException ignored) {}
+        return null;
     }
 
     /**
@@ -104,9 +136,18 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     }
 
     /**
+     * @since 1.9.0
+     */
+    @Nullable
+    public static NBTCompoundHelper wrapCompound(@Nullable NbtCompound compound) {
+        return compound == null ? null : new NBTCompoundHelper(compound);
+    }
+
+    /**
      * @since 1.5.1
      */
-    public static NBTElementHelper<?> resolve(NbtElement element) {
+    @Nullable
+    public static NBTElementHelper<?> resolve(@Nullable NbtElement element) {
         if (element == null) {
             return null;
         }
@@ -213,6 +254,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
          * @return
          * @since 1.8.3
          */
+        @Nullable
         public UUID asUUID() {
             if (!isPossiblyUUID()) {
                 return null;
@@ -231,6 +273,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         /**
          * @since 1.5.1
          */
+        @Nullable
         public NBTElementHelper<?> get(int index) {
             return resolve(base.get(index));
         }
@@ -278,6 +321,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
         /**
          * @since 1.5.1
          */
+        @Nullable
         public NBTElementHelper<?> get(String key) {
             return resolve(base.get(key));
         }

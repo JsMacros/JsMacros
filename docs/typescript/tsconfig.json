@@ -1,19 +1,12 @@
 {
-    "compilerOptions": {
-        "module": "CommonJS",
-        "removeComments": false,
-        "target": "ES2022",
-        "lib": ["ES2022"],
-        "outDir": "./build",
-        "skipLibCheck": true,
-        "typeRoots": []
-    },
-    "include": [
-        "scripts/**/*.ts",
-        "headers/*.d.ts"
-    ],
+  "compilerOptions": {
+    "module": "CommonJS",
+    "removeComments": false,
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "outDir": "./build",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "typeRoots": []
   },
   "include": [
     "scripts/**/*.ts",
@@ -21,5 +14,7 @@
   ],
   "exclude": [
     "build/*"
-  ]
+  ],
+  "outDir": "./build",
+  "skipLibCheck": true
 }

@@ -89,7 +89,7 @@ public class FJsMacros extends PerExecLibrary {
      * @return
      * @since 1.6.3
      */
-    public EventContainer<?> runScript(String file, BaseEvent fakeEvent) {
+    public EventContainer<?> runScript(String file, @Nullable BaseEvent fakeEvent) {
         return runScript(file, fakeEvent, null);
     }
 
@@ -102,7 +102,7 @@ public class FJsMacros extends PerExecLibrary {
      * @return container the script is running on.
      * @since 1.6.3 (1.1.5 - 1.6.3 didn't have fakeEvent)
      */
-    public EventContainer<?> runScript(String file, BaseEvent fakeEvent, MethodWrapper<Throwable, Object, Object, ?> callback) {
+    public EventContainer<?> runScript(String file, @Nullable BaseEvent fakeEvent, @Nullable MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
             return Core.getInstance().exec(new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, "", Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile(), true, false), fakeEvent, () -> callback.accept(null), callback);
         } else {
@@ -130,7 +130,7 @@ public class FJsMacros extends PerExecLibrary {
      * @return the {@link EventContainer} the script is running on.
      * @since 1.2.4
      */
-    public EventContainer<?> runScript(String language, String script, MethodWrapper<Throwable, Object, Object, ?> callback) {
+    public EventContainer<?> runScript(String language, String script, @Nullable MethodWrapper<Throwable, Object, Object, ?> callback) {
         return runScript(language, script, null, callback);
     }
 
@@ -142,7 +142,7 @@ public class FJsMacros extends PerExecLibrary {
      * @return
      * @since 1.6.0
      */
-    public EventContainer<?> runScript(String language, String script, String file, MethodWrapper<Throwable, Object, Object, ?> callback) {
+    public EventContainer<?> runScript(String language, String script, @Nullable String file, @Nullable MethodWrapper<Throwable, Object, Object, ?> callback) {
         return runScript(language, script, file, null, callback);
     }
 
@@ -155,7 +155,7 @@ public class FJsMacros extends PerExecLibrary {
      * @return
      * @since 1.7.0
      */
-    public EventContainer<?> runScript(String language, String script, String file, BaseEvent event, @Nullable MethodWrapper<Throwable, Object, Object, ?> callback) {
+    public EventContainer<?> runScript(String language, String script, @Nullable String file, @Nullable BaseEvent event, @Nullable MethodWrapper<Throwable, Object, Object, ?> callback) {
         if (callback != null) {
             return Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, event, () -> callback.accept(null), callback);
         } else {
@@ -198,7 +198,7 @@ public class FJsMacros extends PerExecLibrary {
      * @return
      * @since 1.7.0
      */
-    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRun(String language, String script, String file) {
+    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRun(String language, String script, @Nullable String file) {
         return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, e, null, null), false);
     }
 
@@ -237,7 +237,7 @@ public class FJsMacros extends PerExecLibrary {
      * @return
      * @since 1.7.0
      */
-    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRunAsync(String language, String script, String file) {
+    public <T, U, R> MethodWrapper<T, U, R, ?> wrapScriptRunAsync(String language, String script, @Nullable String file) {
         return new WrappedScript<>((e) -> (EventContainer<BaseScriptContext<?>>) Core.getInstance().exec(language, script, file != null ? ctx.getContainedFolder().toPath().resolve(file).toFile() : null, e, null, null), true);
     }
 
@@ -470,8 +470,6 @@ public class FJsMacros extends PerExecLibrary {
      * @see FJsMacros#off(String, IEventListener)
      * @since 1.2.3
      */
-    @DocletReplaceTypeParams("E extends keyof Events")
-    @DocletReplaceParams("event: E, listener: IEventListener")
     public boolean off(IEventListener listener) {
         return Core.getInstance().eventRegistry.removeListener(listener);
     }
@@ -485,6 +483,8 @@ public class FJsMacros extends PerExecLibrary {
      * @see IEventListener
      * @since 1.2.3
      */
+    @DocletReplaceTypeParams("E extends keyof Events")
+    @DocletReplaceParams("event: E, listener: IEventListener")
     public boolean off(String event, IEventListener listener) {
         return Core.getInstance().eventRegistry.removeListener(event, listener);
     }
@@ -559,8 +559,8 @@ public class FJsMacros extends PerExecLibrary {
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E")
-    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
-    public EventAndContext waitForEvent(String event) throws InterruptedException {
+    @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
+    public EventAndContext<?> waitForEvent(String event) throws InterruptedException {
         return waitForEvent(event, null, null);
     }
 
@@ -572,8 +572,8 @@ public class FJsMacros extends PerExecLibrary {
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, join: boolean")
-    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
-    public EventAndContext waitForEvent(String event, boolean join) throws InterruptedException {
+    @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
+    public EventAndContext<?> waitForEvent(String event, boolean join) throws InterruptedException {
         return waitForEvent(event, join, null, null);
     }
 
@@ -585,8 +585,8 @@ public class FJsMacros extends PerExecLibrary {
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>")
-    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
-    public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
+    @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
+    public EventAndContext<?> waitForEvent(String event, @Nullable MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, filter, null);
     }
 
@@ -599,8 +599,8 @@ public class FJsMacros extends PerExecLibrary {
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, join: boolean, filter: MethodWrapper<Events[E], undefined, boolean>")
-    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
-    public EventAndContext waitForEvent(String event, boolean join, MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
+    @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
+    public EventAndContext<?> waitForEvent(String event, boolean join, @Nullable MethodWrapper<BaseEvent, Object, Boolean, ?> filter) throws InterruptedException {
         return waitForEvent(event, join, filter, null);
     }
 
@@ -616,8 +616,8 @@ public class FJsMacros extends PerExecLibrary {
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
-    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
-    public EventAndContext waitForEvent(String event, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
+    @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
+    public EventAndContext<?> waitForEvent(String event, @Nullable MethodWrapper<BaseEvent, Object, Boolean, ?> filter, @Nullable MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         return waitForEvent(event, false, filter, runBeforeWaiting);
     }
 
@@ -635,8 +635,8 @@ public class FJsMacros extends PerExecLibrary {
      */
     @DocletReplaceTypeParams("E extends keyof Events")
     @DocletReplaceParams("event: E, join: boolean, filter: MethodWrapper<Events[E], undefined, boolean>, runBeforeWaiting: MethodWrapper<JavaObject, JavaObject, JavaObject>")
-    @DocletReplaceReturn("FJsMacros$EventAndContext & { readonly event: Events[E] }")
-    public EventAndContext waitForEvent(String event, boolean join, MethodWrapper<BaseEvent, Object, Boolean, ?> filter, MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
+    @DocletReplaceReturn("FJsMacros$EventAndContext<Events[E]>")
+    public EventAndContext<?> waitForEvent(String event, boolean join, @Nullable MethodWrapper<BaseEvent, Object, Boolean, ?> filter, @Nullable MethodWrapper<Object, Object, Object, ?> runBeforeWaiting) throws InterruptedException {
         // event return values
         final BaseEvent[] ev = {null};
         // create a new event container so we can actually release joined events
@@ -734,7 +734,7 @@ public class FJsMacros extends PerExecLibrary {
 
         });
         // returns new context and event value to the user so they can release joined stuff early
-        return new EventAndContext(ev[0], ctxCont[0]);
+        return new EventAndContext<>(ev[0], ctxCont[0]);
     }
 
     /**
@@ -800,11 +800,11 @@ public class FJsMacros extends PerExecLibrary {
 
     }
 
-    public static class EventAndContext {
-        public final BaseEvent event;
+    public static class EventAndContext<E extends BaseEvent> {
+        public final E event;
         public final EventContainer<?> context;
 
-        public EventAndContext(BaseEvent event, EventContainer<?> context) {
+        public EventAndContext(E event, EventContainer<?> context) {
             this.event = event;
             this.context = context;
         }

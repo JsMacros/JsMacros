@@ -18,6 +18,8 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
 
+import static net.minecraft.text.Text.literal;
+
 /**
  * @author Etheradon
  * @since 1.8.4
@@ -65,7 +67,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper setName(String name) {
-        base.setCustomName(Text.literal(name));
+        base.setCustomName(literal(name));
         return this;
     }
 
@@ -176,15 +178,15 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper addLore(Object... lore) {
-        if (lore instanceof TextHelper[] textHelpers) {
-            return addLoreInternal(Arrays.stream(textHelpers).map(BaseHelper::getRaw).toArray(Text[]::new));
-        } else if (lore instanceof TextBuilder[] textBuilders) {
-            return addLoreInternal(Arrays.stream(textBuilders).map(TextBuilder::build).map(TextHelper::getRaw).toArray(Text[]::new));
-        } else if (lore instanceof String[] strings) {
-            return addLoreInternal(Arrays.stream(strings).map(Text::literal).toArray(Text[]::new));
-        } else {
-            return addLoreInternal(Arrays.stream(lore).map(Object::toString).map(Text::literal).toArray(Text[]::new));
-        }
+        return addLoreInternal(Arrays.stream(lore).map(e -> {
+            if (e instanceof TextHelper) {
+                return ((TextHelper) e).getRaw();
+            } else if (e instanceof TextBuilder) {
+                return ((TextBuilder) e).build().getRaw();
+            } else {
+                return literal(e.toString());
+            }
+        }).toArray(Text[]::new));
     }
 
     /**
@@ -196,7 +198,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
         NbtCompound nbtCompound = base.getOrCreateSubNbt("display");
         NbtList list = nbtCompound.contains("Lore", 9) ? nbtCompound.getList("Lore", 8) : new NbtList();
         for (Text text : texts) {
-            list.add(NbtString.of(Text.Serializer.toJson(text)));
+            list.add(NbtString.of(Text.Serialization.toJsonString(text)));
         }
         nbtCompound.put("Lore", list);
 

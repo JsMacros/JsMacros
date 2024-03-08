@@ -73,9 +73,18 @@ public class FPlayer extends BaseLibrary {
     /**
      * @since 1.9.0
      */
+    @Nullable
     public InteractionManagerHelper getInteractionManager() {
-        assert mc.interactionManager != null;
-        return new InteractionManagerHelper();
+        return mc.interactionManager == null ? null : new InteractionManagerHelper(mc.interactionManager);
+    }
+
+    /**
+     * alias for {@link FPlayer#getInteractionManager()}
+     * @since 1.9.0
+     */
+    @Nullable
+    public InteractionManagerHelper interactions() {
+        return getInteractionManager();
     }
 
     /**
@@ -185,7 +194,7 @@ public class FPlayer extends BaseLibrary {
      * @see #takeScreenshot(String, String, MethodWrapper)
      * @since 1.2.6
      */
-    public void takeScreenshot(String folder, MethodWrapper<TextHelper, Object, Object, ?> callback) {
+    public void takeScreenshot(String folder, @Nullable MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), mc.getFramebuffer(),
                 (text) -> {
@@ -205,7 +214,7 @@ public class FPlayer extends BaseLibrary {
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      * @since 1.2.6
      */
-    public void takeScreenshot(String folder, String file, MethodWrapper<TextHelper, Object, Object, ?> callback) {
+    public void takeScreenshot(String folder, String file, @Nullable MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null && file != null;
         ScreenshotRecorder.saveScreenshot(new File(Core.getInstance().config.macroFolder, folder), file, mc.getFramebuffer(),
                 (text) -> {
@@ -222,7 +231,7 @@ public class FPlayer extends BaseLibrary {
      * @param callback calls your method as a {@link Consumer}&lt;{@link TextHelper}&gt;
      * @since 1.8.4
      */
-    public void takePanorama(String folder, int width, int height, MethodWrapper<TextHelper, Object, Object, ?> callback) {
+    public void takePanorama(String folder, int width, int height, @Nullable MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
         Text result = mc.takePanorama(new File(Core.getInstance().config.macroFolder, folder), width, height);
         if (callback != null) {

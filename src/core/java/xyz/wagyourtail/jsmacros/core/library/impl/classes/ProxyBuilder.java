@@ -215,15 +215,28 @@ public class ProxyBuilder<T> {
         }
     }
 
+    private static Class<?> boxPrimitive(Class<?> primitive) {
+        if (!primitive.isPrimitive()) return primitive;
+        if (primitive == boolean.class) return Boolean.class;
+        if (primitive == byte.class) return Byte.class;
+        if (primitive == char.class) return Character.class;
+        if (primitive == short.class) return Short.class;
+        if (primitive == int.class) return Integer.class;
+        if (primitive == long.class) return Long.class;
+        if (primitive == float.class) return Float.class;
+        if (primitive == double.class) return Double.class;
+        if (primitive == void.class) return Void.class;
+        throw new NullPointerException("Unknown Primitive: " + primitive);
+    }
+
     private static boolean areParamsCompatible(Class<?>[] fuzzable, Class<?>[] target) {
         if (fuzzable.length != target.length) {
             return false;
         }
         for (int i = 0; i < fuzzable.length; ++i) {
-            if (Number.class.isAssignableFrom(fuzzable[i]) && (Number.class.isAssignableFrom(target[i]) || target[i].isPrimitive())) {
-                continue;
-            }
-            if (target[i].isAssignableFrom(fuzzable[i])) {
+            Class<?> targetArg = boxPrimitive(target[i]);
+            Class<?> fuzzableArg = boxPrimitive(fuzzable[i]);
+            if (targetArg.isAssignableFrom(fuzzableArg) || (Number.class.isAssignableFrom(targetArg) && Number.class.isAssignableFrom(fuzzableArg))) {
                 continue;
             }
             return false;
