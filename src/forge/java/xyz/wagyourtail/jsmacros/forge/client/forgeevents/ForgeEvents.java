@@ -5,14 +5,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraftforge.client.event.RegisterClientCommandsEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
@@ -41,19 +41,19 @@ public class ForgeEvents {
     }
 
     public static void init() {
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onTick);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onRegisterCommands);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::renderWorldListener);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onTick);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onRegisterCommands);
 
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenDraw);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenDraw);
 
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenKeyPressed);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenCharTyped);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenKeyPressed);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenCharTyped);
 
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseClicked);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseReleased);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseScroll);
-        MinecraftForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseDragged);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseClicked);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseReleased);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseScroll);
+        NeoForge.EVENT_BUS.addListener(ForgeEvents::onScreenMouseDragged);
     }
 
     public static void onScreenKeyPressed(ScreenEvent.KeyPressed.Pre event) {
@@ -79,14 +79,14 @@ public class ForgeEvents {
     }
 
     public static void onScreenMouseScroll(ScreenEvent.MouseScrolled.Pre event) {
-        ((IScreenInternal) event.getScreen()).jsmacros_mouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDelta());
+        ((IScreenInternal) event.getScreen()).jsmacros_mouseScrolled(event.getMouseX(), event.getMouseY(), event.getScrollDeltaX(), event.getScrollDeltaY());
     }
 
     public static void onScreenMouseDragged(ScreenEvent.MouseDragged.Pre event) {
         ((IScreenInternal) event.getScreen()).jsmacros_mouseDragged(event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY());
     }
 
-    public static void renderHudListener(ForgeGui gui, DrawContext drawContext, float partialTicks, int width, int height) {
+    public static void renderHudListener(ExtendedGui gui, DrawContext drawContext, float partialTicks, int width, int height) {
         for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays).stream().sorted(Comparator.comparingInt(IDraw2D::getZIndex)).collect(Collectors.toList())) {
             try {
                 h.render(drawContext);
@@ -96,7 +96,7 @@ public class ForgeEvents {
     }
 
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent ev) {
-        ev.registerBelow(VanillaGuiOverlay.DEBUG_TEXT.id(), "jsmacros_hud", ForgeEvents::renderHudListener);
+        ev.registerBelow(VanillaGuiOverlay.DEBUG_SCREEN.id(), "jsmacros_hud", ForgeEvents::renderHudListener);
     }
 
     public static void renderWorldListener(RenderLevelStageEvent e) {

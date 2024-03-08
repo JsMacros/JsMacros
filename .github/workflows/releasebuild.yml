@@ -10,6 +10,9 @@ on:
       upload_docs:
         required: true
         type: boolean
+      forge:
+        required: true
+        type: string
     secrets:
       CF_API_KEY:
         required: true
@@ -50,7 +53,6 @@ jobs:
 
       - name: Build
         run: |
-          ./gradlew :javascript_extension:build
           ./gradlew build
 
       - name: Upload To Artifacts
@@ -178,7 +180,7 @@ jobs:
           files: ./dist/${{ steps.forge_release.outputs.result }}
           version-type: release
 
-          loaders: forge
+          loaders: ${{ inputs.forge }}
           game-versions: ${{ steps.gradle_properties.outputs.minecraft_version }}
 
           java: ${{ steps.gradle_properties.outputs.java_version }}

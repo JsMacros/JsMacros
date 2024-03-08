@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob;
 
 import net.minecraft.entity.mob.ShulkerEntity;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.DyeColorHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
@@ -25,6 +26,7 @@ public class ShulkerEntityHelper extends MobEntityHelper<ShulkerEntity> {
         return new DirectionHelper(base.getAttachedFace());
     }
 
+    @Nullable
     public DyeColorHelper getColor() {
         return base.getColor() == null ? null : new DyeColorHelper(base.getColor());
     }

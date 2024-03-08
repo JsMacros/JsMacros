@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletEnumType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -59,7 +60,8 @@ public class Inventory<T extends HandledScreen<?>> {
         return inv;
     }
 
-    public static Inventory<?> create(Screen s) {
+    @Nullable
+    public static Inventory<?> create(@Nullable Screen s) {
         if (s instanceof HandledScreen) {
             if (s instanceof MerchantScreen) {
                 return new VillagerInventory((MerchantScreen) s);
@@ -582,7 +584,8 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return returns the part of the mapping the slot is in.
      * @since 1.1.3
      */
-    @DocletReplaceReturn("InvMapId")
+    @DocletReplaceReturn("InvMapId | null")
+    @Nullable
     public String getLocation(int slotNum) {
         if (map == null) {
             map = getMapInternal();

@@ -23,6 +23,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Locale;
 import java.util.concurrent.Semaphore;
@@ -33,14 +34,39 @@ import java.util.concurrent.Semaphore;
  * @author aMelonRind
  * @since 1.9.0
  */
-@SuppressWarnings("unused")
-public class InteractionManagerHelper {
+@SuppressWarnings({"unused", "UnusedReturnValue"})
+public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteractionManager> {
     protected final MinecraftClient mc = MinecraftClient.getInstance();
 
-    public InteractionManagerHelper() {}
+    /**
+     * indicates if the helper should auto update the base manager, default is true<br>
+     * when the base doesn't equal to the current manager,<br>
+     *  if this is false, raise an error;<br>
+     *  else if base is updated, the method works as usual;<br>
+     *  else if the method don't need manager or network interaction, work as usual with old manager;<br>
+     *  else the method does nothing
+     */
+    public boolean autoUpdateBase = true;
 
-    public ClientPlayerInteractionManager getRaw() {
-        return mc.interactionManager;
+    public InteractionManagerHelper(ClientPlayerInteractionManager base) {
+        super(base);
+    }
+
+    /**
+     * checks if the base matches the current manager
+     * @param update true if the base should be updated. otherwise it'll raise an error if it's not up-to-date
+     * @return true if base is available
+     */
+    public boolean checkBase(boolean update) {
+        if (mc.interactionManager == base) return true;
+        if (update) {
+            if (mc.interactionManager != null) {
+                base = mc.interactionManager;
+                return true;
+            } else return false;
+        } else {
+            throw new RuntimeException("Wrapped interaction manager doesn't match the current one in client");
+        }
     }
 
     /**
@@ -49,8 +75,8 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceReturn("Gamemode")
     public String getGameMode() {
-        assert mc.interactionManager != null;
-        return mc.interactionManager.getCurrentGameMode().getName();
+        checkBase(autoUpdateBase);
+        return base.getCurrentGameMode().getName();
     }
 
     /**
@@ -60,8 +86,8 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("gameMode: Gamemode")
     public InteractionManagerHelper setGameMode(String gameMode) {
-        assert mc.interactionManager != null;
-        mc.interactionManager.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), mc.interactionManager.getCurrentGameMode()));
+        checkBase(autoUpdateBase);
+        base.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), base.getCurrentGameMode()));
         return this;
     }
 
@@ -70,8 +96,8 @@ public class InteractionManagerHelper {
      * @since 1.8.4
      */
     public float getReach() {
-        assert mc.interactionManager != null;
-        return mc.interactionManager.getReachDistance();
+        checkBase(autoUpdateBase);
+        return base.getReachDistance();
     }
 
 
@@ -94,6 +120,7 @@ public class InteractionManagerHelper {
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
     @DocletEnumType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
     public InteractionManagerHelper setTarget(int x, int y, int z, String direction) {
+        //noinspection DataFlowIssue
         setTarget(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
         return this;
     }
@@ -126,6 +153,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("bpos: BlockPosHelper, direction: Direction")
     public InteractionManagerHelper setTarget(BlockPosHelper pos, String direction) {
+        //noinspection DataFlowIssue
         setTarget(pos, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
         return this;
     }
@@ -157,9 +185,11 @@ public class InteractionManagerHelper {
      * @return targeted block pos, null if not targeting block
      * @since 1.9.0
      */
-    public @Nullable BlockPosHelper getTargetedBlock() {
-        if (mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
-            return new BlockPosHelper(((BlockHitResult) mc.crosshairTarget).getBlockPos());
+    @Nullable
+    public BlockPosHelper getTargetedBlock() {
+        HitResult target = mc.crosshairTarget;
+        if (target != null && target.getType() == HitResult.Type.BLOCK) {
+            return new BlockPosHelper(((BlockHitResult) target).getBlockPos());
         }
         return null;
     }
@@ -168,7 +198,8 @@ public class InteractionManagerHelper {
      * @return targeted entity, null if not targeting entity
      * @since 1.9.0
      */
-    public @Nullable EntityHelper<?> getTargetedEntity() {
+    @Nullable
+    public EntityHelper<?> getTargetedEntity() {
         if (mc.targetedEntity != null) {
             return EntityHelper.create(mc.targetedEntity);
         }
@@ -296,19 +327,19 @@ public class InteractionManagerHelper {
      * @since 1.6.0
      */
     public InteractionManagerHelper attack(EntityHelper<?> entity, boolean await) throws InterruptedException {
+        if (!checkBase(autoUpdateBase)) return this;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
-        assert mc.interactionManager != null;
         if (entity.getRaw() == mc.player) {
             throw new AssertionError("Can't interact with self!");
         }
         if (joinedMain) {
-            mc.interactionManager.attackEntity(mc.player, entity.getRaw());
+            base.attackEntity(mc.player, entity.getRaw());
             assert mc.player != null;
             mc.player.swingHand(Hand.MAIN_HAND);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                mc.interactionManager.attackEntity(mc.player, entity.getRaw());
+                base.attackEntity(mc.player, entity.getRaw());
                 assert mc.player != null;
                 mc.player.swingHand(Hand.MAIN_HAND);
                 wait.release();
@@ -328,6 +359,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
     public InteractionManagerHelper attack(int x, int y, int z, String direction) throws InterruptedException {
+        //noinspection DataFlowIssue
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
     }
 
@@ -354,6 +386,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, await: boolean")
     public InteractionManagerHelper attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
+        //noinspection DataFlowIssue
         return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
     }
 
@@ -368,16 +401,16 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit, await: boolean")
     public InteractionManagerHelper attack(int x, int y, int z, int direction, boolean await) throws InterruptedException {
-        assert mc.interactionManager != null;
+        if (!checkBase(autoUpdateBase)) return this;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
+            base.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
             assert mc.player != null;
             mc.player.swingHand(Hand.MAIN_HAND);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                mc.interactionManager.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
+                base.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
                 assert mc.player != null;
                 mc.player.swingHand(Hand.MAIN_HAND);
                 wait.release();
@@ -392,11 +425,12 @@ public class InteractionManagerHelper {
     /**
      * breaks a block, will wait till it's done<br>
      * you can use {@code ClientPlayerEntityHelper#setTarget()} to specify which block to break
-     * @return result
+     * @return result, or null if interaction manager is unavailable
      * @see InteractionManagerHelper#setTarget(int, int, int, String)
      * @throws InterruptedException
      * @since 1.9.0
      */
+    @Nullable
     public InteractionProxy.Break.BreakBlockResult breakBlock() throws InterruptedException {
         InteractionProxy.Break.BreakBlockResult insta = checkInstaBreak();
         if (insta != null) return insta;
@@ -431,7 +465,8 @@ public class InteractionManagerHelper {
      * @throws InterruptedException
      * @since 1.9.0
      */
-    public @Nullable InteractionProxy.Break.BreakBlockResult breakBlock(int x, int y, int z) throws InterruptedException {
+    @Nullable
+    public InteractionProxy.Break.BreakBlockResult breakBlock(int x, int y, int z) throws InterruptedException {
         return breakBlock(new BlockPos(x, y, z));
     }
 
@@ -449,11 +484,13 @@ public class InteractionManagerHelper {
      * @throws InterruptedException
      * @since 1.9.0
      */
-    public @Nullable InteractionProxy.Break.BreakBlockResult breakBlock(BlockPosHelper pos) throws InterruptedException {
+    @Nullable
+    public InteractionProxy.Break.BreakBlockResult breakBlock(BlockPosHelper pos) throws InterruptedException {
         return breakBlock(pos.getRaw());
     }
 
-    private @Nullable InteractionProxy.Break.BreakBlockResult breakBlock(BlockPos pos) throws InterruptedException {
+    @Nullable
+    private InteractionProxy.Break.BreakBlockResult breakBlock(BlockPos pos) throws InterruptedException {
         InteractionProxy.Break.BreakBlockResult insta = checkInstaBreak(pos);
         if (insta != null) return insta;
         InteractionProxy.Target.setTargetBlock(pos, 0);
@@ -483,31 +520,35 @@ public class InteractionManagerHelper {
         return this;
     }
 
-    private @Nullable InteractionProxy.Break.BreakBlockResult checkInstaBreak() throws InterruptedException {
-        if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) return null;
-        return checkInstaBreak(((BlockHitResult) mc.crosshairTarget).getBlockPos());
+    @Nullable
+    private InteractionProxy.Break.BreakBlockResult checkInstaBreak() throws InterruptedException {
+        HitResult target = mc.crosshairTarget;
+        if (target == null || target.getType() != HitResult.Type.BLOCK) return null;
+        return checkInstaBreak(((BlockHitResult) target).getBlockPos());
     }
 
-    private @Nullable InteractionProxy.Break.BreakBlockResult checkInstaBreak(BlockPos pos) throws InterruptedException {
-        if (mc.world == null || mc.player == null || mc.interactionManager == null
-        ||  ((IClientPlayerInteractionManager) mc.interactionManager).jsmacros_getBlockBreakingCooldown() != 0
+    @Nullable
+    private InteractionProxy.Break.BreakBlockResult checkInstaBreak(BlockPos pos) throws InterruptedException {
+        if (!checkBase(autoUpdateBase)) return InteractionProxy.Break.BreakBlockResult.UNAVAILABLE;
+        if (mc.world == null || mc.player == null
+        ||  ((IClientPlayerInteractionManager) base).jsmacros_getBlockBreakingCooldown() != 0
         ||  mc.world.getBlockState(pos).calcBlockBreakingDelta(mc.player, mc.player.getWorld(), pos) < 1.0F
         ) return null;
         int side = 0;
-        if (mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.BLOCK) {
-            side = ((BlockHitResult) mc.crosshairTarget).getSide().getId();
+        HitResult target = mc.crosshairTarget;
+        if (target != null && target.getType() == HitResult.Type.BLOCK) {
+            side = ((BlockHitResult) target).getSide().getId();
         }
         attack(pos.getX(), pos.getY(), pos.getZ(), side, true);
         return new InteractionProxy.Break.BreakBlockResult("SUCCESS", new BlockPosHelper(pos));
     }
 
     private void preBreakBlock() throws InterruptedException {
-        if (mc.interactionManager == null) return;
-        if (((IClientPlayerInteractionManager) mc.interactionManager).jsmacros_getBlockBreakingCooldown() == 0) {
-            if (mc.crosshairTarget == null || mc.crosshairTarget.getType() != HitResult.Type.BLOCK) return;
-            BlockHitResult target = (BlockHitResult) mc.crosshairTarget;
-            BlockPos pos = target.getBlockPos();
-            attack(pos.getX(), pos.getY(), pos.getZ(), target.getSide().getId(), true);
+        if (((IClientPlayerInteractionManager) base).jsmacros_getBlockBreakingCooldown() == 0) {
+            HitResult target = mc.crosshairTarget;
+            if (target == null || target.getType() != HitResult.Type.BLOCK) return;
+            BlockPos pos = ((BlockHitResult) target).getBlockPos();
+            attack(pos.getX(), pos.getY(), pos.getZ(), ((BlockHitResult) target).getSide().getId(), true);
         }
     }
 
@@ -515,8 +556,8 @@ public class InteractionManagerHelper {
      * @since 1.8.0
      */
     public boolean isBreakingBlock() {
-        assert mc.interactionManager != null;
-        return mc.interactionManager.isBreakingBlock();
+        checkBase(autoUpdateBase);
+        return base.isBreakingBlock();
     }
 
     /**
@@ -583,14 +624,14 @@ public class InteractionManagerHelper {
      * @since 1.6.0
      */
     public InteractionManagerHelper interactEntity(EntityHelper<?> entity, boolean offHand, boolean await) throws InterruptedException {
-        assert mc.interactionManager != null;
+        if (!checkBase(autoUpdateBase)) return this;
         if (entity.getRaw() == mc.player) {
             throw new AssertionError("Can't interact with self!");
         }
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
+            ActionResult result = base.interactEntity(mc.player, entity.getRaw(), hand);
             assert mc.player != null;
             if (result.isAccepted()) {
                 mc.player.swingHand(hand);
@@ -598,7 +639,7 @@ public class InteractionManagerHelper {
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactEntity(mc.player, entity.getRaw(), hand);
+                ActionResult result = base.interactEntity(mc.player, entity.getRaw(), hand);
                 assert mc.player != null;
                 if (result.isAccepted()) {
                     mc.player.swingHand(hand);
@@ -624,11 +665,11 @@ public class InteractionManagerHelper {
      * @since 1.6.0
      */
     public InteractionManagerHelper interactItem(boolean offHand, boolean await) throws InterruptedException {
-        assert mc.interactionManager != null;
+        if (!checkBase(autoUpdateBase)) return this;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
+            ActionResult result = base.interactItem(mc.player, hand);
             assert mc.player != null;
             if (result.isAccepted()) {
                 mc.player.swingHand(hand);
@@ -636,7 +677,7 @@ public class InteractionManagerHelper {
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactItem(mc.player, hand);
+                ActionResult result = base.interactItem(mc.player, hand);
                 assert mc.player != null;
                 if (result.isAccepted()) {
                     mc.player.swingHand(hand);
@@ -658,6 +699,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
+        //noinspection DataFlowIssue
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
     }
 
@@ -685,6 +727,7 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean, await: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
+        //noinspection DataFlowIssue
         return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
     }
 
@@ -699,11 +742,11 @@ public class InteractionManagerHelper {
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit, offHand: boolean, await: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
-        assert mc.interactionManager != null;
+        if (!checkBase(autoUpdateBase)) return this;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = Core.getInstance().profile.checkJoinedThreadStack();
         if (joinedMain) {
-            ActionResult result = mc.interactionManager.interactBlock(mc.player, hand,
+            ActionResult result = base.interactBlock(mc.player, hand,
                     new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
             );
             assert mc.player != null;
@@ -713,7 +756,7 @@ public class InteractionManagerHelper {
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                ActionResult result = mc.interactionManager.interactBlock(mc.player, hand,
+                ActionResult result = base.interactBlock(mc.player, hand,
                         new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
                 );
                 assert mc.player != null;

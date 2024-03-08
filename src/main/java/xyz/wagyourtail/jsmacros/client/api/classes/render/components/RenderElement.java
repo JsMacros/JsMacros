@@ -5,6 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Quaternionf;
+import xyz.wagyourtail.doclet.DocletIgnore;
 
 /**
  * @author Wagyourtail
@@ -15,14 +16,17 @@ public interface RenderElement extends Drawable {
 
     int getZIndex();
 
+    @DocletIgnore
     default void render3D(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         render(drawContext, mouseX, mouseY, delta);
     }
 
+    @DocletIgnore
     default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation) {
         setupMatrix(matrices, x, y, scale, rotation, 0, 0, false);
     }
 
+    @DocletIgnore
     default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation, double width, double height, boolean rotateAroundCenter) {
         matrices.translate(x, y, 0);
         matrices.scale(scale, scale, 1);

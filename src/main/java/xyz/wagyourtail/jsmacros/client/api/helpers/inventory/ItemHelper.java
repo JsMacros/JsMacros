@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
@@ -43,6 +44,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * not in a group.
      * @since 1.8.4
      */
+    @Nullable
     public List<ItemStackHelper> getGroupIcon() {
         return getGroups() == null ? null : getGroups().map(ItemGroup::getIcon).map(ItemStackHelper::new).collect(Collectors.toList());
     }
@@ -91,6 +93,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * corresponding block.
      * @since 1.8.4
      */
+    @Nullable
     public BlockHelper getBlock() {
         if (isBlockItem()) {
             return new BlockHelper(((BlockItem) base).getBlock());
@@ -130,6 +133,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return the recipe remainder if it exists and {@code null} otherwise.
      * @since 1.8.4
      */
+    @Nullable
     public ItemHelper getRecipeRemainder() {
         return base.getRecipeRemainder() == null ? null : new ItemHelper(base.getRecipeRemainder());
     }
@@ -215,6 +219,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @return the food component of this item or {@code null} if this item is not food.
      * @since 1.8.4
      */
+    @Nullable
     public FoodComponentHelper getFood() {
         if (isFood()) {
             return new FoodComponentHelper(base.getFoodComponent());

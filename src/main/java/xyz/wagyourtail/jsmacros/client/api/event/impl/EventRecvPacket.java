@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.network.packet.Packet;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -13,10 +14,12 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 @Event(value = "RecvPacket", cancellable = true)
 @SuppressWarnings("unused")
 public class EventRecvPacket extends BaseEvent {
+    @Nullable
     public Packet<?> packet;
     @DocletReplaceReturn("PacketName")
     public final String type;
 
+    @SuppressWarnings("NullableProblems")
     public EventRecvPacket(Packet<?> packet) {
         this.packet = packet;
         this.type = PacketByteBufferHelper.getPacketName(packet);

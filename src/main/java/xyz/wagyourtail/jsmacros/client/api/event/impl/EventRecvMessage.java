@@ -14,11 +14,13 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
  */
 @Event(value = "RecvMessage", oldName = "RECV_MESSAGE", cancellable = true)
 public class EventRecvMessage extends BaseEvent {
+    @Nullable
     public TextHelper text;
 
     /**
      * @since 1.8.2
      */
+    @Nullable
     public byte[] signature;
 
     /**

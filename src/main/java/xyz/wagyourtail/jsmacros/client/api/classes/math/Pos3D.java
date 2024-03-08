@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.math;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 
 import java.util.Objects;
@@ -216,4 +217,11 @@ public class Pos3D extends Pos2D {
         return Objects.hash(super.hashCode(), z);
     }
 
+    public int compareTo(@NotNull Pos3D o) {
+        int i = super.compareTo(o);
+        if (i == 0) {
+            i = Double.compare(z, o.z);
+        }
+        return i;
+    }
 }

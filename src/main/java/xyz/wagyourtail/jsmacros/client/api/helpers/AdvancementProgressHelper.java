@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementProgress;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -42,9 +43,9 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @since 1.8.4
      */
     public Map<String, Long> getCriteria() {
-        return ((MixinAdvancementProgress) base).getCriteriaProgresses().entrySet().stream().filter(e -> e.getValue().getObtainedDate() != null).collect(Collectors.toMap(
+        return ((MixinAdvancementProgress) base).getCriteriaProgresses().entrySet().stream().filter(e -> e.getValue().getObtainedTime() != null).collect(Collectors.toMap(
                 Map.Entry::getKey,
-                criterionProgressEntry -> criterionProgressEntry.getValue().getObtainedDate().toEpochMilli()
+                criterionProgressEntry -> criterionProgressEntry.getValue().getObtainedTime().toEpochMilli()
         ));
     }
 
@@ -52,7 +53,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @return all requirements of this advancement.
      * @since 1.8.4
      */
-    public String[][] getRequirements() {
+    public List<List<String>> getRequirements() {
         return ((MixinAdvancementProgress) base).getRequirements().requirements();
     }
 
@@ -106,13 +107,13 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
 
     /**
      * @param criteria the criteria
-     * @return the completion date of the given criteria or {@code null} if the criteria is not met
+     * @return the completion date of the given criteria or {@code -1} if the criteria is not met
      * yet.
      * @since 1.8.4
      */
     public long getCriterionProgress(String criteria) {
         CriterionProgress progress = base.getCriterionProgress(criteria);
-        return progress == null ? -1 : progress.getObtainedDate().toEpochMilli();
+        return progress == null ? -1 : progress.getObtainedTime().toEpochMilli();
     }
 
     /**

@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
@@ -14,6 +14,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.world.level.storage.LevelStorage;
 import net.minecraft.world.level.storage.LevelStorageException;
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -181,7 +183,7 @@ public class FClient extends PerExecLibrary {
             } else {
                 mc.disconnect();
             }
-            mc.createIntegratedServerLoader().start(null, folderName);
+            mc.createIntegratedServerLoader().start(folderName, () -> mc.setScreen(new TitleScreen()));
         });
     }
 
@@ -233,7 +235,7 @@ public class FClient extends PerExecLibrary {
      * <p>
      * {@code callback} defaults to {@code null}
      */
-    public void disconnect(MethodWrapper<Boolean, Object, Object, ?> callback) {
+    public void disconnect(@Nullable MethodWrapper<Boolean, Object, Object, ?> callback) {
         mc.execute(() -> {
             boolean isWorld = mc.world != null;
             boolean isInSingleplayer = mc.isInSingleplayer();
@@ -311,10 +313,7 @@ public class FClient extends PerExecLibrary {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
         ctx.wrapSleep(() -> {
-            int i2 = i;
-            while (--i2 >= 0) {
-                tickSynchronizer.waitTick();
-            }
+            tickSynchronizer.waitTicks(i);
         });
     }
 
@@ -342,6 +341,7 @@ public class FClient extends PerExecLibrary {
      * @throws UnknownHostException
      * @since 1.6.5
      */
+    @DocletReplaceParams("ip: string, callback: MethodWrapper<ServerInfoHelper | null, java.io.IOException | null>")
     public void pingAsync(String ip, MethodWrapper<ServerInfoHelper, IOException, Object, ?> callback) {
         CompletableFuture.runAsync(() -> {
             ServerInfo info = new ServerInfo("", ip, ServerInfo.ServerType.OTHER);
@@ -382,6 +382,7 @@ public class FClient extends PerExecLibrary {
      * @return the mod container for the given modId or {@code null} if the mod is not loaded.
      * @since 1.8.4
      */
+    @Nullable
     public ModContainerHelper<?> getMod(String modId) {
         return JsMacros.getModLoader().getMod(modId);
     }
@@ -435,7 +436,6 @@ public class FClient extends PerExecLibrary {
      *
      * @since 1.8.4
      */
-    @DocletReplaceReturn("never")
     public void exitGamePeacefully() {
         mc.scheduleStop();
     }

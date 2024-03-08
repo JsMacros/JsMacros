@@ -4,6 +4,7 @@ import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -31,6 +32,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
      */
     public static class ButtonBuilder extends AbstractWidgetBuilder<ButtonBuilder, ButtonWidget, ButtonWidgetHelper<ButtonWidget>> {
 
+        @Nullable
         private MethodWrapper<ButtonWidgetHelper<ButtonWidget>, IScreen, Object, ?> action;
 
         public ButtonBuilder(IScreen screen) {
@@ -64,6 +66,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @return the action to run when the button is pressed.
          * @since 1.8.4
          */
+        @Nullable
         public MethodWrapper<ButtonWidgetHelper<ButtonWidget>, IScreen, Object, ?> getAction() {
             return action;
         }
@@ -73,7 +76,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @return self for chaining.
          * @since 1.8.4
          */
-        public ButtonBuilder action(MethodWrapper<ButtonWidgetHelper<ButtonWidget>, IScreen, Object, ?> action) {
+        public ButtonBuilder action(@Nullable MethodWrapper<ButtonWidgetHelper<ButtonWidget>, IScreen, Object, ?> action) {
             this.action = action;
             return this;
         }
@@ -102,6 +105,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
      */
     public static class TexturedButtonBuilder extends AbstractWidgetBuilder<TexturedButtonBuilder, TexturedButtonWidget, ButtonWidgetHelper<TexturedButtonWidget>> {
 
+        @Nullable
         private MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> action;
 
         private Identifier enabled;
@@ -140,6 +144,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @return the action to run when the button is pressed.
          * @since 1.8.4
          */
+        @Nullable
         public MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> getAction() {
             return action;
         }
@@ -149,7 +154,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @return self for chaining.
          * @since 1.8.4
          */
-        public TexturedButtonBuilder action(MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> action) {
+        public TexturedButtonBuilder action(@Nullable MethodWrapper<ButtonWidgetHelper<TexturedButtonWidget>, IScreen, Object, ?> action) {
             this.action = action;
             return this;
         }

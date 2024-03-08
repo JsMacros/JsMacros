@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import com.neovisionaries.ws.client.*;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -20,22 +21,27 @@ public class Websocket {
     /**
      * calls your method as a {@link java.util.function.Consumer BiConsumer}&lt;{@link WebSocket}, {@link List}&lt;{@link String}&gt;&gt;
      */
+    @Nullable
     public MethodWrapper<WebSocket, Map<String, List<String>>, Object, ?> onConnect;
     /**
      * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link String}&gt;
      */
+    @Nullable
     public MethodWrapper<WebSocket, String, Object, ?> onTextMessage;
     /**
      * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link Disconnected}&gt;
      */
+    @Nullable
     public MethodWrapper<WebSocket, Disconnected, Object, ?> onDisconnect;
     /**
      * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link WebSocketException}&gt;
      */
+    @Nullable
     public MethodWrapper<WebSocket, WebSocketException, Object, ?> onError;
     /**
      * calls your method as a {@link java.util.function.BiConsumer BiConsumer}&lt;{@link WebSocket}, {@link WebSocketFrame}&gt;
      */
+    @Nullable
     public MethodWrapper<WebSocket, WebSocketFrame, Object, ?> onFrame;
 
     public Websocket(String address) throws IOException {
@@ -107,7 +113,7 @@ public class Websocket {
     }
 
     /**
-     * @return
+     * @return self
      * @throws WebSocketException
      * @since 1.1.9
      */
@@ -126,7 +132,7 @@ public class Websocket {
 
     /**
      * @param text
-     * @return
+     * @return self
      * @since 1.1.9
      */
     public Websocket sendText(String text) {
@@ -135,7 +141,7 @@ public class Websocket {
     }
 
     /**
-     * @return
+     * @return self
      * @since 1.1.9
      */
     public Websocket close() {
@@ -145,7 +151,7 @@ public class Websocket {
 
     /**
      * @param closeCode
-     * @return
+     * @return self
      * @since 1.1.9
      */
     public Websocket close(int closeCode) {
