@@ -12,7 +12,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
  * @author aMelonRind
- * @since 1.9.0
+ * @since 1.9.1
  */
 @SuppressWarnings("unused")
 public class HitResultHelper<T extends HitResult> extends BaseHelper<T> {

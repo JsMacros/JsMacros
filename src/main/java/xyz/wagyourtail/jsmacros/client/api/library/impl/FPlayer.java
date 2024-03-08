@@ -133,7 +133,7 @@ public class FPlayer extends BaseLibrary {
 
     /**
      * @return the raycast result.
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public HitResultHelper.Block detailedRayTraceBlock(double distance, boolean fluid) {
         assert mc.world != null;

@@ -184,7 +184,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
 
     /**
      * @return current hitResult
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public @Nullable HitResultHelper<?> getTarget() {
         return HitResultHelper.resolve(mc.crosshairTarget);

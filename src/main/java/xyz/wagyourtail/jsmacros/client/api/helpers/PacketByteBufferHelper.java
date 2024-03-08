@@ -993,6 +993,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param hitResult the hit result to store
      * @return self for chaining.
      * @since 1.8.4
+     * @deprecated use {@link PacketByteBufferHelper#writeBlockHitResult(HitResultHelper.Block hitResult)} instead.
      */
     @Deprecated
     public PacketByteBufferHelper writeBlockHitResult(BlockHitResult hitResult) {
@@ -1003,7 +1004,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @param hitResult the hit result to store
      * @return self for chaining.
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public PacketByteBufferHelper writeBlockHitResult(HitResultHelper.Block hitResult) {
         base.writeBlockHitResult(hitResult.getRaw());
@@ -1033,6 +1034,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @return the read block hit result.
      * @since 1.8.4
+     * @deprecated use {@link PacketByteBufferHelper#readBlockHitResultHelper()} instead.
      */
     @Deprecated
     public BlockHitResult readBlockHitResult() {
@@ -1042,6 +1044,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @return a map of the block hit result's data and their values.
      * @since 1.8.4
+     * @deprecated use {@link PacketByteBufferHelper#readBlockHitResultHelper()} instead.
      */
     @Deprecated
     public Map<String, Object> readBlockHitResultMap() {
@@ -1051,7 +1054,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
 
     /**
      * @return the read block hit result as a helper.
-     * @since 1.9.0
+     * @since 1.9.1
      */
     public HitResultHelper.Block readBlockHitResultHelper() {
         return new HitResultHelper.Block(base.readBlockHitResult());
