@@ -27,8 +27,8 @@ public class PackageTree {
     );
     private String pkgName;
     private final Map<String, PackageTree> children = new TreeMap<>();
-    private final Set<ClassParser> classes = new TreeSet<>((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.className, b.className));
-    private final Map<ClassParser, String> compiledClasses = new LinkedHashMap<>();
+    private final Set<ClassParser> classes = new LinkedHashSet<>();
+    private final Map<ClassParser, String> compiledClasses = new TreeMap<>((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.className, b.className));
 
     public boolean dirty = true;
 
