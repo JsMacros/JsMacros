@@ -86,9 +86,14 @@ public class ClassParser extends AbstractParser {
             System.out.println("Added mixin interface " + e.getSimpleName() + " on class " + type.getSimpleName());
         }
         if (interfaces.isEmpty()) return "";
-        StringBuilder s = new StringBuilder(" extends ");
+
+        Set<String> strings = new TreeSet<>();
         for (TypeMirror ifa : interfaces) {
-            String sup = transformType(ifa, false, true);
+            strings.add(transformType(ifa, false, true));
+        }
+
+        StringBuilder s = new StringBuilder(" extends ");
+        for (String sup : strings) {
             if (sup.startsWith("/* net.minecraft")) {
                 s.append(sup, 0, sup.length() - 3).append("JavaObject");
             } else {
