@@ -747,6 +747,7 @@ public class Inventory<T extends HandledScreen<?>> {
         return this.inventory.getTitle().getString();
     }
 
+    @DocletReplaceReturn("IScreen")
     public T getRawContainer() {
         return this.inventory;
     }
