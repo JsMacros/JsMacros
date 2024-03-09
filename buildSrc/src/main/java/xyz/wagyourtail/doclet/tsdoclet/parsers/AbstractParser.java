@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.StringHelpers;
 import xyz.wagyourtail.doclet.*;
 import xyz.wagyourtail.doclet.tsdoclet.Main;
+import xyz.wagyourtail.doclet.tsdoclet.PackageTree;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
@@ -295,7 +296,7 @@ public abstract class AbstractParser {
 
                 boolean shortified = false;
                 String classpath = ((PackageElement) typeElement).getQualifiedName().toString();
-                if (javaShortifies.contains(classpath + "." + rawType)) {
+                if (!isExtends && javaShortifies.contains(classpath + "." + rawType)) {
                     shortified = true;
                     rawType.insert(0, "Java");
                     if (isParamType && rawType.toString().equals("JavaClass")) rawType.append("Arg");
@@ -322,8 +323,10 @@ public abstract class AbstractParser {
                     rawType.append(">");
                 }
 
-                if (rawType.toString().startsWith("net.minecraft")) {
-                    return "/* " + rawType.toString().replaceAll("/\\* ", "").replaceAll(" \\*/(?: any)?", "") + " */ any";
+                String res = rawType.toString();
+
+                if (res.startsWith("net.minecraft")) {
+                    return "/* " + res.replaceAll("/\\* ", "").replaceAll(" \\*/(?: any)?", "") + " */ any";
                 }
 
                 AnnotationMirror mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null);
@@ -336,33 +339,31 @@ public abstract class AbstractParser {
                     return "typeof " + Main.getAnnotationValue("value", mirror);
                 }
 
-                if (rawType.toString().equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) {
+                if (res.equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) {
                     return "Events.BaseEvent";
                 }
 
                 Main.classes.addClass(((DeclaredType) type).asElement());
-                if (!isExtends && rawType.toString().startsWith("java.lang")) {
-                    if (javaNumberType.containsKey(rawType.toString())) {
-                        return isParamType ? javaNumberType.get(rawType.toString()) : "number";
+                if (!isExtends && res.startsWith("java.lang")) {
+                    if (javaNumberType.containsKey(res)) {
+                        return isParamType ? javaNumberType.get(res) : "number";
                     }
 
-                    switch (rawType.toString()) {
+                    switch (res) {
                         case "java.lang.Boolean" -> { return "boolean"; }
                         case "java.lang.String"  -> { return "string";  }
                         case "java.lang.Object"  -> { return "any";     }
                     }
                 } else {
-                    if (shortified) return rawType.toString();
+                    if (shortified) return res;
                 }
 
-                String res = rawType.toString();
-                if (!isPackage
-                ||  !res.startsWith(this.path + ".")
-                ||  (res.contains("<") ?
-                    res.substring(this.path.length() + 1, res.indexOf("<")) :
-                    res.substring(this.path.length() + 1)
-                    ).contains(".")
-                ) return "Packages." + res;
+                if (!isPackage || !res.startsWith(this.path + ".")) return "Packages." + res;
+
+                String withoutTypeParams = res.contains("<") ? res.substring(0, res.indexOf("<")) : res;
+
+                if (withoutTypeParams.substring(this.path.length() + 1).contains(".")) return "Packages." + res;
+                if (PackageTree.predefinedClasses.contains(withoutTypeParams)) return res;
                 return res.substring(this.path.length() + 1);
             }
             case TYPEVAR -> {

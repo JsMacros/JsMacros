@@ -426,7 +426,7 @@ declare namespace Packages {
                 static of<E>(...elements: JavaVarArgs<E>): JavaList<E>;
 
             }
-            interface List<E> extends Collection<E>, lang.Iterable<E> {
+            interface List<E> extends Collection<E>, lang.Iterable<E>, globalThis.Array<E> {
                 [n: int | `${bigint}`]: E;
 
                 add(index: int, element: E): void;
@@ -470,7 +470,7 @@ declare namespace Packages {
                 static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V, k10: K, v10: V): Map<K, V>;
 
             }
-            interface Map<K, V> {
+            interface Map<K, V> extends globalThis.Map<K, V> {
                 [k: string | number]: V;
 
                 clear(): void;
