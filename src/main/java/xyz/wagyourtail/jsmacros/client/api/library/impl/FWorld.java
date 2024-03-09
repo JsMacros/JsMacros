@@ -432,7 +432,7 @@ public class FWorld extends BaseLibrary {
     @Nullable
     @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
     @DocletReplaceParams("...types: E[]")
-    @DocletReplaceReturn("JavaList<EntityTypeFromId<E>>")
+    @DocletReplaceReturn("JavaList<EntityTypeFromId<E>> | null")
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registries.ENTITY_TYPE.getId(entity.getType()).toString());
@@ -461,7 +461,7 @@ public class FWorld extends BaseLibrary {
     @Nullable
     @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
     @DocletReplaceParams("distance: double, ...types: E[]")
-    @DocletReplaceReturn("JavaList<EntityTypeFromId<E>>")
+    @DocletReplaceReturn("JavaList<EntityTypeFromId<E>> | null")
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         ClientPlayerEntity player = mc.player;
         if (player == null) return null;
@@ -559,7 +559,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.1.2
      */
     @Nullable
-    @DocletReplaceReturn("Dimension")
+    @DocletReplaceReturn("Dimension | null")
     public String getDimension() {
         ClientWorld world = mc.world;
         if (world == null) return null;
@@ -571,7 +571,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.1.5
      */
     @Nullable
-    @DocletReplaceReturn("Biome")
+    @DocletReplaceReturn("Biome | null")
     public String getBiome() {
         ClientWorld world = mc.world;
         ClientPlayerEntity player = mc.player;
@@ -860,7 +860,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.2.2 [Citation Needed]
      */
     @Nullable
-    @DocletReplaceReturn("Biome")
+    @DocletReplaceReturn("Biome | null")
     public String getBiomeAt(int x, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
@@ -876,7 +876,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.8.4
      */
     @Nullable
-    @DocletReplaceReturn("Biome")
+    @DocletReplaceReturn("Biome | null")
     public String getBiomeAt(int x, int y, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
