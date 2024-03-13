@@ -7,7 +7,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
 /**
- * @author FlareStormGaming
+ * @author Quinntyx
  * @since 1.6.5
  */
 @Event("Heal")
