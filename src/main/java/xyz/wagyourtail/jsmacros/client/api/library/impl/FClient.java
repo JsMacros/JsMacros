@@ -76,7 +76,7 @@ public class FClient extends PerExecLibrary {
     }
 
     /**
-     * @return the NetworkManagerHelper
+     * @return a helper for interacting with minecraft's networking and sending packets
      * @since 1.9.2
      */
     public NetworkHandlerHelper getNetworkHandler() {
