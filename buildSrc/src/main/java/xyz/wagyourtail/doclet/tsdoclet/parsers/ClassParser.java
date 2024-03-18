@@ -5,6 +5,7 @@ import xyz.wagyourtail.StringHelpers;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import java.lang.Override;
@@ -12,20 +13,22 @@ import java.util.*;
 
 public class ClassParser extends AbstractParser {
     private static final Set<String> objectAliases = Set.of("void", "any", "JavaObject", "Object");
-    public static Map<TypeElement, Set<TypeElement>> mixinInterfaceMap = new LinkedHashMap<>();
+    public static final Map<TypeElement, Set<TypeElement>> mixinInterfaceMap = new LinkedHashMap<>();
     public final String className;
-    private Set<TypeElement> superMcClasses;
+    private final Set<TypeElement> superMcClasses = new LinkedHashSet<>();
     private boolean doesDirectExtendMc = false;
     private Set<TypeElement> mixinInterfaces;
 
     public ClassParser(TypeElement type) {
         super(type);
         StringBuilder s = new StringBuilder(type.getSimpleName());
+
         Element enclosing = type.getEnclosingElement();
         while (enclosing.getKind() == ElementKind.INTERFACE || enclosing.getKind() == ElementKind.CLASS) {
             s.insert(0, enclosing.getSimpleName() + "$");
             enclosing = enclosing.getEnclosingElement();
         }
+
         className = s.toString();
     }
 
@@ -36,6 +39,7 @@ public class ClassParser extends AbstractParser {
     public String getClassName(boolean typeParams, boolean defaultToAny) {
         if (!typeParams) return className;
         StringBuilder s = new StringBuilder(className);
+
         List<? extends TypeParameterElement> params = this.type.getTypeParameters();
         if (params != null && !params.isEmpty()) {
             s.append("<");
@@ -45,37 +49,45 @@ public class ClassParser extends AbstractParser {
                 if (!ext.endsWith("any")) {
                     s.append(" extends ").append(ext);
                     if (defaultToAny) s.append(" = any");
-                } else if (ext.startsWith("/* net.minecraft")) {
+                } else if (ext.startsWith("/* net.minecraft.")) {
                     s.append(" = ").append(ext);
                 } else if (defaultToAny) s.append(" = any");
                 s.append(", ");
             }
-            s.setLength(s.length() - 2);
+            s.setLength(s.length() - ", ".length());
             s.append(">");
         }
+
         return s.toString();
     }
 
     private String getClassHeader() {
-        StringBuilder s = new StringBuilder("static readonly class: JavaClass<").append(getClassName(false));
+        StringBuilder s = new StringBuilder("static readonly class: JavaClass<");
+        s.append(getClassName(false));
+
         int params = type.getTypeParameters().size();
         if (params > 0) {
-            s.append("<").append(", any".repeat(params).substring(2)).append(">");
+            s.append("<").append(
+                    ", any".repeat(params).substring(", ".length())
+            ).append(">");
         }
+
         s.append(">;\n/** @deprecated */ static prototype: undefined;\n");
         return s.toString();
     }
 
     private String buildExtends() {
         StringBuilder s = new StringBuilder(" extends ");
+
         String sup = transformType(type.getSuperclass(), false, true);
         if (objectAliases.contains(sup)) {
             s.append("java.lang.Object");
-        } else if (sup.startsWith("/* net.minecraft")) {
-            s.append(sup, 0, sup.length() - 3).append("java.lang.Object");
+        } else if (sup.startsWith("/* net.minecraft.")) {
+            s.append(sup, 0, sup.length() - "any".length()).append("java.lang.Object");
         } else {
             s.append(sup);
         }
+
         return s.toString();
     }
 
@@ -94,14 +106,15 @@ public class ClassParser extends AbstractParser {
 
         StringBuilder s = new StringBuilder(" extends ");
         for (String sup : strings) {
-            if (sup.startsWith("/* net.minecraft")) {
-                s.append(sup, 0, sup.length() - 3).append("JavaObject");
+            if (sup.startsWith("/* net.minecraft.")) {
+                s.append(sup, 0, sup.length() - "any".length()).append("JavaObject");
             } else {
                 s.append(sup);
             }
             s.append(", ");
         }
-        s.setLength(s.length() - 2);
+        s.setLength(s.length() - ", ".length());
+
         return s.toString();
     }
 
@@ -110,12 +123,14 @@ public class ClassParser extends AbstractParser {
             TypeMirror t = c.getSuperclass();
             if (t instanceof DeclaredType) {
                 TypeElement e = (TypeElement) ((DeclaredType) t).asElement();
-                if (transformType(t).startsWith("/* net.minecraft")) {
+                if (isMinecraftClass(t)) {
                     superMcClasses.add(e);
-                    if (doesDirectExtendMc && mixinInterfaceMap.containsKey(e)) {
+                    if (doesDirectExtendMc) {
                         Set<TypeElement> ifs = mixinInterfaceMap.get(e);
-                        set.addAll(ifs);
-                        mixinInterfaces.addAll(ifs);
+                        if (ifs != null) {
+                            set.addAll(ifs);
+                            mixinInterfaces.addAll(ifs);
+                        }
                     }
                 } else {
                     set.add(e);
@@ -126,7 +141,7 @@ public class ClassParser extends AbstractParser {
 
         for (TypeMirror t : c.getInterfaces()) {
             TypeElement e = (TypeElement) ((DeclaredType) t).asElement();
-            if (transformType(t).startsWith("/* net.minecraft")) {
+            if (isMinecraftClass(t)) {
                 superMcClasses.add(e);
             } else {
                 set.add(e);
@@ -140,30 +155,49 @@ public class ClassParser extends AbstractParser {
     }
 
     private boolean isObfuscated(Element m, TypeElement type) {
+        // probably doesn't cover edge cases because this annotation is optional
         if (m.getAnnotation(Override.class) == null) return false;
         if (m.getKind() != ElementKind.METHOD) return false;
         for (TypeElement clz : superMcClasses) {
-            for (Element sel : clz.getEnclosedElements()) {
-                if (sel.getKind() != ElementKind.METHOD) continue;
-                if (Main.elementUtils.overrides(
-                    (ExecutableElement) m,
-                    (ExecutableElement) sel,
-                    type
-                )) return true;
+            for (Element e : clz.getEnclosedElements()) {
+                if (e.getKind() != ElementKind.METHOD) continue;
+                if (overrides(m, e, type)) return true;
             }
         }
         return false;
     }
 
+    private boolean isMinecraftClass(TypeMirror type) {
+        if (type.getKind() != TypeKind.DECLARED) return false;
+        Element e = ((DeclaredType) type).asElement();
+        do {
+            e = e.getEnclosingElement();
+        } while (e.getKind() == ElementKind.CLASS || e.getKind() == ElementKind.INTERFACE);
+
+        return ((PackageElement) e).getQualifiedName().toString().startsWith("net.minecraft.");
+    }
+
+    private boolean overrides(Element overrider, Element overridden) {
+        return overrides(overrider, overridden, type);
+    }
+
+    private boolean overrides(Element overrider, Element overridden, TypeElement type) {
+        return Main.elementUtils.overrides(
+                (ExecutableElement) overrider,
+                (ExecutableElement) overridden,
+                type
+        );
+    }
+
     @Override
     public String genTSInterface() {
-        superMcClasses = new LinkedHashSet<>();
+        superMcClasses.clear();
         Set<TypeElement> superClasses = new LinkedHashSet<>();
         Set<Element> fields = new LinkedHashSet<>();
         Set<Element> methods = new LinkedHashSet<>();
         Set<Element> constructors = new LinkedHashSet<>();
 
-        if (transformType(type.getSuperclass()).startsWith("/* net.minecraft")) {
+        if (isMinecraftClass(type.getSuperclass())) {
             doesDirectExtendMc = true;
             mixinInterfaces = new LinkedHashSet<>();
         }
@@ -187,36 +221,35 @@ public class ClassParser extends AbstractParser {
                 methodNames.add(m.getSimpleName());
             }
         }
+
         // add super methods with same name to this class because js extending works a bit different
         if (!methodNames.isEmpty()) {
             Set<Element> superMethods = new LinkedHashSet<>();
             for (TypeElement clz : superClasses) {
                 outer:
-                for (Element sel : clz.getEnclosedElements()) {
-                    if (sel.getKind() != ElementKind.METHOD) continue;
-                    if (sel.getModifiers().contains(Modifier.STATIC)) continue;
-                    Name name = sel.getSimpleName();
+                for (Element e : clz.getEnclosedElements()) {
+                    if (e.getKind() != ElementKind.METHOD) continue;
+                    if (e.getModifiers().contains(Modifier.STATIC)) continue;
+                    Name name = e.getSimpleName();
                     if (!methodNames.contains(name)) continue;
+
+                    // if this class's method overrides the method, continue outer
                     for (Element m : methods) {
                         if (!m.getSimpleName().equals(name)) continue;
-                        if (Main.elementUtils.overrides(
-                            (ExecutableElement) m,
-                            (ExecutableElement) sel,
-                            type
-                        )) continue outer;
+                        if (overrides(m, e)) continue outer;
                     }
+
+                    // if the method already added to the set, continue outer
                     for (Element m : superMethods) {
                         if (!m.getSimpleName().equals(name)) continue;
-                        if (Main.elementUtils.overrides(
-                            (ExecutableElement) m,
-                            (ExecutableElement) sel,
-                            type
-                        )) continue outer;
+                        if (overrides(m, e)) continue outer;
                     }
-                    if (!isObfuscated(sel, clz)) superMethods.add(sel);
+
+                    if (!isObfuscated(e, clz)) superMethods.add(e);
                 }
             }
             if (!superMethods.isEmpty()) {
+                // try to insert methods by name
                 Set<Element> merged = new LinkedHashSet<>();
                 Set<Name> superMethodNames = new LinkedHashSet<>();
                 Name next = null;
@@ -227,16 +260,19 @@ public class ClassParser extends AbstractParser {
                             merged.add(m);
                             continue;
                         }
+
                         for (Element sm : superMethods) {
                             if (sm.getSimpleName().equals(next)) merged.add(sm);
                         }
                         superMethodNames.remove(next);
                         next = null;
                     }
+
                     Name name = m.getSimpleName();
                     if (superMethodNames.contains(name)) next = name;
                     merged.add(m);
                 }
+
                 if (next != null) {
                     for (Element sm : superMethods) {
                         if (sm.getSimpleName().equals(next)) merged.add(sm);
@@ -259,7 +295,7 @@ public class ClassParser extends AbstractParser {
             int len = s.length();
             if (!(temp = genFields(fields)).isEmpty()) s.append(StringHelpers.tabIn(temp));
             if (!(temp = genMethods(methods)).isEmpty()) s.append("\n").append(StringHelpers.tabIn(temp)).append("\n");
-            if (len == s.length()) s.delete(len - 1, len);
+            if (len == s.length()) s.setLength(len - "\n".length());
             s.append("}");
         } else {
             //noinspection SpellCheckingInspection
@@ -272,7 +308,7 @@ public class ClassParser extends AbstractParser {
             if (!(temp = genStaticFields(fields)).isEmpty()) s.append("\n").append(StringHelpers.tabIn(temp));
             int len = s.length();
             if (!(temp = genStaticMethods(methods)).isEmpty()) s.append("\n").append(StringHelpers.tabIn(temp));
-            if (!constrs.isEmpty()) s.append("\n").append(StringHelpers.tabIn(constrs));
+            if (!constrs.isBlank()) s.append("\n").append(StringHelpers.tabIn(constrs));
             if (!(temp = genFields(fields)).isEmpty()) {
                 s.append("\n").append(StringHelpers.tabIn(temp));
                 len = s.length();

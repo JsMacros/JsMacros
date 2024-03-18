@@ -1,7 +1,7 @@
 package xyz.wagyourtail.doclet.tsdoclet;
 
 import xyz.wagyourtail.StringHelpers;
-import xyz.wagyourtail.doclet.DocletIgnore;
+import xyz.wagyourtail.doclet.tsdoclet.parsers.AbstractParser;
 import xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser;
 
 import javax.lang.model.element.Element;
@@ -9,6 +9,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class PackageTree {
     public final static Set<String> predefinedClasses = Set.of(
@@ -37,7 +38,7 @@ public class PackageTree {
     }
 
     public void addClass(Element clazz) {
-        if (clazz.getAnnotation(DocletIgnore.class) != null) return;
+        if (AbstractParser.shouldIgnore(clazz)) return;
         Stack<String> enclosing = new Stack<>();
         Element enclose = clazz;
 
@@ -52,7 +53,6 @@ public class PackageTree {
             if (predefinedClasses.contains(path + "." + clazz.getSimpleName())) {
                 return;
             }
-            //noinspection SpellCheckingInspection
             if (path.startsWith("org.joml")) return;
         }
         addClassInternal(enclosing, clazz);
@@ -87,7 +87,7 @@ public class PackageTree {
 
     private String genTSTreeIntern() {
         if (classes.isEmpty() && children.size() == 1) {
-            PackageTree onlyChild = children.values().stream().findFirst().get();
+            PackageTree onlyChild = children.values().iterator().next();
             if (!tsReservedWords.contains(onlyChild.pkgName)) {
                 onlyChild.pkgName = pkgName + "." + onlyChild.pkgName;
                 return onlyChild.genTSTreeIntern();
@@ -95,17 +95,19 @@ public class PackageTree {
         }
 
         StringBuilder exports = new StringBuilder();
+        // string builder for elements that needs export
         StringBuilder se = new StringBuilder("namespace ");
         if (tsReservedWords.contains(pkgName)) {
             System.out.println("Escaped typescript reserved word: " + pkgName + " -> _" + pkgName);
             se.append("_");
         }
         se.append(pkgName).append(" {");
+        // string builder for elements that doesn't need export
         StringBuilder sn = new StringBuilder(se);
 
-        for (ClassParser key : compiledClasses.keySet()) {
-            exports.append(key.getClassName(false)).append(",\n");
-            se.append("\n\n").append(StringHelpers.tabIn(compiledClasses.get(key)));
+        for (Map.Entry<ClassParser, String> ent : compiledClasses.entrySet()) {
+            exports.append(ent.getKey().getClassName(false)).append(",\n");
+            se.append("\n\n").append(StringHelpers.tabIn(ent.getValue()));
         }
         for (PackageTree value : children.values()) {
             if (tsReservedWords.contains(value.pkgName)) {
@@ -115,7 +117,7 @@ public class PackageTree {
         }
 
         if (!exports.isEmpty()) {
-            exports.setLength(exports.length() - 2);
+            exports.setLength(exports.length() - ",\n".length());
             se.append("\n\n    export {");
             if (exports.length() < 64) {
                 se.append(" ").append(exports.toString().replaceAll("\n", " ")).append(" }");
@@ -136,19 +138,12 @@ public class PackageTree {
         return se.toString();
     }
 
-    public List<ClassParser> getXyzClasses() {
-        for (PackageTree value : children.values()) {
-            if (value.pkgName.equals("xyz")) return value.getAllClasses();
-        }
-        return null;
+    public List<ClassParser> getWagClasses() {
+        return children.get("xyz").children.get("wagyourtail").streamAllClasses().toList();
     }
 
-    public List<ClassParser> getAllClasses() {
-        List<ClassParser> result = new ArrayList<>(classes);
-        for (PackageTree value : children.values()) {
-            result.addAll(value.getAllClasses());
-        }
-        return result;
+    private Stream<ClassParser> streamAllClasses() {
+        return Stream.concat(classes.stream(), children.values().stream().flatMap(PackageTree::streamAllClasses));
     }
 
 }

@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class LibraryParser extends AbstractParser {
-    protected String name;
+    protected final String name;
 
     public LibraryParser(TypeElement type, String name) {
         super(type);
@@ -26,7 +26,8 @@ public class LibraryParser extends AbstractParser {
     public String genTSInterface() {
         String comment = super.genComment(type).trim()
             .replaceAll("\n \\*  An instance of this class is passed to scripts as the `\\w+` variable\\.", "");
-        if (!comment.isEmpty()) comment += "\n";
+        StringBuilder s = new StringBuilder(comment);
+        if (!s.isEmpty()) s.append("\n");
 
         Set<Element> methods = new LinkedHashSet<>();
 
@@ -36,9 +37,11 @@ public class LibraryParser extends AbstractParser {
             }
         }
 
-        return comment + "declare namespace " + name + " {\n" +
-            StringHelpers.tabIn(genMethods(methods)) +
-            "\n}";
+        s.append("declare namespace ").append(name).append(" {\n")
+                .append(StringHelpers.tabIn(genMethods(methods)))
+                .append("\n}");
+
+        return s.toString();
     }
 
 }

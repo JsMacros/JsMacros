@@ -14,17 +14,18 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import static xyz.wagyourtail.doclet.tsdoclet.PackageTree.tsReservedWords;
 
 public abstract class AbstractParser {
-    static final public Set<String> javaShortifies = Set.of(
-        "java.lang.Class",
+    static final public Set<String> javaAliases = Set.of(
         "java.lang.Array",
+        "java.lang.Class",
         "java.util.Collection",
         "java.util.List",
-        "java.util.Set",
-        "java.util.Map"
+        "java.util.Map",
+        "java.util.Set"
     );
     static final public Map<String, String> javaNumberType = Map.of(
         "java.lang.Integer",   "int",
@@ -50,25 +51,23 @@ public abstract class AbstractParser {
 
     private static final Set<String> loggedTypes = new HashSet<>();
     private final String path;
-    protected TypeElement type;
+    protected final TypeElement type;
     public boolean isPackage = true;
     private transient boolean returnsSelf = false;
 
-    public static TypeElement objectElement = null;
-    public static Set<ExecutableElement> objectMethods = null;
-    public static Set<Name> objectMethodNames = null;
+    public static TypeElement objectElement;
+    public static Set<ExecutableElement> objectMethods;
+    public static Set<Name> objectMethodNames;
 
     public static void initObjectElement() {
         objectElement = Main.elementUtils.getTypeElement("java.lang.Object");
-        objectMethods = new HashSet<>();
-        for (Element oel : objectElement.getEnclosedElements()) {
-            if (oel.getKind() != ElementKind.METHOD) continue;
-            if (checkModifier(oel, false)) {
-                objectMethods.add((ExecutableElement) oel);
-            }
-        }
-        objectMethodNames = new HashSet<>();
-        for (Element m : objectMethods) objectMethodNames.add(m.getSimpleName());
+        objectMethods = objectElement.getEnclosedElements().stream()
+                .filter(e -> e.getKind() == ElementKind.METHOD && checkModifier(e, false))
+                .map(e -> (ExecutableElement) e)
+                .collect(Collectors.toUnmodifiableSet());
+        objectMethodNames = objectMethods.stream()
+                .map(ExecutableElement::getSimpleName)
+                .collect(Collectors.toUnmodifiableSet());
     }
 
     public AbstractParser(TypeElement type) {
@@ -132,11 +131,15 @@ public abstract class AbstractParser {
         StringBuilder s = new StringBuilder();
         s.append(genComment(field));
 
+        // modifiers
         Set<Modifier> mods = field.getModifiers();
         if (mods.contains(Modifier.STATIC)) s.append("static ");
         if (mods.contains(Modifier.FINAL)) s.append("readonly ");
+
+        // name
         s.append(field.getSimpleName()).append(": ");
 
+        // type
         DocletReplaceReturn replace = field.getAnnotation(DocletReplaceReturn.class);
         if (replace != null) {
             s.append(replace.value());
@@ -162,9 +165,11 @@ public abstract class AbstractParser {
         final StringBuilder s = new StringBuilder();
         s.append(genComment(e));
         if (!isConstructor && e.getModifiers().contains(Modifier.STATIC)) s.append("static ");
+
+        // name
         s.append(isConstructor ? "constructor " : e.getSimpleName());
 
-        // diamondOperator
+        // type params
         DocletReplaceTypeParams replace = e.getAnnotation(DocletReplaceTypeParams.class);
         if (replace != null) {
             if (!replace.value().isEmpty()) s.append("<").append(replace.value()).append(">");
@@ -180,11 +185,12 @@ public abstract class AbstractParser {
                     }
                     s.append(", ");
                 }
-                s.setLength(s.length() - 2);
+                s.setLength(s.length() - ", ".length());
                 s.append(">");
             }
         }
 
+        // params
         s.append("(");
         DocletReplaceParams replace2 = e.getAnnotation(DocletReplaceParams.class);
         if (replace2 != null) {
@@ -199,7 +205,7 @@ public abstract class AbstractParser {
                         s.append("...");
                         if (tsReservedWords.contains(name)) s.append("_");
                         s.append(name).append(": ").append("JavaVarArgs<").append(transformType(param, true));
-                        int sl2 = s.length() - 2;
+                        int sl2 = s.length() - "[]".length();
                         if (s.substring(sl2).equals("[]")) s.setLength(sl2);
                         else System.out.println("varargs type is not array?? " + type.getSimpleName() + "." + e.getSimpleName());
                         if (isNullable(param)) s.append(" | null");
@@ -211,11 +217,12 @@ public abstract class AbstractParser {
                     }
                     s.append(", ");
                 }
-                s.setLength(s.length() - 2);
+                s.setLength(s.length() - ", ".length());
             }
         }
         s.append(")");
 
+        // return type
         if (!isConstructor) {
             s.append(": ");
             DocletReplaceReturn replace3 = e.getAnnotation(DocletReplaceReturn.class);
@@ -229,6 +236,7 @@ public abstract class AbstractParser {
                 if (isNullable(e)) s.append(" | null");
             }
         }
+
         s.append(";");
 
         return s.toString();
@@ -289,21 +297,25 @@ public abstract class AbstractParser {
                 Element typeElement = ((DeclaredType) type).asElement();
                 StringBuilder rawType = new StringBuilder(typeElement.getSimpleName().toString());
                 typeElement = typeElement.getEnclosingElement();
+                // full class name
                 while (typeElement.getKind() == ElementKind.CLASS || typeElement.getKind() == ElementKind.INTERFACE) {
                     rawType.insert(0, typeElement.getSimpleName().toString() + "$");
                     typeElement = typeElement.getEnclosingElement();
                 }
 
-                boolean shortified = false;
+                // detect types defined in Graal.d.ts
+                boolean aliased = false;
                 String classpath = ((PackageElement) typeElement).getQualifiedName().toString();
-                if (!isExtends && javaShortifies.contains(classpath + "." + rawType)) {
-                    shortified = true;
+                if (!isExtends && javaAliases.contains(classpath + "." + rawType)) {
+                    aliased = true;
                     rawType.insert(0, "Java");
                     if (isParamType && rawType.toString().equals("JavaClass")) rawType.append("Arg");
                 } else rawType.insert(0, classpath + ".");
 
+                // type params
                 List<? extends TypeMirror> params = ((DeclaredType) type).getTypeArguments();
                 if (!isExtends && functionalInterfaces.containsKey(rawType.toString())) {
+                    // convert to MethodWrapper
                     String res = functionalInterfaces.get(rawType.toString());
                     if (!params.isEmpty()) {
                         int size = params.size();
@@ -325,25 +337,34 @@ public abstract class AbstractParser {
 
                 String res = rawType.toString();
 
-                if (res.startsWith("net.minecraft")) {
+                // comment out minecraft types because it's obfuscated
+                // + including minecraft types will make the file large asf
+                // + don't even know how to get obfuscated names in doclet environment
+                if (res.startsWith("net.minecraft.")) {
                     return "/* " + res.replaceAll("/\\* ", "").replaceAll(" \\*/(?: any)?", "") + " */ any";
                 }
 
-                AnnotationMirror mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().toString().equals("Event")).findFirst().orElse(null);
+                // check Event type (probably none)
+                AnnotationMirror mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().contentEquals("Event")).findFirst().orElse(null);
                 if (mirror != null) {
-                    return "Events." + Main.getAnnotationValue("value", mirror);
+                    return "Events." + Main.getAnnotationValue(mirror);
                 }
 
-                mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().toString().equals("Library")).findFirst().orElse(null);
+                // check Library type (probably none)
+                mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().contentEquals("Library")).findFirst().orElse(null);
                 if (mirror != null) {
-                    return "typeof " + Main.getAnnotationValue("value", mirror);
+                    return "typeof " + Main.getAnnotationValue(mirror);
                 }
 
+                // check BaseEvent
                 if (res.equals("xyz.wagyourtail.jsmacros.core.event.BaseEvent")) {
                     return "Events.BaseEvent";
                 }
 
+                // register this type to the package tree for further type generation
                 Main.classes.addClass(((DeclaredType) type).asElement());
+
+                // primitive/aliased check
                 if (!isExtends && res.startsWith("java.lang")) {
                     if (javaNumberType.containsKey(res)) {
                         return isParamType ? javaNumberType.get(res) : "number";
@@ -355,15 +376,22 @@ public abstract class AbstractParser {
                         case "java.lang.Object"  -> { return "any";     }
                     }
                 } else {
-                    if (shortified) return res;
+                    if (aliased) return res;
                 }
 
+                // insert root name to be able to actually reference this type
+                // if it's redundant, the regex in PackageTree#genTSTree() will take care of it
                 if (!isPackage || !res.startsWith(this.path + ".")) return "Packages." + res;
+                // at this point, res must be starts with this.path, because of the condition above
 
                 String withoutTypeParams = res.contains("<") ? res.substring(0, res.indexOf("<")) : res;
 
+                // if res isn't in the same package as this.type
                 if (withoutTypeParams.substring(this.path.length() + 1).contains(".")) return "Packages." + res;
+                // if res is defined in Graal.d.ts, don't trim the path (as the next line did)
+                // because otherwise this won't be able to reference it
                 if (PackageTree.predefinedClasses.contains(withoutTypeParams)) return res;
+                // trim the path
                 return res.substring(this.path.length() + 1);
             }
             case TYPEVAR -> {
@@ -383,7 +411,7 @@ public abstract class AbstractParser {
                 for (TypeMirror t : ((IntersectionType) type).getBounds()) {
                     s.append(transformType(t, isParamType, isExtends)).append(" & ");
                 }
-                s.setLength(s.length() - 3);
+                s.setLength(s.length() - " & ".length());
                 s.append(")");
                 return s.toString();
             }
@@ -392,7 +420,7 @@ public abstract class AbstractParser {
                 for (TypeMirror t : ((UnionType) type).getAlternatives()) {
                     s.append(transformType(t, isParamType, isExtends)).append(" | ");
                 }
-                s.setLength(s.length() - 3);
+                s.setLength(s.length() - " | ".length());
                 s.append(")");
                 return s.toString();
             }
@@ -405,10 +433,11 @@ public abstract class AbstractParser {
         returnsSelf = false;
 
         DocCommentTree tree = Main.treeUtils.getDocCommentTree(element);
-        if (tree == null) {
-            return Main.elementUtils.isDeprecated(element) ? "/** @deprecated */\n" : "";
-        }
-        final StringBuilder b = new StringBuilder();
+        boolean isDeprecated = Main.elementUtils.isDeprecated(element);
+        if (tree == null) return isDeprecated ? "/** @deprecated */\n" : "";
+
+        StringBuilder b = new StringBuilder();
+        b.append(genCommentDesc(tree.getFullBody()).replaceAll("(?<=[.,:;>]) ?\n", "  \n"));
 
         for (DocTree blockTag : tree.getBlockTags()) {
             switch (blockTag.getKind()) {
@@ -435,8 +464,10 @@ public abstract class AbstractParser {
                     List<? extends DocTree> description = ((ReturnTree) blockTag).getDescription();
                     if (!description.isEmpty()) {
                         String desc = genCommentDesc(description);
-                        if (desc.startsWith("self") && (desc.length() == 4 || desc.charAt(4) == ' ')) returnsSelf = true;
+                        if (desc.startsWith("self") && (desc.length() == "self".length() || desc.charAt("self".length()) == ' ')) returnsSelf = true;
                         b.append("\n@return ");
+                        // to prevent vscode from parsing the description as type
+                        // typescript already provided the type, so assign it as any is fine
                         if (desc.startsWith("{")) b.append("{*} ");
                         b.append(desc);
                     }
@@ -447,16 +478,16 @@ public abstract class AbstractParser {
             }
         }
 
-        String fin = (genCommentDesc(tree.getFullBody()).replaceAll("(?<=[.,:;>]) ?\n", "  \n") + b).trim()
+        String fin = b.toString().trim()
             .replaceAll("\n <p>", "\n")
             .replaceAll("</?pre>", "```")
             // is there any better way to parse html tag?
             .replaceAll("<a (?:\n|.)*?href=\"([^\"]*)\"(?:\n|.)*?>((?:\n|.)*?)</a>", "[$2]($1)")
             .replaceAll("&lt;", "<")
             .replaceAll("&gt;", ">");
-        if (fin.isBlank()) return Main.elementUtils.isDeprecated(element) ? "/** @deprecated */\n" : "";
+        if (fin.isBlank()) return isDeprecated ? "/** @deprecated */\n" : "";
 
-        if (Main.elementUtils.isDeprecated(element) && !b.toString().contains("@deprecated")) {
+        if (isDeprecated && !b.toString().contains("@deprecated")) {
             fin += "\n@deprecated";
         }
 
@@ -512,16 +543,16 @@ public abstract class AbstractParser {
 
     public static void checkEnumType(Element element) {
         DocletDeclareType enumType = element.getAnnotation(DocletDeclareType.class);
-        if (enumType != null) {
-            if (Main.enumTypes.containsKey(enumType.name())
+        if (enumType == null) return;
+
+        if (Main.enumTypes.containsKey(enumType.name())
                 && !loggedTypes.contains(enumType.name())
                 && !Objects.equals(Main.enumTypes.get(enumType.name()), enumType.type())
-            ) {
-                System.out.println("Duplicate enum type name: " + enumType.name());
-                loggedTypes.add(enumType.name());
-            }
-            Main.enumTypes.put(enumType.name(), enumType.type());
+        ) {
+            System.out.println("Duplicate enum type name: " + enumType.name());
+            loggedTypes.add(enumType.name());
         }
+        Main.enumTypes.put(enumType.name(), enumType.type());
     }
 
     public static boolean checkModifier(@NotNull Element e, boolean shouldBeStatic) {
@@ -546,7 +577,7 @@ public abstract class AbstractParser {
 
     public boolean isNullable(Element e) {
         return e.getAnnotationMirrors().stream()
-                .anyMatch(a -> a.getAnnotationType().asElement().getSimpleName().toString().equals("Nullable"));
+                .anyMatch(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals("Nullable"));
     }
 
     @Override
