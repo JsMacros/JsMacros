@@ -314,13 +314,13 @@ public abstract class AbstractParser {
 
                 // type params
                 List<? extends TypeMirror> params = ((DeclaredType) type).getTypeArguments();
-                if (!isExtends && functionalInterfaces.containsKey(rawType.toString())) {
+                if (isParamType && functionalInterfaces.containsKey(rawType.toString())) {
                     // convert to MethodWrapper
                     String res = functionalInterfaces.get(rawType.toString());
                     if (!params.isEmpty()) {
                         int size = params.size();
                         for (int i = 0; i < size; i++) {
-                            res = res.replace("$" + i, transformType(params.get(i), isParamType, false));
+                            res = res.replace("$" + i, transformType(params.get(i), true, false));
                         }
                     }
                     return res;
