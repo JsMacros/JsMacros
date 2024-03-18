@@ -233,8 +233,24 @@ public class InteractionProxy {
 
         public static class BreakBlockResult {
             public static final BreakBlockResult UNAVAILABLE = new BreakBlockResult("UNAVAILABLE", null);
+            /**
+             * Can be one of the following reason:<br>
+             * * `SUCCESS` - the block has been destroyed on client side, no promise that the server will accept it.<br>
+             *      for example if the block is in protected area, or the server is lagging very hard, then the break will get ignored.<br>
+             * * `CANCELLED` - if {@link xyz.wagyourtail.jsmacros.client.api.helpers.InteractionManagerHelper#cancelBreakBlock()} was called.<br>
+             * * `INTERRUPTED` - if block breaking was interrupted by attack key. (left mouse by default)<br>
+             * * `NOT_BREAKING` - if the block breaking was invalid for some reason.<br>
+             * * `RESET` - if interaction proxy has been reset or not in a world.<br>
+             * * `NO_OVERRIDE` - if block breaking override was false but there's remaining callback for some reason.<br>
+             * * `IS_AIR` - if the targeted block was air.<br>
+             * * `NO_TARGET` - if there's no targeted block.<br>
+             * * `TARGET_LOST` - if there's no longer a targeted block.<br>
+             * * `TARGET_CHANGE` - if the targeted block has changed.<br>
+             * * `UNAVAILABLE` - if InteractionManager was unavailable. (mc.interactionManager is null)<br>
+             * * null - unknown. (proxy method has been called outside the api)<br>
+             */
             @DocletReplaceReturn("BreakBlockResult$Reason | null")
-            @DocletDeclareType(name = "BreakBlockResult$Reason", type = "'SUCCESS' | 'CANCELLED' | 'INTERRUPTED' | 'NOT_BREAKING' | 'RESET' | 'NO_OVERRIDE' | 'IS_AIR' | 'NO_SHAPE' | 'NO_TARGET' | 'TARGET_LOST' | 'TARGET_CHANGE' | 'UNAVAILABLE'")
+            @DocletDeclareType(name = "BreakBlockResult$Reason", type = "'SUCCESS' | 'CANCELLED' | 'INTERRUPTED' | 'NOT_BREAKING' | 'RESET' | 'NO_OVERRIDE' | 'IS_AIR' | 'NO_TARGET' | 'TARGET_LOST' | 'TARGET_CHANGE' | 'UNAVAILABLE'")
             @Nullable
             public final String reason;
             @Nullable
