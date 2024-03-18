@@ -555,6 +555,7 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
+     * note that some server might utilize dimension identifiers for mods to distinguish between worlds.
      * @return the current dimension.
      * @since 1.1.2
      */

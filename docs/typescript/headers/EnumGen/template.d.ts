@@ -2,6 +2,9 @@
 // InputUtil
 //@Custom
 type Key = string
+| 'key.mouse.3'
+| 'key.mouse.4'
+
 // option.allKeys.map(getTranslationKey())
 //@Eval Java.from(Client.getGameOptions().getRaw().field_1839).map(k => k.method_1431())
 type Bind = string
@@ -30,6 +33,8 @@ type RecipeId = string
 type Gamemode = string
 //@Eval RegistryManager.method_30530(RegistryKeys.field_41241).method_10235().toArray().map(id => id.toString())
 type Dimension = string
+| string & {}
+
 //@Custom
 type ScreenName = string
 | HandledScreenName
