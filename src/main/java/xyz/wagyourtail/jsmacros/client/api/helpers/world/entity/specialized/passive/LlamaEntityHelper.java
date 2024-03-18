@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.LlamaEntity;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.DyeColorHelper;
 
 /**
@@ -18,6 +19,7 @@ public class LlamaEntityHelper<T extends LlamaEntity> extends DonkeyEntityHelper
      * @return the variant of this llama.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("LlamaVariant")
     public String getVariant() {
         return base.getVariant().asString();
     }

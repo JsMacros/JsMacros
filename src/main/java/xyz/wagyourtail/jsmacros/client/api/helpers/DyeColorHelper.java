@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.util.DyeColor;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**
@@ -18,6 +19,7 @@ public class DyeColorHelper extends BaseHelper<DyeColor> {
      * @return the name of the color.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("DyeColorName")
     public String getName() {
         return base.getName();
     }

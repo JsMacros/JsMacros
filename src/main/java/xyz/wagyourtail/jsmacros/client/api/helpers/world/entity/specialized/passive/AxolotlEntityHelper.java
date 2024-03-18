@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.AxolotlEntity;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 
 /**
  * @author Etheradon
@@ -25,6 +26,7 @@ public class AxolotlEntityHelper extends AnimalEntityHelper<AxolotlEntity> {
      * @return the name of this axolotl's variant.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("AxolotlVariant")
     public String getVariantName() {
         return base.getVariant().getName();
     }

@@ -1,10 +1,35 @@
 
-/// <reference lib="ES2022"/>
+/// <reference lib = "ES2022"/>
 
+declare const __dirname: string;
+declare const __filename: string;
+declare const arguments: any[];
+declare function require(path: string): any;
 declare function load(source: string | Packages.java.io.File | Packages.java.net.URL): any;
 declare function loadWithNewGlobal(source: string | Packages.java.io.File | Packages.java.net.URL, ...arguments: any[]): any;
 declare function print(...arg: any[]): void;
 declare function printErr(...arg: any[]): void;
+
+declare namespace console {
+
+    function log(message?: any, ...optionalParams: any[]): void;
+    function info(message?: any, ...optionalParams: any[]): void;
+    function debug(message?: any, ...optionalParams: any[]): void;
+    function dir(item?: any, options?: any): void;
+    function error(message?: any, ...optionalParams: any[]): void;
+    function warn(message?: any, ...optionalParams: any[]): void;
+    function assert(value: any, message?: string, ...optionalParams: any[]): void;
+    function clear(): void;
+    function count(label?: any): void;
+    function countReset(label?: any): void;
+    function group(...label: any[]): void;
+    function groupCollapsed(...label: any[]): void;
+    function groupEnd(): void;
+    function time(label?: any): void;
+    function timeLog(label?: any, ...data: any[]): void;
+    function timeEnd(label?: any): void;
+
+}
 
 /**
  * Information about the graal runner.
@@ -23,7 +48,7 @@ declare namespace Polyglot {
     function _import(key: string): any;
     function _export(key: string, value: any): void;
     export function eval(languageId: string, sourceCode: string): any;
-    export function evalFile(languageId: string, sourceFileName: string): any;
+    export function evalFile(languageId: string, sourceFileName: string): () => any;
 
     export { _import as import, _export as export }
 
@@ -48,15 +73,15 @@ declare namespace Java {
     export function from<T>(javaData: JavaCollection<T>): T[];
 
     /**
-     * If toType is not present, converts to [Ljava.lang.Object by default
+     * If toType is not present, converts to java.lang.Object[] by default
      */
     export function to<T>(jsArray: T[]): JavaArray<T>;
     export function to<T extends `${string}[]`>(jsArray: GetJava.GraalJsArr<T>, toType: T): GetJava.GraalTo<T>;
-    export function to<T extends JavaArray<any>>(jsArray: GetJava.JavaToJsArrRec<T>, toType: JavaClassArg<T>): T;
+    export function to<T extends JavaArray<any>>(jsArray: GetJava.JavaToJsArr<T>, toType: JavaClass<T> | (new (length: int) => T)): T;
     export function to<T extends `${JavaTypeList | keyof GetJava.Primitives}[]`>(jsArray: GetJava.GraalJsArr<T>, toType: T): GetJava.GraalTo<T>;
     export function isJavaObject(obj: any): boolean;
-    export function isType(obj: JavaClassArg): boolean;
-    export function typeName(obj: JavaObject): string | undefined;
+    export function isType<T>(obj: T): T extends { readonly class: JavaClass } ? true : false;
+    export function typeName<T>(obj: T): T extends JavaClassArg ? string : undefined;
     export function addToClasspath(location: string): void;
 
 }
@@ -64,23 +89,23 @@ declare namespace Java {
 type JavaTypeList = ListPackages<typeof Packages>;
 
 type ListPackages<T extends object, P extends string = ''> =
-    IsStrictAny<T> extends true ? never : IsConstructor<T> extends true ? P :
+    IsStrictAny<T> extends true ? never : T extends JavaClassArg ? P :
     { [K in keyof T]: ListPackages<T[K], P extends '' ? K : `${P}.${K}`> }[keyof T];
 
 namespace GetJava {
 
     type Type$Graal<P extends string, _K extends keyof Primitive<any> = 'type'> =
-        P extends `${string}[]` ? JavaArrayStatics<ArrayType<P>> :
-        P extends keyof Primitives ? Primitives[P][_K] :
-        Type<P>;
+        IsStrictAny<P> extends true ? any :
+        P extends `${string}[]` ? (ArrayType<P> extends JavaArray<infer T> ? typeof Packages.java.lang.Array<T> : never) :
+        P extends keyof Primitives ? Primitives[P][_K] : Type<P>;
 
     type ArrayType<P extends string, _K extends keyof Primitive<any> = 'type'> =
         P extends `${infer C extends string}[]` ? JavaArray<ArrayType<C>> :
-        Type$Graal<P, _K> extends JavaClassStatics<infer T> ? T : unknown;
-    
-    type GraalTo<P extends string> = ArrayType<P>;
-    type GraalJsArr<P extends string> = JavaToJsArrRec<ArrayType<P, 'from'>>;
-    type JavaToJsArrRec<T> = T extends JavaArray<infer C> ? JavaToJsArrRec<C>[] : T;
+        Type$Graal<P, _K> extends { readonly class: JavaClass<infer T> } ? T : unknown;
+
+    type GraalTo<P extends string> = IsStrictAny<P> extends true ? any : ArrayType<P>;
+    type GraalJsArr<P extends string> = IsStrictAny<P> extends true ? any : JavaToJsArr<ArrayType<P, 'from'>>;
+    type JavaToJsArr<T> = IsStrictAny<P> extends true ? any : T extends JavaArray<infer C> ? JavaToJsArr<C>[] : T;
 
     type Type$Reflection<P extends string> =
         P extends keyof Primitives ? Primitives[P]['type']['class'] : TypeClass<P>;
@@ -91,9 +116,9 @@ namespace GetJava {
     type Type<P extends string, T extends object = typeof Packages> =
         IsStrictAny<T> extends true ? unknown :
         P extends `${infer K}.${infer R}` ? Type<R, T[K]> :
-        P extends '' ? IsConstructor<T> extends true ? T : unknown : Type<'', T[P]>;
+        P extends '' ? T extends (abstract new (...args: any[]) => any) & { readonly class: JavaClass } ? T : unknown : Type<'', T[P]>;
 
-    interface Primitives {
+    type Primitives = {
         boolean: Primitive<boolean, boolean>;
         byte:    Primitive<byte   , byte>;
         short:   Primitive<short  , short>;
@@ -102,77 +127,51 @@ namespace GetJava {
         float:   Primitive<float  , float>;
         double:  Primitive<double , double>;
         char:    Primitive<string | char, string>;
+        void:    Primitive<void, void>;
     }
     
-    interface Primitive<A, T = any> {
+    type Primitive<A, T = any> = {
         readonly from: A;
-        readonly type: JavaClassStatics<T> & NoConstructor;
+        readonly type: PrimitiveClass<T>;
+    }
+
+    interface PrimitiveClass<T> extends SuppressFunctionProperties {
+        /** no constructor */
+        new (none: never): never;
+        readonly class: JavaClass<T>;
     }
 
 }
 
-type BooStrNumMethod<T> = // Used in worldscanner
-    { [K in keyof T]: ReturnType<T[K]> extends infer R extends boolean | string | number ?
-    IsStrictAny<R> extends false ? K : never : never }[keyof T];
-
-type IsConstructor<T> = T extends new (...args: never) => any ? true : false;
+type CanOmitNamespace<T extends string> = T extends `minecraft:${infer P}` ? T | P : T;
 
 type IsStrictAny<T> = 0 | 1 extends (T extends never ? 1 : 0) ? true : false;
 
-/** One of the root packages in java. */
-declare const java:   JavaPackageColoring & JavaPackage<typeof Packages.java>;
-/** One of the root packages in java. */
-declare const javafx: JavaPackageColoring & JavaPackage<typeof Packages.javafx>;
-/** One of the root packages in java. */
-declare const javax:  JavaPackageColoring & JavaPackage<typeof Packages.javax>;
-/** One of the root packages in java. */
-declare const com:    JavaPackageColoring & JavaPackage<typeof Packages.com>;
-/** One of the root packages in java. */
-declare const org:    JavaPackageColoring & JavaPackage<typeof Packages.org>;
-/** One of the root packages in java. */
-declare const edu:    JavaPackageColoring & JavaPackage<typeof Packages.edu>;
+/** One of the root packages in java. */ declare var java:   JavaPackage<'java'>;
+/** One of the root packages in java. */ declare var javafx: JavaPackage<'javafx'>;
+/** One of the root packages in java. */ declare var javax:  JavaPackage<'javax'>;
+/** One of the root packages in java. */ declare var com:    JavaPackage<'com'>;
+/** One of the root packages in java. */ declare var edu:    JavaPackage<'edu'>;
+/** One of the root packages in java. */ declare var org:    JavaPackage<'org'>;
 
-type JavaPackage<T> = IsStrictAny<T> extends true ? unknown : T;
-interface JavaPackageColoring extends SuppressProperties {
+type JavaPackage<R extends string> = JavaPackageColoring & typeof Packages[R];
+interface JavaPackageColoring extends SuppressFunctionProperties {
 
     /** java package, no constructor, just for coloring */
     new (none: never): never;
 
 }
 
-interface JavaInterfaceStatics<T> extends SuppressProperties {
-
-    /** interface, no constructor, just for coloring */
-    new (none: never): never;
-
-    readonly class: JavaClass<T>;
-
-}
-
-interface JavaClassStatics<T, C extends object = {}> extends C {
-    readonly class: JavaClass<T> & C;
-}
-
-interface JavaArrayStatics<T extends JavaArray<any>> extends JavaClassStatics<T, JavaArrayConstructor<T>> {}
-
-interface JavaArrayConstructor<T extends JavaArray<any>> extends SuppressProperties {
-
-    new (length: int): T;
-
-}
-
-interface NoConstructor extends SuppressProperties {
-
-    /** no constructor */
-    new (none: never): never;
-
-}
-
-interface SuppressProperties {
+interface SuppressFunctionProperties {
     /** @deprecated */ Symbol: unknown;
+    /** @deprecated */ apply: unknown;
     /** @deprecated */ arguments: unknown;
+    /** @deprecated */ bind: unknown;
+    /** @deprecated */ call: unknown;
     /** @deprecated */ caller: unknown;
     /** @deprecated */ prototype: unknown;
+    /** @deprecated */ length: unknown;
+    /** @deprecated */ name: unknown;
 }
 
 /**
@@ -190,57 +189,59 @@ declare namespace Packages {
         namespace lang {
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html
-            const Class: JavaClassStatics<Class<any>> & NoConstructor & {
-
-                forName<C extends string>(className: C): GetJava.TypeClass<C>;
-                forName<C extends JavaTypeList>(className: C): GetJava.TypeClass<C>;
-                forName<C extends string>(name: C, initialize: boolean, loader: java.lang.ClassLoader): GetJava.TypeClass<C>;
-                forName<C extends JavaTypeList>(name: C, initialize: boolean, loader: java.lang.ClassLoader): GetJava.TypeClass<C>;
-                forName<C extends string>(module: Module, name: C): GetJava.TypeClass<C>;
-                forName<C extends JavaTypeList>(module: Module, name: C): GetJava.TypeClass<C>;
-
+            interface Class<T> extends io.Serializable, reflect.GenericDeclaration, reflect.Type, reflect.AnnotatedElement, invoke.TypeDescriptor$OfField<Class<T>>, constant.Constable {
+                new (...args: any[]): T;
             }
-            interface Class<T> extends Object {
+            class Class<T> extends Object {
+                static readonly class: Class<Class<any>>;
+                private constructor ();
 
-                arrayType(): Class<any>;
-                asSubclass(clazz: Class<any>): Class<any>;
+                static forName<C extends string>(className: C): GetJava.TypeClass<C>;
+                static forName<C extends JavaTypeList>(className: C): GetJava.TypeClass<C>;
+                static forName<C extends string>(name: C, initialize: boolean, loader: ClassLoader): GetJava.TypeClass<C>;
+                static forName<C extends JavaTypeList>(name: C, initialize: boolean, loader: ClassLoader): GetJava.TypeClass<C>;
+                static forName<C extends string>(module: Module, name: C): GetJava.TypeClass<C>;
+                static forName<C extends JavaTypeList>(module: Module, name: C): GetJava.TypeClass<C>;
+
+                arrayType(): Class<JavaArray<T>>;
+                asSubclass<U>(clazz: Class<U>): Class<U>;
                 cast(obj: Object): T;
-                componentType(): Class<any>;
+                componentType(): T extends JavaArray<infer C> ? Class<C> : null;
                 descriptorString(): string;
                 desiredAssertionStatus(): boolean;
-                getAnnotatedInterfaces(): JavaArray<java.lang.reflect.AnnotatedType>;
-                getAnnotatedSuperclass(): java.lang.reflect.AnnotatedType;
-                getAnnotation<A extends java.lang.annotation.Annotation>(annotationClass: Class<A>): A;
-                getAnnotations(): JavaArray<java.lang.annotation.Annotation>;
-                getAnnotationsByType<A extends java.lang.annotation.Annotation>(annotationClass: Class<A>): JavaArray<A>;
+                getAnnotatedInterfaces(): JavaArray<reflect.AnnotatedType>;
+                getAnnotatedSuperclass(): reflect.AnnotatedType;
+                getAnnotation<A extends annotation.Annotation>(annotationClass: Class<A>): A?;
+                getAnnotations(): JavaArray<annotation.Annotation>;
+                getAnnotationsByType<A extends annotation.Annotation>(annotationClass: Class<A>): JavaArray<A>;
                 getCanonicalName(): string;
                 getClasses(): JavaArray<Class<any>>;
-                getClassLoader(): java.lang.ClassLoader;
-                getComponentType(): Class<any>;
-                getConstructor(...parameterTypes: Class<any>): java.lang.reflect.Constructor<T>;
-                getConstructors(): JavaArray<java.lang.reflect.Constructor<any>>;
-                getDeclaredAnnotation<A extends java.lang.annotation.Annotation>(annotationClass: Class<A>): A;
-                getDeclaredAnnotations(): JavaArray<java.lang.annotation.Annotation>;
-                getDeclaredAnnotationsByType<A extends java.lang.annotation.Annotation>(annotationClass: Class<A>): JavaArray<A>;
+                getClassLoader(): ClassLoader;
+                getComponentType(): T extends JavaArray<infer C> ? Class<C> : null;
+                getConstructor(...parameterTypes: JavaVarArgs<JavaClassArg>): reflect.Constructor<T>;
+                getConstructors(): JavaArray<reflect.Constructor<any>>;
+                getDeclaredAnnotation<A extends annotation.Annotation>(annotationClass: Class<A>): A?;
+                getDeclaredAnnotations(): JavaArray<annotation.Annotation>;
+                getDeclaredAnnotationsByType<A extends annotation.Annotation>(annotationClass: Class<A>): JavaArray<A>;
                 getDeclaredClasses(): JavaArray<Class<any>>;
-                getDeclaredConstructor(...parameterTypes: Class<any>): java.lang.reflect.Constructor<T>;
-                getDeclaredConstructors(): JavaArray<java.lang.reflect.Constructor<any>>;
-                getDeclaredField(name: string): java.lang.reflect.Field;
-                getDeclaredFields(): JavaArray<java.lang.reflect.Field>;
-                getDeclaredMethod(name: string, ...parameterTypes: Class<any>): java.lang.reflect.Method;
-                getDeclaredMethods(): JavaArray<java.lang.reflect.Method>;
+                getDeclaredConstructor(...parameterTypes: JavaVarArgs<JavaClassArg>): reflect.Constructor<T>;
+                getDeclaredConstructors(): JavaArray<reflect.Constructor<any>>;
+                getDeclaredField(name: string): reflect.Field;
+                getDeclaredFields(): JavaArray<reflect.Field>;
+                getDeclaredMethod(name: string, ...parameterTypes: JavaVarArgs<JavaClassArg>): reflect.Method;
+                getDeclaredMethods(): JavaArray<reflect.Method>;
                 getDeclaringClass(): Class<any>;
                 getEnclosingClass(): Class<any>;
-                getEnclosingConstructor(): java.lang.reflect.Constructor<any>;
-                getEnclosingMethod(): java.lang.reflect.Method;
-                getEnumConstants(): JavaArray<T>;
-                getField(name: string): java.lang.reflect.Field;
-                getFields(): JavaArray<java.lang.reflect.Field>;
-                getGenericInterfaces(): JavaArray<java.lang.reflect.Type>;
-                getGenericSuperclass(): java.lang.reflect.Type;
+                getEnclosingConstructor(): reflect.Constructor<any>;
+                getEnclosingMethod(): reflect.Method;
+                getEnumConstants(): JavaArray<T>?;
+                getField(name: string): reflect.Field;
+                getFields(): JavaArray<reflect.Field>;
+                getGenericInterfaces(): JavaArray<reflect.Type>;
+                getGenericSuperclass(): reflect.Type;
                 getInterfaces(): JavaArray<Class<any>>;
-                getMethod(name: string, ...parameterTypes: Class<any>): java.lang.reflect.Method;
-                getMethods(): JavaArray<java.lang.reflect.Method>;
+                getMethod(name: string, ...parameterTypes: JavaVarArgs<JavaClassArg>): reflect.Method;
+                getMethods(): JavaArray<reflect.Method>;
                 getModifiers(): number;
                 getModule(): Module;
                 getName(): string;
@@ -249,27 +250,27 @@ declare namespace Packages {
                 getPackage(): Package;
                 getPackageName(): string;
                 getPermittedSubclasses(): JavaArray<Class<any>>;
-                getProtectionDomain(): java.security.ProtectionDomain;
-                getRecordComponents(): any; // JavaArray<java.lang.reflect.RecordComponent>;
-                getResource(name: string): java.net.URL;
-                getResourceAsStream(name: string): java.io.InputStream;
+                getProtectionDomain(): security.ProtectionDomain;
+                getRecordComponents(): JavaArray<reflect.RecordComponent>?;
+                getResource(name: string): net.URL;
+                getResourceAsStream(name: string): io.InputStream;
                 getSigners(): JavaArray<Object>;
                 getSimpleName(): string;
                 getSuperclass(): Class<any>;
                 getTypeName(): string;
-                getTypeParameters(): JavaArray<java.lang.reflect.TypeVariable<Class<T>>>;
+                getTypeParameters(): JavaArray<reflect.TypeVariable<Class<T>>>;
                 isAnnotation(): boolean;
-                isAnnotationPresent<T extends java.lang.annotation.Annotation>(annotationClass: Class<T>): boolean;
+                isAnnotationPresent(annotationClass: Class<annotation.Annotation>): boolean;
                 isAnonymousClass(): boolean;
-                isArray(): boolean;
-                isAssignableFrom(cls: Class<any>): boolean;
+                isArray(): T extends JavaArray<any> ? true : false;
+                isAssignableFrom(cls: JavaClassArg): boolean;
                 isEnum(): boolean;
                 isHidden(): boolean;
                 isInstance(obj: Object): boolean;
                 isInterface(): boolean;
                 isLocalClass(): boolean;
                 isMemberClass(): boolean;
-                isNestmateOf(c: Class<any>): boolean;
+                isNestmateOf(c: JavaClassArg): boolean;
                 isPrimitive(): boolean;
                 isRecord(): boolean;
                 isSealed(): boolean;
@@ -281,197 +282,239 @@ declare namespace Packages {
 
             }
 
-            const Object: JavaClassStatics<JavaObject, Object$$constructor>;
-            interface Object$$constructor extends SuppressProperties {
+            class Object {
+                static readonly class: Class<Object>;
+                /** @deprecated */ static Symbol: undefined;
+                /** @deprecated */ static arguments: undefined;
+                /** @deprecated */ static caller: undefined;
+                /** @deprecated */ static prototype: undefined;
 
-                new (): JavaObject;
-
-            }
-            interface Object {
-
-                equals(obj: JavaObject): boolean;
-                getClass(): JavaClass<any>;
+                equals(obj: any): boolean;
+                getClass(): Class<any>;
                 hashCode(): number;
                 notify(): void;
                 notifyAll(): void;
                 toString(): string;
-                wait(): void;
-                wait(var1: long): void;
-                wait(timeoutMillis: long, nanos: int): void;
+                wait(timeoutMillis?: long, nanos?: int): void;
 
             }
 
-            const Comparable: JavaInterfaceStatics<Comparable<any>>;
-            interface Comparable<T> extends Object {
+            /** Not an actual class */
+            abstract class Interface extends java.lang.Object {
+                /** @deprecated */ static apply: undefined;
+                /** @deprecated */ static bind: undefined;
+                /** @deprecated */ static call: undefined;
+                /** @deprecated */ static length: undefined;
+                /** @deprecated */ static name: undefined;
+            }
 
-                compareTo(arg0: T): number;
+            abstract class Comparable<T> extends Interface {
+                static readonly class: Class<Comparable<any>>;
+                /** @deprecated */ static prototype: undefined;
+            }
+            interface Comparable<T> {
+
+                compareTo(other: T): number;
 
             }
 
-            const Array: JavaInterfaceStatics<Array<any>>;
-            interface Array<T> extends Object, globalThis.Array<T> {
+            interface Array<T> extends globalThis.Array<T> {}
+            class Array<T> extends Object {
+                static readonly class: Class<JavaArray<any>>;
+                /** @deprecated */ static prototype: undefined;
 
-                clone(): Array<T>;
+                constructor (length: int);
 
-            }
-
-            const StackTraceElement: JavaClassStatics<StackTraceElement, StackTraceElement$$constructor>;
-            interface StackTraceElement$$constructor extends SuppressProperties {
-
-                new (declaringClass: string, methodName: string, fileName: string, lineNumber: int): StackTraceElement;
-                new (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: int): StackTraceElement;
+                clone(): JavaArray<T>;
 
             }
-            interface StackTraceElement extends Object, java.io.Serializable {
 
+            interface StackTraceElement extends io.Serializable {}
+            class StackTraceElement extends Object {
+                static readonly class: Class<StackTraceElement>;
+                /** @deprecated */ static prototype: undefined;
+
+                constructor (declaringClass: string, methodName: string, fileName: string, lineNumber: int);
+                constructor (classLoaderName: string, moduleName: string, moduleVersion: string, declaringClass: string, methodName: string, fileName: string, lineNumber: int);
+
+                getClassLoaderName(): string;
+                getClassName(): string;
                 getFileName(): string;
                 getLineNumber(): number;
-                getClassName(): string;
                 getMethodName(): string;
+                getModuleName(): string;
+                getModuleVersion(): string;
                 isNativeMethod(): boolean;
-                toString(): string;
-                equals(arg0: any): boolean;
-                hashCode(): number;
 
             }
 
-            const Throwable: JavaClassStatics<Throwable, Throwable$$constructor>;
-            interface Throwable$$constructor extends SuppressProperties {
+            interface Throwable extends io.Serializable, Error {}
+            class Throwable extends Object {
+                static readonly class: Class<Throwable>;
+                /** @deprecated */ static prototype: undefined;
 
-                new (): Throwable;
-                new (message: string): Throwable;
-                new (message: string, cause: Throwable): Throwable;
+                constructor (message?: string, cause?: Throwable);
+                constructor (message: string, cause: Throwable, enableSuppression: boolean, writableStackTrace: boolean);
+                constructor (cause: Throwable);
 
-            }
-            interface Throwable extends Object, java.io.Serializable, Error {
-
-                getMessage(): string;
-                getLocalizedMessage(): string;
-                getCause(): Throwable;
-                initCause(arg0: Throwable): Throwable;
-                toString(): string;
+                addSuppressed(exception: Throwable): void;
                 fillInStackTrace(): Throwable;
-                getStackTrace(): Array<StackTraceElement>;
-                setStackTrace(arg0: Array<StackTraceElement>): void;
-                addSuppressed(arg0: Throwable): void;
-                getSuppressed(): Array<Throwable>;
+                getCause(): Throwable;
+                getLocalizedMessage(): string;
+                getMessage(): string;
+                getStackTrace(): JavaArray<StackTraceElement>;
+                getSuppressed(): JavaArray<Throwable>;
+                initCause(cause: Throwable): Throwable;
+                printStackTrace(s?: io.PrintStream | io.PrintWriter): void;
+                setStackTrace(stackTrace: JavaArray<StackTraceElement>): void;
 
             }
 
-            const Iterable: JavaInterfaceStatics<Iterable<any>>;
-            interface Iterable<T> extends Object, globalThis.Iterable<T> {
+            abstract class Iterable<T> extends Interface {
+                static readonly class: Class<Iterable<any>>;
+                /** @deprecated */ static prototype: undefined;
+            }
+            interface Iterable<T> extends globalThis.Iterable<T> {
 
-                iterator(): java.util.Iterator<T>;
-                forEach(arg0: java.util.function.Consumer<any>): void;
-                spliterator(): java.util.Spliterator<T>;
+                iterator(): util.Iterator<T>;
+                forEach(action: MethodWrapper<T>): void;
+                spliterator(): util.Spliterator<T>;
 
             }
 
-            export { Class, Object, Comparable, Array, StackTraceElement, Throwable, Iterable }
+            // by exporting this way, the types in popup will be shortened
+            // for example Object will show up as `Object` instead of `Packages.java.lang.Object`
+            export { Class, Object, Interface, Comparable, Array, StackTraceElement, Throwable, Iterable }
 
         }
 
         namespace util {
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html
-            const Collection: JavaInterfaceStatics<Collection<any>>;
-            interface Collection<T> extends java.lang.Iterable<T> {
-                readonly [n: int]: T;
+            abstract class Collection<E> extends java.lang.Interface {
+                static readonly class: JavaClass<Collection<any>>;
+                /** @deprecated */ static prototype: undefined;
+            }
+            interface Collection<E> extends lang.Iterable<E> {
 
-                add(element: T): boolean;
-                addAll(elements: JavaCollection<T>): boolean;
+                add(e: E): boolean;
+                addAll(c: Collection<E>): boolean;
                 clear(): void;
-                contains(element: T): boolean;
-                containsAll(elements: JavaCollection<T>): boolean;
-                equals(object: JavaCollection<T>): boolean;
-                hashCode(): number;
+                contains(o: E): boolean;
+                contains(o: any): boolean;
+                containsAll(c: Collection<E>): boolean;
                 isEmpty(): boolean;
-                iterator(): Iterator<T>;
-                remove(element: T): boolean;
-                removeAll(elements: JavaCollection<T>): boolean;
-                retainAll(elements: JavaCollection<T>): boolean;
+                parallelStream(): stream.Stream<E>;
+                remove(o: E): boolean;
+                remove(o: any): boolean;
+                removeAll(c: Collection<any>): boolean;
+                removeIf(filter: MethodWrapper<E, any, boolean>): boolean;
+                retainAll(c: Collection<any>): boolean;
                 size(): number;
-                toArray(): T[];
+                stream(): stream.Stream<E>;
+                toArray(a?: E[]): JavaArray<E>;
+                toArray(generator: MethodWrapper<int, any, E[]>): JavaArray<E>;
 
             }
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html
-            const List: JavaClassStatics<List<any>> & NoConstructor & {
+            abstract class List<E> extends java.lang.Interface {
+                static readonly class: JavaClass<List<any>>;
+                /** @deprecated */ static prototype: undefined;
 
-                copyOf<T>(coll: JavaCollection<T>): JavaList<T>;
-                of<T>(...elements: T[]): JavaList<T>;
+                static copyOf<E>(coll: Collection<E>): JavaList<E>;
+                static of<E>(...elements: JavaVarArgs<E>): JavaList<E>;
 
             }
-            interface List<T> extends Collection<T> {
+            interface List<E> extends Collection<E>, lang.Iterable<E>, globalThis.Array<E> {
+                [n: int | `${bigint}`]: E;
 
-                add(index: int, element: T): void;
-                add(element: T): boolean;
-                addAll(index: int, elements: JavaCollection<T>): boolean;
-                addAll(elements: JavaCollection<T>): boolean;
-                get(index: int): T;
-                indexOf(element: T): number;
-
-                lastIndexOf(element: T): number;
-                remove(index: int): T;
-                remove(element: T): boolean;
-                set(index: int, element: T): T;
-                subList(start: int, end: int): JavaList<T>;
+                add(index: int, element: E): void;
+                add(e: E): boolean;
+                addAll(index: int, c: Collection<E>): boolean;
+                addAll(c: Collection<E>): boolean;
+                get(index: int): E;
+                indexOf(e: E): number;
+                indexOf(e: any): number;
+                lastIndexOf(e: E): number;
+                lastIndexOf(e: any): number;
+                listIterator(): ListIterator<E>;
+                listIterator(index: int): ListIterator<E>;
+                remove(index: int): E;
+                remove(o: E): boolean;
+                remove(o: any): boolean;
+                replaceAll(operator: MethodWrapper<E, any, E>): void;
+                set(index: int, element: E): E;
+                sort(c: MethodWrapper<E, E, number>): void;
+                subList(fromIndex: int, toIndex: int): List<E>;
 
             }
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html
-            const Map: JavaClassStatics<Map<any, any>> & NoConstructor & {
+            abstract class Map<K, V> extends java.lang.Interface {
+                static readonly class: JavaClass<Map<any, any>>;
+                /** @deprecated */ static prototype: undefined;
 
-                copyOf<K, V>(map: JavaMap<K, V>): JavaMap<K, V>;
-                entry<K, V>(k: K, v: V): java.util.Map$Entry<K, V>;
-                ofEntries<K, V>(...entries: java.util.Map$Entry<K, V>[]): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V, k2: K, v2: V): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V): JavaMap<K, V>;
-                of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V, k10: K, v10: V): JavaMap<K, V>;
+                static copyOf<K, V>(map: Map<K, V>): Map<K, V>;
+                static entry<K, V>(k: K, v: V): Map$Entry<K, V>;
+                static ofEntries<K, V>(...entries: JavaVarArgs<Map$Entry<K, V>>): Map<K, V>;
+                static of<K, V>(k1: K, v1: V): Map<K, V>;
+                static of<K, V>(k1: K, v1: V, k2: K, v2: V): Map<K, V>;
+                static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V): Map<K, V>;
+                static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V): Map<K, V>;
+                static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V): Map<K, V>;
+                static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V): Map<K, V>;
+                static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V): Map<K, V>;
+                static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V): Map<K, V>;
+                static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V): Map<K, V>;
+                static of<K, V>(k1: K, v1: V, k2: K, v2: V, k3: K, v3: V, k4: K, v4: V, k5: K, v5: V, k6: K, v6: V, k7: K, v7: V, k8: K, v8: V, k9: K, v9: V, k10: K, v10: V): Map<K, V>;
 
             }
-            interface Map<K, V> extends JavaObject, Record<string | number, V> {
+            interface Map<K, V> extends globalThis.Map<K, V> {
+                [k: string | number]: V;
 
                 clear(): void;
-
+                compute(key: K, remappingFunction: MethodWrapper<K, V, V>): V?;
+                computeIfAbsent(key: K, mappingFunction: MethodWrapper<K, any, V>): V;
+                computeIfPresent(key: K, remappingFunction: MethodWrapper<K, NonNullable<V>, V>): V;
                 containsKey(key: K): boolean;
-
+                containsKey(key: any): boolean;
                 containsValue(value: V): boolean;
-                entrySet(): JavaSet<java.util.Map$Entry<K, V>>;
-                equals(object: JavaMap<K, V>): boolean;
-                get(key: K): V | null;
+                containsValue(value: any): boolean;
+                entrySet(): Set<Map$Entry<K, V>>;
+                forEach(action: MethodWrapper<K, V>): void;
+                get(key: K): V?;
+                get(key: any): V?;
                 getOrDefault(key: K, defaultValue: V): V;
+                getOrDefault(key: any, defaultValue: V): V;
                 isEmpty(): boolean;
-                keySet(): JavaSet<K>;
-                put(ket: K, value: V): V;
-                putAll(map: JavaMap<K, V>): void;
-                putIfAbsent(key: K, value: V): V | null;
-                remove(key: K): V | null;
+                keySet(): Set<K>;
+                merge(key: K, value: V, remappingFunction: MethodWrapper<V, V, V>): V;
+                put(key: K, value: V): V;
+                putAll(m: Map<K, V>): void;
+                putIfAbsent(key: K, value: V): V?;
+                remove(key: K): V?;
+                remove(key: any): V?;
                 remove(key: K, value: V): boolean;
+                remove(key: any, value: any): boolean;
                 replace(key: K, value: V): V;
-
                 replace(key: K, oldValue: V, newValue: V): boolean;
-
+                replaceAll(fn: MethodWrapper<K, V, V>): void;
                 size(): number;
-                values(): JavaCollection<V>;
+                values(): Collection<V>;
 
             }
 
             // https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html
-            const Set: JavaClassStatics<Set<any>> & NoConstructor & {
+            abstract class Set<E> extends java.lang.Interface {
+                static readonly class: JavaClass<Set<any>>;
+                /** @deprecated */ static prototype: undefined;
 
-                copyOf<T>(coll: JavaCollection<T>): JavaSet<T>;
-                of<T>(...elements: T[]): JavaSet<T>;
+                static copyOf<T>(coll: JavaCollection<T>): Set<T>;
+                static of<T>(...elements: JavaVarArgs<T>): Set<T>;
 
             }
-            interface Set<T> extends Collection<T> {}
+            interface Set<E> extends Collection<E> {}
 
             export { Collection, List, Map, Set }
 
@@ -479,76 +522,71 @@ declare namespace Packages {
 
         namespace io {
 
-            const File: JavaClassStatics<File, File$$constructor> & {
+            interface File extends Serializable, lang.Comparable<File> {}
+            class File extends java.lang.Object {
+                static readonly class: JavaClass<File>;
+                /** @deprecated */ static prototype: undefined;
 
-                listRoots(): JavaArray<File>;
+                static readonly pathSeparator: string;
+                static readonly pathSeparatorChar: char;
+                static readonly separator: string;
+                static readonly separatorChar: char;
 
-            }
-            interface File$$constructor extends SuppressProperties {
+                static createTempFile(prefix: string, suffix: string, directory?: File): File;
+                static listRoots(): JavaArray<File>;
 
-                new (pathName: string): File;
-                new (parent: string, child: string): File;
-                new (parent: File, child: string): File;
-                new (uri: java.net.URI): File;
-
-            }
-            interface File extends JavaObject {
+                constructor (parent: File | string, child: string);
+                constructor (pathName: string);
+                constructor (uri: net.URI);
 
                 canExecute(): boolean;
-
                 canRead(): boolean;
-
                 canWrite(): boolean;
-
                 createNewFile(): boolean;
-
                 delete(): boolean;
-
                 deleteOnExit(): void;
-
                 exists(): boolean;
-
+                getAbsoluteFile(): File;
                 getAbsolutePath(): string;
-
+                getCanonicalFile(): File;
                 getCanonicalPath(): string;
-
+                getFreeSpace(): number;
                 getName(): string;
-
                 getParent(): string;
-
+                getParentFile(): File;
                 getPath(): string;
-
+                getTotalSpace(): number;
+                getUsableSpace(): number;
                 isAbsolute(): boolean;
-
                 isDirectory(): boolean;
-
                 isFile(): boolean;
-
                 isHidden(): boolean;
-
+                lastModified(): number;
                 length(): number;
                 list(): JavaArray<string>;
+                list(filter: MethodWrapper<File, string, boolean>): JavaArray<string>;
                 listFiles(): JavaArray<File>;
+                listFiles(filter: MethodWrapper<File, any, boolean>): JavaArray<File>;
+                listFiles(filter: MethodWrapper<File, string, boolean>): JavaArray<File>;
                 mkdir(): boolean;
-
                 mkdirs(): boolean;
-
                 renameTo(dest: File): boolean;
-
                 setExecutable(executable: boolean, ownerOnly?: boolean): boolean;
                 setLastModified(time: long): boolean;
                 setReadable(readable: boolean, ownerOnly?: boolean): boolean;
-
+                setReadonly(): boolean;
                 setWritable(writable: boolean, ownerOnly?: boolean): boolean;
-
-                toString(): string;
-
-                toURI(): java.net.URI;
+                toPath(): nio.file.Path;
+                toURI(): net.URI;
+                toURL(): net.URL;
 
             }
 
-            const Serializable: JavaInterfaceStatics<Serializable>;
-            interface Serializable extends JavaObject {}
+            abstract class Serializable extends java.lang.Interface {
+                static readonly class: JavaClass<Serializable>;
+                /** @deprecated */ static prototype: undefined;
+            }
+            interface Serializable {}
 
             export { File, Serializable }
 
@@ -556,70 +594,73 @@ declare namespace Packages {
 
         namespace net {
 
-            const URL: JavaClassStatics<URL, URL$$constructor>;
-            interface URL$$constructor extends SuppressProperties {
+            interface URL extends io.Serializable {}
+            class URL extends java.lang.Object {
+                static readonly class: JavaClass<URL>;
+                /** @deprecated */ static prototype: undefined;
 
-                new (protocol: string, host: string, port: int, file: string): URL;
-                new (protocol: string, host: string, file: string): URL;
-                new (spec: string): URL;
-                new (context: URL, spec: string): URL;
+                static setURLStreamHandlerFactory(fac: URLStreamHandlerFactory): void;
 
-            }
-            interface URL extends JavaObject {
+                constructor (spec: string);
+                constructor (protocol: string, host: string, port: int, file: string, handler?: URLStreamHandler);
+                constructor (protocol: string, host: string, file: string);
+                constructor (context: URL, spec: string, handler?: URLStreamHandler);
 
+                getAuthority(): string;
+                getContent(classes?: JavaClassArg[]): any;
+                getDefaultPort(): number;
                 getFile(): string;
-
+                getHost(): string;
                 getPath(): string;
-
+                getPort(): number;
                 getProtocol(): string;
-
-                getRef(): string;
-
                 getQuery(): string;
-
-                toString(): string;
-
+                getRef(): string;
+                getUserInfo(): string;
+                openConnection(proxy?: Proxy): URLConnection;
+                openStream(): io.InputStream;
+                sameFile(other: URL): boolean;
+                toExternalForm(): string;
                 toURI(): URI;
 
             }
 
-            const URI: JavaClassStatics<URI, URI$$constructor> & {
+            interface URI extends lang.Comparable<URI>, io.Serializable {}
+            class URI extends java.lang.Object {
+                static readonly class: JavaClass<URI>;
+                /** @deprecated */ static prototype: undefined;
 
-                create(str: string): URI;
+                static create(str: string): URI;
 
-            }
-            interface URI$$constructor extends SuppressProperties {
+                constructor (str: string);
+                constructor (scheme: string, ssp: string, fragment: string);
+                constructor (scheme: string, userInfo: string, host: string, port: int, path: string, query: string, fragment: string);
+                constructor (scheme: string, host: string, path: string, fragment: string);
+                constructor (scheme: string, authority: string, path: string, query: string, fragment: string);
 
-                new (str: string): URI;
-                new (scheme: string, userInfo: string, host: string, port: int, path: string, query: string, fragment: string): URI;
-                new (scheme: string, authority: string, path: string, query: string, fragment: string): URI;
-                new (scheme: string, host: string, path: string, fragment: string): URI;
-                new (scheme: string, ssp: string, fragment: string): URI;
-                new (scheme: string, path: string): URI;
-
-            }
-            interface URI extends java.lang.Comparable<URI>, java.io.Serializable {
-
+                getAuthority(): string;
+                getFragment(): string;
                 getHost(): string;
-
                 getPath(): string;
-
                 getPort(): number;
-
                 getQuery(): string;
-
+                getRawAuthority(): string;
+                getRawFragment(): string;
+                getRawPath(): string;
+                getRawQuery(): string;
+                getRawSchemeSpecificPart(): string;
+                getRawUserInfo(): string;
                 getScheme(): string;
-
+                getSchemeSpecificPart(): string;
+                getUserInfo(): string;
+                isAbsolute(): boolean;
+                isOpaque(): boolean;
                 normalize(): URI;
-
+                parseServerAuthority(): URI;
                 relativize(uri: URI): URI;
-
                 resolve(str: string): URI;
-
+                resolve(uri: URI): URI;
                 toASCIIString(): string;
-
-                toString(): string;
-
                 toURL(): URL;
 
             }
@@ -632,7 +673,7 @@ declare namespace Packages {
 
 }
 
-type char   = number & {};
+type char   = number | string;
 type byte   = number & {};
 type short  = number & {};
 type int    = number & {};
@@ -641,6 +682,7 @@ type float  = number & {};
 type double = number & {};
 
 type JavaClassArg<T = any> = JavaClass<T> | { readonly class: JavaClass<T> };
+type JavaVarArgs<T> = T[] | [T[]];
 
 type JavaObject                = Packages.java.lang.Object;
 type JavaClass<T = any>        = Packages.java.lang.Class<T>;
@@ -648,4 +690,4 @@ type JavaArray<T = any>        = Packages.java.lang.Array<T>;
 type JavaCollection<T = any>   = Packages.java.util.Collection<T>;
 type JavaList<T = any>         = Packages.java.util.List<T>;
 type JavaSet<T = any>          = Packages.java.util.Set<T>;
-type JavaMap<K = any, V = any> = Packages.java.util.Map<K, V> & Record<Extract<K, string | number>, V>;
+type JavaMap<K = any, V = any> = Packages.java.util.Map<K, V> & Partial<Record<Extract<K, string | number>, V>>;

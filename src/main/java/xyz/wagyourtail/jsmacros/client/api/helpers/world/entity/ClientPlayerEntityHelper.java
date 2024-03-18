@@ -715,7 +715,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      * @since 1.6.5
      */
-    @DocletReplaceParams("item: ItemId")
+    @DocletReplaceParams("item: CanOmitNamespace<ItemId>")
     public int getItemCooldownRemainingTicks(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();
@@ -742,7 +742,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @return
      * @since 1.6.5
      */
-    @DocletReplaceParams("item: ItemId")
+    @DocletReplaceParams("item: CanOmitNamespace<ItemId>")
     public int getTicksSinceCooldownStart(String item) {
         int tick = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getManagerTicks();
         Map<Item, IItemCooldownEntry> map = ((IItemCooldownManager) base.getItemCooldownManager()).jsmacros_getCooldownItems();

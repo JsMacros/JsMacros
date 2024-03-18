@@ -11,6 +11,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.CreativeItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
@@ -36,7 +37,7 @@ public class RegistryHelper {
      * @return an {@link ItemHelper} for the given item.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: ItemId")
+    @DocletReplaceParams("id: CanOmitNamespace<ItemId>")
     public ItemHelper getItem(String id) {
         return new ItemHelper(Registries.ITEM.get(parseIdentifier(id)));
     }
@@ -46,7 +47,7 @@ public class RegistryHelper {
      * @return an {@link ItemStackHelper} for the given item.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: ItemId")
+    @DocletReplaceParams("id: CanOmitNamespace<ItemId>")
     public ItemStackHelper getItemStack(String id) {
         return new CreativeItemStackHelper(new ItemStack(Registries.ITEM.get(parseIdentifier(id))));
     }
@@ -58,7 +59,7 @@ public class RegistryHelper {
      * @throws CommandSyntaxException if the nbt data is invalid.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: ItemId, nbt: string")
+    @DocletReplaceParams("id: CanOmitNamespace<ItemId>, nbt: string")
     public ItemStackHelper getItemStack(String id, String nbt) throws CommandSyntaxException {
         ItemStringReader.ItemResult itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(parseNameSpace(id) + nbt));
         ItemStack stack = new ItemStack(itemResult.item());
@@ -88,7 +89,7 @@ public class RegistryHelper {
      * @return an {@link BlockHelper} for the given block.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: BlockId")
+    @DocletReplaceParams("id: CanOmitNamespace<BlockId>")
     public BlockHelper getBlock(String id) {
         return new BlockHelper(Registries.BLOCK.get(parseIdentifier(id)));
     }
@@ -98,7 +99,7 @@ public class RegistryHelper {
      * @return an {@link BlockStateHelper} for the given block.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: BlockId")
+    @DocletReplaceParams("id: CanOmitNamespace<BlockId>")
     public BlockStateHelper getBlockState(String id) {
         return new BlockStateHelper(Registries.BLOCK.get(parseIdentifier(id)).getDefaultState());
     }
@@ -107,6 +108,7 @@ public class RegistryHelper {
      * @param id the status effect's id
      * @return an {@link StatusEffectHelper} for the given status effect with 0 ticks duration.
      */
+    @DocletReplaceParams("id: CanOmitNamespace<StatusEffectId>")
     public StatusEffectHelper getStatusEffect(String id) {
         return new StatusEffectHelper(Registries.STATUS_EFFECT.get(parseIdentifier(id)));
     }
@@ -126,7 +128,7 @@ public class RegistryHelper {
      * @throws CommandSyntaxException if the nbt data is invalid.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: BlockId, nbt: string")
+    @DocletReplaceParams("id: CanOmitNamespace<BlockId>, nbt: string")
     public BlockStateHelper getBlockState(String id, String nbt) throws CommandSyntaxException {
         return new BlockStateHelper(BlockArgumentParser.block(Registries.BLOCK.getReadOnlyWrapper(), parseNameSpace(id) + nbt, false).blockState());
     }
@@ -164,7 +166,7 @@ public class RegistryHelper {
      * @return an {@link EnchantmentHelper} for the given enchantment with the specified level.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: EnchantmentId, level: int")
+    @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>, level: int")
     public EnchantmentHelper getEnchantment(String id, int level) {
         return new EnchantmentHelper(Registries.ENCHANTMENT.get(parseIdentifier(id)), level);
     }
@@ -191,6 +193,9 @@ public class RegistryHelper {
      * @return an {@link EntityHelper} for the given entity.
      * @since 1.8.4
      */
+    @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
+    @DocletReplaceParams("type: E")
+    @DocletReplaceReturn("EntityTypeFromId<E>")
     public EntityHelper<?> getEntity(String type) {
         return EntityHelper.create(Registries.ENTITY_TYPE.get(parseIdentifier(type)).create(MinecraftClient.getInstance().world));
     }
@@ -200,7 +205,7 @@ public class RegistryHelper {
      * @return an {@link EntityType} for the given entity.
      * @since 1.8.4
      */
-    @DocletReplaceParams("type: EntityId")
+    @DocletReplaceParams("type: CanOmitNamespace<EntityId>")
     public EntityType<?> getRawEntityType(String type) {
         return Registries.ENTITY_TYPE.get(parseIdentifier(type));
     }
@@ -219,6 +224,7 @@ public class RegistryHelper {
      * @return an {@link FluidStateHelper} for the given fluid.
      * @since 1.8.4
      */
+    @DocletReplaceParams("id: CanOmitNamespace<FluidId>")
     public FluidStateHelper getFluidState(String id) {
         return new FluidStateHelper(Registries.FLUID.get(parseIdentifier(id)).getDefaultState());
     }

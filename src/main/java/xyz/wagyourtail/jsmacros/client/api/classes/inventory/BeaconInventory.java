@@ -6,6 +6,10 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.network.packet.c2s.play.UpdateBeaconC2SPacket;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IBeaconScreen;
 
 import java.util.Arrays;
@@ -32,18 +36,22 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      * @return
      * @since 1.5.1
      */
+    @DocletReplaceReturn("BeaconStatusEffect | null")
+    @Nullable
     public String getFirstEffect() {
         StatusEffect effect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
-        return Registries.STATUS_EFFECT.getId(effect).toString();
+        return effect == null ? null : Registries.STATUS_EFFECT.getId(effect).toString();
     }
 
     /**
      * @return
      * @since 1.5.1
      */
+    @DocletReplaceReturn("BeaconStatusEffect | null")
+    @Nullable
     public String getSecondEffect() {
         StatusEffect effect = ((IBeaconScreen) inventory).jsmacros_getSecondaryEffect();
-        return Registries.STATUS_EFFECT.getId(effect).toString();
+        return effect == null ? null : Registries.STATUS_EFFECT.getId(effect).toString();
     }
 
     /**
@@ -51,6 +59,7 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      * @return
      * @since 1.5.1
      */
+    @DocletReplaceParams("id: BeaconStatusEffect")
     public boolean selectFirstEffect(String id) {
         StatusEffect matchEffect;
         for (int i = 0; i < Math.min(getLevel(), 2); i++) {
@@ -68,6 +77,7 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
      * @return
      * @since 1.5.1
      */
+    @DocletReplaceParams("id: BeaconStatusEffect")
     public boolean selectSecondEffect(String id) {
         if (getLevel() >= 3) {
             StatusEffect primaryEffect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();

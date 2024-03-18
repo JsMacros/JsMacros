@@ -34,7 +34,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
         this.level = level;
     }
 
-    @DocletReplaceParams("enchantment: EnchantmentId")
+    @DocletReplaceParams("enchantment: CanOmitNamespace<EnchantmentId>")
     public EnchantmentHelper(String enchantment) {
         this(Registries.ENCHANTMENT.get(new Identifier(enchantment)));
     }
@@ -303,7 +303,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * {@code false} otherwise.
      * @since 1.8.4
      */
-    @DocletReplaceParams("enchantment: EnchantmentId")
+    @DocletReplaceParams("enchantment: CanOmitNamespace<EnchantmentId>")
     public boolean isCompatible(String enchantment) {
         return base.canCombine(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
     }

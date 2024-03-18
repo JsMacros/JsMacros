@@ -6,7 +6,7 @@ declare namespace Packages {
 
         export const minecraft: McPackage;
         interface McPackage extends JavaPackageColoring, Record<`class_${string}`, McClass> {}
-        interface McClass extends SuppressProperties, Record<string, any> {
+        interface McClass extends java.lang.Object, Record<string, any> {
             new (...args: any[]): any;
             readonly class: JavaClass;
         }

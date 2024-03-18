@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.other;
 
 import net.minecraft.entity.AreaEffectCloudEntity;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 /**
@@ -34,6 +35,7 @@ public class AreaEffectCloudEntityHelper extends EntityHelper<AreaEffectCloudEnt
      * @return the id of this cloud's particles.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("ParticleId")
     public String getParticleType() {
         return base.getParticleType().asString();
     }

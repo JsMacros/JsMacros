@@ -33,6 +33,8 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.RaycastContext;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -198,6 +200,7 @@ public class FWorld extends BaseLibrary {
      * @return a builder to create a WorldScanner.
      * @since 1.6.5
      */
+    @DocletReplaceReturn("TypedWorldScannerBuilder.Initial")
     public WorldScannerBuilder getWorldScanner() {
         return new WorldScannerBuilder();
     }
@@ -220,7 +223,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.6.4
      */
     @Nullable
-    @DocletReplaceParams("centerX: int, centerZ: int, id: BlockId, chunkrange: int")
+    @DocletReplaceParams("centerX: int, centerZ: int, id: CanOmitNamespace<BlockId>, chunkrange: int")
     public List<Pos3D> findBlocksMatching(int centerX, int centerZ, String id, int chunkrange) {
         ClientWorld world = mc.world;
         if (world == null) return null;
@@ -235,7 +238,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.6.4
      */
     @Nullable
-    @DocletReplaceParams("id: BlockId, chunkrange: int")
+    @DocletReplaceParams("id: CanOmitNamespace<BlockId>, chunkrange: int")
     public List<Pos3D> findBlocksMatching(String id, int chunkrange) {
         ClientWorld world = mc.world;
         ClientPlayerEntity player = mc.player;
@@ -253,7 +256,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.6.4
      */
     @Nullable
-    @DocletReplaceParams("ids: BlockId[], chunkrange: int")
+    @DocletReplaceParams("ids: CanOmitNamespace<BlockId>[], chunkrange: int")
     public List<Pos3D> findBlocksMatching(String[] ids, int chunkrange) {
         ClientWorld world = mc.world;
         ClientPlayerEntity player = mc.player;
@@ -273,7 +276,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.6.4
      */
     @Nullable
-    @DocletReplaceParams("centerX: int, centerZ: int, ids: BlockId[], chunkrange: int")
+    @DocletReplaceParams("centerX: int, centerZ: int, ids: CanOmitNamespace<BlockId>[], chunkrange: int")
     public List<Pos3D> findBlocksMatching(int centerX, int centerZ, String[] ids, int chunkrange) {
         ClientWorld world = mc.world;
         if (world == null) return null;
@@ -427,7 +430,9 @@ public class FWorld extends BaseLibrary {
      * @since 1.8.4
      */
     @Nullable
-    @DocletReplaceParams("...types: EntityId[]")
+    @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
+    @DocletReplaceParams("...types: E[]")
+    @DocletReplaceReturn("JavaList<EntityTypeFromId<E>> | null")
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registries.ENTITY_TYPE.getId(entity.getType()).toString());
@@ -454,7 +459,9 @@ public class FWorld extends BaseLibrary {
      * @since 1.8.4
      */
     @Nullable
-    @DocletReplaceParams("distance: double, ...types: EntityId[]")
+    @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
+    @DocletReplaceParams("distance: double, ...types: E[]")
+    @DocletReplaceReturn("JavaList<EntityTypeFromId<E>> | null")
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         ClientPlayerEntity player = mc.player;
         if (player == null) return null;
@@ -548,10 +555,12 @@ public class FWorld extends BaseLibrary {
     }
 
     /**
+     * note that some server might utilize dimension identifiers for mods to distinguish between worlds.
      * @return the current dimension.
      * @since 1.1.2
      */
     @Nullable
+    @DocletReplaceReturn("Dimension | null")
     public String getDimension() {
         ClientWorld world = mc.world;
         if (world == null) return null;
@@ -563,6 +572,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.1.5
      */
     @Nullable
+    @DocletReplaceReturn("Biome | null")
     public String getBiome() {
         ClientWorld world = mc.world;
         ClientPlayerEntity player = mc.player;
@@ -772,7 +782,7 @@ public class FWorld extends BaseLibrary {
      * @see FWorld#playSound(String, double, double, double, double, double)
      * @since 1.1.7
      */
-    @DocletReplaceParams("id: SoundId, volume: double, pitch: double")
+    @DocletReplaceParams("id: CanOmitNamespace<SoundId>, volume: double, pitch: double")
     public void playSound(String id, double volume, double pitch) {
         SoundEvent sound = SoundEvent.of(new Identifier(id));
         assert sound != null;
@@ -790,7 +800,7 @@ public class FWorld extends BaseLibrary {
      * @param z
      * @since 1.1.7
      */
-    @DocletReplaceParams("id: SoundId, volume: double, pitch: double, x: double, y: double, z: double")
+    @DocletReplaceParams("id: CanOmitNamespace<SoundId>, volume: double, pitch: double, x: double, y: double, z: double")
     public void playSound(String id, double volume, double pitch, double x, double y, double z) {
         ClientWorld world = mc.world;
         if (world == null) return;
@@ -851,6 +861,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.2.2 [Citation Needed]
      */
     @Nullable
+    @DocletReplaceReturn("Biome | null")
     public String getBiomeAt(int x, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
@@ -866,6 +877,7 @@ public class FWorld extends BaseLibrary {
      * @since 1.8.4
      */
     @Nullable
+    @DocletReplaceReturn("Biome | null")
     public String getBiomeAt(int x, int y, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
@@ -877,6 +889,7 @@ public class FWorld extends BaseLibrary {
      * @return best attempt to measure and give the server tps with various timings.
      * @since 1.2.7
      */
+    @DocletReplaceReturn("`${number}, 1M: ${number}, 5M: ${number}, 15M: ${number}`")
     public String getServerTPS() {
         return String.format("%.2f, 1M: %.1f, 5M: %.1f, 15M: %.1f", serverInstantTPS, server1MAverageTPS, server5MAverageTPS, server15MAverageTPS);
     }
@@ -930,7 +943,7 @@ public class FWorld extends BaseLibrary {
      * @param force  whether to show the particle if it's more than 32 blocks away
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: ParticleId, x: double, y: double, z: double, deltaX: double, deltaY: double, deltaZ: double, speed: double, count: int, force: boolean")
+    @DocletReplaceParams("id: CanOmitNamespace<ParticleId>, x: double, y: double, z: double, deltaX: double, deltaY: double, deltaZ: double, speed: double, count: int, force: boolean")
     public void spawnParticle(String id, double x, double y, double z, double deltaX, double deltaY, double deltaZ, double speed, int count, boolean force) {
         ClientPlayerEntity player = mc.player;
         if (player == null) return;
