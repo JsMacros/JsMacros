@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class LibraryParser extends AbstractParser {
-    protected final String name;
+    public final String name;
 
     public LibraryParser(TypeElement type, String name) {
         super(type);

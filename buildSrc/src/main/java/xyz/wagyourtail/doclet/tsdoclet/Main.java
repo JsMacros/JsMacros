@@ -73,8 +73,8 @@ public class Main implements Doclet {
 
         AbstractParser.initObjectElement();
 
-        Set<LibraryParser> libraryClasses = new LinkedHashSet<>();
-        Set<EventParser> eventClasses = new LinkedHashSet<>();
+        Set<LibraryParser> libraryClasses = new TreeSet<>((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.name, b.name));
+        Set<EventParser> eventClasses = new TreeSet<>((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.getName(), b.getName()));
 
         outputTS = new FileHandler(new File(OutputDirectory.outputDir, "JsMacros-" + Version.version + ".d.ts"));
 
