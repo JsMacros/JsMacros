@@ -70,7 +70,7 @@ namespace Packages {
     }
 
   }
-  namespace names { // split namespace (`names` for this example) for exports and namesaces that doesn't need export
+  namespace names { // split namespace (`names` for this example) for exports and namespaces that doesn't need export
 
     namespace subnamespace {}
 
