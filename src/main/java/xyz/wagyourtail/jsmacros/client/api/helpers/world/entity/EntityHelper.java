@@ -28,6 +28,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
@@ -57,6 +58,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.vehi
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -459,7 +461,9 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @param e mc entity.
      * @return correct subclass of this.
      */
-    public static EntityHelper<?> create(Entity e) {
+    public static EntityHelper<?> create(@NotNull Entity e) {
+        Objects.requireNonNull(e, "Entity cannot be null.");
+
         // Players
         if (e instanceof ClientPlayerEntity) {
             return new ClientPlayerEntityHelper<>((ClientPlayerEntity) e);
