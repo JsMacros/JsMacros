@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
+import net.minecraft.client.gui.widget.CheckboxWidget;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -13,13 +14,13 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHelper, CheckBox> {
+public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHelper, CheckboxWidget> {
 
-    public CheckBoxWidgetHelper(CheckBox btn) {
+    public CheckBoxWidgetHelper(CheckboxWidget btn) {
         super(btn);
     }
 
-    public CheckBoxWidgetHelper(CheckBox btn, int zIndex) {
+    public CheckBoxWidgetHelper(CheckboxWidget btn, int zIndex) {
         super(btn, zIndex);
     }
 
@@ -60,7 +61,7 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
      * @author Etheradon
      * @since 1.8.4
      */
-    public static class CheckBoxBuilder extends AbstractWidgetBuilder<CheckBoxBuilder, CheckBox, CheckBoxWidgetHelper> {
+    public static class CheckBoxBuilder extends AbstractWidgetBuilder<CheckBoxBuilder, CheckboxWidget, CheckBoxWidgetHelper> {
 
         private boolean checked = false;
         @Nullable
@@ -110,15 +111,19 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
         @Override
         public CheckBoxWidgetHelper createWidget() {
             AtomicReference<CheckBoxWidgetHelper> b = new AtomicReference<>(null);
-            CheckBox checkBox = new CheckBox(getX(), getY(), getWidth(), getHeight(), getMessage().getRaw(), checked, btn -> {
-                try {
-                    if (action != null) {
-                        action.accept(b.get(), screen);
+            CheckboxWidget checkBox = new CheckboxWidget(getX(), getY(), getWidth(), getHeight(), getMessage().getRaw(), checked) {
+                @Override
+                public void onPress() {
+                    super.onPress();
+                    try {
+                        if (action != null) {
+                            action.accept(b.get(), screen);
+                        }
+                    } catch (Exception e) {
+                        Core.getInstance().profile.logError(e);
                     }
-                } catch (Exception e) {
-                    Core.getInstance().profile.logError(e);
                 }
-            });
+            };
             b.set(new CheckBoxWidgetHelper(checkBox, getZIndex()));
             return b.get();
         }

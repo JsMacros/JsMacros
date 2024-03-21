@@ -75,11 +75,11 @@ public class Slider extends ClickableWidget {
     }
 
     @Override
-    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    protected void renderButton(DrawContext context, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int offset = (isHovered() ? 2 : 1) * 20;
-        drawContext.drawTexture(WIDGETS_TEXTURE, getX() + (int) (value * (double) (width - 8)), getY(), 0, 46 + offset, 4, 20);
-        drawContext.drawTexture(WIDGETS_TEXTURE, getX() + (int) (value * (double) (width - 8)) + 4, getY(), 196, 46 + offset, 4, 20);
+        context.drawTexture(WIDGETS_TEXTURE, getX() + (int) (value * (double) (width - 8)), getY(), 0, 46 + offset, 4, 20);
+        context.drawTexture(WIDGETS_TEXTURE, getX() + (int) (value * (double) (width - 8)) + 4, getY(), 196, 46 + offset, 4, 20);
     }
 
     @Override

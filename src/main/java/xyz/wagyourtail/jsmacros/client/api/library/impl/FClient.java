@@ -183,7 +183,7 @@ public class FClient extends PerExecLibrary {
             } else {
                 mc.disconnect();
             }
-            mc.createIntegratedServerLoader().start(null, folderName);
+            mc.createIntegratedServerLoader().start(new TitleScreen(), folderName);
         });
     }
 
