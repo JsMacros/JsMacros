@@ -38,6 +38,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.chunk.Chunk;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
@@ -137,7 +138,9 @@ public class FJavaUtils extends BaseLibrary {
      * @since 1.8.4
      */
     @Nullable
-    public Object getHelperFromRaw(Object raw) {
+    public Object getHelperFromRaw(@NotNull Object raw) {
+        Objects.requireNonNull(raw, "Object cannot be null.");
+
         // Didn't implement CommandNodeHelper, TradeOfferHelper, ModContainerHelper
         if (raw instanceof Entity) {
             return EntityHelper.create(((Entity) raw));
