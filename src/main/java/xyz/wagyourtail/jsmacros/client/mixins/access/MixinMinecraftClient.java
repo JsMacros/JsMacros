@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Group;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -148,13 +149,6 @@ class MixinMinecraftClient implements IMinecraftClient {
     @Inject(at = @At("TAIL"), method = "handleInputEvents")
     private void ensureInteracting(CallbackInfo ci) {
         InteractionProxy.Interact.ensureInteracting(itemUseCooldown);
-    }
-
-    @ModifyExpressionValue(method = "handleBlockBreaking", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isAir()Z"))
-    private boolean catchEmptyShapeException(boolean value, @Local BlockPos blockPos) {
-        if (value) return true;
-        assert world != null;
-        return world.getBlockState(blockPos).getOutlineShape(world, blockPos).isEmpty();
     }
 
     @Override

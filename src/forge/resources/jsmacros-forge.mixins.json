@@ -4,6 +4,7 @@
   "mixins": [
   ],
   "client": [
+    "access.MixinMinecraftClient"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,14 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.criterion.CriterionProgress;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementProgress;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -43,9 +42,9 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @since 1.8.4
      */
     public Map<String, Long> getCriteria() {
-        return ((MixinAdvancementProgress) base).getCriteriaProgresses().entrySet().stream().filter(e -> e.getValue().getObtainedTime() != null).collect(Collectors.toMap(
+        return ((MixinAdvancementProgress) base).getCriteriaProgresses().entrySet().stream().filter(e -> e.getValue().getObtainedDate() != null).collect(Collectors.toMap(
                 Map.Entry::getKey,
-                criterionProgressEntry -> criterionProgressEntry.getValue().getObtainedTime().toEpochMilli()
+                criterionProgressEntry -> criterionProgressEntry.getValue().getObtainedDate().toEpochMilli()
         ));
     }
 
@@ -54,7 +53,11 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      * @since 1.8.4
      */
     public List<List<String>> getRequirements() {
-        return ((MixinAdvancementProgress) base).getRequirements().requirements();
+        List<List<String>> requirements = new ArrayList<>();
+        for (String[] reqs : ((MixinAdvancementProgress) base).getRequirements().requirements()) {
+            requirements.add(Arrays.asList(reqs));
+        }
+        return ImmutableList.copyOf(requirements);
     }
 
     /**
@@ -113,7 +116,7 @@ public class AdvancementProgressHelper extends BaseHelper<AdvancementProgress> {
      */
     public long getCriterionProgress(String criteria) {
         CriterionProgress progress = base.getCriterionProgress(criteria);
-        return progress == null ? -1 : progress.getObtainedTime().toEpochMilli();
+        return progress == null ? -1 : progress.getObtainedDate().toEpochMilli();
     }
 
     /**

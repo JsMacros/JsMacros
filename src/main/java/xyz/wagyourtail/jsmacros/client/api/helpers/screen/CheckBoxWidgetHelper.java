@@ -110,17 +110,19 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
         @Override
         public CheckBoxWidgetHelper createWidget() {
             AtomicReference<CheckBoxWidgetHelper> b = new AtomicReference<>(null);
-            CheckboxWidget checkBox = CheckboxWidget.builder(getMessage().getRaw(), mc.textRenderer).callback((btn, value) -> {
-                try {
-                    if (action != null) {
-                        action.accept(b.get(), screen);
+            CheckboxWidget checkBox = new CheckboxWidget(getX(), getY(), getWidth(), getHeight(), getMessage().getRaw(), checked) {
+                @Override
+                public void onPress() {
+                    super.onPress();
+                    try {
+                        if (action != null) {
+                            action.accept(b.get(), screen);
+                        }
+                    } catch (Exception e) {
+                        Core.getInstance().profile.logError(e);
                     }
-                } catch (Exception e) {
-                    Core.getInstance().profile.logError(e);
                 }
-            }).pos(getX(), getY()).checked(isChecked()).build();
-            checkBox.setWidth(getWidth());
-            checkBox.setHeight(getHeight());
+            };
             b.set(new CheckBoxWidgetHelper(checkBox, getZIndex()));
             return b.get();
         }

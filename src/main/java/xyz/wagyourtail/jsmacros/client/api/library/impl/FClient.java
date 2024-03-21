@@ -1,9 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
@@ -183,7 +183,7 @@ public class FClient extends PerExecLibrary {
             } else {
                 mc.disconnect();
             }
-            mc.createIntegratedServerLoader().start(folderName, () -> mc.setScreen(new TitleScreen()));
+            mc.createIntegratedServerLoader().start(new TitleScreen(), folderName);
         });
     }
 

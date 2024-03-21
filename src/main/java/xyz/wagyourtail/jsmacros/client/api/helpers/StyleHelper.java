@@ -137,7 +137,7 @@ public class StyleHelper extends BaseHelper<Style> {
     @DocletReplaceReturn("TextHoverAction | null")
     @Nullable
     public String getHoverAction() {
-        return base.getHoverEvent() == null ? null : base.getHoverEvent().getAction().asString();
+        return base.getHoverEvent() == null ? null : base.getHoverEvent().getAction().getName();
     }
 
     @Nullable

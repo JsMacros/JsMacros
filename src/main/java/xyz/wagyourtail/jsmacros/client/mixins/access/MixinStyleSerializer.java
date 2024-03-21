@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(value = Style.Codecs.class, priority = 1001)
+@Mixin(value = Style.Serializer.class, priority = 1001)
 public class MixinStyleSerializer {
 
-    @ModifyExpressionValue(method = "method_54215", at = @At(value = "FIELD", target = "Lnet/minecraft/text/Style;clickEvent:Lnet/minecraft/text/ClickEvent;", opcode = Opcodes.GETFIELD))
-    private static ClickEvent redirectClickGetAction(ClickEvent original) {
+    @ModifyExpressionValue(method = "serialize(Lnet/minecraft/text/Style;Ljava/lang/reflect/Type;Lcom/google/gson/JsonSerializationContext;)Lcom/google/gson/JsonElement;", at = @At(value = "FIELD", target = "Lnet/minecraft/text/Style;clickEvent:Lnet/minecraft/text/ClickEvent;", opcode = Opcodes.GETFIELD))
+    private ClickEvent redirectClickGetAction(ClickEvent original) {
         if (original == null) return null;
         if (original.getAction() == null) {
             return null;
