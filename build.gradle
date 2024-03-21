@@ -81,10 +81,14 @@ unimined.minecraft {
     mappings {
         intermediary()
         yarn project.yarn_mappings
+
+        devFallbackNamespace "intermediary"
     }
 
-    defaultRemapJar = false
-    runs.off = true
+    if (sourceSet == sourceSets.main) {
+        defaultRemapJar = false
+        runs.off = true
+    }
 }
 
 sourceSets {
@@ -98,14 +102,7 @@ sourceSets {
 if (enabled_loaders.contains("forge")) {
 
     unimined.minecraft(sourceSets.forge) {
-        version project.minecraft_version
-
-        mappings {
-            intermediary()
-            yarn project.yarn_mappings
-
-            devFallbackNamespace "intermediary"
-        }
+        combineWith(sourceSets.main)
 
         minecraftRemapper.config {
             ignoreConflicts(true)
@@ -117,31 +114,19 @@ if (enabled_loaders.contains("forge")) {
             mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json", "fabric-command-api-v1.mixins.json"]
         }
     }
-} else {
-    configurations {
-        forgeRuntimeOnly
-    }
+
 }
 
 if (enabled_loaders.contains("fabric")) {
 
     unimined.minecraft(sourceSets.fabric) {
-        version project.minecraft_version
-
-        mappings {
-            yarn project.yarn_mappings
-        }
+        combineWith(sourceSets.main)
 
         fabric {
             loader project.fabric_loader_version
         }
     }
-} else {
-    configurations {
-        fabricModImplementation
-        fabricRuntimeOnly
-        fabricInclude
-    }
+
 }
 
 dependencies {
@@ -155,41 +140,55 @@ dependencies {
     coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
     coreImplementation "org.javassist:javassist:3.28.0-GA"
 
-    fabricModImplementation fabricApi.module("fabric-api-base", project.fapi_version)
-    fabricModImplementation fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
-    fabricModImplementation fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
-    fabricModImplementation fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
-    fabricModImplementation fabricApi.module("fabric-command-api-v1", project.fapi_version)
-
-    fabricInclude fabricApi.module("fabric-api-base", project.fapi_version)
-    fabricInclude fabricApi.module("fabric-lifecycle-events-v1", project.fapi_version)
-    fabricInclude fabricApi.module("fabric-key-binding-api-v1", project.fapi_version)
-    fabricInclude fabricApi.module("fabric-resource-loader-v0", project.fapi_version)
-    fabricInclude fabricApi.module("fabric-command-api-v1", project.fapi_version)
-
-    fabricInclude "io.noties:prism4j:${project.prism_version}"
-    fabricInclude "com.neovisionaries:nv-websocket-client:2.10"
-    fabricInclude "org.javassist:javassist:3.28.0-GA"
-    fabricInclude "org.jooq:joor:0.9.14"
-
-    fabricModImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-    fabricModImplementation fabricApi.module("fabric-screen-api-v1", project.fapi_version)
-
-    shadowForge "io.noties:prism4j:${project.prism_version}", {
-        exclude module: "annotations-java5"
-    }
-    shadowForge "com.neovisionaries:nv-websocket-client:2.10"
-    shadowForge "org.javassist:javassist:3.28.0-GA"
-    shadowForge "org.jooq:joor:0.9.14"
-
-    fabricRuntimeOnly(forgeRuntimeOnly(project(":javascript_extension")) { transitive = false })
-
-    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.sdk:graal-sdk:${project.graal_version}"))
-    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.js:js:${project.graal_version}"))
-    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.truffle:truffle-api:${project.graal_version}"))
-    fabricRuntimeOnly(forgeRuntimeOnly("org.graalvm.regex:regex:${project.graal_version}"))
-
     jsmacrosExtensionInclude(project(":javascript_extension")) { transitive = false }
+
+    if (enabled_loaders.contains("fabric")) {
+
+        fabricModImplementation fabricApi.fabricModule("fabric-api-base", project.fapi_version)
+        fabricModImplementation fabricApi.fabricModule("fabric-lifecycle-events-v1", project.fapi_version)
+        fabricModImplementation fabricApi.fabricModule("fabric-key-binding-api-v1", project.fapi_version)
+        fabricModImplementation fabricApi.fabricModule("fabric-resource-loader-v0", project.fapi_version)
+        fabricModImplementation fabricApi.fabricModule("fabric-command-api-v1", project.fapi_version)
+
+        fabricInclude fabricApi.fabricModule("fabric-api-base", project.fapi_version)
+        fabricInclude fabricApi.fabricModule("fabric-lifecycle-events-v1", project.fapi_version)
+        fabricInclude fabricApi.fabricModule("fabric-key-binding-api-v1", project.fapi_version)
+        fabricInclude fabricApi.fabricModule("fabric-resource-loader-v0", project.fapi_version)
+        fabricInclude fabricApi.fabricModule("fabric-command-api-v1", project.fapi_version)
+
+        fabricInclude "io.noties:prism4j:${project.prism_version}"
+        fabricInclude "com.neovisionaries:nv-websocket-client:2.10"
+        fabricInclude "org.javassist:javassist:3.28.0-GA"
+        fabricInclude "org.jooq:joor:0.9.14"
+
+        fabricModImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+        fabricModImplementation fabricApi.fabricModule("fabric-screen-api-v1", project.fapi_version)
+
+        fabricRuntimeOnly(project(":javascript_extension")) { transitive = false }
+        fabricRuntimeOnly "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+        fabricRuntimeOnly "org.graalvm.js:js:${project.graal_version}"
+        fabricRuntimeOnly "org.graalvm.truffle:truffle-api:${project.graal_version}"
+        fabricRuntimeOnly "org.graalvm.regex:regex:${project.graal_version}"
+
+    }
+
+    if (enabled_loaders.contains("forge")) {
+
+        shadowForge "io.noties:prism4j:${project.prism_version}", {
+            exclude module: "annotations-java5"
+        }
+        shadowForge "com.neovisionaries:nv-websocket-client:2.10"
+        shadowForge "org.javassist:javassist:3.28.0-GA"
+        shadowForge "org.jooq:joor:0.9.14"
+
+
+        forgeRuntimeOnly(project(":javascript_extension")) { transitive = false }
+        forgeRuntimeOnly "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+        forgeRuntimeOnly "org.graalvm.js:js:${project.graal_version}"
+        forgeRuntimeOnly "org.graalvm.truffle:truffle-api:${project.graal_version}"
+        forgeRuntimeOnly "org.graalvm.regex:regex:${project.graal_version}"
+
+    }
 }
 
 tasks.register('removeDist', Delete) {

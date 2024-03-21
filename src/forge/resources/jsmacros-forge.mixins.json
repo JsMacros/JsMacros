@@ -4,6 +4,7 @@
   "mixins": [
   ],
   "client": [
+    "access.MixinMinecraftClient",
     "MixinGameRenderer"
   ],
   "injectors": {
