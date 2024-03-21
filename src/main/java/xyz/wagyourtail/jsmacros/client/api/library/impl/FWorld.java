@@ -224,7 +224,7 @@ public class FWorld extends BaseLibrary {
         ClientWorld world = mc.world;
         if (world == null) return null;
         String finalId = RegistryHelper.parseNameSpace(id);
-        return new WorldScanner(world, block -> Registries.BLOCK.getId(block.getRaw()).toString().equals(finalId), null).scanChunkRange(centerX, centerZ, chunkrange);
+        return new WorldScanner(world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(finalId), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 
     /**
@@ -242,7 +242,7 @@ public class FWorld extends BaseLibrary {
         String finalId = RegistryHelper.parseNameSpace(id);
         int playerChunkX = player.getBlockX() >> 4;
         int playerChunkZ = player.getBlockZ() >> 4;
-        return new WorldScanner(world, block -> Registries.BLOCK.getId(block.getRaw()).toString().equals(finalId), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
+        return new WorldScanner(world, block -> Registry.BLOCK.getId(block.getRaw()).toString().equals(finalId), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
     }
 
     /**
@@ -260,7 +260,7 @@ public class FWorld extends BaseLibrary {
         int playerChunkX = player.getBlockX() >> 4;
         int playerChunkZ = player.getBlockZ() >> 4;
         Set<String> ids2 = Arrays.stream(ids).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
-        return new WorldScanner(world, block -> ids2.contains(Registries.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
+        return new WorldScanner(world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(playerChunkX, playerChunkZ, chunkrange);
     }
 
     /**
@@ -277,7 +277,7 @@ public class FWorld extends BaseLibrary {
         ClientWorld world = mc.world;
         if (world == null) return null;
         Set<String> ids2 = Arrays.stream(ids).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
-        return new WorldScanner(world, block -> ids2.contains(Registries.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
+        return new WorldScanner(world, block -> ids2.contains(Registry.BLOCK.getId(block.getRaw()).toString()), null).scanChunkRange(centerX, centerZ, chunkrange);
     }
 
     /**
@@ -459,7 +459,7 @@ public class FWorld extends BaseLibrary {
         if (player == null) return null;
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
         Predicate<Entity> distancePredicate = e -> e.distanceTo(player) <= distance;
-        Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registries.ENTITY_TYPE.getId(entity.getType()).toString());
+        Predicate<Entity> typePredicate = entity -> uniqueTypes.contains(Registry.ENTITY_TYPE.getId(entity.getType()).toString());
         return getEntitiesInternal(distancePredicate.and(typePredicate));
     }
 
@@ -566,7 +566,7 @@ public class FWorld extends BaseLibrary {
         ClientWorld world = mc.world;
         ClientPlayerEntity player = mc.player;
         if (world == null || player == null) return null;
-        Identifier id = world.getRegistryManager().get(RegistryKeys.BIOME).getId(world.getBiome(player.getBlockPos()).value());
+        Identifier id = world.getRegistryManager().get(Registry.BIOME_KEY).getId(world.getBiome(player.getBlockPos()).value());
         return id == null ? null : id.toString();
     }
 
@@ -793,8 +793,7 @@ public class FWorld extends BaseLibrary {
     public void playSound(String id, double volume, double pitch, double x, double y, double z) {
         ClientWorld world = mc.world;
         if (world == null) return;
-        SoundEvent sound = SoundEvent.of(new Identifier(id));
-        assert sound != null;
+        SoundEvent sound = new SoundEvent(new Identifier(id));
         mc.execute(() -> world.playSound(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true));
     }
 
@@ -853,7 +852,7 @@ public class FWorld extends BaseLibrary {
     public String getBiomeAt(int x, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
-        Identifier id = world.getRegistryManager().get(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, 10, z)).value());
+        Identifier id = world.getRegistryManager().get(Registry.BIOME_KEY).getId(world.getBiome(new BlockPos(x, 10, z)).value());
         return id == null ? null : id.toString();
     }
 
@@ -868,7 +867,7 @@ public class FWorld extends BaseLibrary {
     public String getBiomeAt(int x, int y, int z) {
         ClientWorld world = mc.world;
         if (world == null) return null;
-        Identifier id = world.getRegistryManager().get(RegistryKeys.BIOME).getId(world.getBiome(new BlockPos(x, y, z)).value());
+        Identifier id = world.getRegistryManager().get(Registry.BIOME_KEY).getId(world.getBiome(new BlockPos(x, y, z)).value());
         return id == null ? null : id.toString();
     }
 
@@ -933,7 +932,7 @@ public class FWorld extends BaseLibrary {
     public void spawnParticle(String id, double x, double y, double z, double deltaX, double deltaY, double deltaZ, double speed, int count, boolean force) {
         ClientPlayerEntity player = mc.player;
         if (player == null) return;
-        ParticleEffect particle = (ParticleEffect) Registries.PARTICLE_TYPE.get(RegistryHelper.parseIdentifier(id));
+        ParticleEffect particle = (ParticleEffect) Registry.PARTICLE_TYPE.get(RegistryHelper.parseIdentifier(id));
         particle = particle != null ? particle : ParticleTypes.CLOUD;
 
         ParticleS2CPacket packet = new ParticleS2CPacket(particle, force, x, y, z, (float) deltaX, (float) deltaY, (float) deltaZ, (float) speed, count);

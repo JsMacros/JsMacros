@@ -607,7 +607,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     public CheckBoxWidgetHelper addCheckbox(int x, int y, int width, int height, int zIndex, String text, boolean checked, boolean showMessage, MethodWrapper<CheckBoxWidgetHelper, IScreen, Object, ?> callback) {
         AtomicReference<CheckBoxWidgetHelper> ref = new AtomicReference<>(null);
 
-        CheckboxWidget checkbox = new CheckboxWidget(x, y, width, height, net.minecraft.text.Text.literal(text), checked) {
+        CheckboxWidget checkbox = new CheckboxWidget(x, y, width, height, literal(text), checked) {
             @Override
             public void onPress() {
                 super.onPress();
