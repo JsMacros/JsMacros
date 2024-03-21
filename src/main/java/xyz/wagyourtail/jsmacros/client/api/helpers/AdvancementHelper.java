@@ -1,5 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
+import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.JsonOps;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -10,6 +12,7 @@ import xyz.wagyourtail.jsmacros.client.mixins.access.MixinAdvancementRewards;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinClientAdvancementManager;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +51,12 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      * @return the requirements of this advancement.
      * @since 1.8.4
      */
-    public String[][] getRequirements() {
-        return base.getRequirements();
+    public List<List<String>> getRequirements() {
+        ArrayList<List<String>> result = new ArrayList<>();
+        for (String[] reqs : base.getRequirements()) {
+            result.add(Arrays.asList(reqs));
+        }
+        return ImmutableList.copyOf(result);
     }
 
     /**
@@ -99,7 +106,7 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
      */
     @DocletReplaceReturn("JavaArray<RecipeId>")
     public String[] getRecipes() {
-        return (String[]) Arrays.stream(base.getRewards().getRecipes()).map(Identifier::toString).toArray();
+        return Arrays.stream(((MixinAdvancementRewards) base.getRewards()).getRecipes()).map(Identifier::toString).toArray(String[]::new);
     }
 
     /**
@@ -112,12 +119,14 @@ public class AdvancementHelper extends BaseHelper<Advancement> {
         return new AdvancementProgressHelper(((MixinClientAdvancementManager) player.networkHandler.getAdvancementHandler()).getAdvancementProgresses().get(base));
     }
 
-//    /**
-//     * @since 1.9.0
-//     * @return the json string of this advancement.
-//     */
-//    public String toJson() {
-//    }
+    /**
+     * @since 1.9.0
+     * @return the json string of this advancement.
+     */
+    public String toJson() {
+//        return base.getAdvancement().toJson().toString();
+        return null;
+    }
 
     @Override
     public String toString() {

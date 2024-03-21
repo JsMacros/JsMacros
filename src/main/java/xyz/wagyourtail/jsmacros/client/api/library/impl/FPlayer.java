@@ -65,7 +65,9 @@ public class FPlayer extends BaseLibrary {
      * @since 1.0.3
      */
     public ClientPlayerEntityHelper<ClientPlayerEntity> getPlayer() {
-        assert mc.player != null;
+        if (mc.player == null) {
+            return null;
+        }
         return new ClientPlayerEntityHelper<>(mc.player);
     }
 
