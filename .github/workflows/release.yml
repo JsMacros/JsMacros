@@ -23,11 +23,25 @@ jobs:
       MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
       PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
 
+  build_backports_neo:
+    strategy:
+      matrix:
+        branch: [ 'backports/1.20.2' ]
+    uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
+    with:
+      branch: ${{ matrix.branch }}
+      GITHUB_REF: ${{ github.ref }}
+      upload_docs: false
+      forge: neoforge
+    secrets:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+
   build_backports:
     strategy:
       matrix:
-        branch: [ 'backports/1.19.4', 'backports/1.20.1' ]
-      max-parallel: 1
+        branch: [ 'backports/1.17.1', 'backports/1.18.2', 'backports/1.19.4', 'backports/1.20.1' ]
     uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
     with:
       branch: ${{ matrix.branch }}

@@ -452,7 +452,9 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param slot1
      * @param slot2
      * @return
+     * @deprecated use {@link Inventory#swapHotbar(int, int)} or write it yourself instead. This method is not reliable on servers due to timing issues.
      */
+    @Deprecated
     public Inventory<T> swap(int slot1, int slot2) {
         boolean is1 = getSlot(slot1).isEmpty();
         boolean is2 = getSlot(slot2).isEmpty();
