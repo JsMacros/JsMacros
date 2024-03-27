@@ -125,11 +125,11 @@ public class FUtils extends BaseLibrary {
     }
 
     /**
-     * Hashes the given string with sha-256 the selected algorithm.
+     * Hashes the given string with the selected algorithm.
      *
-     * @param message   the message to hash
+     * @param message the message to hash
      * @param algorithm sha1 | sha256 | sha384 | sha512 | md2 | md5
-     * @return the hashed message.
+     * @return the hashed message (Hex)
      * @since 1.8.4
      */
     @Nullable
@@ -146,6 +146,47 @@ public class FUtils extends BaseLibrary {
             case "md2":
                 return DigestUtils.md2Hex(message);
             case "md5":
+                return DigestUtils.md5Hex(message);
+            default:
+                return message;
+        }
+    }
+
+    /**
+     * Hashes the given string with the selected algorithm.
+     *
+     * @param message the message to hash
+     * @param algorithm sha1 | sha256 | sha384 | sha512 | md2 | md5
+     * @param base64 encode the result in base64
+     * @return the hashed message (Hex or Base64)
+     * @since 1.9.1
+     */
+    @Nullable
+    public String hashString(@Nullable String message, String algorithm, Boolean base64) {
+        switch (algorithm) {
+            case "sha256":
+                if (base64)
+                    return new String(Base64.encodeBase64(DigestUtils.sha256(message)));
+                return DigestUtils.sha256Hex(message);
+            case "sha512":
+                if (base64)
+                    return new String(Base64.encodeBase64(DigestUtils.sha512(message)));
+                return DigestUtils.sha512Hex(message);
+            case "sha1":
+                if (base64)
+                    return new String(Base64.encodeBase64(DigestUtils.sha1(message)));
+                return DigestUtils.sha1Hex(message);
+            case "sha384":
+                if (base64)
+                    return new String(Base64.encodeBase64(DigestUtils.sha384(message)));
+                return DigestUtils.sha384Hex(message);
+            case "md2":
+                if (base64)
+                    return new String(Base64.encodeBase64(DigestUtils.md2(message)));
+                return DigestUtils.md2Hex(message);
+            case "md5":
+                if (base64)
+                    return new String(Base64.encodeBase64(DigestUtils.md5(message)));
                 return DigestUtils.md5Hex(message);
             default:
                 return message;
