@@ -9,6 +9,8 @@ import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
+import static xyz.wagyourtail.jsmacros.client.api.classes.render.components.RenderElement.mc;
+
 /**
  * @author aMelonRind
  * @since 1.9.0
@@ -54,7 +56,7 @@ public class EntityTraceLine extends TraceLine {
 
     @Override
     public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
-        if (shouldRemove || entity == null || entity.isRemoved()) {
+        if (shouldRemove || entity == null || entity.isRemoved() || entity.getWorld() != mc.world) {
             shouldRemove = true;
             dirty = true;
             return;
