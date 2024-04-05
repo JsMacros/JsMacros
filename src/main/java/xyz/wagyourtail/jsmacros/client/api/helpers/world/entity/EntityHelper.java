@@ -12,9 +12,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.decoration.ArmorStandEntity;
-import net.minecraft.entity.decoration.EndCrystalEntity;
-import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.entity.decoration.*;
 import net.minecraft.entity.decoration.painting.PaintingEntity;
 import net.minecraft.entity.mob.*;
 import net.minecraft.entity.passive.*;
@@ -28,6 +26,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -48,7 +47,12 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.deco
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.decoration.EndCrystalEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.decoration.ItemFrameEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.decoration.PaintingEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.display.BlockDisplayEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.display.DisplayEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.display.ItemDisplayEntityHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.display.TextDisplayEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.mob.*;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.other.InteractionEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.projectile.ArrowEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.projectile.FishingBobberEntityHelper;
@@ -61,6 +65,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -474,7 +479,9 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @param e mc entity.
      * @return correct subclass of this.
      */
-    public static EntityHelper<?> create(Entity e) {
+    public static EntityHelper<?> create(@NotNull Entity e) {
+        Objects.requireNonNull(e, "Entity cannot be null.");
+
         // Players
         if (e instanceof ClientPlayerEntity) {
             return new ClientPlayerEntityHelper<>((ClientPlayerEntity) e);
@@ -665,6 +672,19 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         }
         if (e instanceof ItemEntity) {
             return new ItemEntityHelper((ItemEntity) e);
+        }
+        if (e instanceof DisplayEntity) {
+            if (e instanceof DisplayEntity.ItemDisplayEntity) {
+                return new ItemDisplayEntityHelper((DisplayEntity.ItemDisplayEntity) e);
+            } else if (e instanceof DisplayEntity.TextDisplayEntity) {
+                return new TextDisplayEntityHelper((DisplayEntity.TextDisplayEntity) e);
+            } else if (e instanceof DisplayEntity.BlockDisplayEntity) {
+                return new BlockDisplayEntityHelper((DisplayEntity.BlockDisplayEntity) e);
+            }
+            return new DisplayEntityHelper<>((DisplayEntity) e);
+        }
+        if (e instanceof InteractionEntity) {
+            return new InteractionEntityHelper((InteractionEntity) e);
         }
         return new EntityHelper<>(e);
     }
