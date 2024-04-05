@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.filterer;
 
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventRecvPacket;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
@@ -26,7 +27,8 @@ public class FiltererRecvPacket implements EventFilterer {
         return (event instanceof EventRecvPacket e) && (type == null || e.type.equals(type));
     }
 
-    public FiltererRecvPacket setType(String type) {
+    @DocletReplaceParams("type: PacketName | null")
+    public FiltererRecvPacket setType(@Nullable String type) {
         this.type = type;
         return this;
     }
