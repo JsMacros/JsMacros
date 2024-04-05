@@ -174,6 +174,7 @@ public class Profile extends BaseProfile {
         runner.eventRegistry.addEvent(EventKey.class);
         runner.eventRegistry.addEvent(EventLaunchGame.class);
         runner.eventRegistry.addEvent(EventMouseScroll.class);
+        runner.eventRegistry.addEvent(EventNameChange.class);
         runner.eventRegistry.addEvent(EventOpenContainer.class);
         runner.eventRegistry.addEvent(EventOpenScreen.class);
         runner.eventRegistry.addEvent(EventRecvPacket.class);
