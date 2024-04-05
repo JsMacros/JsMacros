@@ -32,6 +32,7 @@ public class Main implements Doclet {
     public static DocTrees treeUtils;
     public static Elements elementUtils;
     public static Map<String, String> enumTypes = new HashMap<>();
+    private final Map<String, String> filterableEvents = new TreeMap<>();
 
     public static final List<String> includedClassPath = List.of(
             "xyz.wagyourtail.jsmacros.client.api.helpers.",
@@ -96,7 +97,16 @@ public class Main implements Doclet {
                 if (annotationName.equals("Event")) {
                     Boolean cancellableValue = (Boolean) getAnnotationValue("cancellable", annotationMirror);
                     boolean cancellable = cancellableValue != null && cancellableValue;
-                    eventClasses.add(new EventParser(e, getAnnotationValue("value", annotationMirror).toString(), cancellable));
+                    String name = getAnnotationValue("value", annotationMirror).toString();
+                    eventClasses.add(new EventParser(e, name, cancellable));
+                    DeclaredType filterer = (DeclaredType) getAnnotationValue("filterer", annotationMirror);
+                    if (filterer != null) {
+                        String filtererName = filterer.asElement().getSimpleName().toString();
+                        if (!filtererName.equals("EventFilterer")) {
+                            classes.addClass(filterer.asElement());
+                            filterableEvents.put(name, filtererName);
+                        }
+                    }
                 }
                 if (annotationName.equals("Mixin")) {
                     List<TypeElement> interfaces = e.getInterfaces().stream()
@@ -167,6 +177,12 @@ public class Main implements Doclet {
             );
             for (EventParser event : eventClasses) {
                 outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
+            }
+
+            outputTS.append("\n\n}\n\ninterface EventFilterers {\n");
+            for (String name : filterableEvents.keySet()) {
+                outputTS.append("\n    ").append(name)
+                        .append(": ").append(filterableEvents.get(name)).append(";");
             }
 
             // for type-safe event listener
