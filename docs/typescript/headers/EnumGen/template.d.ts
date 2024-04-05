@@ -79,7 +79,7 @@ type RecipeTypeId = string
 type SensorTypeId = string
 //@RegistryHelper getPotionTypeIds
 type PotionTypeId = string
-//@Eval Java.from(Player.getPlayer().getAdvancementManager().getAdvancements()).map(a => a.getId())
+//@Eval Java.from(Player.getPlayer().getAdvancementManager().getAdvancementsForIdentifiers().keySet().toArray())
 type AdvancementId = string
 //@RegistryHelper getParticleTypeIds
 type ParticleTypeId = string
