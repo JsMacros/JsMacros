@@ -6,6 +6,7 @@ import net.minecraft.util.Util;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.util.NameUtil;
@@ -15,6 +16,7 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Etheradon
@@ -213,6 +215,35 @@ public class FUtils extends BaseLibrary {
      */
     public String decode(String message) {
         return new String(Base64.decodeBase64(message.getBytes()));
+    }
+
+    /**
+     * Checks that the specified object reference is not {@code null}.
+     *
+     * @param obj the object reference to check for nullity
+     * @return {@code obj} if not {@code null}
+     * @throws NullPointerException if {@code obj} is {@code null}
+     * @since 1.9.1
+     */
+    @DocletReplaceReturn("T & {}")
+    public <T> T requireNonNull(T obj) {
+        return Objects.requireNonNull(obj);
+    }
+
+    /**
+     * Checks that the specified object reference is not {@code null} and
+     * throws a customized {@link NullPointerException} if it is.
+     *
+     * @param obj     the object reference to check for nullity
+     * @param message detail message to be used in the event that a {@code
+     *                NullPointerException} is thrown
+     * @return {@code obj} if not {@code null}
+     * @throws NullPointerException if {@code obj} is {@code null}
+     * @since 1.9.1
+     */
+    @DocletReplaceReturn("T & {}")
+    public <T> T requireNonNull(T obj, String message) {
+        return Objects.requireNonNull(obj, message);
     }
 
 }
