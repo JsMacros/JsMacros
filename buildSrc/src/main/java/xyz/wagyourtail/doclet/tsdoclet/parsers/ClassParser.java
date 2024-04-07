@@ -283,6 +283,7 @@ public class ClassParser extends AbstractParser {
         }
 
         StringBuilder s = new StringBuilder(genComment(type));
+        if (!s.isEmpty() && s.charAt(0) == '\n') s.deleteCharAt(0);
 
         String className = getClassName(true);
         String temp;
