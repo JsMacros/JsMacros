@@ -9,11 +9,7 @@ import xyz.wagyourtail.doclet.tsdoclet.PackageTree;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static xyz.wagyourtail.doclet.tsdoclet.PackageTree.tsReservedWords;
@@ -294,18 +290,31 @@ public abstract class AbstractParser {
                 return "void";
             }
             case DECLARED -> {
-                Element typeElement = ((DeclaredType) type).asElement();
+                final Element typeElement = ((DeclaredType) type).asElement();
                 StringBuilder rawType = new StringBuilder(typeElement.getSimpleName().toString());
-                typeElement = typeElement.getEnclosingElement();
+                Element enclosing = typeElement.getEnclosingElement();
                 // full class name
-                while (typeElement.getKind() == ElementKind.CLASS || typeElement.getKind() == ElementKind.INTERFACE) {
-                    rawType.insert(0, typeElement.getSimpleName().toString() + "$");
-                    typeElement = typeElement.getEnclosingElement();
+                while (enclosing.getKind() == ElementKind.CLASS || enclosing.getKind() == ElementKind.INTERFACE) {
+                    rawType.insert(0, enclosing.getSimpleName().toString() + "$");
+                    enclosing = enclosing.getEnclosingElement();
+                }
+
+                String classpath = ((PackageElement) enclosing).getQualifiedName().toString();
+                // check Event and Library type (probably none Library)
+                if (classpath.startsWith("xyz.wagyourtail.")) {
+                    Optional<String> special = typeElement.getAnnotationMirrors().stream()
+                            .map(a -> switch (a.getAnnotationType().asElement().getSimpleName().toString()) {
+                                case "Event" -> "Events." + Main.getAnnotationValue(a);
+                                case "Library" -> "typeof " + Main.getAnnotationValue(a);
+                                default -> null;
+                            })
+                            .filter(Objects::nonNull)
+                            .findFirst();
+                    if (special.isPresent()) return special.get();
                 }
 
                 // detect types defined in Graal.d.ts
                 boolean aliased = false;
-                String classpath = ((PackageElement) typeElement).getQualifiedName().toString();
                 if (!isExtends && javaAliases.contains(classpath + "." + rawType)) {
                     aliased = true;
                     rawType.insert(0, "Java");
@@ -342,18 +351,6 @@ public abstract class AbstractParser {
                 // + don't even know how to get obfuscated names in doclet environment
                 if (res.startsWith("net.minecraft.")) {
                     return "/* " + res.replaceAll("/\\* ", "").replaceAll(" \\*/(?: any)?", "") + " */ any";
-                }
-
-                // check Event type (probably none)
-                AnnotationMirror mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().contentEquals("Event")).findFirst().orElse(null);
-                if (mirror != null) {
-                    return "Events." + Main.getAnnotationValue(mirror);
-                }
-
-                // check Library type (probably none)
-                mirror = type.getAnnotationMirrors().stream().filter(e -> e.getAnnotationType().asElement().getSimpleName().contentEquals("Library")).findFirst().orElse(null);
-                if (mirror != null) {
-                    return "typeof " + Main.getAnnotationValue(mirror);
                 }
 
                 // check BaseEvent
