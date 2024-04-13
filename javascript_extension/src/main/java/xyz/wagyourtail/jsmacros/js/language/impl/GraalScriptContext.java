@@ -69,7 +69,9 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
                 }
             }
         } finally {
-            getContext().enter();
+            if(!isContextClosed()) {
+                getContext().enter();
+            }
         }
     }
 
