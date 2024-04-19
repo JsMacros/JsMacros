@@ -1,16 +1,11 @@
 function getColorMode() {
-    let colorMode = localStorage.getItem('colorMode') || "light";
-    localStorage.setItem('colorMode', colorMode);
-    return colorMode;
+    return localStorage.getItem("colorMode") || (localStorage.setItem("colorMode", "light"), "light");
 }
 
 function changeColorMode() {
-    if (getColorMode() === "light") {
-        localStorage.setItem('colorMode', "dark");
-    } else {
-        localStorage.setItem('colorMode', "light");
-    }
-    document.documentElement.setAttribute("color-mode", getColorMode());
+    const mode = getColorMode() === "light" ? "dark" : "light";
+    localStorage.setItem("colorMode", mode);
+    document.documentElement.setAttribute("color-mode", mode);
 }
 
 document.documentElement.setAttribute("color-mode", getColorMode());
@@ -45,7 +40,7 @@ async function openMain(url, dontpush) {
     url = url.replace(/https?:\/\/.+?\//, "/");
     if (!dontpush) window.history.pushState({}, '', `${window.location.href.split('?')[0].replace(/#.*\??/, "")}?${url}`);
     const req = await fetch(url);
-    if (req.status != 200) {
+    if (req.status !== 200) {
         alert(`failed to load ${req.status}: \n${req.statusText}`);
         return;
     }
@@ -61,7 +56,7 @@ async function openMain(url, dontpush) {
             frameLink(a);
         }
     }
-    if (cname == "searchMain") {
+    if (cname === "searchMain") {
         updateClassGroups();
     }
     scrlTo(url);
@@ -80,11 +75,11 @@ function scrlTo(url) {
 }
 
 async function searchBox(val) {
-    if (mainContent.getAttribute("class") != "searchMain") {
+    if (mainContent.getAttribute("class") !== "searchMain") {
         await openMain("./search.html");
     }
     if (loadingSearchMap == null) {
-        console.error("loadingSearchMap is null")
+        console.error("loadingSearchMap is null");
     }
     await searchF(val);
 }
@@ -102,11 +97,7 @@ loadingSearchMap.then(populateClassSidebar).then(() => {
 });
 
 menuBtn.onclick = () => {
-    if (mainNav.parentElement.style.display) {
-        mainNav.parentElement.style.display = null;
-    } else {
-        mainNav.parentElement.style.display = "block";
-    }
+    mainNav.parentElement.style.display = mainNav.parentElement.style.display ? null : "block";
 };
 
 window.addEventListener("popstate", (e) => {

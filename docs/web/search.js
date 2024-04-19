@@ -113,13 +113,11 @@ function updateClassGroups() {
         input.setAttribute("class", "SearchCheck");
         input.setAttribute("name", `${name}Check`);
         input.setAttribute("checked", null);
-        input.setAttribute("onclick", "searchF(search.value, true)")
+        input.setAttribute("onclick", "searchF(search.value, true)");
         div.appendChild(input);
 
         classGroupChecks.appendChild(div);
-
     }
-
 }
 
 async function searchF(query, force = false) {
@@ -220,7 +218,7 @@ function appendSearchResult(name, url, type) {
     flags.appendChild(typed);
     div.appendChild(flags);
     const a = document.createElement("a");
-    a.setAttribute("href", `${versionSelect.value}/${url.replace(/(#|$)/, ".html$1")}`)
+    a.setAttribute("href", `${versionSelect.value}/${url.replace(/(#|$)/, ".html$1")}`);
     a.innerHTML = name;
     frameLink?.(a);
     div.appendChild(a);
