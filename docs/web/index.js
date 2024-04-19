@@ -86,12 +86,7 @@ async function searchBox(val) {
     if (loadingSearchMap == null) {
         console.error("loadingSearchMap is null")
     }
-    await loadingSearchMap
-    populateClassSidebar();
     await searchF(val);
-    for (const resultItem of document.getElementsByClassName("resultItem")) {
-        frameLink(resultItem.getElementsByTagName("a")[0]);
-    }
 }
 
 async function changeVersion() {
