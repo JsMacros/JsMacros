@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.pas
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.passive.ParrotEntity;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 
 /**
  * @author Etheradon
@@ -18,6 +19,7 @@ public class ParrotEntityHelper extends TameableEntityHelper<ParrotEntity> {
      * @return the variant of this parrot.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("ParrotVariant")
     public String getVariant() {
         return base.getVariant().asString();
     }
