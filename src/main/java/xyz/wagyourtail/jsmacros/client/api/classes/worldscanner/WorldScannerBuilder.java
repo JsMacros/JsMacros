@@ -2,8 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner;
 
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.doclet.DocletEnumType;
-import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IAdvancedFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.impl.BlockFilter;
@@ -51,12 +49,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
  * @author Etheradon
  * @since 1.6.5
  */
-@DocletEnumType(name = "StringFilterMethod", type =
-    """
-    'EQUALS' | 'CONTAINS' | 'STARTS_WITH' | 'ENDS_WITH' | 'MATCHES';
-    type NumberFilterOperation = '>' | '>=' | '<' | '<=' | '==' | '!=';
-    """
-)
+@SuppressWarnings("unused")
 public final class WorldScannerBuilder {
 
     @Nullable
@@ -83,6 +76,7 @@ public final class WorldScannerBuilder {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     private void setTargetFilter(@Nullable IAdvancedFilter<?> filter) {
         if (selectedCategory == FilterCategory.BLOCK) {
             blockFilter = (IAdvancedFilter<BlockHelper>) filter;
@@ -91,6 +85,7 @@ public final class WorldScannerBuilder {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private <T> void composeFilters(@Nullable IFilter<T> filter) {
         if (selectedCategory == null || selectedCategory == FilterCategory.NONE) {
             throw new IllegalStateException("No category for creating the new filter was specified.");
@@ -151,19 +146,16 @@ public final class WorldScannerBuilder {
         }
     }
 
-    @DocletReplaceParams("method: BooStrNumMethod<BlockStateHelper>")
     public WorldScannerBuilder withStateFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.STATE, method);
         return this;
     }
 
-    @DocletReplaceParams("method: BooStrNumMethod<BlockStateHelper>")
     public WorldScannerBuilder andStateFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.STATE, method);
         return this;
     }
 
-    @DocletReplaceParams("method: BooStrNumMethod<BlockStateHelper>")
     public WorldScannerBuilder orStateFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.STATE, method);
         return this;
@@ -175,19 +167,16 @@ public final class WorldScannerBuilder {
         return this;
     }
 
-    @DocletReplaceParams("method: BooStrNumMethod<BlockHelper>")
     public WorldScannerBuilder withBlockFilter(String method) {
         createNewFilter(Operation.NEW, FilterCategory.BLOCK, method);
         return this;
     }
 
-    @DocletReplaceParams("method: BooStrNumMethod<BlockHelper>")
     public WorldScannerBuilder andBlockFilter(String method) {
         createNewFilter(Operation.AND, FilterCategory.BLOCK, method);
         return this;
     }
 
-    @DocletReplaceParams("method: BooStrNumMethod<BlockHelper>")
     public WorldScannerBuilder orBlockFilter(String method) {
         createNewFilter(Operation.OR, FilterCategory.BLOCK, method);
         return this;
@@ -229,38 +218,10 @@ public final class WorldScannerBuilder {
         return this;
     }
 
-    // i'm gonna use cursed (and probably only unless actually adding overload to this class) -
-    // way to add overloads for typescript
-    // 
-    // pydoc doesn't use this annotation anyways  --MelonRind
-    @DocletReplaceParams(
-        """
-        ...args: any[]): WorldScannerBuilder;
-        /** for boolean value */
-        is(value: boolean): WorldScannerBuilder;
-        /** for string value */
-        is(method: StringFilterMethod, value: string): WorldScannerBuilder;
-        /** for char value */
-        is(value: string): WorldScannerBuilder;
-        /** for number value */
-        is(operation: NumberFilterOperation, value: number"""
-    )
     public WorldScannerBuilder is(Object... args) {
         return is(null, args);
     }
 
-    @DocletReplaceParams(
-        """
-        methodArgs: any[], filterArgs: any[]): WorldScannerBuilder;
-        /** for boolean value */
-        is(methodArgs: any[], filterArgs: [boolean]): WorldScannerBuilder;
-        /** for string value */
-        is(methodArgs: any[], filterArgs: [StringFilterMethod, string]): WorldScannerBuilder;
-        /** for char value */
-        is(methodArgs: any[], filterArgs: [string]): WorldScannerBuilder;
-        /** for number value */
-        is(methodArgs: any[], filterArgs: [NumberFilterOperation, number]"""
-    )
     public WorldScannerBuilder is(Object[] methodArgs, Object[] filterArgs) {
         if (selectedCategory == FilterCategory.STATE) {
             composeFilters(new BlockStateFilter(method, methodArgs, filterArgs));
@@ -272,34 +233,10 @@ public final class WorldScannerBuilder {
         return this;
     }
 
-    @DocletReplaceParams(
-        """
-        ...args: any[]): WorldScannerBuilder;
-        /** for boolean value */
-        test(value: boolean): WorldScannerBuilder;
-        /** for string value */
-        test(method: StringFilterMethod, value: string): WorldScannerBuilder;
-        /** for char value */
-        test(value: string): WorldScannerBuilder;
-        /** for number value */
-        test(operation: NumberFilterOperation, value: number"""
-    )
     public WorldScannerBuilder test(Object... args) {
-        return test(args);
+        return is(args);
     }
 
-    @DocletReplaceParams(
-        """
-        methodArgs: any[], filterArgs: any[]): WorldScannerBuilder;
-        /** for boolean value */
-        test(methodArgs: any[], filterArgs: [boolean]): WorldScannerBuilder;
-        /** for string value */
-        test(methodArgs: any[], filterArgs: [StringFilterMethod, string]): WorldScannerBuilder;
-        /** for char value */
-        test(methodArgs: any[], filterArgs: [string]): WorldScannerBuilder;
-        /** for number value */
-        test(methodArgs: any[], filterArgs: [NumberFilterOperation, number]"""
-    )
     public WorldScannerBuilder test(Object[] methodArgs, Object[] filterArgs) {
         return is(methodArgs, filterArgs);
     }
@@ -329,6 +266,7 @@ public final class WorldScannerBuilder {
         return this;
     }
 
+    @SuppressWarnings("unchecked")
     private void createStringFilter(String method, String... args) {
         if (selectedCategory == FilterCategory.STATE) {
             composeFilters(new StringifyFilter<BlockStateFilter>(method).addOption(args));

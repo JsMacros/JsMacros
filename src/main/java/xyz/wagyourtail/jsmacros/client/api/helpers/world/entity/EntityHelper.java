@@ -28,8 +28,11 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
@@ -60,6 +63,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.vehi
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.vehicle.TntMinecartEntityHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -167,6 +171,17 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
     @DocletReplaceReturn("EntityId")
     public String getType() {
         return EntityType.getId(base.getType()).toString();
+    }
+
+    /**
+     * checks if this entity type equals to any of the specified types<br>
+     * @since 1.9.0
+     */
+    @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
+    @DocletReplaceParams("...anyOf: E[]")
+    @DocletReplaceReturn("this is EntityTypeFromId<E>")
+    public boolean is(String ...types) {
+        return Arrays.stream(types).map(RegistryHelper::parseNameSpace).anyMatch(getType()::equals);
     }
 
     /**

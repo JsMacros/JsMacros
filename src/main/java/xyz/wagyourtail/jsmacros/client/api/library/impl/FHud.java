@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
@@ -114,8 +114,9 @@ public class FHud extends BaseLibrary {
      * @return The name of the currently open screen.
      * @since 1.0.5, renamed from {@code getOpenScreen} in 1.2.7
      */
+    @SuppressWarnings("SpellCheckingInspection")
     @DocletReplaceReturn("ScreenName | null")
-    @DocletEnumType(name = "HandledScreenName", type =
+    @DocletDeclareType(name = "HandledScreenName", type =
             """
             | `${ 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 } Row Chest`
             | '3x3 Container'
@@ -139,6 +140,7 @@ public class FHud extends BaseLibrary {
             | 'Horse'
             | 'Creative Inventory'
             | 'Chat'
+            | string & {}
             | 'unknown'
             """
     )
