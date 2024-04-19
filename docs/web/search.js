@@ -1,74 +1,95 @@
 let prevSearch = null;
 
-const searchMaps = {classes: new Map(), fields: new Map(), methods: new Map()}
+/**
+ * @type {{
+ *  classes: Map<string, Set<{ group: string; name: string; url: string; }>>;
+ *  fields:  Map<string, Set<{ class: string; name: string; url: string; }>>;
+ *  methods: Map<string, Set<{ class: string; name: string; url: string; }>>;
+ * }}
+ */
+const searchMaps = {
+    classes: new Map(),
+    fields:  new Map(),
+    methods: new Map()
+};
+let reloadSyncId = 0n;
+/** @type {Set<string>} */
 let classGroups = new Set();
 let loaded = false;
 
 async function reloadSearchMap() {
+    const syncId = ++reloadSyncId;
     for (const val of Object.values(searchMaps)) val.clear();
     classGroups.clear();
+
     const res = await fetch(`${versionSelect.value}/search-list`);
-    if (res.status == 200) {
-        const text = (await res.text()).split("\n");
-        for (const line of text) {
-            if (line == "") continue;
-            const parts = line.split("\t");
-            switch (parts[0]) {
-                case "C":
-                    if (!searchMaps.classes.has(parts[4] ?? parts[1]))
-                        searchMaps.classes.set(parts[4] ?? parts[1], new Set());
-                    searchMaps.classes.get(parts[4] ?? parts[1]).add({
-                        name: parts[1],
-                        url: parts[2],
-                        group: parts[3] ?? "Class"
-                    });
-                    if (parts[3] && parts[3] !== "Class") classGroups.add(parts[3]);
-                    break;
-                case "M": {
-                    let methodStuff = {class: parts[1].split("#")[0], name: parts[1].split("#")[1], url: parts[2]}
-                    let cname = methodStuff.class;
-                    if (!searchMaps.classes.has(cname)) {
-                        for (const [name, st] of searchMaps.classes) {
-                            for (const clazz of st) {
-                                if (clazz.name === cname) {
-                                    cname = name;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    searchMaps.methods.set(`${cname}#${methodStuff.name}`, methodStuff);
-                    break;
-                }
-                case "F": {
-                    let fieldStuff = {class: parts[1].split("#")[0], name: parts[1].split("#")[1], url: parts[2]}
-                    let cname = fieldStuff.class;
-                    if (!searchMaps.classes.has(cname)) {
-                        for (const [name, clazz] of searchMaps.classes) {
-                            for (const [name, st] of searchMaps.classes) {
-                                for (const clazz of st) {
-                                    if (clazz.name === cname) {
-                                        cname = name;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    searchMaps.fields.set(`${cname}#${fieldStuff.name}`, fieldStuff);
-                    break;
-                }
-                default:
-                    alert(`unsupported line: ${line}`)
-            }
-        }
-    } else {
-        alert(`error ${res.status}\n${res.statusText}`);
+    if (syncId !== reloadSyncId) return;
+    if (res.status !== 200) {
+        alert(`fetch error ${res.status}\n${res.statusText}`);
+        return;
     }
-    searchMaps.classes = new Map([...searchMaps.classes.entries()].sort());
-    searchMaps.methods = new Map([...searchMaps.methods.entries()].sort());
-    searchMaps.fields = new Map([...searchMaps.fields.entries()].sort());
-    classGroups.add("Class");
+    const text = (await res.text()).split("\n");
+    if (syncId !== reloadSyncId) return;
+
+    let lastClass = '\x00';
+    for (const line of text) if (line) {
+        const parts = line.split("\t");
+        switch (parts[0]) {
+            case "C": {
+                const key = lastClass = parts[4] ?? parts[1];
+                let set = searchMaps.classes.get(key);
+                if (!set) searchMaps.classes.set(key, set = new Set());
+                const group = parts[3] ?? "Class";
+                set.add({ group, name: parts[1], url: parts[2] });
+                classGroups.add(group);
+                break;
+            }
+            case "M":
+            case "F": {
+                const split = parts[1].split("#", 2);
+                const stuff = { class: split[0], name: split[1], url: parts[2] };
+                let cname = stuff.class;
+                if (!searchMaps.classes.has(cname)) block: {
+                    for (const clazz of searchMaps.classes.get(lastClass)) {
+                        if (clazz.name === cname) {
+                            cname = lastClass;
+                            break block;
+                        }
+                    }
+                    for (const [name, st] of searchMaps.classes) {
+                        for (const clazz of st) {
+                            if (clazz.name === cname) {
+                                cname = name;
+                                break block;
+                            }
+                        }
+                    }
+                }
+                searchMaps[parts[0] === "M" ? "methods" : "fields"].set(`${cname}#${stuff.name}`, stuff);
+                break;
+            }
+            default:
+                alert(`unsupported line: ${line}`);
+        }
+    }
+    sortMap(searchMaps.classes);
+    sortMap(searchMaps.methods);
+    sortMap(searchMaps.fields);
+    if (classGroups.delete("Class")) classGroups.add("Class"); // keep it the last one
+}
+
+/**
+ * @template T
+ * @param {Map<string, T>} map
+ */
+function sortMap(map) {
+    const clone = new Map(map);
+    const keys = [...clone.keys()].sort();
+    map.clear();
+    for (const key of keys) {
+        map.set(key, clone.get(key));
+    }
+    return map;
 }
 
 function updateClassGroups() {
@@ -169,4 +190,4 @@ function appendSearchResult(name, url, type) {
     document.getElementById(`${type}Results`).appendChild(div);
 }
 
-const loadingSearchMap = reloadSearchMap();
+let loadingSearchMap = reloadSearchMap();

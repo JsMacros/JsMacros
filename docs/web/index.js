@@ -95,7 +95,8 @@ async function searchBox(val) {
 }
 
 async function changeVersion() {
-    reloadSearchMap().then(populateClassSidebar);
+    loadingSearchMap = reloadSearchMap();
+    loadingSearchMap.then(populateClassSidebar);
     openMain("general.html");
 }
 
