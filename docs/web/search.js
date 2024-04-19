@@ -152,7 +152,6 @@ async function searchF(query, force = false) {
         searchResults.appendChild(groupDiv);
     }
 
-    const start = Date.now();
     let time = Date.now();
     const asyncCheck = async () => {
         if (Date.now() - time > 20) {
