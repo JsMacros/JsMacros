@@ -408,6 +408,7 @@ public class FJsMacros extends PerExecLibrary {
             }
         };
         Core.getInstance().eventRegistry.addListener(event, listener);
+        ctx.eventListeners.put(listener, event);
         return listener;
     }
 
@@ -496,6 +497,7 @@ public class FJsMacros extends PerExecLibrary {
 
         };
         Core.getInstance().eventRegistry.addListener(event, listener);
+        ctx.eventListeners.put(listener, event);
         return listener;
     }
 
@@ -740,6 +742,7 @@ public class FJsMacros extends PerExecLibrary {
             };
             // register the listener
             Core.getInstance().eventRegistry.addListener(event, listener);
+            ctx.eventListeners.put(listener, event);
 
             // run before, this is a thread-safety thing to prevent "interrupts" from going in between this and things like deferCurrentTask
             // it is thread safe because we already registered the listener so we won't miss any events

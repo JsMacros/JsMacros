@@ -1,14 +1,20 @@
 package xyz.wagyourtail.jsmacros.core.service;
 
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * @since 1.6.4
@@ -20,12 +26,87 @@ public class EventService extends BaseEvent {
 
     /**
      * when this service is stopped, this is run...
+     * @see EventService#unregisterOnStop(boolean, Registrable[])
      */
     @Nullable
     public MethodWrapper<Object, Object, Object, ?> stopListener;
+    /**
+     * @see EventService#unregisterOnStop(boolean, Registrable[])
+     * @since 1.9.1
+     */
+    @Nullable
+    public MethodWrapper<Object, Object, Object, ?> postStopListener;
+    protected boolean offEventsOnStop = false;
+    @Nullable
+    protected Registrable<?>[] registrableList = null;
 
     public EventService(String name) {
         this.serviceName = name;
+    }
+
+    /**
+     * Setup unregister on stop. For example, {@code event.unregisterOnStop(false, d2d);} is
+     * the equivalent of {@code event.stopListener = JavaWrapper.methodToJava(() => d2d.unregister());}.<br>
+     * <br>
+     * If this is called multiple times, the previous ones would be discarded.<br>
+     * <br>
+     * The order of execution is run stopListener -> off events -> unregister stuff -> run postStopListener.<br>
+     * <br>
+     * Note that if the script stopped by itself (stopped without you stopping it in the gui), this won't take effect.
+     * @param offEvents whether the service manager should clear event listeners on stop.
+     *                  it's generally recommended to set to true, because callbacks cannot run after context closed.
+     * @param list the list of registrable, such as Draw2D, Draw3D and CommandBuilder.
+     * @since 1.9.1
+     */
+    public void unregisterOnStop(boolean offEvents, Registrable<?> ...list) {
+        offEventsOnStop = offEvents;
+        registrableList = list.length > 0 ? list : null;
+
+        // TODO: prevent the script from stopping itself (idk how to do it - aMelonRind)
+        // example code of script stopping itself:
+        // JsMacros.assertEvent(event, 'Service');
+        // const d2d = Hud.createDraw2D().register();
+        // d2d.addText('Hello World', 200, 200, 0xFFFFFF, true);
+        // event.unregisterOnStop(true, d2d);
+    }
+
+    /**
+     * don't touch this... although it's nothing much dangerous.
+     * @since 1.9.1
+     */
+    @DocletIgnore
+    public void _onStop(BaseScriptContext<?> ctx, Consumer<Throwable> errorConsumer) {
+        try {
+            MethodWrapper<?, ?, ?, ?> sl = stopListener;
+            if (sl != null) sl.run();
+        } catch (Throwable t) {
+            errorConsumer.accept(t);
+        }
+
+        if (offEventsOnStop) {
+            BaseEventRegistry reg = Core.getInstance().eventRegistry;
+            for (Map.Entry<IEventListener, String> ent : ctx.eventListeners.entrySet()) {
+                reg.removeListener(ent.getValue(), ent.getKey());
+            }
+        }
+
+        Registrable<?>[] list = registrableList;
+        if (list != null) {
+            for (Registrable<?> e : list) {
+                try {
+                    e.unregister();
+                } catch (Throwable t) {
+                    errorConsumer.accept(t);
+                }
+            }
+        }
+
+        try {
+            MethodWrapper<?, ?, ?, ?> sl = postStopListener;
+            if (sl != null) sl.run();
+        } catch (Throwable t) {
+            errorConsumer.accept(t);
+        }
     }
 
     @Override

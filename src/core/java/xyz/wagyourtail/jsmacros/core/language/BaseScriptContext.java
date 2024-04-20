@@ -1,17 +1,18 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -37,6 +38,9 @@ public abstract class BaseScriptContext<T> {
     protected final Set<Thread> threads = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     protected final Map<Thread, EventContainer<? extends BaseScriptContext<T>>> events = new ConcurrentHashMap<>();
+
+    // <listener, event>
+    public final WeakHashMap<IEventListener, String> eventListeners = new WeakHashMap<>();
 
     public boolean hasMethodWrapperBeenInvoked = false;
 

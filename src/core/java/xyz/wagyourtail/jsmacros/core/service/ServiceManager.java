@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
 import java.util.*;
@@ -143,13 +144,8 @@ public class ServiceManager {
             return ServiceStatus.UNKNOWN;
         }
         if (service.getU() != null && !service.getU().getCtx().isContextClosed()) {
-            try {
-                if (((EventService) service.getU().getCtx().getTriggeringEvent()).stopListener != null) {
-                    ((EventService) service.getU().getCtx().getTriggeringEvent()).stopListener.run();
-                }
-            } catch (Throwable e) {
-                runner.profile.logError(e);
-            }
+            BaseScriptContext<?> ctx = service.getU().getCtx();
+            ((EventService) ctx.getTriggeringEvent())._onStop(ctx, runner.profile::logError);
             service.getU().getCtx().closeContext();
             return ServiceStatus.RUNNING;
         }
