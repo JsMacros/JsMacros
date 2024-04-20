@@ -92,7 +92,7 @@ public class CommandBuilderFabric extends CommandBuilder {
     }
 
     @Override
-    public void register() {
+    public CommandBuilder register() {
         or(1);
         CommandDispatcher<FabricClientCommandSource> dispatcher = ClientCommandManager.getActiveDispatcher();
         Function<CommandRegistryAccess, ArgumentBuilder<FabricClientCommandSource, ?>> head = pointer.pop().getU();
@@ -105,10 +105,11 @@ public class CommandBuilderFabric extends CommandBuilder {
             }
         }
         commands.put(name, head);
+        return this;
     }
 
     @Override
-    public void unregister() throws IllegalAccessException {
+    public CommandBuilder unregister() throws IllegalAccessException {
         CommandNodeAccessor.remove(ClientCommandManager.getActiveDispatcher().getRoot(), name);
         ClientPlayNetworkHandler p = MinecraftClient.getInstance().getNetworkHandler();
         if (p != null) {
@@ -116,6 +117,7 @@ public class CommandBuilderFabric extends CommandBuilder {
             CommandNodeAccessor.remove(cd.getRoot(), name);
         }
         commands.remove(name);
+        return this;
     }
 
     public static void registerEvent() {
