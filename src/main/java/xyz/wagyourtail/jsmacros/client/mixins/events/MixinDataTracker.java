@@ -24,11 +24,11 @@ public class MixinDataTracker {
     private Entity trackedEntity;
 
     @Inject(method = "copyToFrom", at = @At("HEAD"), cancellable = true)
-    public void onCopyToFrom(DataTracker.Entry<Optional<Text>> to, DataTracker.SerializedEntry<Optional<Text>> from, CallbackInfo ci) {
+    public void onCopyToFrom(DataTracker.Entry<Optional<Text>> to, DataTracker.Entry<Optional<Text>> from, CallbackInfo ci) {
         int id = to.getData().getId();
-        if (id != ((MixinEntity2) trackedEntity).getCustomNameKey().getId() || id != from.id()) return;
+        if (id != ((MixinEntity2) trackedEntity).getCustomNameKey().getId() || id != from.getData().getId()) return;
 
-        Text newName = from.value().orElse(null);
+        Text newName = from.get().orElse(null);
         Text oldName = to.get().orElse(null);
         if (ObjectUtils.notEqual(oldName, newName)) {
             EventNameChange event = new EventNameChange(trackedEntity, oldName, newName);

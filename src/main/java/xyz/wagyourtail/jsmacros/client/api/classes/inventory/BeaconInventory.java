@@ -6,6 +6,9 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.network.packet.c2s.play.UpdateBeaconC2SPacket;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IBeaconScreen;
 
 import java.util.Arrays;
@@ -36,7 +39,7 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     @Nullable
     public String getFirstEffect() {
         StatusEffect effect = ((IBeaconScreen) inventory).jsmacros_getPrimaryEffect();
-        return effect == null ? null : Registries.STATUS_EFFECT.getId(effect).toString();
+        return effect == null ? null : Registry.STATUS_EFFECT.getId(effect).toString();
     }
 
     /**
@@ -47,7 +50,7 @@ public class BeaconInventory extends Inventory<BeaconScreen> {
     @Nullable
     public String getSecondEffect() {
         StatusEffect effect = ((IBeaconScreen) inventory).jsmacros_getSecondaryEffect();
-        return effect == null ? null : Registries.STATUS_EFFECT.getId(effect).toString();
+        return effect == null ? null : Registry.STATUS_EFFECT.getId(effect).toString();
     }
 
     /**
