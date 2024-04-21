@@ -21,41 +21,6 @@ public class DisplayEntityHelper<T extends DisplayEntity> extends EntityHelper<T
     /**
      * @since 1.9.1
      */
-    public double getLerpTargetX() {
-        return base.getLerpTargetX();
-    }
-
-    /**
-     * @since 1.9.1
-     */
-    public double getLerpTargetY() {
-        return base.getLerpTargetY();
-    }
-
-    /**
-     * @since 1.9.1
-     */
-    public double getLerpTargetZ() {
-        return base.getLerpTargetZ();
-    }
-
-    /**
-     * @since 1.9.1
-     */
-    public float getLerpTargetPitch() {
-        return base.getLerpTargetPitch();
-    }
-
-    /**
-     * @since 1.9.1
-     */
-    public float getLerpTargetYaw() {
-        return base.getLerpTargetYaw();
-    }
-
-    /**
-     * @since 1.9.1
-     */
     public Vec3D getVisibilityBoundingBox() {
         Box box = base.getVisibilityBoundingBox();
         return new Vec3D(box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ);
