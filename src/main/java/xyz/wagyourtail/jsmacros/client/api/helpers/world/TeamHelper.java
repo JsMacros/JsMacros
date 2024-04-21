@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.scoreboard.Team;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -80,6 +82,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return the name of this team's color.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("FormattingColorName")
     public String getColorName() {
         return base.getColor().getName();
     }
@@ -112,6 +115,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      * @since 1.3.0
      */
+    @DocletReplaceReturn("TeamCollisionRule")
     public String getCollisionRule() {
         return base.getCollisionRule().name;
     }
@@ -136,6 +140,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      * @since 1.3.0
      */
+    @DocletReplaceReturn("TeamVisibilityRule")
     public String nametagVisibility() {
         return base.getNameTagVisibilityRule().name;
     }
@@ -144,6 +149,7 @@ public class TeamHelper extends BaseHelper<Team> {
      * @return
      * @since 1.3.0
      */
+    @DocletReplaceReturn("TeamVisibilityRule")
     public String deathMessageVisibility() {
         return base.getDeathMessageVisibilityRule().name;
     }

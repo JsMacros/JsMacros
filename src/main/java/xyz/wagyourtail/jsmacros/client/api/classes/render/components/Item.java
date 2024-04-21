@@ -76,7 +76,7 @@ public class Item implements RenderElement, Alignable<Item> {
      * @return
      * @since 1.0.5 [citation needed]
      */
-    @DocletReplaceParams("id: ItemId, count: int")
+    @DocletReplaceParams("id: CanOmitNamespace<ItemId>, count: int")
     public Item setItem(String id, int count) {
         this.item = new ItemStack(Registries.ITEM.get(RegistryHelper.parseIdentifier(id)), count);
         return this;
@@ -415,7 +415,7 @@ public class Item implements RenderElement, Alignable<Item> {
          * @return self for chaining.
          * @since 1.8.4
          */
-        @DocletReplaceParams("id: ItemId")
+        @DocletReplaceParams("id: CanOmitNamespace<ItemId>")
         public Builder item(String id) {
             this.itemStack = new ItemStackHelper(Registries.ITEM.get(RegistryHelper.parseIdentifier(id))
                     .getDefaultStack());
