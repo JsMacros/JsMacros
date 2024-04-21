@@ -19,6 +19,7 @@ public abstract class BaseEventRegistry {
     public final Set<String> events = new LinkedHashSet<>();
     public final Set<String> cancellableEvents = new HashSet<>();
     public final Set<String> joinableEvents = new HashSet<>();
+    public final Map<String, Class<? extends EventFilterer>> filterableEvents = new HashMap<>();
 
     public BaseEventRegistry(Core runner) {
         this.runner = runner;
@@ -135,7 +136,7 @@ public abstract class BaseEventRegistry {
     public synchronized void addEvent(Class<? extends BaseEvent> clazz) {
         if (clazz.isAnnotationPresent(Event.class)) {
             Event e = clazz.getAnnotation(Event.class);
-            if (!e.oldName().equals("")) {
+            if (!e.oldName().isEmpty()) {
                 oldEvents.put(e.oldName(), e.value());
             }
             oldEvents.put(clazz.getSimpleName(), e.value());
@@ -146,6 +147,9 @@ public abstract class BaseEventRegistry {
             }
             if (e.joinable()) {
                 joinableEvents.add(e.value());
+            }
+            if (e.filterer() != EventFilterer.class) {
+                filterableEvents.put(e.value(), e.filterer());
             }
         } else {
             throw new RuntimeException("Tried to add event that doesn't have proper event annotation, " + clazz.getSimpleName());

@@ -12,13 +12,14 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IClientPlayerInteractionManager;
 import xyz.wagyourtail.jsmacros.client.access.IMinecraftClient;
 import xyz.wagyourtail.jsmacros.client.api.classes.InteractionProxy;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.HitResultHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -118,7 +119,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      * @since 1.9.0
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
-    @DocletEnumType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
+    @DocletDeclareType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
     public InteractionManagerHelper setTarget(int x, int y, int z, String direction) {
         //noinspection DataFlowIssue
         setTarget(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
@@ -179,6 +180,14 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         if (entity.getRaw() == mc.player) throw new AssertionError("Can't target self!");
         InteractionProxy.Target.setTarget(new EntityHitResult(entity.getRaw()));
         return this;
+    }
+
+    /**
+     * @return current hitResult
+     * @since 1.9.1
+     */
+    public @Nullable HitResultHelper<?> getTarget() {
+        return HitResultHelper.resolve(mc.crosshairTarget);
     }
 
     /**

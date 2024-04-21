@@ -6,7 +6,6 @@ import jdk.javadoc.doclet.DocletEnvironment;
 import jdk.javadoc.doclet.Reporter;
 import xyz.wagyourtail.FileHandler;
 import xyz.wagyourtail.StringHelpers;
-import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.options.IgnoredItem;
 import xyz.wagyourtail.doclet.options.OutputDirectory;
 import xyz.wagyourtail.doclet.options.Version;
@@ -23,15 +22,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static xyz.wagyourtail.doclet.tsdoclet.parsers.AbstractParser.shouldIgnore;
 import static xyz.wagyourtail.doclet.tsdoclet.parsers.ClassParser.mixinInterfaceMap;
 
 public class Main implements Doclet {
     public static Reporter reporter;
     public static FileHandler outputTS;
-    public static PackageTree classes = new PackageTree("Packages");
+    public static final PackageTree classes = new PackageTree("Packages");
     public static DocTrees treeUtils;
     public static Elements elementUtils;
-    public static Map<String, String> enumTypes = new HashMap<>();
+    public static final Map<String, String> enumTypes = new TreeMap<>();
+    private final Map<String, String> filterableEvents = new TreeMap<>();
 
     public static final List<String> includedClassPath = List.of(
             "xyz.wagyourtail.jsmacros.client.api.helpers.",
@@ -48,6 +49,7 @@ public class Main implements Doclet {
         return "TypeScript Generator";
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     @Override
     public Set<? extends Option> getSupportedOptions() {
         return Set.of(
@@ -72,8 +74,8 @@ public class Main implements Doclet {
 
         AbstractParser.initObjectElement();
 
-        Set<LibraryParser> libraryClasses = new LinkedHashSet<>();
-        Set<EventParser> eventClasses = new LinkedHashSet<>();
+        Set<LibraryParser> libraryClasses = new TreeSet<>((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.name, b.name));
+        Set<EventParser> eventClasses = new TreeSet<>((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(a.getName(), b.getName()));
 
         outputTS = new FileHandler(new File(OutputDirectory.outputDir, "JsMacros-" + Version.version + ".d.ts"));
 
@@ -87,35 +89,44 @@ public class Main implements Doclet {
             return false;
         }
 
-        elements.stream().filter(e -> e instanceof TypeElement).map(e -> (TypeElement) e).forEach(e -> {
+        for (Element v : elements) if (v instanceof TypeElement e) {
             for (AnnotationMirror annotationMirror : e.getAnnotationMirrors()) {
                 String annotationName = annotationMirror.getAnnotationType().asElement().getSimpleName().toString();
-                if (annotationName.equals("Library")) {
-                    libraryClasses.add(new LibraryParser(e, getAnnotationValue("value", annotationMirror).toString()));
-                }
-                if (annotationName.equals("Event")) {
-                    Boolean cancellableValue = (Boolean) getAnnotationValue("cancellable", annotationMirror);
-                    boolean cancellable = cancellableValue != null && cancellableValue;
-                    eventClasses.add(new EventParser(e, getAnnotationValue("value", annotationMirror).toString(), cancellable));
-                }
-                if (annotationName.equals("Mixin")) {
-                    List<TypeElement> interfaces = e.getInterfaces().stream()
-                            .filter(t -> t.getKind() == TypeKind.DECLARED)
-                            .map(t -> (TypeElement) ((DeclaredType) t).asElement())
-                            .filter(i -> i.getAnnotation(DocletIgnore.class) == null)
-                            .toList();
-                    if (!interfaces.isEmpty()) {
-                        @SuppressWarnings("unchecked")
-                        List<AnnotationValue> targets = (List<AnnotationValue>) getAnnotationValue("value", annotationMirror);
-                        if (targets != null && !targets.isEmpty()) {
-                            for (AnnotationValue target : targets) {
-                                TypeMirror type = (TypeMirror) target.getValue();
-                                if (type.getKind() == TypeKind.DECLARED) {
-                                    TypeElement el = (TypeElement) ((DeclaredType) type).asElement();
-                                    if (!mixinInterfaceMap.containsKey(el)) mixinInterfaceMap.put(el, new HashSet<>());
-                                    mixinInterfaceMap.get(el).addAll(interfaces);
-                                }
+                switch (annotationName) {
+                    case "Library" ->
+                        libraryClasses.add(new LibraryParser(e, getAnnotationValue(annotationMirror).toString()));
+                    case "Event" -> {
+                        Boolean cancellableValue = (Boolean) getAnnotationValue(annotationMirror, "cancellable");
+                        boolean cancellable = Boolean.TRUE.equals(cancellableValue);
+                        String name = getAnnotationValue(annotationMirror).toString();
+                        eventClasses.add(new EventParser(e, name, cancellable));
+                        DeclaredType filterer = (DeclaredType) getAnnotationValue(annotationMirror, "filterer");
+                        if (filterer != null) {
+                            String filtererName = filterer.asElement().getSimpleName().toString();
+                            if (!filtererName.equals("EventFilterer")) {
+                                classes.addClass(filterer.asElement());
+                                filterableEvents.put(name, filtererName);
                             }
+                        }
+                    }
+                    case "Mixin" -> {
+                        List<TypeElement> interfaces = e.getInterfaces().stream()
+                                .filter(t -> t.getKind() == TypeKind.DECLARED)
+                                .map(t -> (TypeElement) ((DeclaredType) t).asElement())
+                                .filter(i -> !shouldIgnore(i))
+                                .toList();
+                        if (interfaces.isEmpty()) continue;
+
+                        @SuppressWarnings("unchecked")
+                        List<AnnotationValue> targets = (List<AnnotationValue>) getAnnotationValue(annotationMirror);
+                        if (targets == null || targets.isEmpty()) continue;
+
+                        for (AnnotationValue target : targets) {
+                            TypeMirror type = (TypeMirror) target.getValue();
+                            if (type.getKind() != TypeKind.DECLARED) continue;
+
+                            TypeElement el = (TypeElement) ((DeclaredType) type).asElement();
+                            mixinInterfaceMap.computeIfAbsent(el, k -> new HashSet<>()).addAll(interfaces);
                         }
                     }
                 }
@@ -124,14 +135,14 @@ public class Main implements Doclet {
             if (includedClassPath.stream().anyMatch(qualifiedName::startsWith)) {
                 classes.addClass(e);
             }
-            if (e.getSimpleName().toString().equals("EventContainer")) {
+            if (e.getSimpleName().contentEquals("EventContainer")) {
                 classes.addClass(e);
                 System.out.println(e);
             }
-        });
+        }
 
         try {
-            
+            // `\n\` to prevent java compiler from trimming the string
             outputTS.append(
                 """
                 \n\
@@ -169,6 +180,12 @@ public class Main implements Doclet {
                 outputTS.append("\n\n" + StringHelpers.tabIn(event.genTSInterface()));
             }
 
+            outputTS.append("\n\n}\n\ninterface EventFilterers {\n");
+            for (String name : filterableEvents.keySet()) {
+                outputTS.append("\n    ").append(name)
+                        .append(": ").append(filterableEvents.get(name)).append(";");
+            }
+
             // for type-safe event listener
             outputTS.append("\n\n}\n\ninterface Events {\n");
             for (EventParser event : eventClasses) {
@@ -187,7 +204,7 @@ public class Main implements Doclet {
             // also used by some DocletReplace annotations
             Set<String> duplicateCheck = new HashSet<>();
             Set<String> sorter = new TreeSet<>();
-            for (ClassParser clz : classes.getXyzClasses()) {
+            for (ClassParser clz : classes.getWagClasses()) {
                 if (!duplicateCheck.add(clz.getClassName(false))) continue;
                 clz.isPackage = false; // to trick it transfer full type
                 sorter.add("\ntype " + clz.getClassName(true, true) + " = " +
@@ -197,8 +214,11 @@ public class Main implements Doclet {
             outputTS.append(String.join("", sorter));
 
             // append number enums here because they are very unlikely to change
-            outputTS.append("\n\n// Enum types\n").append(
+            //noinspection SpellCheckingInspection
+            outputTS.append(
                 """
+                \n
+                // Enum types
                 type Bit    = 1 | 0;
                 type Trit   = 2 | Bit;
                 type Dit    = 3 | Trit;
@@ -216,10 +236,9 @@ public class Main implements Doclet {
                 """
             );
 
-            for (String key : new TreeSet<>(enumTypes.keySet())) {
-                outputTS.append("type ").append(key).append(" = ")
-                    .append(enumTypes.get(key));
-                if (!enumTypes.get(key).contains("\n")) outputTS.append(";\n");
+            for (Map.Entry<String, String> ent : enumTypes.entrySet()) {
+                outputTS.append("type ").append(ent.getKey()).append(" = ").append(ent.getValue());
+                if (!ent.getValue().contains("\n")) outputTS.append(";\n");
             }
 
         } catch (IOException e) {
@@ -230,9 +249,13 @@ public class Main implements Doclet {
         return true;
     }
 
-    public static Object getAnnotationValue(String key, AnnotationMirror annotation) {
+    public static Object getAnnotationValue(AnnotationMirror annotation) {
+        return getAnnotationValue(annotation, "value");
+    }
+
+    public static Object getAnnotationValue(AnnotationMirror annotation, String key) {
         for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> el : annotation.getElementValues().entrySet()) {
-            if (el.getKey().getSimpleName().toString().equals(key)) {
+            if (el.getKey().getSimpleName().contentEquals(key)) {
                 return el.getValue().getValue();
             }
         }

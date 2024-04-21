@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl.inventory;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
+import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.Inventory;
@@ -16,6 +17,7 @@ import xyz.wagyourtail.jsmacros.core.event.Event;
 public class EventSlotUpdate extends BaseEvent {
     protected final HandledScreen<?> screen;
     @DocletReplaceReturn("SlotUpdateType")
+    @DocletDeclareType(name = "SlotUpdateType", type = "'HELD' | 'INVENTORY' | 'SCREEN'")
     public final String type;
     public final int slot;
     public final ItemStackHelper oldStack;
