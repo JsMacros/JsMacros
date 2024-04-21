@@ -1,5 +1,5 @@
 
-// version jsm1.8.4 mc1.19.3
+// ~version >=jsm1.8.4 >=mc1.19.3
 // need to be in a world to run this script
 
 
@@ -18,23 +18,20 @@ const fromEval = {}
 //--- get methods of fetching enums
 //@Custom
 // will place the code in this script, like Key
-/**
- * storing it this way instead of string[] looks better when using it
- * @type {{ [type: string]: never }}
- */
-const custom = {}
+/** @type {Set<string>} */
+const custom = new Set()
 ;[...enumFile.matchAll(/\/\/@[Cc]ustom.*\n *type +(\w+) *= *string/g)]
   .map(m => m[1])
-  .forEach(type => custom[type] = null)
+  .forEach(type => custom.add(type))
 
 //@Unknown
 // mark as unknown, don't know how to get the enum (reserved type)
 /** @type {string[]} */
 const unknown = [...enumFile.matchAll(/\/\/@[Uu]nknown.*\n *type +(\w+) *= *string/g)].map(m => m[1])
 
-//@Enum class.method.method...
+//@Enum class.key.key...
 // will try to find all static field of that class, and the values are instance of class
-// and then call the methods on the values
+// and then get the fields/call the methods on the values
 const EnumMatcher = enumFile.matchAll(/\/\/@Enum +(\S+).*\n *type +(\w+) *= *string/g)
 for (const [, expression, type] of EnumMatcher) fromEnum[type] = expression
 
@@ -49,24 +46,26 @@ const EvalMatcher = enumFile.matchAll(/\/\/@Eval +(.*)\n *type +(\w+) *= *string
 for (const [, code, type] of EvalMatcher) fromEval[type] = code
 
 /**
- * for enum, call the methods on value
- * @param {any} value 
- * @param {string[]} methods 
- * @returns 
+ * for enum, get the fields/call the methods on value
+ * @param {any} value
+ * @param {string[]} keys
+ * @returns
  */
-const call = (value, methods) => {
-  for (const method of methods)
-    if (!value || (typeof value === 'object' && !(method in value))) return
-    else value = value[method]()
+function call(value, keys) {
+  for (const key of keys)
+    if (!value || (typeof value === 'object' && !(key in value))) return
+    else {
+      value = typeof value[key] === 'function' ? value[key]() : value[key]
+    }
   return value
 }
 
 /**
  * take the string[] from {@link temp} then place it into file
- * @param {string} type 
- * @returns 
+ * @param {string} type
+ * @returns
  */
-const replaceToFile = type => {
+function replaceToFile(type) {
   if (!temp) return
   types[type] = temp.slice()
 
@@ -121,8 +120,32 @@ for (const [type, method] of Object.entries(fromRegistryHelper)) {
 
 log('fetching custom')
 
-if ('Key' in custom) {
-  delete custom.Key
+{
+  const ids = Java.from(RegistryHelper.getEntityTypeIds())
+    .sort()
+    .filter((v, i, a) => v && v !== a[i - 1])
+  log(`fetched ${ids.length} ids for EntityId`)
+  types['EntityId'] = ids
+
+  const map = ids.map(id => {
+    let type = null
+    if (id === 'minecraft:player') type = 'PlayerEntityHelper'
+    else try {
+      type = RegistryHelper.getEntity(id).getClass().getSimpleName()
+    } catch {}
+    type ||= 'EntityHelper'
+    return `\n  '${id}': ${type}`
+  }).join('')
+  enumFile = enumFile.replace( // type EntityIdToTypeMap = { [id: string]: EntityHelper }
+    /type EntityIdToTypeMap = \{ \[id: string\]: EntityHelper \}/,
+    `type EntityIdToTypeMap = {${map}\n}\n`
+  )
+  log('created EntityIdToTypeMap')
+  temp = undefined
+}
+
+if (custom.has('Key')) {
+  custom.delete('Key')
   const InputUtil = Java.type('net.minecraft.class_3675')
   const InputUtil$Type = Java.type('net.minecraft.class_3675$class_307')
 
@@ -149,16 +172,71 @@ if ('Key' in custom) {
     .concat(temp.filter(k => !funcRegex.test(k) && !commonRegex.test(k) && !groupRegex.test(k)))
   log(`fetched ${temp?.length} keys for Key`)
   replaceToFile('Key')
-} else Chat.log('custom type Key not found')
+} else log('custom type Key not found')
+
+if (custom.has('ScreenName') || custom.has('ScreenClass')) {
+  const HandledScreen = Reflection.getClass('net.minecraft.class_465')
+
+  /** @type {JavaSet<JavaClass>} */
+  const screens = GlobalVars.getObject('lastFilteredScreenClasses') ?? (() => {
+    /** @type {JavaSet<JavaClass>} */
+    const res = JavaUtils.createHashSet()
+    const Screen = Reflection.getClass('net.minecraft.class_437')
+    const fabricLoader = Client.getMinecraft().getClass().getClassLoader()
+    //@ts-ignore
+    const loader = Java.type('com.google.common.reflect.ClassPath').from(fabricLoader)
+    log('loading through classes to get all screen classes...')
+    /** @type {JavaSet} */
+    const get = loader.getAllClasses()
+    const size = get.size()
+    let count = 0
+    for (const clz of get) {
+      if (++count % 1000 === 0) log(`${count} / ${size}`)
+      try {
+        const Class = java.lang.Class
+        const loaded = Class.forName(clz.getName(), false, fabricLoader)
+        // @ts-ignore
+        if (Screen.isAssignableFrom(loaded)) res.add(loaded)
+      } catch (e) {}
+    }
+    GlobalVars.putObject('lastFilteredScreenClasses', res)
+    return res;
+  })()
+
+  if (custom.has('ScreenName')) {
+    custom.delete('ScreenName')
+    temp = [...screens]
+      .filter(c => !c.getTypeName().startsWith('net.minecraft.') && HandledScreen.isAssignableFrom(c))
+      .map(c => c.getName())
+      .filter(n => n)
+      .sort()
+      .filter((v, i, a) => v && v !== a[i - 1])
+    log(`fetched ${temp?.length} names for ScreenName`)
+    replaceToFile('ScreenName')
+  } else log('custom type ScreenName not found')
+
+  if (custom.has('ScreenClass')) {
+    custom.delete('ScreenClass')
+    temp = [...screens]
+      .map(c => c.getSimpleName())
+      .filter(n => n)
+      .sort()
+      .filter((v, i, a) => v && v !== a[i - 1])
+    log(`fetched ${temp?.length} names for ScreenClass`)
+    replaceToFile('ScreenClass')
+  } else log('custom type ScreenClass not found')
+
+} else log('custom type ScreenName and ScreenClass not found')
 
 
 // get registry classes for evals
 const Registry = Java.type('net.minecraft.class_2378')
 const Registries = Java.type('net.minecraft.class_7923')
 const RegistryKeys = Java.type('net.minecraft.class_7924')
+const world = Client.getMinecraft().field_1687
 // this is why you need to be in a world
 // mc.world.getRegistryManager()
-const RegistryManager = Client.getMinecraft().field_1687.method_30349()
+const RegistryManager = world.method_30349()
 
 log('fetching from Eval')
 for (const [type, code] of Object.entries(fromEval)) {
@@ -172,9 +250,8 @@ for (const [type, code] of Object.entries(fromEval)) {
 }
 
 
-const customLeft = Object.keys(custom).length
-if (customLeft) Chat.log(`There's ${customLeft} not fetched enum:\n${Object.keys(custom).join(', ')}`)
-if (unknown[0]) Chat.log(`Enums marked as unknown:\n${unknown.join(', ')}`)
+if (custom.size) log(`There's ${custom.size} not fetched enum:\n${[...custom].join(', ')}`)
+if (unknown[0]) log(`Enums marked as unknown:\n${unknown.join(', ')}`)
 
 FS.open('./McIdsAndEnums.d.ts').write(enumFile.replace(/\n+$/, "\n"))
 log('exported')

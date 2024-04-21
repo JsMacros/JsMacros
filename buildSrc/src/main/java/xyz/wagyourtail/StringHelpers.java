@@ -1,5 +1,6 @@
 package xyz.wagyourtail;
 
+@SuppressWarnings("unused")
 public class StringHelpers {
 
     public static String toSymbolsGTLT(String s) {
@@ -11,18 +12,15 @@ public class StringHelpers {
     }
 
     public static String tabIn(String string) {
-        return ("\n" + string).replaceAll("\n(?=[^\n])", "\n    ").substring(1);
+        return tabIn(string, 1);
     }
 
     public static String tabIn(String string, int count) {
-        for (int i = 0; i < count; i++) {
-            string = tabIn(string);
-        }
-        return string;
+        return string.replaceAll("(?<=^|\n)(?=[^\n])", "    ".repeat(count));
     }
 
     public static String tabOut(String string) {
-        return ("\n" + string).replaceAll("\n    ", "\n").substring(1);
+        return string.replaceAll("(?<=^|\n)    ", "");
     }
 
     public static String addToLineStarts(String string, String start) {

@@ -23,6 +23,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.InteractionManagerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.HitResultHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.ClientPlayerEntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.movement.MovementDummy;
@@ -131,6 +132,16 @@ public class FPlayer extends BaseLibrary {
             return null;
         }
         return new BlockDataHelper(b, t, h.getBlockPos());
+    }
+
+    /**
+     * @return the raycast result.
+     * @since 1.9.1
+     */
+    public HitResultHelper.Block detailedRayTraceBlock(double distance, boolean fluid) {
+        assert mc.world != null;
+        assert mc.player != null;
+        return new HitResultHelper.Block((BlockHitResult) mc.player.raycast(distance, 0, fluid));
     }
 
     /**
