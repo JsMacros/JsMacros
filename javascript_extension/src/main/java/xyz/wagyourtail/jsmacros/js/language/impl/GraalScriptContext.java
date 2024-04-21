@@ -40,11 +40,11 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
     }
 
     @Override
-    public void wrapSleep(SleepRunnable sleep) throws InterruptedException {
+    public void wrapSleep(SleepRunnable sleep) {
         wrapSleep(0, sleep);
     }
 
-    public void wrapSleep(int changePriority, SleepRunnable sleep) throws InterruptedException {
+    public void wrapSleep(int changePriority, SleepRunnable sleep) {
         getContext().leave();
         try {
             assert tasks.peek() != null;
@@ -68,6 +68,8 @@ public class GraalScriptContext extends BaseScriptContext<Context> {
                     wt.waitUntilReady();
                 }
             }
+        } catch (InterruptedException ex) {
+
         } finally {
             if(!isContextClosed()) {
                 getContext().enter();

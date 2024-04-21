@@ -289,11 +289,10 @@ public class FClient extends PerExecLibrary {
     }
 
     /**
-     * @throws InterruptedException
      * @see #waitTick(int)
      * @since 1.2.4
      */
-    public void waitTick() throws InterruptedException {
+    public void waitTick() {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
@@ -305,10 +304,9 @@ public class FClient extends PerExecLibrary {
      * don't use this on an event that the main thread waits on (joins)... that'll cause circular waiting.
      *
      * @param i
-     * @throws InterruptedException
      * @since 1.2.6
      */
-    public void waitTick(int i) throws InterruptedException {
+    public void waitTick(int i) {
         if (Core.getInstance().profile.checkJoinedThreadStack()) {
             throw new IllegalThreadStateException("Attempted to wait on a thread that is currently joined to main!");
         }
