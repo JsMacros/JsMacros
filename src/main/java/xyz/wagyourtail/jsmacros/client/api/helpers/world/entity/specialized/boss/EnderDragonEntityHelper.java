@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.boss;
 
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.MobEntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinPhaseType;
@@ -30,6 +32,7 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
      * @return the current phase of the dragon.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("DragonPhase")
     public String getPhase() {
         return ((MixinPhaseType) base.getPhaseManager().getCurrent().getType()).getName();
     }
@@ -59,6 +62,7 @@ public class EnderDragonEntityHelper extends MobEntityHelper<EnderDragonEntity> 
      * @return a list of all body parts of the dragon with the specified name.
      * @since 1.8.4
      */
+    @DocletReplaceParams("name: DragonBodyPart")
     public List<? extends EntityHelper<?>> getBodyParts(String name) {
         return Arrays.stream(base.getBodyParts()).filter(e -> e.name.equals(name)).map(EntityHelper::create).collect(Collectors.toList());
     }

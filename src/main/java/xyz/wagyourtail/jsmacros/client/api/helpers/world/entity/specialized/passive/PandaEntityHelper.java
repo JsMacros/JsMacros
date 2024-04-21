@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.PandaEntity;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 
 /**
  * @author Etheradon
@@ -25,6 +26,7 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
      * @return the name of this panda's main gene.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("PandaGene")
     public String getMainGeneName() {
         return base.getMainGene().getName();
     }
@@ -49,6 +51,7 @@ public class PandaEntityHelper extends AnimalEntityHelper<PandaEntity> {
      * @return the name of this panda's hidden gene.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("PandaGene")
     public String getHiddenGeneName() {
         return base.getHiddenGene().getName();
     }

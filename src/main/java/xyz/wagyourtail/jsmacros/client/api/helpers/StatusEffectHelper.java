@@ -53,6 +53,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @return the string name of the category of the status effect, "HARMFUL", "NEUTRAL", or "BENEFICIAL".
      * @since 1.8.4
      */
+    @DocletReplaceReturn("StatusEffectCategory")
     public String getCategory() {
         return switch (base.getEffectType().getType()) {
             case HARMFUL -> "HARMFUL";

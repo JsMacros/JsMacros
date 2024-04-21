@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.registry.Registry;
+import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 
@@ -194,6 +195,7 @@ public class BlockStateHelper extends StateHelper<BlockState> {
      * current world.
      * @since 1.6.5
      */
+    @DocletReplaceParams("pos: BlockPosHelper, entity: CanOmitNamespace<EntityId>")
     public boolean allowsSpawning(BlockPosHelper pos, String entity) {
         return base.allowsSpawning(MinecraftClient.getInstance().world, pos.getRaw(), Registry.ENTITY_TYPE.get(RegistryHelper.parseIdentifier(entity)));
     }

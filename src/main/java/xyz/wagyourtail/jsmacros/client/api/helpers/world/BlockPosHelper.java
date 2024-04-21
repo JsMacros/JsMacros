@@ -240,6 +240,20 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BlockPosHelper) {
+            BlockPosHelper other = (BlockPosHelper) obj;
+            return base.equals(other.base);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return base.hashCode();
+    }
+
+    @Override
     public String toString() {
         return String.format("BlockPosHelper:{\"x\": %d, \"y\": %d, \"z\": %d}", base.getX(), base.getY(), base.getZ());
     }

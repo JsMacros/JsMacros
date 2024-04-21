@@ -17,9 +17,10 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
 import xyz.wagyourtail.jsmacros.client.access.IInventory;
@@ -453,7 +454,9 @@ public class Inventory<T extends HandledScreen<?>> {
      * @param slot1
      * @param slot2
      * @return
+     * @deprecated use {@link Inventory#swapHotbar(int, int)} or write it yourself instead. This method is not reliable on servers due to timing issues.
      */
+    @Deprecated
     public Inventory<T> swap(int slot1, int slot2) {
         boolean is1 = getSlot(slot1).isEmpty();
         boolean is2 = getSlot(slot2).isEmpty();
@@ -518,17 +521,65 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return the part of the mapping the slot is in.
      * @since 1.1.3
      */
-    @DocletReplaceReturn("InventoryType")
+    @DocletReplaceReturn("ScreenName")
     public String getType() {
         return JsMacros.getScreenName(this.inventory);
+    }
+
+    /**
+     * checks if this inventory type equals to any of the specified types<br>
+     * @since 1.9.0
+     */
+    @SuppressWarnings("SpellCheckingInspection")
+    @DocletReplaceTypeParams("T extends ScreenName")
+    @DocletReplaceParams("...anyOf: T[]")
+    @DocletReplaceReturn("this is T extends keyof InvNameToTypeMap ? InvNameToTypeMap[keyof InvNameToTypeMap] extends InvNameToTypeMap[T] ? Inventory : InvNameToTypeMap[T] : this")
+    @DocletDeclareType(name = "InvNameToTypeMap", type =
+            """
+            {
+                '1 Row Chest': ContainerInventory;
+                '2 Row Chest': ContainerInventory;
+                '3 Row Chest': ContainerInventory;
+                '4 Row Chest': ContainerInventory;
+                '5 Row Chest': ContainerInventory;
+                '6 Row Chest': ContainerInventory;
+                '7 Row Chest': ContainerInventory;
+                '8 Row Chest': ContainerInventory;
+                '9 Row Chest': ContainerInventory;
+                '3x3 Container': ContainerInventory;
+                'Anvil': AnvilInventory;
+                'Beacon': BeaconInventory;
+                'Blast Furnace': FurnaceInventory;
+                'Brewing Stand': BrewingStandInventory;
+                'Crafting Table': CraftingInventory;
+                'Enchanting Table': EnchantInventory;
+                'Furnace': FurnaceInventory;
+                'Grindstone': GrindStoneInventory;
+                'Hopper': ContainerInventory;
+                'Loom': LoomInventory;
+                'Villager': VillagerInventory;
+                'Shulker Box': ContainerInventory;
+                'Smithing Table': SmithingInventory;
+                'Smoker': FurnaceInventory;
+                'Cartography Table': CartographyInventory;
+                'Stonecutter': StoneCutterInventory;
+                'Survival Inventory': PlayerInventory;
+                'Horse': HorseInventory;
+                'Creative Inventory': CreativeInventory;
+            }
+            """
+    )
+    public boolean is(String ...types) {
+        return Arrays.asList(types).contains(getType());
     }
 
     /**
      * @return the inventory mappings different depending on the type of open container/inventory.
      * @since 1.1.3
      */
+    @SuppressWarnings("SpellCheckingInspection")
     @DocletReplaceReturn("JavaMap<InvMapId, JavaArray<number>>")
-    @DocletEnumType(name = "InvMapId", type =
+    @DocletDeclareType(name = "InvMapId", type =
             """
             InvMapType.All;
             declare namespace InvMapType {
@@ -552,7 +603,7 @@ public class Inventory<T extends HandledScreen<?>> {
                 type Smithing         = _invio;
                 type Grindstone       = _invio;
                 type CartographyTable = _invio;
-                type All = 
+                type All =
                 | Inventory
                 | CreativeInvInvTab
                 | CreativeInv
@@ -699,6 +750,7 @@ public class Inventory<T extends HandledScreen<?>> {
         return this.inventory.getTitle().getString();
     }
 
+    @DocletReplaceReturn("IScreen")
     public T getRawContainer() {
         return this.inventory;
     }

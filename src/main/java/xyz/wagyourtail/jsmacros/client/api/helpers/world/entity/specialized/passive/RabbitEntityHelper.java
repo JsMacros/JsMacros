@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
 import net.minecraft.entity.passive.RabbitEntity;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 
 /**
  * @author Etheradon
@@ -17,6 +18,7 @@ public class RabbitEntityHelper extends AnimalEntityHelper<RabbitEntity> {
      * @return the variant of this rabbit.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("RabbitVariant")
     public int getVariant() {
         return base.getRabbitType();
     }
