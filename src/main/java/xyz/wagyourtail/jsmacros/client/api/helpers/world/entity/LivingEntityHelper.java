@@ -16,7 +16,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.RaycastContext;
-import xyz.wagyourtail.doclet.DocletEnumType;
+import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -71,7 +71,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @return {@code true} if the entity has the specified status effect, {@code false} otherwise.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: StatusEffectId")
+    @DocletReplaceParams("id: CanOmitNamespace<StatusEffectId>")
     public boolean hasStatusEffect(String id) {
         StatusEffect effect = Registry.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
         return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));
@@ -184,7 +184,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @since 1.8.4
      */
     @DocletReplaceReturn("MobCategory")
-    @DocletEnumType(name = "MobCategory", type = "'UNDEAD' | 'DEFAULT' | 'ARTHROPOD' | 'ILLAGER' | 'AQUATIC' | 'UNKNOWN'")
+    @DocletDeclareType(name = "MobCategory", type = "'UNDEAD' | 'DEFAULT' | 'ARTHROPOD' | 'ILLAGER' | 'AQUATIC' | 'UNKNOWN'")
     public String getMobCategory() {
         EntityGroup group = base.getGroup();
         if (group == EntityGroup.UNDEAD) {

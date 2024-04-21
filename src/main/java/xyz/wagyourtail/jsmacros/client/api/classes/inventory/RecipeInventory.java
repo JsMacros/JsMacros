@@ -11,6 +11,7 @@ import net.minecraft.client.recipebook.RecipeBookGroup;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookResults;
 import xyz.wagyourtail.jsmacros.client.access.IRecipeBookWidget;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
@@ -105,19 +106,9 @@ public abstract class RecipeInventory<T extends HandledScreen<? extends Abstract
      * @return the recipe category of recipes that can be crafted in this inventory.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("RecipeBookCategory")
     public String getCategory() {
-        switch (handler.getCategory()) {
-            case CRAFTING:
-                return "CRAFTING";
-            case FURNACE:
-                return "FURNACE";
-            case BLAST_FURNACE:
-                return "BLAST_FURNACE";
-            case SMOKER:
-                return "SMOKER";
-            default:
-                throw new IllegalArgumentException();
-        }
+        return handler.getCategory().name();
     }
 
     /**

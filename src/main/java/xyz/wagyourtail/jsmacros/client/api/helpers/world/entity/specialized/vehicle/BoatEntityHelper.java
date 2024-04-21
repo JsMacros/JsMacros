@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.vehicle;
 
 import net.minecraft.entity.vehicle.BoatEntity;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinBoatEntity;
@@ -28,6 +29,7 @@ public class BoatEntityHelper extends EntityHelper<BoatEntity> {
      * @return the name of the boat's material.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("BoatType")
     public String getBoatType() {
         return base.getBoatType().getName();
     }

@@ -87,7 +87,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @return self for chaining.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: EnchantmentId, level: int")
+    @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>, level: int")
     public CreativeItemStackHelper addEnchantment(String id, int level) {
         return addEnchantment(Registry.ENCHANTMENT.get(RegistryHelper.parseIdentifier(id)), level);
     }

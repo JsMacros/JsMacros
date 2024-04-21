@@ -41,7 +41,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     private static final Style LORE_STYLE = Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true);
     protected static final MinecraftClient mc = MinecraftClient.getInstance();
 
-    @DocletReplaceParams("id: ItemId, count: int")
+    @DocletReplaceParams("id: CanOmitNamespace<ItemId>, count: int")
     public ItemStackHelper(String id, int count) {
         super(new ItemStack(Registry.ITEM.get(RegistryHelper.parseIdentifier(id)), count));
     }
@@ -147,7 +147,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * otherwise.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: EnchantmentId")
+    @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>")
     public boolean hasEnchantment(String enchantment) {
         String toCheck = RegistryHelper.parseNameSpace(enchantment);
         return getEnchantments().stream().anyMatch(e -> e.getId().equals(toCheck));

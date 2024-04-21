@@ -173,7 +173,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * {@code false} otherwise.
      * @since 1.8.4
      */
-    @DocletReplaceParams("...blocks: BlockId[]")
+    @DocletReplaceParams("...blocks: CanOmitNamespace<BlockId>[]")
     public boolean containsAny(String... blocks) {
         // Don't use section.hasAny because it will take some time to update the block palette
         Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
@@ -198,7 +198,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
      * otherwise.
      * @since 1.8.4
      */
-    @DocletReplaceParams("...blocks: BlockId[]")
+    @DocletReplaceParams("...blocks: CanOmitNamespace<BlockId>[]")
     public boolean containsAll(String... blocks) {
         // Don't use section.hasAny because it will take some time to update the block palette
         Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registry.BLOCK::get).collect(Collectors.toSet());
