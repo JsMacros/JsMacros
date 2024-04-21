@@ -96,43 +96,68 @@ public class FClient extends PerExecLibrary {
      * @param runnable task to run
      * @since 1.4.0
      */
-    public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable) {
-        runOnMainThread(runnable, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+    public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable) throws InterruptedException {
+        runOnMainThread(runnable, false, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+    }
+
+    /**
+     *
+     * @param runnable
+     * @param watchdogMaxTime
+     * @throws InterruptedException
+     * @since 1.6.5
+     */
+    public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable, long watchdogMaxTime) throws InterruptedException {
+        runOnMainThread(runnable, false, watchdogMaxTime);
     }
 
     /**
      * @param runnable
+     * @param await
      * @param watchdogMaxTime max time for the watchdog to wait before killing the script
-     * @since 1.6.5
+     * @since 1.9.1
      */
-    public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable, long watchdogMaxTime) {
-        mc.execute(() -> {
-            EventContainer<?> lock = new EventContainer<>(runnable.getCtx());
-            lock.setLockThread(Thread.currentThread());
-            EventLockWatchdog.startWatchdog(lock, new IEventListener() {
-                @Override
-                public boolean joined() {
-                    return false;
-                }
+    public void runOnMainThread(MethodWrapper<Object, Object, Object, ?> runnable, boolean await, long watchdogMaxTime) throws InterruptedException {
+        if (mc.isOnThread()) {
+            runnable.run();
+        } else if (Core.getInstance().profile.checkJoinedThreadStack()) {
+            throw new IllegalThreadStateException("Attempted to wait on main thread while currently joined to main!");
+        } else {
+            Semaphore semaphore = new Semaphore(await ? 0 : 1);
+            mc.execute(() -> {
+                EventContainer<?> lock = new EventContainer<>(runnable.getCtx());
+                lock.setLockThread(Thread.currentThread());
+                EventLockWatchdog.startWatchdog(lock, new IEventListener() {
+                    @Override
+                    public boolean joined() {
+                        return false;
+                    }
 
-                @Override
-                public EventContainer<?> trigger(BaseEvent event) {
-                    return null;
-                }
+                    @Override
+                    public EventContainer<?> trigger(BaseEvent event) {
+                        return null;
+                    }
 
-                @Override
-                public String toString() {
-                    return "RunOnMainThread{\"called_by\": " + runnable.getCtx().getTriggeringEvent().toString() + "}";
+                    @Override
+                    public String toString() {
+                        return "RunOnMainThread{\"called_by\": " + runnable.getCtx().getTriggeringEvent().toString() + "}";
+                    }
+                }, watchdogMaxTime);
+                boolean success = false;
+                try {
+                    runnable.run();
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                } finally {
+                    lock.releaseLock();
+                    semaphore.release();
                 }
-            }, watchdogMaxTime);
-            boolean success = false;
-            try {
-                runnable.run();
-            } catch (Throwable e) {
-                e.printStackTrace();
+            });
+
+            if (await) {
+                ctx.wrapSleep(semaphore::acquire);
             }
-            lock.releaseLock();
-        });
+        }
     }
 
     /**
