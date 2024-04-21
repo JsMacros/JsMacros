@@ -44,6 +44,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.ChunkHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.DirectionHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.HitResultHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -697,6 +698,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @return self for chaining.
      * @since 1.8.4
      */
+    @DocletReplaceParams("dimension: CanOmitNamespace<Dimension>, pos: BlockPosHelper")
     public PacketByteBufferHelper writeGlobalPos(String dimension, BlockPosHelper pos) {
         RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, new Identifier(dimension));
         base.writeGlobalPos(GlobalPos.create(key, pos.getRaw()));
@@ -712,6 +714,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @return self for chaining.
      * @since 1.8.4
      */
+    @DocletReplaceParams("dimension: CanOmitNamespace<Dimension>, x: int, y: int, z: int")
     public PacketByteBufferHelper writeGlobalPos(String dimension, int x, int y, int z) {
         RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, new Identifier(dimension));
         base.writeGlobalPos(GlobalPos.create(key, new BlockPos(x, y, z)));
@@ -992,9 +995,21 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @param hitResult the hit result to store
      * @return self for chaining.
      * @since 1.8.4
+     * @deprecated use {@link PacketByteBufferHelper#writeBlockHitResult(HitResultHelper.Block hitResult)} instead.
      */
+    @Deprecated
     public PacketByteBufferHelper writeBlockHitResult(BlockHitResult hitResult) {
         base.writeBlockHitResult(hitResult);
+        return this;
+    }
+
+    /**
+     * @param hitResult the hit result to store
+     * @return self for chaining.
+     * @since 1.9.1
+     */
+    public PacketByteBufferHelper writeBlockHitResult(HitResultHelper.Block hitResult) {
+        base.writeBlockHitResult(hitResult.getRaw());
         return this;
     }
 
@@ -1014,13 +1029,16 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         } else {
             result = new BlockHitResult(pos.toMojangDoubleVector(), Direction.valueOf(direction), blockPos.getRaw(), insideBlock);
         }
-        return writeBlockHitResult(result);
+        base.writeBlockHitResult(result);
+        return this;
     }
 
     /**
      * @return the read block hit result.
      * @since 1.8.4
+     * @deprecated use {@link PacketByteBufferHelper#readBlockHitResultHelper()} instead.
      */
+    @Deprecated
     public BlockHitResult readBlockHitResult() {
         return base.readBlockHitResult();
     }
@@ -1028,10 +1046,20 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     /**
      * @return a map of the block hit result's data and their values.
      * @since 1.8.4
+     * @deprecated use {@link PacketByteBufferHelper#readBlockHitResultHelper()} instead.
      */
+    @Deprecated
     public Map<String, Object> readBlockHitResultMap() {
-        BlockHitResult hitResult = readBlockHitResult();
+        BlockHitResult hitResult = base.readBlockHitResult();
         return ImmutableMap.of("side", new DirectionHelper(hitResult.getSide()), "blockPos", new BlockPosHelper(hitResult.getBlockPos()), "missed", hitResult.getType() == HitResult.Type.MISS, "inside", hitResult.isInsideBlock());
+    }
+
+    /**
+     * @return the read block hit result as a helper.
+     * @since 1.9.1
+     */
+    public HitResultHelper.Block readBlockHitResultHelper() {
+        return new HitResultHelper.Block(base.readBlockHitResult());
     }
 
     /**
