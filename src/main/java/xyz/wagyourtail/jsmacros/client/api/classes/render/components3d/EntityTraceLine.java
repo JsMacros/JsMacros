@@ -56,7 +56,7 @@ public class EntityTraceLine extends TraceLine {
 
     @Override
     public void render(MatrixStack drawContext, BufferBuilder builder, float tickDelta) {
-        if (shouldRemove || entity == null || entity.isRemoved() || entity.getWorld() != mc.world) {
+        if (shouldRemove || entity == null || entity.isRemoved() || entity.world != mc.world) {
             shouldRemove = true;
             dirty = true;
             return;
