@@ -38,7 +38,7 @@ function frameLink(a) {
 
 async function openMain(url, dontpush) {
     url = url.replace(/https?:\/\/.+?\//, "/");
-    if (!dontpush) window.history.pushState({}, '', `${window.location.href.split('?')[0].replace(/#.*\??/, "")}?${url}`);
+    if (!dontpush) window.history.pushState({}, "", `${window.location.href.split("?")[0].replace(/#.*\??/, "")}?${url}`);
     const req = await fetch(url);
     if (req.status !== 200) {
         alert(`failed to load ${req.status}: \n${req.statusText}`);
