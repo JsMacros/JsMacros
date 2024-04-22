@@ -36,11 +36,11 @@ public class MixinClientConnection {
             return;
         }
         EventRecvPacket event = new EventRecvPacket(packet);
+        event.trigger();
         if (event.isCanceled() || event.packet == null) {
             ci.cancel();
             return;
         }
-        event.trigger();
         jsmacros$eventRecvPacket = event;
     }
 
