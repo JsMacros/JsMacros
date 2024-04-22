@@ -3,9 +3,14 @@ package xyz.wagyourtail.jsmacros.core.service;
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
+import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
@@ -16,6 +21,7 @@ import java.util.*;
  * @since 1.6.3
  */
 public class ServiceManager {
+    private static final WeakHashMap<EventService, SecretFields> secrets = new WeakHashMap<>();
     protected boolean reloadOnModify;
     protected final Object2LongMap<String> lastModifiedMap = new Object2LongArrayMap<>();
     protected final Set<String> crashedServices = new HashSet<>();
@@ -143,13 +149,65 @@ public class ServiceManager {
         if (service == null) {
             return ServiceStatus.UNKNOWN;
         }
-        if (service.getU() != null && !service.getU().getCtx().isContextClosed()) {
-            BaseScriptContext<?> ctx = service.getU().getCtx();
-            ((EventService) ctx.getTriggeringEvent())._onStop(ctx, runner.profile::logError);
-            service.getU().getCtx().closeContext();
-            return ServiceStatus.RUNNING;
+        if (service.getU() == null) {
+            return ServiceStatus.STOPPED;
         }
-        return ServiceStatus.STOPPED;
+        BaseScriptContext<?> ctx = service.getU().getCtx();
+        if (ctx.isContextClosed()) {
+            return ServiceStatus.STOPPED;
+        }
+
+
+        EventService event = (EventService) ctx.getTriggeringEvent();
+        SecretFields secret = secrets.getOrDefault(event, SecretFields.EMPTY);
+
+        try {
+            MethodWrapper<?, ?, ?, ?> sl = event.stopListener;
+            if (sl != null) sl.run();
+        } catch (Throwable t) {
+            runner.profile.logError(t);
+        }
+
+        if (secret.offEventsOnStop) {
+            BaseEventRegistry reg = Core.getInstance().eventRegistry;
+            for (Map.Entry<IEventListener, String> ent : ctx.eventListeners.entrySet()) {
+                reg.removeListener(ent.getValue(), ent.getKey());
+            }
+        }
+
+        Registrable<?>[] list = secret.registrableList;
+        if (list != null) {
+            for (Registrable<?> e : list) {
+                try {
+                    e.unregister();
+                } catch (Throwable t) {
+                    runner.profile.logError(t);
+                }
+            }
+        }
+
+        try {
+            MethodWrapper<?, ?, ?, ?> psl = event.postStopListener;
+            if (psl != null) psl.run();
+        } catch (Throwable t) {
+            runner.profile.logError(t);
+        }
+
+        ctx.closeContext();
+        return ServiceStatus.RUNNING;
+    }
+
+    public static void setUnregisterSecret(EventService event, boolean offEvents, Registrable<?>[] list) {
+        SecretFields secret = secrets.computeIfAbsent(event, e -> new SecretFields());
+        secret.offEventsOnStop = offEvents;
+        secret.registrableList = list.length > 0 ? list : null;
+
+        // TODO: prevent the script from stopping itself (idk how to do it - aMelonRind)
+        // example code of script stopping itself:
+        // JsMacros.assertEvent(event, 'Service');
+        // const d2d = Hud.createDraw2D().register();
+        // d2d.addText('Hello World', 200, 200, 0xFFFFFF, true);
+        // event.unregisterOnStop(true, d2d);
     }
 
     /**
@@ -376,6 +434,14 @@ public class ServiceManager {
         ENABLED, DISABLED, // returned by start/stop
         RUNNING, STOPPED, // returned by enable/disable
         UNKNOWN // service doesn't exist
+    }
+
+    static class SecretFields {
+        private static final SecretFields EMPTY = new SecretFields();
+
+        private boolean offEventsOnStop = false;
+        @Nullable
+        private Registrable<?>[] registrableList = null;
     }
 
 }

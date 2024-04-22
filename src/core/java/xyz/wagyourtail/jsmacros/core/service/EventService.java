@@ -1,20 +1,15 @@
 package xyz.wagyourtail.jsmacros.core.service;
 
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.Event;
-import xyz.wagyourtail.jsmacros.core.event.IEventListener;
-import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
 
 /**
  * @since 1.6.4
@@ -36,9 +31,6 @@ public class EventService extends BaseEvent {
      */
     @Nullable
     public MethodWrapper<Object, Object, Object, ?> postStopListener;
-    protected boolean offEventsOnStop = false;
-    @Nullable
-    protected Registrable<?>[] registrableList = null;
 
     public EventService(String name) {
         this.serviceName = name;
@@ -59,54 +51,7 @@ public class EventService extends BaseEvent {
      * @since 1.9.1
      */
     public void unregisterOnStop(boolean offEvents, Registrable<?> ...list) {
-        offEventsOnStop = offEvents;
-        registrableList = list.length > 0 ? list : null;
-
-        // TODO: prevent the script from stopping itself (idk how to do it - aMelonRind)
-        // example code of script stopping itself:
-        // JsMacros.assertEvent(event, 'Service');
-        // const d2d = Hud.createDraw2D().register();
-        // d2d.addText('Hello World', 200, 200, 0xFFFFFF, true);
-        // event.unregisterOnStop(true, d2d);
-    }
-
-    /**
-     * don't touch this... although it's nothing much dangerous.
-     * @since 1.9.1
-     */
-    @DocletIgnore
-    public void _onStop(BaseScriptContext<?> ctx, Consumer<Throwable> errorConsumer) {
-        try {
-            MethodWrapper<?, ?, ?, ?> sl = stopListener;
-            if (sl != null) sl.run();
-        } catch (Throwable t) {
-            errorConsumer.accept(t);
-        }
-
-        if (offEventsOnStop) {
-            BaseEventRegistry reg = Core.getInstance().eventRegistry;
-            for (Map.Entry<IEventListener, String> ent : ctx.eventListeners.entrySet()) {
-                reg.removeListener(ent.getValue(), ent.getKey());
-            }
-        }
-
-        Registrable<?>[] list = registrableList;
-        if (list != null) {
-            for (Registrable<?> e : list) {
-                try {
-                    e.unregister();
-                } catch (Throwable t) {
-                    errorConsumer.accept(t);
-                }
-            }
-        }
-
-        try {
-            MethodWrapper<?, ?, ?, ?> sl = postStopListener;
-            if (sl != null) sl.run();
-        } catch (Throwable t) {
-            errorConsumer.accept(t);
-        }
+        ServiceManager.setUnregisterSecret(this, offEvents, list);
     }
 
     @Override
