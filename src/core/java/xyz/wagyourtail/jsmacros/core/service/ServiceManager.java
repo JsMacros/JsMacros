@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.service;
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
@@ -22,6 +23,7 @@ import java.util.*;
  */
 public class ServiceManager {
     private static final WeakHashMap<EventService, SecretFields> secrets = new WeakHashMap<>();
+    private static final Set<Object> autoUnregisterKeepAlive = new HashSet<>();
     protected boolean reloadOnModify;
     protected final Object2LongMap<String> lastModifiedMap = new Object2LongArrayMap<>();
     protected final Set<String> crashedServices = new HashSet<>();
@@ -134,7 +136,12 @@ public class ServiceManager {
             return ServiceStatus.UNKNOWN;
         }
         if (service.getU() == null || service.getU().getCtx().isContextClosed()) {
-            service.setU(runner.exec(service.getT().toScriptTrigger(), new EventService(name)));
+            EventService event = new EventService(name);
+            SecretFields secret = new SecretFields();
+            EventContainer<?> container = runner.exec(service.getT().toScriptTrigger(), event);
+            service.setU(container);
+            secret.ctx = container.getCtx();
+            secrets.put(event, secret);
             return ServiceStatus.STOPPED;
         }
         return ServiceStatus.RUNNING;
@@ -193,21 +200,37 @@ public class ServiceManager {
             runner.profile.logError(t);
         }
 
+        synchronized (autoUnregisterKeepAlive) {
+            autoUnregisterKeepAlive.remove(ctx.getSyncObject());
+            if (secret.ctx != null && secret.ctx != ctx) {
+                autoUnregisterKeepAlive.remove(secret.ctx.getSyncObject());
+            }
+        }
+
         ctx.closeContext();
         return ServiceStatus.RUNNING;
     }
 
-    public static void setUnregisterSecret(EventService event, boolean offEvents, Registrable<?>[] list) {
+    public static void setUnregisterSecret(EventService event, boolean offEvents, @NotNull Registrable<?>[] list) {
         SecretFields secret = secrets.computeIfAbsent(event, e -> new SecretFields());
         secret.offEventsOnStop = offEvents;
         secret.registrableList = list.length > 0 ? list : null;
 
-        // TODO: prevent the script from stopping itself (idk how to do it - aMelonRind)
-        // example code of script stopping itself:
-        // JsMacros.assertEvent(event, 'Service');
-        // const d2d = Hud.createDraw2D().register();
-        // d2d.addText('Hello World', 200, 200, 0xFFFFFF, true);
-        // event.unregisterOnStop(true, d2d);
+        if (secret.ctx != null) {
+            synchronized (autoUnregisterKeepAlive) {
+                if (offEvents || list.length > 0) {
+                    autoUnregisterKeepAlive.add(secret.ctx.getSyncObject());
+                } else {
+                    autoUnregisterKeepAlive.remove(secret.ctx.getSyncObject());
+                }
+            }
+        }
+    }
+
+    public static boolean hasKeepAlive(@NotNull BaseScriptContext<?> ctx) {
+        if (!(ctx.getTriggeringEvent() instanceof EventService)) return false;
+        Object syncObject = ctx.getSyncObject();
+        return syncObject != null && autoUnregisterKeepAlive.contains(syncObject);
     }
 
     /**
@@ -442,6 +465,8 @@ public class ServiceManager {
         private boolean offEventsOnStop = false;
         @Nullable
         private Registrable<?>[] registrableList = null;
+
+        private BaseScriptContext<?> ctx = null;
     }
 
 }

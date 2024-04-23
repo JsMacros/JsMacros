@@ -44,7 +44,7 @@ public class EventService extends BaseEvent {
      * <br>
      * The order of execution is run stopListener -> off events -> unregister stuff -> run postStopListener.<br>
      * <br>
-     * Note that if the script stopped by itself (stopped without you stopping it in the gui), this won't take effect.
+     * If anything was set to unregister, the service won't stop by itself even if it reaches the end.
      * @param offEvents whether the service manager should clear event listeners on stop.
      *                  it's generally recommended to set to true, because callbacks cannot run after context closed.
      * @param list the list of registrable, such as Draw2D, Draw3D and CommandBuilder.

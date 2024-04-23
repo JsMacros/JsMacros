@@ -88,7 +88,7 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
                 }
 
                 ctx.getCtx().clearSyncObject();
-                if (!ctx.getCtx().hasMethodWrapperBeenInvoked) {
+                if (!ctx.getCtx().shouldKeepAlive()) {
                     ctx.getCtx().closeContext();
                 }
             }
@@ -134,7 +134,7 @@ public abstract class BaseLanguage<U, T extends BaseScriptContext<U>> {
                 }
 
                 ctx.getCtx().clearSyncObject();
-                if (!ctx.getCtx().hasMethodWrapperBeenInvoked) {
+                if (!ctx.getCtx().shouldKeepAlive()) {
                     ctx.getCtx().closeContext();
                 }
             }

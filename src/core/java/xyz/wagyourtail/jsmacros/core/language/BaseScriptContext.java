@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -58,6 +59,11 @@ public abstract class BaseScriptContext<T> {
 
     public void clearSyncObject() {
         this.syncObjectPrivate = null;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean shouldKeepAlive() {
+        return this.hasMethodWrapperBeenInvoked || ServiceManager.hasKeepAlive(this);
     }
 
     /**
