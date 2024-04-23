@@ -218,7 +218,7 @@ public class ServiceManager {
 
         if (secret.ctx != null) {
             synchronized (autoUnregisterKeepAlive) {
-                if (offEvents || list.length > 0) {
+                if (list.length > 0) {
                     autoUnregisterKeepAlive.add(secret.ctx.getSyncObject());
                 } else {
                     autoUnregisterKeepAlive.remove(secret.ctx.getSyncObject());
