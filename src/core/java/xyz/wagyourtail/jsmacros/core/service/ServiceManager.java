@@ -14,6 +14,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
+import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
 import java.util.*;
 
@@ -175,9 +176,17 @@ public class ServiceManager {
             runner.profile.logError(t);
         }
 
+        BaseEventRegistry reg = Core.getInstance().eventRegistry;
         if (secret.offEventsOnStop) {
-            BaseEventRegistry reg = Core.getInstance().eventRegistry;
             for (Map.Entry<IEventListener, String> ent : ctx.eventListeners.entrySet()) {
+                reg.removeListener(ent.getValue(), ent.getKey());
+            }
+        } else {
+            for (Map.Entry<IEventListener, String> ent : ctx.eventListeners.entrySet()) {
+                IEventListener listener = ent.getKey();
+                if (!(listener instanceof FJsMacros.ScriptEventListener sel)) continue;
+                MethodWrapper<?, ?, ?, ?> wrapper = sel.getWrapper();
+                if (wrapper == null || wrapper.getCtx() != ctx) continue;
                 reg.removeListener(ent.getValue(), ent.getKey());
             }
         }
@@ -218,7 +227,7 @@ public class ServiceManager {
 
         if (secret.ctx != null) {
             synchronized (autoUnregisterKeepAlive) {
-                if (list.length > 0) {
+                if (offEvents || list.length > 0) {
                     autoUnregisterKeepAlive.add(secret.ctx.getSyncObject());
                 } else {
                     autoUnregisterKeepAlive.remove(secret.ctx.getSyncObject());

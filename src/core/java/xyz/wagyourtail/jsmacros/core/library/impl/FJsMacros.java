@@ -886,6 +886,7 @@ public class FJsMacros extends PerExecLibrary {
     public interface ScriptEventListener extends IEventListener {
         String getCreatorName();
 
+        @Nullable
         MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper();
 
     }
