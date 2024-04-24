@@ -7,6 +7,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,6 +33,12 @@ public class EventService extends BaseEvent {
     @Nullable
     public MethodWrapper<Object, Object, Object, ?> postStopListener;
 
+    boolean offEventsOnStop = false;
+    @Nullable
+    Registrable<?>[] registrableList = null;
+    @Nullable
+    BaseScriptContext<?> ctx = null;
+
     public EventService(String name) {
         this.serviceName = name;
     }
@@ -50,7 +57,12 @@ public class EventService extends BaseEvent {
      * @since 1.9.1
      */
     public void unregisterOnStop(boolean offEvents, Registrable<?> ...list) {
-        ServiceManager.setUnregisterSecret(this, offEvents, list);
+        offEventsOnStop = offEvents;
+        registrableList = list.length > 0 ? list : null;
+
+        if (ctx != null) {
+            ServiceManager.setAutoUnregisterKeepAlive(ctx, offEvents || registrableList != null);
+        }
     }
 
     @Override

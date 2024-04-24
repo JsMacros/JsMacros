@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -23,7 +22,6 @@ import java.util.*;
  * @since 1.6.3
  */
 public class ServiceManager {
-    private static final WeakHashMap<EventService, SecretFields> secrets = new WeakHashMap<>();
     private static final Set<Object> autoUnregisterKeepAlive = new HashSet<>();
     protected boolean reloadOnModify;
     protected final Object2LongMap<String> lastModifiedMap = new Object2LongArrayMap<>();
@@ -138,11 +136,9 @@ public class ServiceManager {
         }
         if (service.getU() == null || service.getU().getCtx().isContextClosed()) {
             EventService event = new EventService(name);
-            SecretFields secret = new SecretFields();
             EventContainer<?> container = runner.exec(service.getT().toScriptTrigger(), event);
             service.setU(container);
-            secret.ctx = container.getCtx();
-            secrets.put(event, secret);
+            event.ctx = container.getCtx();
             return ServiceStatus.STOPPED;
         }
         return ServiceStatus.RUNNING;
@@ -167,7 +163,6 @@ public class ServiceManager {
 
 
         EventService event = (EventService) ctx.getTriggeringEvent();
-        SecretFields secret = secrets.getOrDefault(event, SecretFields.EMPTY);
 
         try {
             MethodWrapper<?, ?, ?, ?> sl = event.stopListener;
@@ -177,7 +172,7 @@ public class ServiceManager {
         }
 
         BaseEventRegistry reg = Core.getInstance().eventRegistry;
-        if (secret.offEventsOnStop) {
+        if (event.offEventsOnStop) {
             for (Map.Entry<IEventListener, String> ent : ctx.eventListeners.entrySet()) {
                 reg.removeListener(ent.getValue(), ent.getKey());
             }
@@ -191,7 +186,7 @@ public class ServiceManager {
             }
         }
 
-        Registrable<?>[] list = secret.registrableList;
+        Registrable<?>[] list = event.registrableList;
         if (list != null) {
             for (Registrable<?> e : list) {
                 try {
@@ -211,8 +206,8 @@ public class ServiceManager {
 
         synchronized (autoUnregisterKeepAlive) {
             autoUnregisterKeepAlive.remove(ctx.getSyncObject());
-            if (secret.ctx != null && secret.ctx != ctx) {
-                autoUnregisterKeepAlive.remove(secret.ctx.getSyncObject());
+            if (event.ctx != null && event.ctx != ctx) { // should not happen but just in case
+                autoUnregisterKeepAlive.remove(event.ctx.getSyncObject());
             }
         }
 
@@ -220,18 +215,12 @@ public class ServiceManager {
         return ServiceStatus.RUNNING;
     }
 
-    public static void setUnregisterSecret(EventService event, boolean offEvents, @NotNull Registrable<?>[] list) {
-        SecretFields secret = secrets.computeIfAbsent(event, e -> new SecretFields());
-        secret.offEventsOnStop = offEvents;
-        secret.registrableList = list.length > 0 ? list : null;
-
-        if (secret.ctx != null) {
-            synchronized (autoUnregisterKeepAlive) {
-                if (offEvents || list.length > 0) {
-                    autoUnregisterKeepAlive.add(secret.ctx.getSyncObject());
-                } else {
-                    autoUnregisterKeepAlive.remove(secret.ctx.getSyncObject());
-                }
+    public static void setAutoUnregisterKeepAlive(@NotNull BaseScriptContext<?> ctx, boolean keepAlive) {
+        synchronized (autoUnregisterKeepAlive) {
+            if (keepAlive) {
+                autoUnregisterKeepAlive.add(ctx.getSyncObject());
+            } else {
+                autoUnregisterKeepAlive.remove(ctx.getSyncObject());
             }
         }
     }
@@ -466,16 +455,6 @@ public class ServiceManager {
         ENABLED, DISABLED, // returned by start/stop
         RUNNING, STOPPED, // returned by enable/disable
         UNKNOWN // service doesn't exist
-    }
-
-    static class SecretFields {
-        private static final SecretFields EMPTY = new SecretFields();
-
-        private boolean offEventsOnStop = false;
-        @Nullable
-        private Registrable<?>[] registrableList = null;
-
-        private BaseScriptContext<?> ctx = null;
     }
 
 }
