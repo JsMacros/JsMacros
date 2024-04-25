@@ -25,7 +25,7 @@ public class MixinMouse {
         ((IScreenInternal) screen).jsmacros_mouseReleased(x, y, button);
     }
 
-    @Inject(method = "method_55795", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;mouseDragged(DDIDD)Z"))
+    @Inject(method = "method_1602", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;mouseDragged(DDIDD)Z"))
     private void onMouseDragged(Screen screen, double x, double y, double dx, double dy, CallbackInfo ci) {
         ((IScreenInternal) screen).jsmacros_mouseDragged(x, y, activeButton, dx, dy);
     }

@@ -2,8 +2,6 @@ package xyz.wagyourtail.jsmacros.client.tick;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.MultiplayerServerListPinger;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -37,8 +35,26 @@ public class TickBasedEvents {
         if (a.isEmpty() && b.isEmpty()) {
             return true;
         } else if (!a.isEmpty() && !b.isEmpty()) {
-            ComponentMap bc = b.getComponents();
-            return a.getComponents().stream().allMatch(e -> e.type() == DataComponentTypes.DAMAGE || e.equals(bc.get(e.type())));
+            if (a.getNbt() == null && b.getNbt() == null) {
+                return true;
+            } else {
+                NbtCompound at;
+                NbtCompound bt;
+                if (a.getNbt() != null) {
+                    at = a.getNbt().copy();
+                } else {
+                    at = new NbtCompound();
+                }
+                if (b.getNbt() != null) {
+                    bt = b.getNbt().copy();
+                } else {
+                    bt = new NbtCompound();
+                }
+                at.remove("Damage");
+                bt.remove("Damage");
+                return at.equals(bt);
+            }
+
         } else {
             return false;
         }

@@ -73,7 +73,7 @@ public class ScriptScreen extends BaseScreen {
             return;
         }
         if (bgStyle == 0) {
-            this.renderDarkening(drawContext);
+            this.renderBackgroundTexture(drawContext);
         } else if (bgStyle == 1) {
             this.renderBackground(drawContext, mouseX, mouseY, delta);
         }

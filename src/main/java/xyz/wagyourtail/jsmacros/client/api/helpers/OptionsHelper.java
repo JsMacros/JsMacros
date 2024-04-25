@@ -116,7 +116,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.1.7
      */
     public List<String> getResourcePacks() {
-        return new ArrayList<>(rpm.getIds());
+        return new ArrayList<>(rpm.getNames());
     }
 
     /**
@@ -124,7 +124,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.2.0
      */
     public List<String> getEnabledResourcePacks() {
-        return new ArrayList<>(rpm.getEnabledIds());
+        return new ArrayList<>(rpm.getEnabledNames());
     }
 
     /**
@@ -142,9 +142,9 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         base.incompatibleResourcePacks.clear();
         for (ResourcePackProfile p : rpm.getEnabledProfiles()) {
             if (!p.isPinned()) {
-                base.resourcePacks.add(p.getId());
+                base.resourcePacks.add(p.getName());
                 if (!p.getCompatibility().isCompatible()) {
-                    base.incompatibleResourcePacks.add(p.getId());
+                    base.incompatibleResourcePacks.add(p.getName());
                 }
             }
         }

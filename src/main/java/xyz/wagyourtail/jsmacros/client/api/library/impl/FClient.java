@@ -240,7 +240,7 @@ public class FClient extends PerExecLibrary {
             } else {
                 mc.disconnect();
             }
-            ConnectScreen.connect(null, mc, new ServerAddress(ip, port), new ServerInfo("server", new ServerAddress(ip, port).toString(), ServerInfo.ServerType.OTHER), false, null);
+            ConnectScreen.connect(null, mc, new ServerAddress(ip, port), new ServerInfo("server", new ServerAddress(ip, port).toString(), ServerInfo.ServerType.OTHER), false);
         });
     }
 
@@ -355,7 +355,7 @@ public class FClient extends PerExecLibrary {
             throw new IllegalThreadStateException("pinging from main thread is not supported!");
         }
         Semaphore semaphore = new Semaphore(0);
-        TickBasedEvents.serverListPinger.add(info, () -> {}, semaphore::release);
+        TickBasedEvents.serverListPinger.add(info, semaphore::release);
         semaphore.acquire();
         return new ServerInfoHelper(info);
     }
@@ -371,7 +371,7 @@ public class FClient extends PerExecLibrary {
         CompletableFuture.runAsync(() -> {
             ServerInfo info = new ServerInfo("", ip, ServerInfo.ServerType.OTHER);
             try {
-                TickBasedEvents.serverListPinger.add(info, () -> {}, () -> callback.accept(new ServerInfoHelper(info), null));
+                TickBasedEvents.serverListPinger.add(info, () -> callback.accept(new ServerInfoHelper(info), null));
             } catch (IOException e) {
                 callback.accept(null, e);
             }

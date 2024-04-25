@@ -2,9 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
 import com.google.gson.JsonParseException;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.*;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -12,34 +9,25 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.predicate.BlockPredicate;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPredicateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
-import xyz.wagyourtail.jsmacros.client.mixins.access.MixinBlockPredicatesChecker;
-import xyz.wagyourtail.jsmacros.client.mixins.access.MixinItemEnchantmentsComponent;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -87,7 +75,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isUnbreakable() {
-        return base.get(DataComponentTypes.UNBREAKABLE) != null;
+        return base.getOrCreateNbt().getBoolean("Unbreakable");
     }
 
     /**
@@ -112,10 +100,9 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public List<EnchantmentHelper> getEnchantments() {
         List<EnchantmentHelper> enchantments = new ArrayList<>();
-        ItemEnchantmentsComponent lv = base.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT);
-        for (RegistryEntry<Enchantment> enchantment : lv.getEnchantments()) {
-            enchantments.add(new EnchantmentHelper(enchantment.value(), lv.getLevel(enchantment.value())));
-        }
+        net.minecraft.enchantment.EnchantmentHelper.get(base).forEach((enchantment, value) -> {
+            enchantments.add(new EnchantmentHelper(enchantment, value));
+        });
         return enchantments;
     }
 
@@ -176,7 +163,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
-        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.isAcceptableItem(base) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.target.isAcceptableItem(base.getItem()) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -189,9 +176,26 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public List<TextHelper> getLore() {
         List<TextHelper> texts = new ArrayList<>();
-        LoreComponent component = base.get(DataComponentTypes.LORE);
-        if (component != null) {
-            component.lines().forEach(text -> texts.add(TextHelper.wrap(text)));
+        if (base.hasNbt()) {
+            if (base.getNbt().contains("display", 10)) {
+                NbtCompound nbtCompound = base.getNbt().getCompound("display");
+                if (nbtCompound.getType("Lore") == 9) {
+                    NbtList nbtList = nbtCompound.getList("Lore", 8);
+
+                    for (int i = 0; i < nbtList.size(); i++) {
+                        String string = nbtList.getString(i);
+                        try {
+                            MutableText mutableText2 = Text.Serialization.fromJson(string);
+                            if (mutableText2 != null) {
+                                Texts.setStyleIfAbsent(mutableText2, LORE_STYLE);
+                                texts.add(TextHelper.wrap(mutableText2));
+                            }
+                        } catch (JsonParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
         }
         return texts;
     }
@@ -217,11 +221,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public int getRepairCost() {
-        Integer i = base.get(DataComponentTypes.REPAIR_COST);
-        if (i == null) {
-            return 0;
-        }
-        return i;
+        return base.getRepairCost();
     }
 
     /**
@@ -245,9 +245,8 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public double getAttackDamage() {
-        assert mc.player != null;
-        AttributeModifiersComponent lv = base.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
-        return lv.applyOperations(mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE), EquipmentSlot.MAINHAND);
+        double damage = base.getAttributeModifiers(EquipmentSlot.MAINHAND).get(EntityAttributes.GENERIC_ATTACK_DAMAGE).stream().mapToDouble(EntityAttributeModifier::getValue).sum();
+        return damage + mc.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
     }
 
     /**
@@ -284,8 +283,8 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.6, was a {@link String} until 1.5.1
      */
     @Nullable
-    public NBTElementHelper getNBT() {
-        return NBTElementHelper.wrap(base.encode(Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager()));
+    public NBTElementHelper.NBTCompoundHelper getNBT() {
+        return NBTElementHelper.wrapCompound(base.getNbt());
     }
 
     /**
@@ -328,7 +327,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.2
      */
     public boolean isFood() {
-        return base.get(DataComponentTypes.FOOD) != null;
+        return base.getItem().isFood();
     }
 
     /**
@@ -345,6 +344,18 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      */
     public boolean isWearable() {
         return base.getItem() instanceof Equipment && ((Equipment) base.getItem()).getSlotType().isArmorSlot();
+    }
+
+    /**
+     * @return
+     * @since 1.8.2
+     */
+    public int getMiningLevel() {
+        if (isTool()) {
+            return ((ToolItem) base.getItem()).getMaterial().getMiningLevel();
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -502,7 +513,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean hasDestroyRestrictions() {
-        return base.get(DataComponentTypes.CAN_BREAK) != null;
+        return base.getOrCreateNbt().contains("CanDestroy", 9);
     }
 
     /**
@@ -513,17 +524,16 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean hasPlaceRestrictions() {
-        return base.get(DataComponentTypes.CAN_PLACE_ON) != null;
+        return base.getOrCreateNbt().contains("CanPlaceOn", 9);
     }
 
     /**
      * @return a list of all filters set for the can destroy flag.
      * @since 1.8.4
      */
-    public List<BlockPredicateHelper> getDestroyRestrictions() {
-        BlockPredicatesChecker bpc = base.get(DataComponentTypes.CAN_BREAK);
-        if (bpc != null) {
-            return ((MixinBlockPredicatesChecker) bpc).getPredicates().stream().map(BlockPredicateHelper::new).collect(Collectors.toList());
+    public List<String> getDestroyRestrictions() {
+        if (hasDestroyRestrictions()) {
+            return base.getOrCreateNbt().getList("CanDestroy", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
@@ -532,10 +542,9 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @return a list of all filters set for the can place on flag.
      * @since 1.8.4
      */
-    public List<BlockPredicateHelper> getPlaceRestrictions() {
-        BlockPredicatesChecker nbtList = base.get(DataComponentTypes.CAN_PLACE_ON);
-        if (nbtList != null) {
-            return ((MixinBlockPredicatesChecker) nbtList).getPredicates().stream().map(BlockPredicateHelper::new).collect(Collectors.toList());
+    public List<String> getPlaceRestrictions() {
+        if (hasPlaceRestrictions()) {
+            return base.getOrCreateNbt().getList("CanPlaceOn", 8).stream().map(NbtElement::asString).collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
@@ -545,8 +554,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean areEnchantmentsHidden() {
-        ItemEnchantmentsComponent iec = base.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT);
-        return !((MixinItemEnchantmentsComponent) iec).getShowInTooltip();
+        return isFlagSet(ItemStack.TooltipSection.ENCHANTMENTS);
     }
 
     /**
@@ -554,8 +562,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean areModifiersHidden() {
-        AttributeModifiersComponent amc = base.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
-        return !amc.showInTooltip();
+        return isFlagSet(ItemStack.TooltipSection.MODIFIERS);
     }
 
     /**
@@ -563,8 +570,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isUnbreakableHidden() {
-        UnbreakableComponent uc = base.get(DataComponentTypes.UNBREAKABLE);
-        return uc != null && !uc.showInTooltip();
+        return isFlagSet(ItemStack.TooltipSection.UNBREAKABLE);
     }
 
     /**
@@ -572,8 +578,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isCanDestroyHidden() {
-        BlockPredicatesChecker bph = base.get(DataComponentTypes.CAN_BREAK);
-        return bph != null && !bph.showInTooltip();
+        return isFlagSet(ItemStack.TooltipSection.CAN_DESTROY);
     }
 
     /**
@@ -581,18 +586,28 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isCanPlaceHidden() {
-        BlockPredicatesChecker bph = base.get(DataComponentTypes.CAN_PLACE_ON);
-        return bph != null && !bph.showInTooltip();
+        return isFlagSet(ItemStack.TooltipSection.CAN_PLACE);
     }
 
+    /**
+     * @return {@code true} if additional attributes are hidden, {@code false} otherwise.
+     * @since 1.8.4
+     */
+    public boolean areAdditionalsHidden() {
+        return isFlagSet(ItemStack.TooltipSection.ADDITIONAL);
+    }
 
     /**
      * @return {@code true} if dye of colored leather armor is hidden, {@code false} otherwise.
      * @since 1.8.4
      */
     public boolean isDyeHidden() {
-        DyedColorComponent dyed = base.get(DataComponentTypes.DYED_COLOR);
-        return dyed != null && !dyed.showInTooltip();
+        return isFlagSet(ItemStack.TooltipSection.DYE);
+    }
+
+    protected boolean isFlagSet(ItemStack.TooltipSection section) {
+        NbtCompound nbtCompound = base.getOrCreateNbt();
+        return (nbtCompound.getInt("HideFlags") & section.getFlag()) != 0;
     }
 
     /**
@@ -608,10 +623,10 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
             return true;
         } else if (left.isEmpty() || right.isEmpty()) {
             return false;
-        } else if (left.encode(mc.getNetworkHandler().getRegistryManager()) == null && right.encode(mc.getNetworkHandler().getRegistryManager()) != null) {
+        } else if (left.getNbt() == null && right.getNbt() != null) {
             return false;
         } else {
-            return left.encode(mc.getNetworkHandler().getRegistryManager()) == null || left.encode(mc.getNetworkHandler().getRegistryManager()).equals(right.encode(mc.getNetworkHandler().getRegistryManager()));
+            return left.getNbt() == null || left.getNbt().equals(right.getNbt());
         }
     }
 

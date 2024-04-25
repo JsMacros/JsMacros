@@ -1,4 +1,4 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import groovy.json.JsonSlurper
 
 plugins {
     id "xyz.wagyourtail.unimined"
@@ -7,12 +7,6 @@ plugins {
 
 sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
 targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(project.java_version))
-    }
-}
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -86,15 +80,6 @@ unimined.minecraft {
     mappings {
         intermediary()
         yarn project.yarn_mappings
-
-        stub.withMappings("intermediary", ["yarn"]) {
-            c("net/minecraft/class_1496", []) {
-                m("method_56680", "()Lnet/minecraft/class_1263;", ["getInventoryVanilla"])
-            }
-            c("net/minecraft/class_329", []) {
-                m("method_1759", "(Lnet/minecraft/class_332;F)V", ["renderHotbarVanilla"])
-            }
-        }
 
         devFallbackNamespace "intermediary"
     }
@@ -233,6 +218,8 @@ tasks.withType(JavaCompile).configureEach {
 jar {
     enabled = false
 }
+
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 if (enabled_loaders.contains("forge")) {
     processForgeResources {

@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 public abstract class MixinChatHud implements IChatHud {
 
     @Shadow
-    private void addMessage(Text message, @Nullable MessageSignatureData signature, @Nullable MessageIndicator indicator) {
+    private void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh) {
     }
 
     @Shadow
@@ -38,7 +38,7 @@ public abstract class MixinChatHud implements IChatHud {
 
     @Override
     public void jsmacros_addMessageBypass(Text message) {
-        addMessage(message, null, MessageIndicator.system());
+        addMessage(message, null, client.inGameHud.getTicks(), MessageIndicator.system(), false);
     }
 
     @Override
@@ -57,11 +57,11 @@ public abstract class MixinChatHud implements IChatHud {
     @Override
     public void jsmacros_addMessageAtIndexBypass(Text message, int index, int time) {
         jsmacros$positionOverride.set(index);
-        addMessage(message, null, MessageIndicator.system());
+        addMessage(message, null, time, MessageIndicator.system(), false);
         jsmacros$positionOverride.set(0);
     }
 
-    @ModifyArg(method = "addMessage(Lnet/minecraft/client/gui/hud/ChatHudLine;)V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V", remap = false))
+    @ModifyArg(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", at = @At(value = "INVOKE", target = "Ljava/util/List;add(ILjava/lang/Object;)V", remap = false))
     public int overrideMessagePos(int pos) {
         return jsmacros$positionOverride.get();
     }

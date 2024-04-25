@@ -146,7 +146,7 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
     public void onEntityStatusEffect(EntityStatusEffectS2CPacket packet, CallbackInfo info) {
         assert client.player != null;
         if (packet.getEntityId() == client.player.getId()) {
-            StatusEffectInstance newEffect = new StatusEffectInstance(packet.getEffectId(), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), null);
+            StatusEffectInstance newEffect = new StatusEffectInstance(packet.getEffectId(), packet.getDuration(), packet.getAmplifier(), packet.isAmbient(), packet.shouldShowParticles(), packet.shouldShowIcon(), null, Optional.ofNullable(packet.getFactorCalculationData()));
             StatusEffectInstance oldEffect = client.player.getStatusEffect(packet.getEffectId());
             new EventStatusEffectUpdate(oldEffect == null ? null : new StatusEffectHelper(oldEffect), new StatusEffectHelper(newEffect), true).trigger();
         }
@@ -156,7 +156,7 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
     public void onEntityStatusEffect(RemoveEntityStatusEffectS2CPacket packet, CallbackInfo info) {
         if (packet.getEntity(client.world) == client.player) {
             assert client.player != null;
-            new EventStatusEffectUpdate(new StatusEffectHelper(client.player.getStatusEffect(packet.effect())), null, false).trigger();
+            new EventStatusEffectUpdate(new StatusEffectHelper(client.player.getStatusEffect(packet.getEffectType())), null, false).trigger();
         }
     }
 

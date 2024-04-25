@@ -93,6 +93,17 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     }
 
     /**
+     * @return the current reach distance of the player.
+     * @since 1.8.4
+     */
+    public float getReach() {
+        checkBase(autoUpdateBase);
+        return base.getReachDistance();
+    }
+
+
+
+    /**
      * sets crosshair target to a block
      * @return self for chaining
      * @since 1.9.0

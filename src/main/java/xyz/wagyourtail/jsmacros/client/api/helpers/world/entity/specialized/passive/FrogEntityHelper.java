@@ -23,7 +23,7 @@ public class FrogEntityHelper extends AnimalEntityHelper<FrogEntity> {
      */
     @DocletReplaceReturn("FrogVariant")
     public String getVariant() {
-        return Registries.FROG_VARIANT.getId(base.getVariant().value()).toString();
+        return Registries.FROG_VARIANT.getId(base.getVariant()).toString();
     }
 
     /**

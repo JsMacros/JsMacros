@@ -5,7 +5,6 @@ import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -15,7 +14,6 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("unused")
 public class TextHelper extends BaseHelper<Text> {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public static final Pattern STRIP_FORMATTING_PATTERN = Pattern.compile("\u00a7[0-9A-FK-OR]", Pattern.CASE_INSENSITIVE);
 
@@ -41,7 +39,7 @@ public class TextHelper extends BaseHelper<Text> {
      */
     @Deprecated
     public TextHelper replaceFromJson(String json) {
-        base = Text.Serialization.fromJson(json, Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager());
+        base = Text.Serialization.fromJson(json);
         return this;
     }
 
@@ -64,7 +62,7 @@ public class TextHelper extends BaseHelper<Text> {
      * @since 1.2.7
      */
     public String getJson() {
-        return Text.Serialization.toJsonString(base, Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager());
+        return Text.Serialization.toJsonString(base);
     }
 
     /**

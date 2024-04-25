@@ -42,6 +42,7 @@
     "access.MixinMinecraftClient",
     "access.MixinOcelotEntity",
     "access.MixinPackedIntegerArray",
+    "access.MixinPacketHandler",
     "access.MixinPalettedContainer",
     "access.MixinPalettedContainerData",
     "access.MixinPhaseType",
@@ -85,7 +86,5 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "access.MixinBlockPredicatesChecker",
-    "access.MixinItemEnchantmentsComponent"
   ]
 }

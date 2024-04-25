@@ -60,7 +60,7 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
     }
 
     public boolean isOnline() {
-        return !base.isLocal();
+        return base.online;
     }
 
     public boolean isLocal() {
@@ -69,6 +69,14 @@ public class ServerInfoHelper extends BaseHelper<ServerInfo> {
 
     public NBTElementHelper.NBTCompoundHelper getNbt() {
         return NBTElementHelper.wrapCompound(base.toNbt());
+    }
+
+    /**
+     * @return {@code true} if the server enforces secure chat, {@code false} otherwise.
+     * @since 1.8.4
+     */
+    public boolean isSecureChatEnforced() {
+        return base.isSecureChatEnforced();
     }
 
     @Override

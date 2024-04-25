@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
 import it.unimi.dsi.fastutil.objects.Object2FloatArrayMap;
-import net.minecraft.component.type.FoodComponent;
+import net.minecraft.item.FoodComponent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -23,7 +23,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
      * @since 1.8.4
      */
     public int getHunger() {
-        return base.nutrition();
+        return base.getHunger();
     }
 
     /**
@@ -31,7 +31,15 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
      * @since 1.8.4
      */
     public float getSaturation() {
-        return base.saturation();
+        return base.getSaturationModifier();
+    }
+
+    /**
+     * @return {@code true} if this food can be eaten by wolves, {@code false} otherwise.
+     * @since 1.8.4
+     */
+    public boolean isMeat() {
+        return base.isMeat();
     }
 
     /**
@@ -40,7 +48,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
      * @since 1.8.4
      */
     public boolean isAlwaysEdible() {
-        return base.canAlwaysEat();
+        return base.isAlwaysEdible();
     }
 
     /**
@@ -48,7 +56,7 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
      * @since 1.8.4
      */
     public boolean isFastFood() {
-        return base.eatSeconds() < 1.6F;
+        return base.isSnack();
     }
 
     /**
@@ -57,13 +65,13 @@ public class FoodComponentHelper extends BaseHelper<FoodComponent> {
      */
     public Map<StatusEffectHelper, Float> getStatusEffects() {
         Object2FloatArrayMap<StatusEffectHelper> effects = new Object2FloatArrayMap<>();
-        base.effects().forEach(e -> effects.put(new StatusEffectHelper(e.effect()), e.probability()));
+        base.getStatusEffects().forEach(e -> effects.put(new StatusEffectHelper(e.getFirst()), e.getSecond().floatValue()));
         return effects;
     }
 
     @Override
     public String toString() {
-        return String.format("FoodComponentHelper:{\"hunger\": %d, \"saturation\": %f, \"alwaysEdible\": %b, \"fastFood\": %b}", getHunger(), getSaturation(), isAlwaysEdible(), isFastFood());
+        return String.format("FoodComponentHelper:{\"hunger\": %d, \"saturation\": %f, \"meat\": %b, \"alwaysEdible\": %b, \"fastFood\": %b}", getHunger(), getSaturation(), isMeat(), isAlwaysEdible(), isFastFood());
     }
 
 }

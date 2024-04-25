@@ -1,12 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.gui.screen.ingame.GrindstoneScreen;
-import net.minecraft.component.type.ItemEnchantmentsComponent;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.entry.RegistryEntry;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 /**
@@ -59,18 +55,7 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
     }
 
     private int getExperience(ItemStack stack) {
-        int i = 0;
-        ItemEnchantmentsComponent lv = EnchantmentHelper.getEnchantments(stack);
-
-        for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : lv.getEnchantmentsMap()) {
-            Enchantment lv2 = (Enchantment)((RegistryEntry)entry.getKey()).value();
-            int j = entry.getIntValue();
-            if (!lv2.isCursed()) {
-                i += lv2.getMinPower(j);
-            }
-        }
-
-        return i;
+        return EnchantmentHelper.get(stack).entrySet().stream().filter(e -> !e.getKey().isCursed()).mapToInt(e -> e.getKey().getMinPower(e.getValue())).sum();
     }
 
     @Override

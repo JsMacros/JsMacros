@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.other;
 
 import net.minecraft.entity.AreaEffectCloudEntity;
-import net.minecraft.registry.Registries;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
@@ -29,7 +28,7 @@ public class AreaEffectCloudEntityHelper extends EntityHelper<AreaEffectCloudEnt
      * @since 1.8.4
      */
     public int getColor() {
-        return base.getTeamColorValue();
+        return base.getColor();
     }
 
     /**
@@ -38,7 +37,7 @@ public class AreaEffectCloudEntityHelper extends EntityHelper<AreaEffectCloudEnt
      */
     @DocletReplaceReturn("ParticleId")
     public String getParticleType() {
-        return Registries.PARTICLE_TYPE.getId(base.getParticleType().getType()).toString();
+        return base.getParticleType().asString();
     }
 
     /**

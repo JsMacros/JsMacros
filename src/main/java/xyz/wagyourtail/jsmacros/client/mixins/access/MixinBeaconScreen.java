@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.mixins.access;
 
 import net.minecraft.client.gui.screen.ingame.BeaconScreen;
 import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.registry.entry.RegistryEntry;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,29 +12,29 @@ public class MixinBeaconScreen implements IBeaconScreen {
 
     @Shadow
     @Nullable
-    private RegistryEntry<StatusEffect> primaryEffect;
+    private StatusEffect primaryEffect;
 
     @Shadow
     @Nullable
-    private RegistryEntry<StatusEffect> secondaryEffect;
+    private StatusEffect secondaryEffect;
 
     @Override
-    public RegistryEntry<StatusEffect> jsmacros_getPrimaryEffect() {
+    public StatusEffect jsmacros_getPrimaryEffect() {
         return primaryEffect;
     }
 
     @Override
-    public void jsmacros_setPrimaryEffect(RegistryEntry<StatusEffect> effect) {
+    public void jsmacros_setPrimaryEffect(StatusEffect effect) {
         primaryEffect = effect;
     }
 
     @Override
-    public RegistryEntry<StatusEffect> jsmacros_getSecondaryEffect() {
+    public StatusEffect jsmacros_getSecondaryEffect() {
         return secondaryEffect;
     }
 
     @Override
-    public void jsmacros_setSecondaryEffect(RegistryEntry<StatusEffect> effect) {
+    public void jsmacros_setSecondaryEffect(StatusEffect effect) {
         secondaryEffect = effect;
     }
 

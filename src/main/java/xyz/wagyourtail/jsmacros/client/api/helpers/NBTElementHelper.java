@@ -144,13 +144,6 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     }
 
     /**
-     * @since 1.9.1
-     */
-    public static NBTElementHelper<?> wrap(@Nullable NbtElement element) {
-        return element == null ? null : resolve(element);
-    }
-
-    /**
      * @since 1.5.1
      */
     @Nullable

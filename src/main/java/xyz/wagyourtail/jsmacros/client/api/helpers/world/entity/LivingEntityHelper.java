@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityGroup;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
@@ -10,9 +11,6 @@ import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.EntityTypeTags;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
@@ -181,12 +179,27 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     }
 
     /**
-     * @since 1.9.1
-     *
+     * @return the entity's mob category, {@code UNDEAD}, {@code DEFAULT}, {@code ARTHROPOD}, or
+     * {@code ILLAGER}, {@code AQUATIC} or {@code UNKNOWN}.
+     * @since 1.8.4
      */
-    @DocletReplaceReturn("JavaList<MobTag>")
-    public List<String> getMobTags() {
-        return base.getType().getRegistryEntry().streamTags().map(TagKey::id).map(Identifier::toString).toList();
+    @DocletReplaceReturn("MobCategory")
+    @DocletDeclareType(name = "MobCategory", type = "'UNDEAD' | 'DEFAULT' | 'ARTHROPOD' | 'ILLAGER' | 'AQUATIC' | 'UNKNOWN'")
+    public String getMobCategory() {
+        EntityGroup group = base.getGroup();
+        if (group == EntityGroup.UNDEAD) {
+            return "UNDEAD";
+        } else if (group == EntityGroup.DEFAULT) {
+            return "DEFAULT";
+        } else if (group == EntityGroup.ARTHROPOD) {
+            return "ARTHROPOD";
+        } else if (group == EntityGroup.ILLAGER) {
+            return "ILLAGER";
+        } else if (group == EntityGroup.AQUATIC) {
+            return "AQUATIC";
+        } else {
+            return "UNKNOWN";
+        }
     }
 
     /**
@@ -284,7 +297,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      * @since 1.8.4
      */
     public boolean isUndead() {
-        return base.getType().getRegistryEntry().streamTags().anyMatch(e -> EntityTypeTags.UNDEAD.id().equals(e.id()));
+        return base.isUndead();
     }
 
     /**

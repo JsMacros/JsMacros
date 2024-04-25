@@ -135,9 +135,10 @@ public class InteractionProxy {
                 if (override.getType() == HitResult.Type.MISS) return true;
 
                 Vec3d campos = mc.player.getCameraPosVec(tickDelta);
-                double blockReach = mc.player.getBlockInteractionRange();
-                double entityReach = mc.player.getEntityInteractionRange();
-                if (override.getPos().isInRange(campos, override.getType() == HitResult.Type.ENTITY ? entityReach : blockReach)) return true;
+                double reach = mc.interactionManager.getReachDistance();
+                // might need to rewrite entity distance check
+                // not sure how to handle modded entity reach distance
+                if (override.getPos().isInRange(campos, reach)) return true;
 
                 if (override.getType() != HitResult.Type.BLOCK) return false;
                 BlockPos pos = ((BlockHitResult) override).getBlockPos();
@@ -145,7 +146,7 @@ public class InteractionProxy {
                         MathHelper.clamp(campos.x, pos.getX(), pos.getX() + 1),
                         MathHelper.clamp(campos.y, pos.getY(), pos.getY() + 1),
                         MathHelper.clamp(campos.z, pos.getZ(), pos.getZ() + 1)
-                ) < blockReach * blockReach;
+                ) < reach * reach;
             }
         }
 

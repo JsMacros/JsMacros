@@ -5,12 +5,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.client.gui.overlay.ExtendedGui;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.TickEvent;
 import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
@@ -86,7 +86,7 @@ public class ForgeEvents {
         ((IScreenInternal) event.getScreen()).jsmacros_mouseDragged(event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY());
     }
 
-    public static void renderHudListener(DrawContext drawContext, float partialTicks) {
+    public static void renderHudListener(ExtendedGui gui, DrawContext drawContext, float partialTicks, int width, int height) {
         for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays).stream().sorted(Comparator.comparingInt(IDraw2D::getZIndex)).collect(Collectors.toList())) {
             try {
                 h.render(drawContext);
@@ -95,8 +95,8 @@ public class ForgeEvents {
         }
     }
 
-    public static void onRegisterGuiOverlays(RegisterGuiLayersEvent ev) {
-        ev.registerBelow(VanillaGuiLayers.DEBUG_OVERLAY, new Identifier("jsmacros:hud"), ForgeEvents::renderHudListener);
+    public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent ev) {
+        ev.registerBelow(VanillaGuiOverlay.DEBUG_SCREEN.id(), "jsmacros_hud", ForgeEvents::renderHudListener);
     }
 
     public static void renderWorldListener(RenderLevelStageEvent e) {

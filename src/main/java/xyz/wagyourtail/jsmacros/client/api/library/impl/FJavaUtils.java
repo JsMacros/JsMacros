@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.library.impl;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementManager;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.PlacedAdvancement;
@@ -20,13 +21,12 @@ import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.predicate.BlockPredicate;
-import net.minecraft.predicate.NbtPredicate;
-import net.minecraft.predicate.StatePredicate;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.FoodComponentHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.RecipeHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.screen.*;
@@ -167,6 +168,8 @@ public class FJavaUtils extends BaseLibrary {
             return new DirectionHelper(((Direction) raw));
         } else if (raw instanceof Enchantment) {
             return new EnchantmentHelper(((Enchantment) raw));
+        } else if (raw instanceof FoodComponent) {
+            return new FoodComponentHelper(((FoodComponent) raw));
         } else if (raw instanceof ItemStack) {
             return new ItemStackHelper(((ItemStack) raw));
         } else if (raw instanceof GameOptions) {
@@ -226,15 +229,6 @@ public class FJavaUtils extends BaseLibrary {
         } else if (raw instanceof ClickableWidget) {
             return new ClickableWidgetHelper<>(((ClickableWidget) raw));
         }
-
-        if (raw instanceof BlockPredicate) {
-            return new BlockPredicateHelper((BlockPredicate) raw);
-        } else if (raw instanceof NbtPredicate) {
-            return new NbtPredicateHelper((NbtPredicate) raw);
-        } else if (raw instanceof StatePredicate) {
-            return new StatePredicateHelper((StatePredicate) raw);
-        }
-
         return null;
     }
 
