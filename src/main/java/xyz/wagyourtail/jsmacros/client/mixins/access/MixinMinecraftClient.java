@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.FontManager;
+import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
@@ -97,12 +98,15 @@ class MixinMinecraftClient implements IMinecraftClient {
     }
 
     @Inject(at = @At("HEAD"), method = "joinWorld")
-    public void onJoinWorld(ClientWorld world, CallbackInfo ci) {
+    public void onJoinWorld(ClientWorld world, DownloadingTerrainScreen.WorldEntryReason worldEntryReason, CallbackInfo ci) {
         InteractionProxy.reset();
     }
 
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;integratedServerRunning:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V")
-    public void onDisconnect(Screen s, CallbackInfo ci) {
+    @Inject(
+        at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;integratedServerRunning:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER),
+        method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;Z)V"
+    )
+    public void onDisconnect(Screen disconnectionScreen, boolean transferring, CallbackInfo ci) {
         InteractionProxy.reset();
     }
 

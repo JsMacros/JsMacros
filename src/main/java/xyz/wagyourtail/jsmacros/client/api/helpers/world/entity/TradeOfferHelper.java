@@ -1,8 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
+import com.mojang.serialization.JsonOps;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.village.TradeOffer;
+import net.minecraft.village.TradedItem;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.VillagerInventory;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -10,6 +13,7 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("unused")
 public class TradeOfferHelper extends BaseHelper<TradeOffer> {
@@ -27,11 +31,11 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      */
     public List<ItemStackHelper> getInput() {
         List<ItemStackHelper> items = new ArrayList<>();
-        ItemStack first = base.getAdjustedFirstBuyItem();
+        ItemStack first = base.getDisplayedFirstBuyItem();
         if (!first.isEmpty()) {
             items.add(new ItemStackHelper(first));
         }
-        ItemStack second = base.getSecondBuyItem();
+        ItemStack second = base.getDisplayedSecondBuyItem();
         if (second != null && !second.isEmpty()) {
             items.add(new ItemStackHelper(second));
         }
@@ -46,7 +50,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @since 1.8.4
      */
     public ItemStackHelper getLeftInput() {
-        return new ItemStackHelper(base.getAdjustedFirstBuyItem());
+        return new ItemStackHelper(base.getFirstBuyItem().itemStack());
     }
 
     /**
@@ -57,7 +61,10 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @since 1.8.4
      */
     public ItemStackHelper getRightInput() {
-        return new ItemStackHelper(base.getAdjustedFirstBuyItem());
+        if (base.getSecondBuyItem().isEmpty()) {
+            return new ItemStackHelper(ItemStack.EMPTY);
+        }
+        return new ItemStackHelper(base.getSecondBuyItem().get().itemStack());
     }
 
     /**
@@ -95,8 +102,8 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     /**
      * @return trade offer as nbt tag
      */
-    public NBTElementHelper.NBTCompoundHelper getNBT() {
-        return NBTElementHelper.wrapCompound(base.toNbt());
+    public NBTElementHelper<?> getNBT() {
+        return NBTElementHelper.wrap(TradeOffer.CODEC.encodeStart(NbtOps.INSTANCE, base).getOrThrow());
     }
 
     /**
@@ -133,7 +140,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @return current price adjustment, negative is discount.
      */
     public int getCurrentPriceAdjustment() {
-        return base.getAdjustedFirstBuyItem().getCount() - base.getOriginalFirstBuyItem().getCount();
+        return base.getDisplayedFirstBuyItem().getCount() - base.getOriginalFirstBuyItem().getCount();
     }
 
     /**
@@ -157,7 +164,7 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
      * @since 1.8.4
      */
     public int getAdjustedPrice() {
-        return base.getAdjustedFirstBuyItem().getCount();
+        return base.getDisplayedFirstBuyItem().getCount();
     }
 
     /**

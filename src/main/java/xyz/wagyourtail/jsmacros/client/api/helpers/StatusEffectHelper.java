@@ -29,7 +29,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @since 1.8.4
      */
     public StatusEffectHelper(StatusEffect s, int t) {
-        super(new StatusEffectInstance(s, t));
+        super(new StatusEffectInstance(Registries.STATUS_EFFECT.getEntry(s), t));
     }
 
     /**
@@ -38,7 +38,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      */
     @DocletReplaceReturn("StatusEffectId")
     public String getId() {
-        return Registries.STATUS_EFFECT.getId(base.getEffectType()).toString();
+        return Registries.STATUS_EFFECT.getId(base.getEffectType().value()).toString();
     }
 
     /**
@@ -55,7 +55,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      */
     @DocletReplaceReturn("StatusEffectCategory")
     public String getCategory() {
-        return base.getEffectType().getCategory().name();
+        return base.getEffectType().value().getCategory().name();
     }
 
     /**
@@ -110,7 +110,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @since 1.8.4
      */
     public boolean isInstant() {
-        return base.getEffectType().isInstant();
+        return base.getEffectType().value().isInstant();
     }
 
     /**
@@ -118,7 +118,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @since 1.8.4
      */
     public boolean isBeneficial() {
-        return base.getEffectType().getCategory() == StatusEffectCategory.BENEFICIAL;
+        return base.getEffectType().value().getCategory() == StatusEffectCategory.BENEFICIAL;
     }
 
     /**
@@ -126,7 +126,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @since 1.8.4
      */
     public boolean isNeutral() {
-        return base.getEffectType().getCategory() == StatusEffectCategory.NEUTRAL;
+        return base.getEffectType().value().getCategory() == StatusEffectCategory.NEUTRAL;
     }
 
     /**
@@ -134,7 +134,7 @@ public class StatusEffectHelper extends BaseHelper<StatusEffectInstance> {
      * @since 1.8.4
      */
     public boolean isHarmful() {
-        return base.getEffectType().getCategory() == StatusEffectCategory.HARMFUL;
+        return base.getEffectType().value().getCategory() == StatusEffectCategory.HARMFUL;
     }
 
     @Override

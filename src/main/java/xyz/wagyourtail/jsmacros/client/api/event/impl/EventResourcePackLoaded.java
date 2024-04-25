@@ -21,7 +21,7 @@ public class EventResourcePackLoaded extends BaseEvent {
 
     public EventResourcePackLoaded(boolean isGameStart) {
         this.isGameStart = isGameStart;
-        this.loadedPacks = new ArrayList<>(MinecraftClient.getInstance().getResourcePackManager().getEnabledNames());
+        this.loadedPacks = new ArrayList<>(MinecraftClient.getInstance().getResourcePackManager().getEnabledIds());
     }
 
     @Override

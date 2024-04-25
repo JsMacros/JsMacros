@@ -24,12 +24,12 @@ public class MixinResourcePackManager implements IResourcePackManager {
         return disableServerPacks;
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourcePackProfile;isAlwaysEnabled()Z"), method = "buildEnabledProfiles")
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourcePackProfile;isRequired()Z"), method = "buildEnabledProfiles")
     public boolean onBuildPackList(ResourcePackProfile instance) {
-        if (instance.getName().equals("server")) {
-            return instance.isAlwaysEnabled() && !disableServerPacks;
+        if (instance.getId().equals("server")) {
+            return instance.isRequired() && !disableServerPacks;
         }
-        return instance.isAlwaysEnabled();
+        return instance.isRequired();
     }
 
 }

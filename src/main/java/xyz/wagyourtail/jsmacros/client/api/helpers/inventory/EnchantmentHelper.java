@@ -134,26 +134,6 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
     }
 
     /**
-     * @return the rarity of this enchantment.
-     * @since 1.8.4
-     */
-    @DocletReplaceReturn("EnchantmentRarity")
-    public String getRarity() {
-        switch (base.getRarity()) {
-            case COMMON:
-                return "COMMON";
-            case UNCOMMON:
-                return "UNCOMMON";
-            case RARE:
-                return "RARE";
-            case VERY_RARE:
-                return "VERY_RARE";
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    /**
      * Only accounts for enchantments of the same target type.
      *
      * @return a list of all enchantments that conflict with this one.
@@ -170,7 +150,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments(boolean ignoreType) {
-        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.target == base.target) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.getApplicableItems().equals(base.getApplicableItems())) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -190,7 +170,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments(boolean ignoreType) {
-        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.target == base.target) && e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.getApplicableItems().equals(base.getApplicableItems()))).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -199,38 +179,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      */
     @DocletReplaceReturn("EnchantmentTargetType")
     public String getTargetType() {
-        switch (base.target) {
-            case ARMOR:
-                return "ARMOR";
-            case ARMOR_FEET:
-                return "ARMOR_FEET";
-            case ARMOR_LEGS:
-                return "ARMOR_LEGS";
-            case ARMOR_CHEST:
-                return "ARMOR_CHEST";
-            case ARMOR_HEAD:
-                return "ARMOR_HEAD";
-            case WEAPON:
-                return "WEAPON";
-            case DIGGER:
-                return "DIGGER";
-            case FISHING_ROD:
-                return "FISHING_ROD";
-            case TRIDENT:
-                return "TRIDENT";
-            case BREAKABLE:
-                return "BREAKABLE";
-            case BOW:
-                return "BOW";
-            case WEARABLE:
-                return "WEARABLE";
-            case CROSSBOW:
-                return "CROSSBOW";
-            case VANISHABLE:
-                return "VANISHABLE";
-            default:
-                throw new IllegalArgumentException();
-        }
+        return base.getApplicableItems().id().toString();
     }
 
     /**
@@ -242,7 +191,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public int getWeight() {
-        return base.getRarity().getWeight();
+        return base.getWeight();
     }
 
     /**
@@ -294,7 +243,7 @@ public class EnchantmentHelper extends BaseHelper<Enchantment> {
      * @since 1.8.4
      */
     public List<ItemHelper> getAcceptableItems() {
-        return Registries.ITEM.stream().filter(item -> base.target.isAcceptableItem(item)).map(ItemHelper::new).collect(Collectors.toList());
+        return Registries.ITEM.stream().filter(item -> base.isAcceptableItem(item.getDefaultStack())).map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**

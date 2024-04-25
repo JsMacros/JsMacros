@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.mixins.events;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
+import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
@@ -43,7 +44,7 @@ public abstract class MixinMinecraftClient {
     private Session session;
 
     @Inject(at = @At("HEAD"), method = "joinWorld")
-    public void onJoinWorld(ClientWorld world, CallbackInfo info) {
+    public void onJoinWorld(ClientWorld world, DownloadingTerrainScreen.WorldEntryReason worldEntryReason, CallbackInfo ci) {
         if (world != null) {
             new EventDimensionChange(world.getRegistryKey().getValue().toString()).trigger();
         }
@@ -83,8 +84,8 @@ public abstract class MixinMinecraftClient {
         jsmacros$prevScreen = null;
     }
 
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;integratedServerRunning:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;)V")
-    public void onDisconnect(Screen s, CallbackInfo info) {
+    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;integratedServerRunning:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;Z)V")
+    public void onDisconnect(Screen s, boolean transferring, CallbackInfo ci) {
         if (s instanceof DisconnectedScreen) {
             new EventDisconnect(((MixinDisconnectedScreen) s).getReason()).trigger();
         } else {

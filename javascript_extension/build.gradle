@@ -5,6 +5,15 @@ plugins {
 
 archivesBaseName = archivesBaseName + "-js-extension"
 
+sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(project.java_version))
+    }
+}
+
 configurations {
     jsmacrosExtensionInclude
 }

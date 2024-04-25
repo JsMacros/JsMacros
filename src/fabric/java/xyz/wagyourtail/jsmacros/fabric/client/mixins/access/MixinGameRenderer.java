@@ -49,11 +49,11 @@ public class MixinGameRenderer {
     }
 
     @Inject(at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = "ldc=hand"), method = "renderWorld")
-    public void render(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo info) {
+    public void render(float tickDelta, long limitTime, CallbackInfo ci) {
         client.getProfiler().swap("jsmacros_draw3d");
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
-                DrawContext drawContext = DRAW_CONTEXT_CONSTRUCTOR.newInstance(client, matrix, client.getBufferBuilders().getEntityVertexConsumers());
+                DrawContext drawContext = DRAW_CONTEXT_CONSTRUCTOR.newInstance(client, new MatrixStack(), client.getBufferBuilders().getEntityVertexConsumers());
                 d.render(drawContext, tickDelta);
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -62,7 +62,7 @@ public class MixinGameRenderer {
         client.getProfiler().pop();
     }
 
-    @Inject(at = @At("HEAD"), method = "updateTargetedEntity", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "updateCrosshairTarget", cancellable = true)
     public void onTargetUpdate(float tickDelta, CallbackInfo ci) {
         InteractionProxy.Target.onUpdate(tickDelta, ci);
     }

@@ -1,15 +1,16 @@
 package xyz.wagyourtail.jsmacros.client.access;
 
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.registry.entry.RegistryEntry;
 
 public interface IBeaconScreen {
 
-    StatusEffect jsmacros_getPrimaryEffect();
+    RegistryEntry<StatusEffect> jsmacros_getPrimaryEffect();
 
-    void jsmacros_setPrimaryEffect(StatusEffect effect);
+    void jsmacros_setPrimaryEffect(RegistryEntry<StatusEffect> effect);
 
-    StatusEffect jsmacros_getSecondaryEffect();
+    RegistryEntry<StatusEffect> jsmacros_getSecondaryEffect();
 
-    void jsmacros_setSecondaryEffect(StatusEffect effect);
+    void jsmacros_setSecondaryEffect(RegistryEntry<StatusEffect> effect);
 
 }

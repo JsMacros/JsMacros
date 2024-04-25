@@ -6,6 +6,7 @@ import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.EventSendMessage;
 
@@ -18,13 +19,13 @@ public abstract class MixinChatScreen extends Screen {
     }
 
     @Inject(method = "sendMessage", at = @At("HEAD"), cancellable = true)
-    public void onSendChatMessage(String chatText, boolean addToHistory, CallbackInfoReturnable<Boolean> cir) {
+    public void onSendChatMessage(String chatText, boolean addToHistory, CallbackInfo ci) {
         final EventSendMessage event = new EventSendMessage(chatText);
         event.trigger();
         if (event.message == null || event.message.equals("") || event.isCanceled()) {
-            cir.setReturnValue(true);
+            ci.cancel();
         } else if (!event.message.equals(chatText)) {
-            cir.setReturnValue(true);
+            ci.cancel();
             assert this.client != null;
             assert this.client.player != null;
             if (event.message.startsWith("/")) {

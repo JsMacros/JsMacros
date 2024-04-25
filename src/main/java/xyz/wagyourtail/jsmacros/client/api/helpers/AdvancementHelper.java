@@ -83,7 +83,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @since 1.8.4
      */
     public String[] getLoot() {
-        return base.getAdvancement().rewards().loot().stream().map(Identifier::toString).toArray(String[]::new);
+        return base.getAdvancement().rewards().loot().stream().map(e -> e.getValue().toString()).toArray(String[]::new);
     }
 
     /**
@@ -110,7 +110,7 @@ public class AdvancementHelper extends BaseHelper<PlacedAdvancement> {
      * @return the json string of this advancement.
      */
     public String toJson() {
-        return Util.getResult(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, base.getAdvancement()), IllegalStateException::new).toString();
+        return Advancement.CODEC.encodeStart(JsonOps.INSTANCE, base.getAdvancement()).getOrThrow().toString();
     }
 
     @Override

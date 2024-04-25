@@ -17,11 +17,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.NetworkSide;
 import net.minecraft.network.NetworkState;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.s2c.common.CustomPayloadS2CPacket;
+import net.minecraft.network.state.PlayStateFactories;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -49,6 +52,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.security.PublicKey;
 import java.time.Instant;
 import java.util.*;
@@ -61,6 +65,7 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("unused")
 public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     /**
      * Don't touch this here!
@@ -96,7 +101,17 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         this.packet = packet;
         base.markReaderIndex();
         base.markWriterIndex();
-        packet.write(base);
+
+        // get the PacketCodec static field and use it to write
+        try {
+            Class<?> packetClass = packet.getClass();
+            Field f = Arrays.stream(packetClass.getFields()).filter(e -> e.getType().isAssignableFrom(PacketCodec.class)).findFirst().orElseThrow();
+            PacketCodec<PacketByteBuf, Packet<?>> codec = (PacketCodec<PacketByteBuf, Packet<?>>) f.get(null);
+            codec.encode(base, packet);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
         this.original = base.copy();
     }
 
@@ -133,20 +148,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     public Packet<?> toPacket(Class<? extends Packet> clazz) {
         return BUFFER_TO_PACKET.get(clazz).apply(base);
-    }
-
-    /**
-     * @param clientbound whether the packet is clientbound or serverbound
-     * @param packetId    the id of the packet
-     * @return the packet for this buffer.
-     * @see #getPacketId(Class)
-     * @see #getNetworkStateId(Class)
-     * @see #isClientbound(Class)
-     * @see #isServerbound(Class)
-     * @since 1.8.4
-     */
-    public Packet<?> toPacket(boolean clientbound, int packetId) {
-        return NetworkState.PLAY.getHandler(clientbound ? NetworkSide.CLIENTBOUND : NetworkSide.SERVERBOUND).createPacket(packetId, base);
     }
 
     /**
@@ -220,26 +221,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     /**
-     * @param channel the channel to send the packet on
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper sendCustomPacket(String channel) {
-        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new CustomPayload() {
-            @Override
-            public void write(PacketByteBuf buf) {
-                buf.writeBytes(base);
-            }
-
-            @Override
-            public Identifier id() {
-                return new Identifier(channel);
-            }
-        }));
-        return this;
-    }
-
-    /**
      * @return self for chaining.
      * @since 1.8.4
      */
@@ -277,27 +258,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     /**
-     * @param channel the channel to receive the packet on
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper receiveCustomPacket(String channel) {
-        CustomPayloadS2CPacket s2CPacket = new CustomPayloadS2CPacket(new CustomPayload() {
-            @Override
-            public void write(PacketByteBuf buf) {
-                buf.writeBytes(base);
-            }
-
-            @Override
-            public Identifier id() {
-                return new Identifier(channel);
-            }
-        });
-        s2CPacket.apply(Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()));
-        return this;
-    }
-
-    /**
      * These names are subject to change and are only for an easier access. They will probably not
      * change in the future, but it is not guaranteed.
      *
@@ -318,26 +278,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     public PacketByteBufferHelper reset() {
         base = new PacketByteBuf(original.copy());
         return this;
-    }
-
-    /**
-     * @param registry the registry the value is from
-     * @param value    the value to store
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public <T> PacketByteBufferHelper writeRegistryValue(IndexedIterable<T> registry, T value) {
-        base.writeRegistryValue(registry, value);
-        return this;
-    }
-
-    /**
-     * @param registry the registry the read value is from
-     * @return the registry value.
-     * @since 1.8.4
-     */
-    public <T> T readRegistryValue(IndexedIterable<T> registry) {
-        return base.readRegistryValue(registry);
     }
 
     /**
@@ -471,32 +411,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     public <T> T readNullable(MethodWrapper<PacketByteBuf, ?, T, ?> reader) {
         return base.readNullable(reader::apply);
-    }
-
-    /**
-     * This method chooses the left value if it's not null, otherwise it chooses the right value.
-     *
-     * @param left        the left value to store
-     * @param right       the right value to store
-     * @param leftWriter  the function to write the left value to the buffer
-     * @param rightWriter the function to write the right value to the buffer
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public <L, R> PacketByteBufferHelper writeEither(L left, R right, MethodWrapper<PacketByteBuf, L, ?, ?> leftWriter, MethodWrapper<PacketByteBuf, R, ?, ?> rightWriter) {
-        base.writeEither(left == null ? Either.right(right) : Either.left(left), leftWriter::accept, rightWriter::accept);
-        return this;
-    }
-
-    /**
-     * @param leftReader  the function to read the left value from the buffer
-     * @param rightReader the function to read the right value from the buffer
-     * @return the read object.
-     * @since 1.8.4
-     */
-    public Object readEither(MethodWrapper<PacketByteBuf, ?, Object, ?> leftReader, MethodWrapper<PacketByteBuf, ?, Object, ?> rightReader) {
-        Either<?, ?> either = base.readEither(leftReader::apply, rightReader::apply);
-        return either.map(left -> left, right -> right);
     }
 
     /**
@@ -722,53 +636,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     /**
-     * @return the read global pos, the first element is the dimension, the second is the position.
-     * @since 1.8.4
-     */
-    public Pair<String, BlockPosHelper> readGlobalPos() {
-        GlobalPos pos = base.readGlobalPos();
-        return new Pair<>(pos.getDimension().getValue().toString(), new BlockPosHelper(pos.getPos()));
-    }
-
-    /**
-     * @param text the string to store
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeText(String text) {
-        base.writeText(Text.literal(text));
-        return this;
-    }
-
-    /**
-     * @param builder the text builder whose text should be stored
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeText(TextBuilder builder) {
-        base.writeText(builder.build().getRaw());
-        return this;
-    }
-
-    /**
-     * @param text the text to store
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeText(TextHelper text) {
-        base.writeText(text.getRaw());
-        return this;
-    }
-
-    /**
-     * @return the read text.
-     * @since 1.8.4
-     */
-    public TextHelper readText() {
-        return TextHelper.wrap(base.readText());
-    }
-
-    /**
      * @param constant the enum constant to store
      * @return self for chaining.
      * @since 1.8.4
@@ -857,24 +724,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     public NBTElementHelper<?> readNbt() {
         return NBTElementHelper.resolve(base.readNbt());
-    }
-
-    /**
-     * @param stack the item stack to store
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeItemStack(ItemStackHelper stack) {
-        base.writeItemStack(stack.getRaw());
-        return this;
-    }
-
-    /**
-     * @return the read item stack.
-     * @since 1.8.4
-     */
-    public ItemStackHelper readItemStack() {
-        return new ItemStackHelper(base.readItemStack());
     }
 
     /**
@@ -1078,40 +927,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     public BitSet readBitSet() {
         return base.readBitSet();
-    }
-
-    /**
-     * @param profile the profile to store
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public PacketByteBufferHelper writeGameProfile(GameProfile profile) {
-        base.writeGameProfile(profile);
-        return this;
-    }
-
-    /**
-     * @return the read game profile.
-     * @since 1.8.4
-     */
-    public GameProfile readGameProfile() {
-        return base.readGameProfile();
-    }
-
-    /**
-     * @return the read profile's name.
-     * @since 1.8.4
-     */
-    public String readGameProfileName() {
-        return readGameProfile().getName();
-    }
-
-    /**
-     * @return the read profile's UUID.
-     * @since 1.8.4
-     */
-    public UUID readGameProfileUuid() {
-        return readGameProfile().getId();
     }
 
     /**
@@ -1734,15 +1549,15 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
     }
 
     public static void init() {
-        for (NetworkState state : NetworkState.values()) {
-            for (NetworkSide side : NetworkSide.values()) {
-                state.getPacketIdToPacketMap(side).forEach((id, packet) -> {
-                    PACKET_IDS.put(packet, id);
-                    PACKET_STATES.put(packet, state.ordinal());
-                    PACKET_SIDES.put(packet, side == NetworkSide.CLIENTBOUND);
-                });
-            }
-        }
+//        for (NetworkState state : NetworkState.values()) {
+//            for (NetworkSide side : NetworkSide.values()) {
+//                state.getPacketIdToPacketMap(side).forEach((id, packet) -> {
+//                    PACKET_IDS.put(packet, id);
+//                    PACKET_STATES.put(packet, state.ordinal());
+//                    PACKET_SIDES.put(packet, side == NetworkSide.CLIENTBOUND);
+//                });
+//            }
+//        }
 
         PACKETS.put("WorldBorderWarningTimeChangedS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderWarningTimeChangedS2CPacket.class);
         PACKETS.put("SelectMerchantTradeC2SPacket", net.minecraft.network.packet.c2s.play.SelectMerchantTradeC2SPacket.class);

@@ -330,7 +330,7 @@ public class WorldScanner {
     }
 
     private double getReach() {
-        return mc.interactionManager != null ? mc.interactionManager.getReachDistance() : 4.5;
+        return mc.player != null ? mc.player.getBlockInteractionRange() : 4.5;
     }
 
     /**

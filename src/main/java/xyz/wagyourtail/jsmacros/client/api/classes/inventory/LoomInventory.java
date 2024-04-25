@@ -7,11 +7,13 @@ import net.minecraft.item.BannerPatternItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.BannerPatternTags;
 import xyz.wagyourtail.jsmacros.client.access.ILoomScreen;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -26,12 +28,13 @@ public class LoomInventory extends Inventory<LoomScreen> {
 
     private List<RegistryEntry<BannerPattern>> getPatternsFor(ItemStack stack) {
         if (stack.isEmpty()) {
-            return (List) Registries.BANNER_PATTERN.getEntryList(BannerPatternTags.NO_ITEM_REQUIRED).map(ImmutableList::copyOf).orElse(ImmutableList.of());
+
+            return (List) mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.BANNER_PATTERN).getEntryList(BannerPatternTags.NO_ITEM_REQUIRED).map(ImmutableList::copyOf).orElse(ImmutableList.of());
         } else {
             Item var3 = stack.getItem();
             if (var3 instanceof BannerPatternItem) {
                 BannerPatternItem bannerPatternItem = (BannerPatternItem) var3;
-                return (List) Registries.BANNER_PATTERN.getEntryList(bannerPatternItem.getPattern()).map(ImmutableList::copyOf).orElse(ImmutableList.of());
+                return (List) mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.BANNER_PATTERN).getEntryList(bannerPatternItem.getPattern()).map(ImmutableList::copyOf).orElse(ImmutableList.of());
             } else {
                 return List.of();
             }
@@ -54,7 +57,7 @@ public class LoomInventory extends Inventory<LoomScreen> {
      */
     public List<String> listAvailablePatterns() {
         List<RegistryEntry<BannerPattern>> patterns = getPatternsFor(inventory.getScreenHandler().getSlot(2).getStack());
-        return patterns.stream().map(e -> e.value().getId()).collect(Collectors.toList());
+        return patterns.stream().map(e -> Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager().get(RegistryKeys.BANNER_PATTERN).getId(e.value()).toString()).collect(Collectors.toList());
     }
 
     /**
@@ -64,7 +67,7 @@ public class LoomInventory extends Inventory<LoomScreen> {
      */
     public boolean selectPatternId(String id) {
         List<RegistryEntry<BannerPattern>> patterns = getPatternsFor(inventory.getScreenHandler().getSlot(2).getStack());
-        RegistryEntry<BannerPattern> pattern = patterns.stream().filter(e -> e.value().getId().equals(id)).findFirst().orElse(null);
+        RegistryEntry<BannerPattern> pattern = patterns.stream().filter(e -> Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager().get(RegistryKeys.BANNER_PATTERN).getId(e.value()).toString().equals(id)).findFirst().orElse(null);
 
         int iid = patterns.indexOf(pattern);
         if (pattern != null && ((ILoomScreen) inventory).jsmacros_canApplyDyePattern() &&

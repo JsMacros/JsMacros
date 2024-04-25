@@ -23,6 +23,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.FluidStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unused")
 public class RegistryHelper {
+    MinecraftClient mc = MinecraftClient.getInstance();
 
     /**
      * @param id the item's id
@@ -61,9 +63,10 @@ public class RegistryHelper {
      */
     @DocletReplaceParams("id: CanOmitNamespace<ItemId>, nbt: string")
     public ItemStackHelper getItemStack(String id, String nbt) throws CommandSyntaxException {
-        ItemStringReader.ItemResult itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(parseNameSpace(id) + nbt));
+        ItemStringReader reader = new ItemStringReader(Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager());
+        ItemStringReader.ItemResult itemResult = reader.consume(new StringReader(parseNameSpace(id) + nbt));
         ItemStack stack = new ItemStack(itemResult.item());
-        stack.setNbt(itemResult.nbt());
+        stack.applyComponentsFrom(itemResult.components());
         return new CreativeItemStackHelper(stack);
     }
 

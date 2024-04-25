@@ -2,9 +2,12 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.ItemStringReader;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -13,6 +16,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,6 +26,7 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("unused")
 public class ItemHelper extends BaseHelper<Item> {
+    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public ItemHelper(Item base) {
         super(base);
@@ -67,7 +72,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isSuitableFor(BlockHelper block) {
-        return base.isSuitableFor(block.getDefaultState().getRaw());
+        return base.isCorrectForDrops(base.getDefaultStack(), block.getDefaultState().getRaw());
     }
 
     /**
@@ -77,7 +82,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isSuitableFor(BlockStateHelper block) {
-        return base.isSuitableFor(block.getRaw());
+        return base.isCorrectForDrops(base.getDefaultStack(), block.getRaw());
     }
 
     /**
@@ -109,7 +114,7 @@ public class ItemHelper extends BaseHelper<Item> {
      */
     public float getMiningSpeedMultiplier(BlockStateHelper state) {
         // At least in vanilla the item stack is never used
-        return base.getMiningSpeedMultiplier(null, state.getRaw());
+        return base.getMiningSpeed(base.getDefaultStack(), state.getRaw());
     }
 
     /**
@@ -117,7 +122,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isDamageable() {
-        return base.isDamageable();
+        return base.getDefaultStack().isDamageable();
     }
 
     /**
@@ -180,7 +185,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public int getMaxDurability() {
-        return base.getMaxDamage();
+        return base.getComponents().getOrDefault(DataComponentTypes.MAX_DAMAGE, 0);
     }
 
     /**
@@ -188,7 +193,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isFireproof() {
-        return base.isFireproof();
+        return base.getComponents().get(DataComponentTypes.FIRE_RESISTANT) != null;
     }
 
     /**
@@ -212,7 +217,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isFood() {
-        return base.isFood();
+        return base.getComponents().get(DataComponentTypes.FOOD) != null;
     }
 
     /**
@@ -222,7 +227,7 @@ public class ItemHelper extends BaseHelper<Item> {
     @Nullable
     public FoodComponentHelper getFood() {
         if (isFood()) {
-            return new FoodComponentHelper(base.getFoodComponent());
+            return new FoodComponentHelper(base.getComponents().get(DataComponentTypes.FOOD));
         }
         return null;
     }
@@ -251,7 +256,8 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public ItemStackHelper getStackWithNbt(String nbt) throws CommandSyntaxException {
-        ItemStringReader.ItemResult itemResult = ItemStringReader.item(Registries.ITEM.getReadOnlyWrapper(), new StringReader(getId() + nbt));
+        ItemStringReader reader = new ItemStringReader(Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager());
+        ItemStringReader.ItemResult itemResult = reader.consume(new StringReader(getId() + nbt));
         return new ItemStackHelper(new ItemStack(itemResult.item()));
     }
 

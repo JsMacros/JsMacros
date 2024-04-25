@@ -1,7 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
+import net.minecraft.item.BlockPredicatesChecker;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -10,6 +13,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
@@ -67,7 +71,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper setName(String name) {
-        base.setCustomName(literal(name));
+        base.set(DataComponentTypes.CUSTOM_NAME, literal(name));
         return this;
     }
 
@@ -77,7 +81,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper setName(TextHelper name) {
-        base.setCustomName(name.getRaw());
+        base.set(DataComponentTypes.CUSTOM_NAME, name.getRaw());
         return this;
     }
 
@@ -102,11 +106,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     }
 
     protected CreativeItemStackHelper addEnchantment(Enchantment enchantment, int level) {
-        if (base.isOf(Items.ENCHANTED_BOOK)) {
-            EnchantedBookItem.addEnchantment(base, new EnchantmentLevelEntry(enchantment, level));
-        } else {
-            base.addEnchantment(enchantment, level);
-        }
+        base.addEnchantment(enchantment, level);
         return this;
     }
 
@@ -115,10 +115,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper clearEnchantments() {
-        NbtCompound compound = base.getOrCreateNbt();
-        if (compound.contains("Enchantments", 9)) {
-            compound.remove("Enchantments");
-        }
+        base.set(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT);
         return this;
     }
 
@@ -138,15 +135,10 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      */
     @DocletReplaceParams("id: EnchantmentId")
     public CreativeItemStackHelper removeEnchantment(String id) {
-        NbtCompound compound = base.getOrCreateNbt();
-        if (compound.contains("Enchantments", 9)) {
-            NbtList nbtList = compound.getList("Enchantments", 10);
-            nbtList.forEach(nbtElement -> {
-                if (nbtElement.asString().contains(id)) {
-                    nbtList.remove(nbtElement);
-                }
-            });
-        }
+        ItemEnchantmentsComponent enchantments = base.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT);
+        ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(enchantments);
+        builder.remove((e) -> e.matchesId(new Identifier(id)));
+
         return this;
     }
 
@@ -155,10 +147,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper clearLore() {
-        NbtCompound nbtCompound = base.getOrCreateSubNbt("display");
-        if (nbtCompound.contains("Lore", 9)) {
-            nbtCompound.remove("Lore");
-        }
+        base.set(DataComponentTypes.LORE, LoreComponent.DEFAULT);
         return this;
     }
 
@@ -195,13 +184,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     private CreativeItemStackHelper addLoreInternal(Text... texts) {
-        NbtCompound nbtCompound = base.getOrCreateSubNbt("display");
-        NbtList list = nbtCompound.contains("Lore", 9) ? nbtCompound.getList("Lore", 8) : new NbtList();
-        for (Text text : texts) {
-            list.add(NbtString.of(Text.Serialization.toJsonString(text)));
-        }
-        nbtCompound.put("Lore", list);
-
+        base.set(DataComponentTypes.LORE, new LoreComponent(Arrays.asList(texts)));
         return this;
     }
 
@@ -211,7 +194,11 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper setUnbreakable(boolean unbreakable) {
-        base.getOrCreateNbt().putBoolean("Unbreakable", unbreakable);
+        if (unbreakable) {
+            base.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true));
+        } else {
+            base.remove(DataComponentTypes.UNBREAKABLE);
+        }
         return this;
     }
 
@@ -221,7 +208,8 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideEnchantments(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.ENCHANTMENTS, hide);
+        base.set(DataComponentTypes.ENCHANTMENTS, base.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT).withShowInTooltip(!hide));
+        return this;
     }
 
     /**
@@ -230,7 +218,8 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideModifiers(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.MODIFIERS, hide);
+        base.set(DataComponentTypes.ATTRIBUTE_MODIFIERS, base.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).withShowInTooltip(!hide));
+        return this;
     }
 
     /**
@@ -240,7 +229,11 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      */
 
     public CreativeItemStackHelper hideUnbreakable(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.UNBREAKABLE, hide);
+        UnbreakableComponent unbreakable = base.get(DataComponentTypes.UNBREAKABLE);
+        if (unbreakable != null) {
+            base.set(DataComponentTypes.UNBREAKABLE, unbreakable.withShowInTooltip(!hide));
+        }
+        return this;
     }
 
     /**
@@ -249,7 +242,11 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideCanDestroy(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.CAN_DESTROY, hide);
+        BlockPredicatesChecker checker = base.get(DataComponentTypes.CAN_BREAK);
+        if (checker != null) {
+            base.set(DataComponentTypes.CAN_BREAK, checker.withShowInTooltip(!hide));
+        }
+        return this;
     }
 
     /**
@@ -258,19 +255,11 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideCanPlace(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.CAN_PLACE, hide);
-    }
-
-    /**
-     * These flags are for banner patterns, potion effects, book information and other special
-     * flags.
-     *
-     * @param hide whether to hide additional flags or not
-     * @return self for chaining.
-     * @since 1.8.4
-     */
-    public CreativeItemStackHelper hideAdditional(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.ADDITIONAL, hide);
+        BlockPredicatesChecker checker = base.get(DataComponentTypes.CAN_PLACE_ON);
+        if (checker != null) {
+            base.set(DataComponentTypes.CAN_PLACE_ON, checker.withShowInTooltip(!hide));
+        }
+        return this;
     }
 
     /**
@@ -279,15 +268,9 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideDye(boolean hide) {
-        return setHideFlag(ItemStack.TooltipSection.DYE, hide);
-    }
-
-    protected CreativeItemStackHelper setHideFlag(ItemStack.TooltipSection section, boolean hide) {
-        NbtCompound nbtCompound = base.getOrCreateNbt();
-        if (hide) {
-            nbtCompound.putInt("HideFlags", nbtCompound.getInt("HideFlags") | section.getFlag());
-        } else {
-            nbtCompound.putInt("HideFlags", nbtCompound.getInt("HideFlags") & ~section.getFlag());
+        DyedColorComponent color = base.get(DataComponentTypes.DYED_COLOR);
+        if (color != null) {
+            base.set(DataComponentTypes.DYED_COLOR, color.withShowInTooltip(!hide));
         }
         return this;
     }

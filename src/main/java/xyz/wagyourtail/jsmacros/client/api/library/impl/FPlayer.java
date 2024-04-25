@@ -250,12 +250,10 @@ public class FPlayer extends BaseLibrary {
     /**
      * @return the current reach distance of the player.
      * @since 1.8.4
-     * @deprecated moved to {@code Player.getInteractionManager()}
      */
-    @Deprecated
-    public float getReach() {
-        assert mc.interactionManager != null;
-        return mc.interactionManager.getReachDistance();
+    public double getReach() {
+        assert mc.player != null;
+        return mc.player.getBlockInteractionRange();
     }
 
     /**
