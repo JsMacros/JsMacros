@@ -375,7 +375,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.3 [citation needed]
      */
     public boolean equals(ItemStack is) {
-        return ItemStack.areItemsEqual(base, is) && areNbtEqual(base, is);
+        return ItemStack.areItemsAndComponentsEqual(base, is);
     }
 
     /**
@@ -420,7 +420,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.3 [citation needed]
      */
     public boolean isNBTEqual(ItemStackHelper ish) {
-        return areNbtEqual(base, ish.getRaw());
+        return Objects.equals(base.getComponents(), ish.getRaw().getComponents());
     }
 
     /**
@@ -429,7 +429,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.3 [citation needed]
      */
     public boolean isNBTEqual(ItemStack is) {
-        return areNbtEqual(base, is);
+        return Objects.equals(base.getComponents(), is.getComponents());
     }
 
     /**
@@ -593,26 +593,6 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public boolean isDyeHidden() {
         DyedColorComponent dyed = base.get(DataComponentTypes.DYED_COLOR);
         return dyed != null && !dyed.showInTooltip();
-    }
-
-    /**
-     * The old implementation use used in {@link ItemStack} before 1.20. This only checks for the nbt data, the
-     * items themselves are not compared.
-     *
-     * @param left  the first item stack
-     * @param right the second item stack
-     * @return {@code true} if the two item stacks have equal nbt data, {@code false} otherwise.
-     */
-    public static boolean areNbtEqual(ItemStack left, ItemStack right) {
-        if (left.isEmpty() && right.isEmpty()) {
-            return true;
-        } else if (left.isEmpty() || right.isEmpty()) {
-            return false;
-        } else if (left.encode(mc.getNetworkHandler().getRegistryManager()) == null && right.encode(mc.getNetworkHandler().getRegistryManager()) != null) {
-            return false;
-        } else {
-            return left.encode(mc.getNetworkHandler().getRegistryManager()) == null || left.encode(mc.getNetworkHandler().getRegistryManager()).equals(right.encode(mc.getNetworkHandler().getRegistryManager()));
-        }
     }
 
 }
