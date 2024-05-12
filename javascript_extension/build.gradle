@@ -3,7 +3,19 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-archivesBaseName = archivesBaseName + "-js-extension"
+base {
+    archivesName = archivesName + "-js-extension"
+}
+
+java {
+    sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+    targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(project.java_version))
+    }
+
+}
 
 configurations {
     jsmacrosExtensionInclude
