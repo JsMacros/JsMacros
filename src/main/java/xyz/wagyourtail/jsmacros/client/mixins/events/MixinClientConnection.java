@@ -26,9 +26,9 @@ public class MixinClientConnection {
     @Shadow
     private Channel channel;
     @Unique
-    private EventRecvPacket eventRecvPacket;
+    private EventRecvPacket jsmacros$eventRecvPacket;
     @Unique
-    private EventSendPacket eventSendPacket;
+    private EventSendPacket jsmacros$eventSendPacket;
 
     @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
     private void onReceivePacket(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
@@ -36,17 +36,17 @@ public class MixinClientConnection {
             return;
         }
         EventRecvPacket event = new EventRecvPacket(packet);
+        event.trigger();
         if (event.isCanceled() || event.packet == null) {
             ci.cancel();
             return;
         }
-        event.trigger();
-        eventRecvPacket = event;
+        jsmacros$eventRecvPacket = event;
     }
 
     @ModifyArg(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;handlePacket(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;)V"), index = 0)
     public Packet<?> modifyReceivedPacket(Packet<?> packet) {
-        return eventRecvPacket.packet;
+        return jsmacros$eventRecvPacket.packet;
     }
 
     @Inject(method = "sendImmediately", at = @At("HEAD"), cancellable = true)
@@ -57,12 +57,12 @@ public class MixinClientConnection {
             ci.cancel();
             return;
         }
-        eventSendPacket = event;
+        jsmacros$eventSendPacket = event;
     }
 
     @ModifyVariable(method = "sendImmediately", at = @At(value = "LOAD"), ordinal = 0, argsOnly = true)
     public Packet<?> modifySendPacket(Packet<?> packet) {
-        return eventSendPacket.packet;
+        return jsmacros$eventSendPacket.packet;
     }
 
 }

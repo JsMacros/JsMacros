@@ -299,7 +299,7 @@ public abstract class AbstractParser {
                     enclosing = enclosing.getEnclosingElement();
                 }
 
-                String classpath = ((PackageElement) enclosing).getQualifiedName().toString();
+                String classpath = ((QualifiedNameable) enclosing).getQualifiedName().toString();
                 // check Event and Library type (probably none Library)
                 if (classpath.startsWith("xyz.wagyourtail.")) {
                     Optional<String> special = typeElement.getAnnotationMirrors().stream()

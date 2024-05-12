@@ -30,7 +30,7 @@
     "jsmacros-fabric.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.9.0",
+    "fabricloader": ">=0.15.0",
     "minecraft": "1.19.4"
   }
 }
