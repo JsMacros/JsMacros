@@ -22,25 +22,32 @@
         left corner of the screen.
         <br>
         <br>
-        To register a service, click the service button in the bottom left next to "running".
+        To register a service, select service tab on the top bar.
+        (or click the service button in the bottom left next to "running" if you're on older version of jsmacros)
         Give it a name, and assign a file. the enable/disable will determine if the service should start at startup,
         you can manully start/stop with the run/stop button.
     </p>
     <pre class="prettyprint"><code class="language-javascript">
 // services start with minecraft, when enabled and are meant to be persistent scripts.
-const d2d = Hud.createDraw2D()
-let tpsmeter;
+JsMacros.assertEvent(event, "Service");
+
+const d2d = Hud.createDraw2D();
+let tpsmeter = null;
+
 d2d.setOnInit(JavaWrapper.methodToJava(() => {
     tpsmeter = d2d.addText(World.getServerTPS(), 0, d2d.getHeight() - 10, 0xFFFFFF, true);
 }));
-const ticklistener = JsMacros.on("Tick", JavaWrapper.methodToJava(() => {
+
+const tickListener = JsMacros.on("Tick", JavaWrapper.methodToJava(() => {
     tpsmeter?.setText(World.getServerTPS());
 }));
-Hud.registerDraw2D(d2d);
+
+d2d.register();
+
 // this fires when the service is stopped
 event.stopListener = JavaWrapper.methodToJava(() => {
-    Hud.unregisterDraw2D(d2d);
-    JsMacros.off(ticklistener);
+    d2d.unregister();
+    JsMacros.off(tickListener);
 });
   </code>
   </pre>

@@ -36,12 +36,12 @@ public class MixinClientConnection {
             return;
         }
         EventRecvPacket event = new EventRecvPacket(packet);
+        event.trigger();
         if (event.isCanceled() || event.packet == null) {
             ci.cancel();
             return;
         }
-        event.trigger();
-        eventRecvPacket = event;
+        jsmacros$eventRecvPacket = event;
     }
 
     @ModifyArg(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/ClientConnection;handlePacket(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/listener/PacketListener;)V"), index = 0)
