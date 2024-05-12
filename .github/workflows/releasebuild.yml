@@ -134,7 +134,7 @@ jobs:
 
       - name: Run Publish Fabric
         if: ${{ steps.fabric_release.outputs.result != 'false' }}
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: 3wGWhm8A
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -162,7 +162,7 @@ jobs:
 
       - name: Run Publish Forge
         if: ${{ steps.forge_release.outputs.result != 'false' }}
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: 3wGWhm8A
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
