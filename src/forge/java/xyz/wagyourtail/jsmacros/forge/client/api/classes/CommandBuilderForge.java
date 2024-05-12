@@ -80,7 +80,6 @@ public class CommandBuilderForge extends CommandBuilder {
         if (cpnh != null) {
             ClientCommandInternals.addCommands((CommandDispatcher) cpnh.getCommandDispatcher(), (FabricClientCommandSource) cpnh.getCommandSource());
         }
-        commands.put(name, head);
         return this;
     }
 
@@ -92,7 +91,6 @@ public class CommandBuilderForge extends CommandBuilder {
             CommandDispatcher<?> cd = p.getCommandDispatcher();
             CommandNodeAccessor.remove(cd.getRoot(), head.getLiteral());
         }
-        commands.remove(name);
         return this;
     }
 }
