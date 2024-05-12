@@ -53,6 +53,15 @@ dependencies {
 
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+
+    var javaVersion = project.java_version.toInteger()
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release.set javaVersion
+    }
+}
+
 processResources {
     filesMatching("jsmacros.ext.graal.json") {
         expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")

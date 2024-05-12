@@ -211,6 +211,7 @@ tasks.withType(JavaCompile).configureEach {
         options.release.set javaVersion
     }
 }
+
 jar {
     enabled = false
 }
