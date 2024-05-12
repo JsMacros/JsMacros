@@ -56,8 +56,8 @@ sourceSets {
         resources {
             srcDir "common/src/main/resources"
         }
-        compileClasspath += core.output
-        runtimeClasspath += core.output
+        compileClasspath += core.output + core.compileClasspath
+        runtimeClasspath += core.output + core.runtimeClasspath
     }
     if (enabled_loaders.contains("forge")) {
         forge {
