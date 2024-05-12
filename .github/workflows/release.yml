@@ -11,7 +11,7 @@ on:
 jobs:
 
   build_latest:
-    needs: build_backports
+    needs: [build_backports, build_backports_neo]
     uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
     with:
       branch: main
