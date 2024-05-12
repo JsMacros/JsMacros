@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.forge.client;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -22,10 +22,11 @@ import xyz.wagyourtail.jsmacros.forge.client.forgeevents.ForgeEvents;
 public class JsMacrosForge {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsMacrosForge.class);
 
-    public JsMacrosForge(IEventBus modBus, ModContainer modContainer) {
+    public JsMacrosForge() {
         LOGGER.error("JsMacrosForge constructor");
         System.setProperty("jnr.ffi.provider", "cause.class.not.found.please");
 
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         modBus.addListener(this::onInitialize);
         modBus.addListener(this::onInitializeClient);
         modBus.addListener(this::onRegisterKeyMappings);
@@ -42,6 +43,7 @@ public class JsMacrosForge {
 
         // initialize loader-specific stuff
         CommandManager.instance = new CommandManagerForge();
+
         ForgeEvents.init();
     }
 
