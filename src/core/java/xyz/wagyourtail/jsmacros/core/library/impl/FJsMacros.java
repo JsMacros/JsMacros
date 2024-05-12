@@ -369,7 +369,7 @@ public class FJsMacros extends PerExecLibrary {
             @Override
             public EventContainer<?> trigger(BaseEvent e) {
                 if (filterer != null && !filterer.test(e)) return null;
-                EventContainer<?> p = new EventContainer<>(ctx);
+                EventContainer<?> p = new EventContainer<>(callback.getCtx());
                 Thread ot = callback.overrideThread();
                 Thread th = Core.getInstance().threadPool.runTask(() -> {
                     Thread t = Thread.currentThread();
@@ -456,7 +456,7 @@ public class FJsMacros extends PerExecLibrary {
             @Override
             public EventContainer<?> trigger(BaseEvent e) {
                 Core.getInstance().eventRegistry.removeListener(event, this);
-                EventContainer<?> p = new EventContainer<>(ctx);
+                EventContainer<?> p = new EventContainer<>(callback.getCtx());
                 Thread ot = callback.overrideThread();
                 Thread th = Core.getInstance().threadPool.runTask(() -> {
                     Thread t = Thread.currentThread();

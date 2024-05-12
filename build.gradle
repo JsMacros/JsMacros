@@ -258,6 +258,9 @@ if (enabled_loaders.contains("forge")) {
                     'MixinConnector': 'xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser',
             ])
         }
+
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
     }
 }
 
@@ -287,6 +290,12 @@ if (enabled_loaders.contains("fabric")) {
             include '*'
             into "META-INF/jsmacrosdeps"
         }
+    }
+
+    remapFabricJar {
+
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
     }
 }
 
