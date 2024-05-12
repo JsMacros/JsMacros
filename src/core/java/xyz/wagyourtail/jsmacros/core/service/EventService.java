@@ -4,8 +4,10 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,12 +22,47 @@ public class EventService extends BaseEvent {
 
     /**
      * when this service is stopped, this is run...
+     * @see EventService#unregisterOnStop(boolean, Registrable[])
      */
     @Nullable
     public MethodWrapper<Object, Object, Object, ?> stopListener;
+    /**
+     * @see EventService#unregisterOnStop(boolean, Registrable[])
+     * @since 1.9.1
+     */
+    @Nullable
+    public MethodWrapper<Object, Object, Object, ?> postStopListener;
+
+    boolean offEventsOnStop = false;
+    @Nullable
+    Registrable<?>[] registrableList = null;
+    @Nullable
+    BaseScriptContext<?> ctx = null;
 
     public EventService(String name) {
         this.serviceName = name;
+    }
+
+    /**
+     * Setup unregister on stop. For example, {@code event.unregisterOnStop(false, d2d);} is
+     * the equivalent of {@code event.stopListener = JavaWrapper.methodToJava(() => d2d.unregister());}.<br>
+     * <br>
+     * If this is called multiple times, the previous ones would be discarded.<br>
+     * <br>
+     * The order of execution is run stopListener -> off events -> unregister stuff -> run postStopListener.<br>
+     * <br>
+     * If anything was set to unregister, the service won't stop by itself even if it reaches the end.
+     * @param offEvents whether the service manager should clear event listeners that the callback doesn't belong to this context.
+     * @param list the list of registrable, such as Draw2D, Draw3D and CommandBuilder.
+     * @since 1.9.1
+     */
+    public void unregisterOnStop(boolean offEvents, Registrable<?> ...list) {
+        offEventsOnStop = offEvents;
+        registrableList = list.length > 0 ? list : null;
+
+        if (ctx != null) {
+            ServiceManager.setAutoUnregisterKeepAlive(ctx, offEvents || registrableList != null);
+        }
     }
 
     @Override
