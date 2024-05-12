@@ -386,7 +386,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.3 [citation needed]
      */
     public boolean equals(ItemStack is) {
-        return ItemStack.areItemsEqual(base, is) && areNbtEqual(base, is);
+        return ItemStack.areItemsAndComponentsEqual(base, is);
     }
 
     /**
@@ -431,7 +431,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.3 [citation needed]
      */
     public boolean isNBTEqual(ItemStackHelper ish) {
-        return areNbtEqual(base, ish.getRaw());
+        return Objects.equals(base.getComponents(), ish.getRaw().getComponents());
     }
 
     /**
@@ -440,7 +440,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.3 [citation needed]
      */
     public boolean isNBTEqual(ItemStack is) {
-        return areNbtEqual(base, is);
+        return Objects.equals(base.getComponents(), is.getComponents());
     }
 
     /**
