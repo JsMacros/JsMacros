@@ -5,16 +5,18 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
-sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
-targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+base {
+    archivesName = project.archives_base_name
+}
 
 java {
+    sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+    targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(project.java_version))
     }
 }
 
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
