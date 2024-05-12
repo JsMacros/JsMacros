@@ -95,7 +95,7 @@ public class CommandBuilderForge extends CommandBuilder {
     }
 
     @Override
-    public void register() {
+    public CommandBuilder register() {
         or(1);
         CommandDispatcher<ServerCommandSource> dispatcher = ClientCommandHandler.getDispatcher();
         Function<CommandRegistryAccess, ArgumentBuilder<ServerCommandSource, ?>> head = pointer.pop().getU();
@@ -108,10 +108,11 @@ public class CommandBuilderForge extends CommandBuilder {
             }
         }
         commands.put(name, head);
+        return this;
     }
 
     @Override
-    public void unregister() throws IllegalAccessException {
+    public CommandBuilder unregister() throws IllegalAccessException {
         CommandNodeAccessor.remove(ClientCommandHandler.getDispatcher().getRoot(), name);
         ClientPlayNetworkHandler p = MinecraftClient.getInstance().getNetworkHandler();
         if (p != null) {
@@ -119,6 +120,7 @@ public class CommandBuilderForge extends CommandBuilder {
             CommandNodeAccessor.remove(cd.getRoot(), name);
         }
         commands.remove(name);
+        return this;
     }
 
     public static void onRegisterEvent(RegisterClientCommandsEvent event) {

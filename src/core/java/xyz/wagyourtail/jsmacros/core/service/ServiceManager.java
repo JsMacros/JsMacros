@@ -3,10 +3,17 @@ package xyz.wagyourtail.jsmacros.core.service;
 import com.google.common.collect.ImmutableSet;
 import it.unimi.dsi.fastutil.objects.Object2LongArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import org.jetbrains.annotations.NotNull;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
+import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
+import xyz.wagyourtail.jsmacros.core.event.IEventListener;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
+import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
 import java.util.*;
 
@@ -15,6 +22,7 @@ import java.util.*;
  * @since 1.6.3
  */
 public class ServiceManager {
+    private static final Set<Object> autoUnregisterKeepAlive = new HashSet<>();
     protected boolean reloadOnModify;
     protected final Object2LongMap<String> lastModifiedMap = new Object2LongArrayMap<>();
     protected final Set<String> crashedServices = new HashSet<>();
@@ -127,7 +135,10 @@ public class ServiceManager {
             return ServiceStatus.UNKNOWN;
         }
         if (service.getU() == null || service.getU().getCtx().isContextClosed()) {
-            service.setU(runner.exec(service.getT().toScriptTrigger(), new EventService(name)));
+            EventService event = new EventService(name);
+            EventContainer<?> container = runner.exec(service.getT().toScriptTrigger(), event);
+            service.setU(container);
+            event.ctx = container.getCtx();
             return ServiceStatus.STOPPED;
         }
         return ServiceStatus.RUNNING;
@@ -142,18 +153,82 @@ public class ServiceManager {
         if (service == null) {
             return ServiceStatus.UNKNOWN;
         }
-        if (service.getU() != null && !service.getU().getCtx().isContextClosed()) {
-            try {
-                if (((EventService) service.getU().getCtx().getTriggeringEvent()).stopListener != null) {
-                    ((EventService) service.getU().getCtx().getTriggeringEvent()).stopListener.run();
-                }
-            } catch (Throwable e) {
-                runner.profile.logError(e);
-            }
-            service.getU().getCtx().closeContext();
-            return ServiceStatus.RUNNING;
+        if (service.getU() == null) {
+            return ServiceStatus.STOPPED;
         }
-        return ServiceStatus.STOPPED;
+        BaseScriptContext<?> ctx = service.getU().getCtx();
+        if (ctx.isContextClosed()) {
+            return ServiceStatus.STOPPED;
+        }
+
+
+        EventService event = (EventService) ctx.getTriggeringEvent();
+
+        try {
+            MethodWrapper<?, ?, ?, ?> sl = event.stopListener;
+            if (sl != null) sl.run();
+        } catch (Throwable t) {
+            runner.profile.logError(t);
+        }
+
+        BaseEventRegistry reg = Core.getInstance().eventRegistry;
+        if (event.offEventsOnStop) {
+            for (Map.Entry<IEventListener, String> ent : ctx.eventListeners.entrySet()) {
+                reg.removeListener(ent.getValue(), ent.getKey());
+            }
+        } else {
+            for (Map.Entry<IEventListener, String> ent : ctx.eventListeners.entrySet()) {
+                IEventListener listener = ent.getKey();
+                if (!(listener instanceof FJsMacros.ScriptEventListener sel)) continue;
+                MethodWrapper<?, ?, ?, ?> wrapper = sel.getWrapper();
+                if (wrapper == null || wrapper.getCtx() != ctx) continue;
+                reg.removeListener(ent.getValue(), ent.getKey());
+            }
+        }
+
+        Registrable<?>[] list = event.registrableList;
+        if (list != null) {
+            for (Registrable<?> e : list) {
+                try {
+                    e.unregister();
+                } catch (Throwable t) {
+                    runner.profile.logError(t);
+                }
+            }
+        }
+
+        try {
+            MethodWrapper<?, ?, ?, ?> psl = event.postStopListener;
+            if (psl != null) psl.run();
+        } catch (Throwable t) {
+            runner.profile.logError(t);
+        }
+
+        synchronized (autoUnregisterKeepAlive) {
+            autoUnregisterKeepAlive.remove(ctx.getSyncObject());
+            if (event.ctx != null && event.ctx != ctx) { // should not happen but just in case
+                autoUnregisterKeepAlive.remove(event.ctx.getSyncObject());
+            }
+        }
+
+        ctx.closeContext();
+        return ServiceStatus.RUNNING;
+    }
+
+    public static void setAutoUnregisterKeepAlive(@NotNull BaseScriptContext<?> ctx, boolean keepAlive) {
+        synchronized (autoUnregisterKeepAlive) {
+            if (keepAlive) {
+                autoUnregisterKeepAlive.add(ctx.getSyncObject());
+            } else {
+                autoUnregisterKeepAlive.remove(ctx.getSyncObject());
+            }
+        }
+    }
+
+    public static boolean hasKeepAlive(@NotNull BaseScriptContext<?> ctx) {
+        if (!(ctx.getTriggeringEvent() instanceof EventService)) return false;
+        Object syncObject = ctx.getSyncObject();
+        return syncObject != null && autoUnregisterKeepAlive.contains(syncObject);
     }
 
     /**
