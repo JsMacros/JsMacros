@@ -16,6 +16,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
@@ -35,7 +36,7 @@ import static xyz.wagyourtail.jsmacros.client.backport.TextBackport.translatable
  * @since 1.4.2
  */
 @SuppressWarnings("unused")
-public abstract class CommandBuilder {
+public abstract class CommandBuilder implements Registrable<CommandBuilder> {
 
     protected abstract void argument(String name, Supplier<ArgumentType<?>> type);
 
@@ -433,12 +434,14 @@ public abstract class CommandBuilder {
 
     }
 
-    public abstract void register();
+    @Override
+    public abstract CommandBuilder register();
 
     /**
      * @since 1.6.5
      * removes this command
      */
-    public abstract void unregister() throws IllegalAccessException;
+    @Override
+    public abstract CommandBuilder unregister() throws IllegalAccessException;
 
 }

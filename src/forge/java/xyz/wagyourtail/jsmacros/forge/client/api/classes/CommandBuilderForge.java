@@ -73,22 +73,26 @@ public class CommandBuilderForge extends CommandBuilder {
     }
 
     @Override
-    public void register() {
+    public CommandBuilder register() {
         or(1);
         ClientCommandManager.DISPATCHER.register(head);
         ClientPlayNetworkHandler cpnh = MinecraftClient.getInstance().getNetworkHandler();
         if (cpnh != null) {
             ClientCommandInternals.addCommands((CommandDispatcher) cpnh.getCommandDispatcher(), (FabricClientCommandSource) cpnh.getCommandSource());
         }
+        commands.put(name, head);
+        return this;
     }
 
     @Override
-    public void unregister() throws IllegalAccessException {
+    public CommandBuilder unregister() throws IllegalAccessException {
         CommandNodeAccessor.remove(ClientCommandManager.DISPATCHER.getRoot(), head.getLiteral());
         ClientPlayNetworkHandler p = MinecraftClient.getInstance().getNetworkHandler();
         if (p != null) {
             CommandDispatcher<?> cd = p.getCommandDispatcher();
             CommandNodeAccessor.remove(cd.getRoot(), head.getLiteral());
         }
+        commands.remove(name);
+        return this;
     }
 }
