@@ -43,10 +43,10 @@ jobs:
             return process.env.branch.replace(/\//g, '_')
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
-          java-version: 17
+          java-version: 21
 
       - name: Grant Execute Permission
         run: chmod +x gradlew
