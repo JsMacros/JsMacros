@@ -14,6 +14,7 @@ import xyz.wagyourtail.jsmacros.client.api.classes.render.components3d.*;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
+import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 
 import java.util.*;
 
@@ -24,7 +25,7 @@ import java.util.*;
  * @since 1.0.6
  */
 @SuppressWarnings("unused")
-public class Draw3D {
+public class Draw3D implements Registrable<Draw3D> {
     private final ArrayList<RenderElement3D> elements = new ArrayList<>();
 
     /**
@@ -675,6 +676,7 @@ public class Draw3D {
      * @return self for chaining
      * @since 1.6.5
      */
+    @Override
     public Draw3D register() {
         FHud.renders.add(this);
         return this;
@@ -684,6 +686,7 @@ public class Draw3D {
      * @return self for chaining
      * @since 1.6.5
      */
+    @Override
     public Draw3D unregister() {
         FHud.renders.remove(this);
         return this;
