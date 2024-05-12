@@ -28,7 +28,7 @@ public class TickBasedEvents {
     public static final MultiplayerServerListPinger serverListPinger = new MultiplayerServerListPinger();
 
     public static boolean areNotEqual(ItemStack a, ItemStack b) {
-        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !ItemStack.areItemsEqual(a, b) || a.getCount() != b.getCount() || !a.getComponents().equals(b.getComponents()) || a.getDamage() != b.getDamage());
+        return (!a.isEmpty() || !b.isEmpty()) && (a.isEmpty() || b.isEmpty() || !ItemStack.areItemsEqual(a, b) || a.getCount() != b.getCount() || !ItemStackHelper.areNbtEqual(a, b) || a.getDamage() != b.getDamage());
     }
 
     public static boolean areTagsEqualIgnoreDamage(ItemStack a, ItemStack b) {
