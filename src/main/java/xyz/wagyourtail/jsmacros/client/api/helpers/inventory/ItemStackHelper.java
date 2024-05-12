@@ -630,24 +630,4 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
         }
     }
 
-    /**
-     * The old implementation use used in {@link ItemStack} before 1.20. This only checks for the nbt data, the
-     * items themselves are not compared.
-     *
-     * @param left  the first item stack
-     * @param right the second item stack
-     * @return {@code true} if the two item stacks have equal nbt data, {@code false} otherwise.
-     */
-    public static boolean areNbtEqual(ItemStack left, ItemStack right) {
-        if (left.isEmpty() && right.isEmpty()) {
-            return true;
-        } else if (left.isEmpty() || right.isEmpty()) {
-            return false;
-        } else if (left.encode(mc.getNetworkHandler().getRegistryManager()) == null && right.encode(mc.getNetworkHandler().getRegistryManager()) != null) {
-            return false;
-        } else {
-            return left.encode(mc.getNetworkHandler().getRegistryManager()) == null || left.encode(mc.getNetworkHandler().getRegistryManager()).equals(right.encode(mc.getNetworkHandler().getRegistryManager()));
-        }
-    }
-
 }
