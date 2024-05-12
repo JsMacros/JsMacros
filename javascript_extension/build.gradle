@@ -64,6 +64,9 @@ jar {
         include '*'
         into "META-INF/jsmacrosdeps"
     }
+
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
 }
 
 test {
