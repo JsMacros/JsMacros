@@ -26,7 +26,7 @@ jobs:
   build_backports_neo:
     strategy:
       matrix:
-        branch: [ 'backports/1.20.2' ]
+        branch: [ 'backports/1.20.2', 'backports/1.20.4' ]
     uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
     with:
       branch: ${{ matrix.branch }}
@@ -41,7 +41,7 @@ jobs:
   build_backports:
     strategy:
       matrix:
-        branch: [ 'backports/1.17.1', 'backports/1.18.2', 'backports/1.19.4', 'backports/1.20.1', 'backports/1.20.2', 'backports/1.20.4' ]
+        branch: [ 'backports/1.17.1', 'backports/1.18.2', 'backports/1.19.4', 'backports/1.20.1' ]
     uses: jsmacros/jsmacros/.github/workflows/releasebuild.yml@main
     with:
       branch: ${{ matrix.branch }}
