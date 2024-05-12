@@ -4,7 +4,7 @@ plugins {
 }
 
 base {
-    archivesName = archivesName + "-js-extension"
+    archivesName = project.archives_base_name + "-js-extension"
 }
 
 java {
