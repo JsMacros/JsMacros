@@ -14,6 +14,7 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 
 import java.util.*;
 import java.util.function.IntSupplier;
@@ -25,7 +26,7 @@ import java.util.stream.Collectors;
  * @since 1.0.5
  */
 @SuppressWarnings("deprecation")
-public class Draw2D implements IDraw2D<Draw2D> {
+public class Draw2D implements IDraw2D<Draw2D>, Registrable<Draw2D> {
     protected final Set<RenderElement> elements = new LinkedHashSet<>();
     public IntSupplier widthSupplier;
     public IntSupplier heightSupplier;
@@ -638,6 +639,7 @@ public class Draw2D implements IDraw2D<Draw2D> {
      * @return self for chaining
      * @since 1.6.5
      */
+    @Override
     public Draw2D register() {
         this.init();
         FHud.overlays.add(this);
@@ -650,6 +652,7 @@ public class Draw2D implements IDraw2D<Draw2D> {
      * @return self for chaining
      * @since 1.6.5
      */
+    @Override
     public Draw2D unregister() {
         FHud.overlays.remove(this);
         return this;
