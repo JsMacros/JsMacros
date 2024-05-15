@@ -398,6 +398,11 @@ public class FJsMacros extends PerExecLibrary {
             }
 
             @Override
+            public BaseScriptContext<?> getCtx() {
+                return callback.getCtx();
+            }
+
+            @Override
             public void off() {
                 Core.getInstance().eventRegistry.removeListener(event, this);
             }
@@ -483,6 +488,11 @@ public class FJsMacros extends PerExecLibrary {
             @Override
             public MethodWrapper<BaseEvent, EventContainer<?>, Object, ?> getWrapper() {
                 return callback;
+            }
+
+            @Override
+            public BaseScriptContext<?> getCtx() {
+                return callback.getCtx();
             }
 
             @Override

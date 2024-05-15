@@ -8,6 +8,7 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventCustom;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventProfileLoad;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.*;
 
@@ -134,8 +135,11 @@ public abstract class BaseProfile {
     }
 
     protected void runJoinedEventListener(BaseEvent event, boolean joinedMain, IEventListener macroListener) {
-        if (macroListener instanceof FJsMacros.ScriptEventListener && ((FJsMacros.ScriptEventListener) macroListener).getCtx().getBoundThreads().contains(Thread.currentThread()) && !((FJsMacros.ScriptEventListener) macroListener).getCtx().isMultiThreaded()) {
-            throw new IllegalThreadStateException("Cannot join " + macroListener + " on same context as it's creation.");
+        if (macroListener instanceof FJsMacros.ScriptEventListener) {
+            BaseScriptContext<?> ctx = ((FJsMacros.ScriptEventListener) macroListener).getCtx();
+            if (ctx != null && ctx.getBoundThreads().contains(Thread.currentThread()) && !ctx.isMultiThreaded()) {
+                throw new IllegalThreadStateException("Cannot join " + macroListener + " on same context as it's creation.");
+            }
         }
         EventContainer<?> t = macroListener.trigger(event);
         if (t == null) {
