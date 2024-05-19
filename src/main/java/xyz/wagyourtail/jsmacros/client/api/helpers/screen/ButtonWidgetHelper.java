@@ -169,12 +169,26 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         }
 
         /**
+         * @since 1.9.3
+         */
+        public TexturedButtonBuilder enabledTexture(String enabled) {
+            return enabledTexture(new Identifier(enabled));
+        }
+
+        /**
          * @since 1.9.0
          * @return self for chaining.
          */
         public TexturedButtonBuilder disabledTexture(Identifier disabled) {
             this.disabled = disabled;
             return this;
+        }
+
+        /**
+         * @since 1.9.3
+         */
+        public TexturedButtonBuilder disabledTexture(String disabled) {
+            return disabledTexture(new Identifier(disabled));
         }
 
         /**
@@ -187,12 +201,26 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
         }
 
         /**
+         * @since 1.9.3
+         */
+        public TexturedButtonBuilder enabledFocusedTexture(String enabledFocused) {
+            return enabledFocusedTexture(new Identifier(enabledFocused));
+        }
+
+        /**
          * @since 1.9.0
          * @return self for chaining.
          */
         public TexturedButtonBuilder disabledFocusedTexture(Identifier disabledFocused) {
             this.disabledFocused = disabledFocused;
             return this;
+        }
+
+        /**
+         * @since 1.9.3
+         */
+        public TexturedButtonBuilder disabledFocusedTexture(String disabledFocused) {
+            return disabledFocusedTexture(new Identifier(disabledFocused));
         }
 
         @Override
