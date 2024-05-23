@@ -62,8 +62,9 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
     /**
      * override to return true if the method can't join to the context it was wrapped/created in, ie for languages that don't allow multithreading.
      */
+    @Deprecated
     public boolean preventSameScriptJoin() {
-        return false;
+        return !ctx.isMultiThreaded();
     }
 
     /**
