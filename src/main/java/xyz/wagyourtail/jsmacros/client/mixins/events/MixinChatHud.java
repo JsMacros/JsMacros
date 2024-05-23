@@ -24,6 +24,7 @@ class MixinChatHud {
     private Text modifyChatMessage(Text text) {
         if (text == null) return null;
         EventRecvMessage eventRecvMessage = new EventRecvMessage(text);
+        eventRecvMessage.trigger();
         final TextHelper result = eventRecvMessage.text;
         if (result == null) return null;
         if (!result.getRaw().equals(text)) {
