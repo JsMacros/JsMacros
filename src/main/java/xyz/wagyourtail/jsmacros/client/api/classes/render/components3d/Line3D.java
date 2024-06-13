@@ -2,12 +2,8 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
@@ -99,7 +95,7 @@ public class Line3D implements RenderElement3D<Line3D> {
 
     @Override
     @DocletIgnore
-    public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
+    public void render(DrawContext drawContext, float tickDelta) {
         MatrixStack matrixStack = drawContext.getMatrices();
         final boolean cull = !this.cull;
         if (cull) {
@@ -111,13 +107,12 @@ public class Line3D implements RenderElement3D<Line3D> {
         int g = (color >> 8) & 0xFF;
         int b = color & 0xFF;
         Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buf = tess.getBuffer();
         Matrix4f model = matrixStack.peek().getPositionMatrix();
         RenderSystem.lineWidth(2.5F);
-        buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-        buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).next();
-        buf.vertex(model, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).next();
-        tess.draw();
+        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+        buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a);
+        buf.vertex(model, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a);
+        BufferRenderer.drawWithGlobalProgram(buf.end());
 
         if (cull) {
             RenderSystem.enableDepthTest();

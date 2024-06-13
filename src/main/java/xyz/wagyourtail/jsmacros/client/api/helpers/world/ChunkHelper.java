@@ -177,7 +177,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     @DocletReplaceParams("...blocks: CanOmitNamespace<BlockId>[]")
     public boolean containsAny(String... blocks) {
         // Don't use section.hasAny because it will take some time to update the block palette
-        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registries.BLOCK::get).collect(Collectors.toSet());
+        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::of).map(Registries.BLOCK::get).collect(Collectors.toSet());
         for (ChunkSection section : base.getSectionArray()) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {
@@ -202,7 +202,7 @@ public class ChunkHelper extends BaseHelper<Chunk> {
     @DocletReplaceParams("...blocks: CanOmitNamespace<BlockId>[]")
     public boolean containsAll(String... blocks) {
         // Don't use section.hasAny because it will take some time to update the block palette
-        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::new).map(Registries.BLOCK::get).collect(Collectors.toSet());
+        Set<Block> filterBlocks = Arrays.stream(blocks).map(Identifier::of).map(Registries.BLOCK::get).collect(Collectors.toSet());
         for (ChunkSection section : base.getSectionArray()) {
             for (int x = 0; x < 16; x++) {
                 for (int z = 0; z < 16; z++) {

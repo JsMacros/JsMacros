@@ -311,9 +311,8 @@ public class Image implements RenderElement, Alignable<Image> {
         RenderSystem.enableBlend();
         RenderSystem.setShaderTexture(0, imageid);
         Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buf = tess.getBuffer();
 
-        buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_TEXTURE_COLOR);
+        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_TEXTURE_COLOR);
         Matrix4f matrix = matrices.peek().getPositionMatrix();
 
         float x1 = x;
@@ -327,11 +326,11 @@ public class Image implements RenderElement, Alignable<Image> {
         float v2 = (imageY + regionHeight) / (float) textureHeight;
 
         //draw a rectangle using triangle strips
-        buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(color).next(); // Top-left
-        buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(color).next(); // Top-right
-        buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(color).next(); // Bottom-left
-        buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(color).next(); // Bottom-right
-        tess.draw();
+        buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(color); // Top-left
+        buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(color); // Top-right
+        buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(color); // Bottom-left
+        buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(color); // Bottom-right
+        BufferRenderer.drawWithGlobalProgram(buf.end());
 
         matrices.pop();
         RenderSystem.disableBlend();

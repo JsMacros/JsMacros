@@ -707,9 +707,6 @@ public class Draw3D implements Registrable<Draw3D> {
         Vec3d camPos = mc.gameRenderer.getCamera().getPos();
         matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-
         EntityTraceLine.dirty = false;
 
 
@@ -719,7 +716,7 @@ public class Draw3D implements Registrable<Draw3D> {
 
             //TODO: pull setup out of render as they should be sorted by type
             for (RenderElement3D element : elements) {
-                element.render(drawContext, bufferBuilder, tickDelta);
+                element.render(drawContext, tickDelta);
             }
         }
 

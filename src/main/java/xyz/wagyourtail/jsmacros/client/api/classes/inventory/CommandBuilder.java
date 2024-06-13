@@ -288,7 +288,7 @@ public abstract class CommandBuilder implements Registrable<CommandBuilder> {
      * @since 1.8.4
      */
     public CommandBuilder suggestIdentifier(Collection<String> suggestions) {
-        suggests((ctx, builder) -> CommandSource.suggestIdentifiers(suggestions.stream().map(Identifier::new), builder));
+        suggests((ctx, builder) -> CommandSource.suggestIdentifiers(suggestions.stream().map(Identifier::of), builder));
         return this;
     }
 

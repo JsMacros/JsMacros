@@ -172,7 +172,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @since 1.9.3
          */
         public TexturedButtonBuilder enabledTexture(String enabled) {
-            return enabledTexture(new Identifier(enabled));
+            return enabledTexture(Identifier.of(enabled));
         }
 
         /**
@@ -188,7 +188,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @since 1.9.3
          */
         public TexturedButtonBuilder disabledTexture(String disabled) {
-            return disabledTexture(new Identifier(disabled));
+            return disabledTexture(Identifier.of(disabled));
         }
 
         /**
@@ -204,7 +204,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @since 1.9.3
          */
         public TexturedButtonBuilder enabledFocusedTexture(String enabledFocused) {
-            return enabledFocusedTexture(new Identifier(enabledFocused));
+            return enabledFocusedTexture(Identifier.of(enabledFocused));
         }
 
         /**
@@ -220,7 +220,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
          * @since 1.9.3
          */
         public TexturedButtonBuilder disabledFocusedTexture(String disabledFocused) {
-            return disabledFocusedTexture(new Identifier(disabledFocused));
+            return disabledFocusedTexture(Identifier.of(disabledFocused));
         }
 
         @Override

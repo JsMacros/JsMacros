@@ -28,6 +28,7 @@ import net.minecraft.predicate.BlockPredicate;
 import net.minecraft.predicate.NbtPredicate;
 import net.minecraft.predicate.StatePredicate;
 import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.Team;
@@ -165,8 +166,10 @@ public class FJavaUtils extends BaseLibrary {
             return new CommandContextHelper(((CommandContext<?>) raw));
         } else if (raw instanceof Direction) {
             return new DirectionHelper(((Direction) raw));
-        } else if (raw instanceof Enchantment) {
-            return new EnchantmentHelper(((Enchantment) raw));
+        } else if (raw instanceof RegistryEntry<?>) {
+            if (((RegistryEntry<?>) raw).value() instanceof Enchantment) {
+                return new EnchantmentHelper((RegistryEntry<Enchantment>) raw);
+            }
         } else if (raw instanceof ItemStack) {
             return new ItemStackHelper(((ItemStack) raw));
         } else if (raw instanceof GameOptions) {

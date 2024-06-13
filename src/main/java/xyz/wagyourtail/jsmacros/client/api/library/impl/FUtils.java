@@ -14,6 +14,7 @@ import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +34,7 @@ public class FUtils extends BaseLibrary {
      * @since 1.8.4
      */
     public void openUrl(String url) throws MalformedURLException {
-        Util.getOperatingSystem().open(new URL(url));
+        Util.getOperatingSystem().open(URI.create(url));
     }
 
     /**

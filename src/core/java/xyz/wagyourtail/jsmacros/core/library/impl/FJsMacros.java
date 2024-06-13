@@ -30,7 +30,7 @@ import java.util.concurrent.Semaphore;
 
 /**
  * Functions that interact directly with JsMacros or Events.
- * <p>
+ * <pd
  * An instance of this class is passed to scripts as the {@code JsMacros} variable.
  *
  * @author Wagyourtail

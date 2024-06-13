@@ -614,7 +614,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     @DocletReplaceParams("dimension: CanOmitNamespace<Dimension>, pos: BlockPosHelper")
     public PacketByteBufferHelper writeGlobalPos(String dimension, BlockPosHelper pos) {
-        RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, new Identifier(dimension));
+        RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, Identifier.of(dimension));
         base.writeGlobalPos(GlobalPos.create(key, pos.getRaw()));
         return this;
     }
@@ -630,7 +630,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      */
     @DocletReplaceParams("dimension: CanOmitNamespace<Dimension>, x: int, y: int, z: int")
     public PacketByteBufferHelper writeGlobalPos(String dimension, int x, int y, int z) {
-        RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, new Identifier(dimension));
+        RegistryKey<World> key = RegistryKey.of(RegistryKeys.WORLD, Identifier.of(dimension));
         base.writeGlobalPos(GlobalPos.create(key, new BlockPos(x, y, z)));
         return this;
     }
@@ -1726,7 +1726,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("EntitySpawnS2CPacket", net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket.class);
         PACKETS.put("TitleFadeS2CPacket", net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket.class);
         PACKETS.put("ReadyS2CPacket", net.minecraft.network.packet.s2c.config.ReadyS2CPacket.class);
-        PACKETS.put("UnlockRecipesS2CPacket", net.minecraft.network.packet.s2c.play.UnlockRecipesS2CPacket.class);
         PACKETS.put("SynchronizeRecipesS2CPacket", net.minecraft.network.packet.s2c.play.SynchronizeRecipesS2CPacket.class);
         PACKETS.put("LoginDisconnectS2CPacket", net.minecraft.network.packet.s2c.login.LoginDisconnectS2CPacket.class);
         PACKETS.put("PlayerSessionC2SPacket", net.minecraft.network.packet.c2s.play.PlayerSessionC2SPacket.class);

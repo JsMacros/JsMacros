@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.forge.client.forgeevents;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -82,7 +83,7 @@ public class ForgeEvents {
         ((IScreenInternal) event.getScreen()).jsmacros_mouseDragged(event.getMouseX(), event.getMouseY(), event.getMouseButton(), event.getDragX(), event.getDragY());
     }
 
-    public static void renderHudListener(DrawContext drawContext, float partialTicks) {
+    public static void renderHudListener(DrawContext drawContext, RenderTickCounter partialTicks) {
         for (IDraw2D<Draw2D> h : ImmutableSet.copyOf(FHud.overlays).stream().sorted(Comparator.comparingInt(IDraw2D::getZIndex)).collect(Collectors.toList())) {
             try {
                 h.render(drawContext);
@@ -92,7 +93,7 @@ public class ForgeEvents {
     }
 
     public static void onRegisterGuiOverlays(RegisterGuiLayersEvent ev) {
-        ev.registerBelow(VanillaGuiLayers.DEBUG_OVERLAY, new Identifier("jsmacros:hud"), ForgeEvents::renderHudListener);
+        ev.registerBelow(VanillaGuiLayers.DEBUG_OVERLAY, Identifier.of("jsmacros:hud"), ForgeEvents::renderHudListener);
     }
 
     public static void renderWorldListener(RenderLevelStageEvent e) {
@@ -103,7 +104,7 @@ public class ForgeEvents {
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
                 DrawContext drawContext = DRAW_CONTEXT_CONSTRUCTOR.newInstance(client, e.getPoseStack(), client.getBufferBuilders().getEntityVertexConsumers());
-                d.render(drawContext, e.getPartialTick());
+                d.render(drawContext, e.getPartialTick().getLastFrameDuration());
             } catch (Throwable t) {
                 t.printStackTrace();
             }

@@ -7,6 +7,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.EnchantmentTags;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 
 /**
@@ -62,11 +63,11 @@ public class GrindStoneInventory extends Inventory<GrindstoneScreen> {
         int i = 0;
         ItemEnchantmentsComponent lv = EnchantmentHelper.getEnchantments(stack);
 
-        for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : lv.getEnchantmentsMap()) {
-            Enchantment lv2 = (Enchantment)((RegistryEntry)entry.getKey()).value();
+        for (Object2IntMap.Entry<RegistryEntry<Enchantment>> entry : lv.getEnchantmentEntries()) {
+            RegistryEntry<Enchantment> lv2 = entry.getKey();
             int j = entry.getIntValue();
-            if (!lv2.isCursed()) {
-                i += lv2.getMinPower(j);
+            if (!lv2.isIn(EnchantmentTags.CURSE)) {
+                i += lv2.value().getMinPower(j);
             }
         }
 

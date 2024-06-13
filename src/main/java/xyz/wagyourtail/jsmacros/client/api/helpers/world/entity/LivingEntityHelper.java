@@ -85,7 +85,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
      */
     @DocletReplaceParams("item: ItemId")
     public boolean isHolding(String item) {
-        Identifier id = new Identifier(item);
+        Identifier id = Identifier.of(item);
         if (id.equals(Registries.ITEM.getDefaultId())) return base.isHolding(Items.AIR);
         Item it = Registries.ITEM.get(id);
         return it != Items.AIR && base.isHolding(it);

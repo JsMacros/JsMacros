@@ -56,7 +56,7 @@ public class EditorScreen extends BaseScreen {
             "kotlin",
             "none"
     );
-    public static Style defaultStyle = Style.EMPTY.withFont(new Identifier("jsmacros", "ubuntumono"));
+    public static Style defaultStyle = Style.EMPTY.withFont(Identifier.of("jsmacros", "ubuntumono"));
     protected final File file;
     protected final FileHandler handler;
     public final History history;
@@ -95,7 +95,7 @@ public class EditorScreen extends BaseScreen {
         savedString = content;
 
         this.handler = handler;
-        defaultStyle = Style.EMPTY.withFont(new Identifier(Core.getInstance().config.getOptions(ClientConfigV2.class).editorFont));
+        defaultStyle = Style.EMPTY.withFont(Identifier.of(Core.getInstance().config.getOptions(ClientConfigV2.class).editorFont));
 
         cursor = new SelectCursor(defaultStyle);
 
@@ -839,7 +839,7 @@ public class EditorScreen extends BaseScreen {
 
     @Override
     public void updateSettings() {
-        defaultStyle = Style.EMPTY.withFont(new Identifier(Core.getInstance().config.getOptions(ClientConfigV2.class).editorFont));
+        defaultStyle = Style.EMPTY.withFont(Identifier.of(Core.getInstance().config.getOptions(ClientConfigV2.class).editorFont));
         cursor.defaultStyle = defaultStyle;
         cursor.updateStartIndex(cursor.startIndex, history.current);
         cursor.updateEndIndex(cursor.endIndex, history.current);

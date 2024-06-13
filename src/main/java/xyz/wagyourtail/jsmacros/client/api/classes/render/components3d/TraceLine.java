@@ -2,10 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
@@ -111,7 +108,7 @@ public class TraceLine implements RenderElement3D<TraceLine> {
         return pos.compareTo(other.pos);
     }
 
-    public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
+    public void render(DrawContext drawContext, float tickDelta) {
         MatrixStack matrixStack = drawContext.getMatrices();
         RenderSystem.disableDepthTest();
 
@@ -120,13 +117,12 @@ public class TraceLine implements RenderElement3D<TraceLine> {
         int g = (color >> 8) & 0xFF;
         int b = color & 0xFF;
         Tessellator tess = Tessellator.getInstance();
-        BufferBuilder buf = tess.getBuffer();
         Matrix4f model = matrixStack.peek().getPositionMatrix();
         RenderSystem.lineWidth(2.5F);
-        buf.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-        buf.vertex(screenPos.x, screenPos.y, -4.0).color(r, g, b, a).next();
-        buf.vertex(model, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ()).color(r, g, b, a).next();
-        tess.draw();
+        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+        buf.vertex((float) screenPos.x, (float) screenPos.y, -4.0f).color(r, g, b, a);
+        buf.vertex(model, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ()).color(r, g, b, a);
+        BufferRenderer.drawWithGlobalProgram(buf.end());
 
         RenderSystem.enableDepthTest();
     }

@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 
 import net.minecraft.client.gui.screen.ingame.HorseScreen;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.passive.AbstractDonkeyEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import xyz.wagyourtail.jsmacros.client.access.IHorseScreen;
@@ -54,7 +55,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
      * @since 1.8.4
      */
     public boolean hasArmorSlot() {
-        return horse.hasArmorSlot();
+        return horse.canUseSlot(EquipmentSlot.BODY);
     }
 
     /**
