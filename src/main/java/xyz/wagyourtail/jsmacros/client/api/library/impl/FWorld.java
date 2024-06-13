@@ -784,7 +784,7 @@ public class FWorld extends BaseLibrary {
      */
     @DocletReplaceParams("id: CanOmitNamespace<SoundId>, volume: double, pitch: double")
     public void playSound(String id, double volume, double pitch) {
-        SoundEvent sound = SoundEvent.of(Identifier.of(id));
+        SoundEvent sound = SoundEvent.of(new Identifier(id));
         assert sound != null;
         mc.execute(() -> mc.getSoundManager().play(PositionedSoundInstance.master(sound, (float) pitch, (float) volume)));
     }
@@ -804,7 +804,7 @@ public class FWorld extends BaseLibrary {
     public void playSound(String id, double volume, double pitch, double x, double y, double z) {
         ClientWorld world = mc.world;
         if (world == null) return;
-        SoundEvent sound = SoundEvent.of(Identifier.of(id));
+        SoundEvent sound = SoundEvent.of(new Identifier(id));
         assert sound != null;
         mc.execute(() -> world.playSound(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true));
     }

@@ -23,13 +23,13 @@ import java.io.File;
 import java.util.List;
 
 public class MacroContainer extends MultiElementContainer<MacroScreen> {
-    private static final Identifier key_down_tex = Identifier.of(JsMacros.MOD_ID, "resources/key_down.png");
-    private static final Identifier key_up_tex = Identifier.of(JsMacros.MOD_ID, "resources/key_up.png");
-    private static final Identifier key_both_tex = Identifier.of(JsMacros.MOD_ID, "resources/key_both.png");
+    private static final Identifier key_down_tex = new Identifier(JsMacros.MOD_ID, "resources/key_down.png");
+    private static final Identifier key_up_tex = new Identifier(JsMacros.MOD_ID, "resources/key_up.png");
+    private static final Identifier key_both_tex = new Identifier(JsMacros.MOD_ID, "resources/key_both.png");
     @SuppressWarnings("unused")
-    private static final Identifier event_tex = Identifier.of(JsMacros.MOD_ID, "resources/event.png");
-    private static final Identifier script_fork_tex = Identifier.of(JsMacros.MOD_ID, "resources/script_fork.png");
-    private static final Identifier script_join_tex = Identifier.of(JsMacros.MOD_ID, "resources/script_join.png");
+    private static final Identifier event_tex = new Identifier(JsMacros.MOD_ID, "resources/event.png");
+    private static final Identifier script_fork_tex = new Identifier(JsMacros.MOD_ID, "resources/script_fork.png");
+    private static final Identifier script_join_tex = new Identifier(JsMacros.MOD_ID, "resources/script_join.png");
     private final MinecraftClient mc;
     private final ScriptTrigger macro;
     private Button enableBtn;

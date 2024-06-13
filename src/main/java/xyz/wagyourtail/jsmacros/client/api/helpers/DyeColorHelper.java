@@ -37,7 +37,8 @@ public class DyeColorHelper extends BaseHelper<DyeColor> {
      * @since 1.8.4
      */
     public int getColorValue() {
-        return base.getEntityColor();
+        float[] color = base.getColorComponents();
+        return (int) (color[0] * 255) << 16 | (int) (color[1] * 255) << 8 | (int) (color[2] * 255);
     }
 
     /**

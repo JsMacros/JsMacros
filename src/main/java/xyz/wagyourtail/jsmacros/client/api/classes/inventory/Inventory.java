@@ -8,7 +8,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.passive.AbstractDonkeyEntity;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -719,7 +718,7 @@ public class Inventory<T extends HandledScreen<?>> {
                 if (h.canBeSaddled()) {
                     map.put("saddle", new int[]{0});
                 }
-                if (h.canUseSlot(EquipmentSlot.BODY)) {
+                if (h.hasArmorSlot()) {
                     map.put("armor", new int[]{1});
                 }
                 if (h instanceof AbstractDonkeyEntity && ((AbstractDonkeyEntity) h).hasChest()) {

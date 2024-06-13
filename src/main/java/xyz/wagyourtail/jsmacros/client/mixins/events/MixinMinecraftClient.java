@@ -87,7 +87,7 @@ public abstract class MixinMinecraftClient {
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/client/MinecraftClient;integratedServerRunning:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), method = "disconnect(Lnet/minecraft/client/gui/screen/Screen;Z)V")
     public void onDisconnect(Screen s, boolean transferring, CallbackInfo ci) {
         if (s instanceof DisconnectedScreen) {
-            new EventDisconnect(((MixinDisconnectedScreen) s).getInfo().reason()).trigger();
+            new EventDisconnect(((MixinDisconnectedScreen) s).getReason()).trigger();
         } else {
             new EventDisconnect(null).trigger();
         }

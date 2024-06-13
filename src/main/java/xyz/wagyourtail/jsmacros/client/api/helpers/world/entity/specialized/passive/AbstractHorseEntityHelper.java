@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.passive;
 
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.passive.AbstractHorseEntity;
 import org.jetbrains.annotations.Nullable;
@@ -72,7 +71,7 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      * @since 1.8.4
      */
     public boolean canWearArmor() {
-        return base.canUseSlot(EquipmentSlot.BODY);
+        return base.hasArmorSlot();
     }
 
     /**

@@ -8,7 +8,6 @@ import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -67,7 +66,7 @@ public class RegistryHelper {
         ItemStringReader reader = new ItemStringReader(Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager());
         ItemStringReader.ItemResult itemResult = reader.consume(new StringReader(parseNameSpace(id) + nbt));
         ItemStack stack = new ItemStack(itemResult.item());
-        stack.applyUnvalidatedChanges(itemResult.components());
+        stack.applyComponentsFrom(itemResult.components());
         return new CreativeItemStackHelper(stack);
     }
 
@@ -172,7 +171,7 @@ public class RegistryHelper {
      */
     @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>, level: int")
     public EnchantmentHelper getEnchantment(String id, int level) {
-        return new EnchantmentHelper(mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(parseIdentifier(id)).orElseThrow(), level);
+        return new EnchantmentHelper(Registries.ENCHANTMENT.get(parseIdentifier(id)), level);
     }
 
     /**
@@ -181,7 +180,7 @@ public class RegistryHelper {
      */
     @DocletReplaceReturn("JavaList<EnchantmentId>")
     public List<String> getEnchantmentIds() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -189,7 +188,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getEnchantments() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries().map(EnchantmentHelper::new).collect(Collectors.toList());
+        return Registries.ENCHANTMENT.stream().map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -257,7 +256,7 @@ public class RegistryHelper {
      */
     @DocletReplaceReturn("JavaList<PaintingId>")
     public List<String> getPaintingIds() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.PAINTING_VARIANT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
+        return Registries.PAINTING_VARIANT.getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -405,7 +404,7 @@ public class RegistryHelper {
     }
 
     public static Identifier parseIdentifier(String id) {
-        return Identifier.of(parseNameSpace(id));
+        return new Identifier(parseNameSpace(id));
     }
 
     public static String parseNameSpace(String id) {

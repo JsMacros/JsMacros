@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -251,7 +252,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
 
     @Override
     @DocletIgnore
-    public void render(DrawContext drawContext, float delta) {
+    public void render(DrawContext drawContext, BufferBuilder builder, float delta) {
         MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
         if (boundEntity != null && boundEntity.isAlive()) {

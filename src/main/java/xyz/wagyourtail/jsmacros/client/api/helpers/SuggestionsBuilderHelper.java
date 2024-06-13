@@ -89,7 +89,7 @@ public class SuggestionsBuilderHelper extends BaseHelper<SuggestionsBuilder> {
      * @since 1.8.4
      */
     public SuggestionsBuilderHelper suggestIdentifier(Collection<String> identifiers) {
-        CommandSource.suggestIdentifiers(identifiers.stream().map(Identifier::of), base);
+        CommandSource.suggestIdentifiers(identifiers.stream().map(Identifier::new), base);
         return this;
     }
 

@@ -3,8 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.EnchantmentScreenHandler;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.EnchantmentHelper;
@@ -34,11 +32,10 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
      */
     public TextHelper[] getEnchantments() {
         TextHelper[] enchants = new TextHelper[3];
-        var enchRegistry = mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT);
         for (int j = 0; j < 3; ++j) {
-            RegistryEntry<Enchantment> enchantment = enchRegistry.getEntry(inventory.getScreenHandler().enchantmentId[j]).orElseThrow();
+            Enchantment enchantment = Enchantment.byRawId(inventory.getScreenHandler().enchantmentId[j]);
             if ((enchantment) != null) {
-                enchants[j] = TextHelper.wrap(Enchantment.getName(enchantment, inventory.getScreenHandler().enchantmentLevel[j]));
+                enchants[j] = TextHelper.wrap(enchantment.getName(inventory.getScreenHandler().enchantmentLevel[j]));
             }
         }
         return enchants;
@@ -51,9 +48,8 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
     public EnchantmentHelper[] getEnchantmentHelpers() {
         EnchantmentScreenHandler handler = inventory.getScreenHandler();
         EnchantmentHelper[] enchantments = new EnchantmentHelper[3];
-        var enchRegistry = mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT);
         for (int i = 0; i < 3; i++) {
-            enchantments[i] = new EnchantmentHelper(enchRegistry.getEntry(handler.enchantmentId[i]).orElseThrow(), handler.enchantmentLevel[i]);
+            enchantments[i] = new EnchantmentHelper(Enchantment.byRawId(handler.enchantmentId[i]), handler.enchantmentLevel[i]);
         }
         return enchantments;
     }
@@ -64,10 +60,11 @@ public class EnchantInventory extends Inventory<EnchantmentScreen> {
      */
     public String[] getEnchantmentIds() {
         String[] enchants = new String[3];
-        var enchRegistry = mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT);
         for (int j = 0; j < 3; ++j) {
-            RegistryEntry<Enchantment> enchantment = enchRegistry.getEntry(inventory.getScreenHandler().enchantmentId[j]).orElseThrow();
-            enchants[j] = enchantment.getIdAsString();
+            Enchantment enchantment = Enchantment.byRawId(inventory.getScreenHandler().enchantmentId[j]);
+            if ((enchantment) != null) {
+                enchants[j] = Registries.ENCHANTMENT.getId(enchantment).toString();
+            }
         }
         return enchants;
     }

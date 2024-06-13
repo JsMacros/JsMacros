@@ -86,18 +86,12 @@ unimined.minecraft {
         intermediary()
         yarn project.yarn_mappings
 
-        stub.withMappings("official", ["intermediary", "yarn"]) {
-            c("fzc", []) {
-                m("b", "(Lzg;)V", ["method_14364", "sendPacket"])
-            }
-        }
-
         stub.withMappings("intermediary", ["yarn"]) {
             c("net/minecraft/class_1496", []) {
                 m("method_56680", "()Lnet/minecraft/class_1263;", ["getInventoryVanilla"])
             }
             c("net/minecraft/class_329", []) {
-                m("method_1759", "(Lnet/minecraft/class_332;Lnet/minecraft/class_9779;)V", ["renderHotbarVanilla"])
+                m("method_1759", "(Lnet/minecraft/class_332;F)V", ["renderHotbarVanilla"])
             }
         }
 

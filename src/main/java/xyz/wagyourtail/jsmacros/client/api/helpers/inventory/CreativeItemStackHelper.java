@@ -12,8 +12,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
@@ -95,7 +93,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      */
     @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>, level: int")
     public CreativeItemStackHelper addEnchantment(String id, int level) {
-        return addEnchantment(mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Identifier.of(id)).orElseThrow(), level);
+        return addEnchantment(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(id)), level);
     }
 
     /**
@@ -107,7 +105,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
         return addEnchantment(enchantment.getRaw(), enchantment.getLevel());
     }
 
-    protected CreativeItemStackHelper addEnchantment(RegistryEntry<Enchantment> enchantment, int level) {
+    protected CreativeItemStackHelper addEnchantment(Enchantment enchantment, int level) {
         base.addEnchantment(enchantment, level);
         return this;
     }
@@ -139,7 +137,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
     public CreativeItemStackHelper removeEnchantment(String id) {
         ItemEnchantmentsComponent enchantments = base.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT);
         ItemEnchantmentsComponent.Builder builder = new ItemEnchantmentsComponent.Builder(enchantments);
-        builder.remove((e) -> e.matchesId(Identifier.of(id)));
+        builder.remove((e) -> e.matchesId(new Identifier(id)));
 
         return this;
     }

@@ -13,7 +13,6 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -94,10 +93,8 @@ public class CommandContextHelper extends BaseEvent {
             arg = (Predicate<BlockPosHelper>) block -> blockPredicate.test(new CachedBlockPosition(MinecraftClient.getInstance().world, block.getRaw(), false));
         } else if (arg instanceof PosArgument) {
             arg = new BlockPosHelper(((PosArgument) arg).toAbsoluteBlockPos(fakeServerSource));
-        } else if (arg instanceof RegistryEntry<?>) {
-            if (((RegistryEntry<?>) arg).value() instanceof Enchantment) {
-                arg = new EnchantmentHelper((RegistryEntry<Enchantment>) arg);
-            }
+        } else if (arg instanceof Enchantment) {
+            arg = new EnchantmentHelper((Enchantment) arg);
         } else if (arg instanceof EntitySelector) {
             arg = ((EntitySelector) arg).getEntities(fakeServerSource).stream().map(EntityHelper::create).collect(Collectors.toList());
         } else if (arg instanceof ParticleEffect) {

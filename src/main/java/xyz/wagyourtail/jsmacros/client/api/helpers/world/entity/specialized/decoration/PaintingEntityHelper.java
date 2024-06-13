@@ -21,7 +21,7 @@ public class PaintingEntityHelper extends EntityHelper<PaintingEntity> {
      * @since 1.8.4
      */
     public int getWidth() {
-        return base.getVariant().value().width();
+        return base.getVariant().value().getWidth();
     }
 
     /**
@@ -29,7 +29,7 @@ public class PaintingEntityHelper extends EntityHelper<PaintingEntity> {
      * @since 1.8.4
      */
     public int getHeight() {
-        return base.getVariant().value().height();
+        return base.getVariant().value().getWidth();
     }
 
     /**

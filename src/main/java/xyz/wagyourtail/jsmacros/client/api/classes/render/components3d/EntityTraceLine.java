@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
@@ -54,7 +55,7 @@ public class EntityTraceLine extends TraceLine {
     }
 
     @Override
-    public void render(DrawContext drawContext, float tickDelta) {
+    public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
         if (shouldRemove || entity == null || entity.isRemoved() || entity.getWorld() != mc.world) {
             shouldRemove = true;
             dirty = true;
@@ -67,7 +68,7 @@ public class EntityTraceLine extends TraceLine {
         pos.x = vec.x;
         pos.y = vec.y + yOffset;
         pos.z = vec.z;
-        super.render(drawContext, tickDelta);
+        super.render(drawContext, builder, tickDelta);
     }
 
     public static class Builder {

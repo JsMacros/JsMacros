@@ -2,7 +2,10 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.doclet.DocletIgnore;
@@ -169,7 +172,7 @@ public class Box implements RenderElement3D<Box> {
 
     @Override
     @DocletIgnore
-    public void render(DrawContext drawContext, float tickDelta) {
+    public void render(DrawContext drawContext, BufferBuilder builder, float tickDelta) {
         MatrixStack matrixStack = drawContext.getMatrices();
         final boolean cull = !this.cull;
         int a = (color >> 24) & 0xFF;
@@ -189,6 +192,7 @@ public class Box implements RenderElement3D<Box> {
         }
 
         Tessellator tess = Tessellator.getInstance();
+        BufferBuilder buf = tess.getBuffer();
 
         Matrix4f matrix = matrixStack.peek().getPositionMatrix();
 
@@ -201,70 +205,70 @@ public class Box implements RenderElement3D<Box> {
             //1.15+ culls insides
             RenderSystem.disableCull();
 
-            BufferBuilder buf = tess.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
+            buf.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 
             //draw a cube using triangle strips
-            buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa); // Front-top-left
-            buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa); // Front-top-right
-            buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa); // Front-bottom-left
-            buf.vertex(matrix, x2, y1, z2).color(fr, fg, fb, fa); // Front-bottom-right
-            buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa); // Front-bottom-left
-            buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa); // Front-top-right
-            buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa); // Back-top-right
-            buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa); // Front-top-left
-            buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa); // Back-top-left
-            buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa); // Front-bottom-left
-            buf.vertex(matrix, x1, y1, z1).color(fr, fg, fb, fa); // Back-bottom-left
-            buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa); // Back-bottom-right
-            buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa); // Back-top-left
-            buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa); // Back-top-right
+            buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
+            buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-right
+            buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-left
+            buf.vertex(matrix, x2, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-right
+            buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa).next(); // Front-bottom-left
+            buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-right
+            buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-right
+            buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa).next(); // Front-top-left
+            buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-left
+            buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa).next(); // Front-bottom-left
+            buf.vertex(matrix, x1, y1, z1).color(fr, fg, fb, fa).next(); // Back-bottom-left
+            buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa).next(); // Back-bottom-right
+            buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-left
+            buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa).next(); // Back-top-right
 
-            BufferRenderer.drawWithGlobalProgram(buf.end());
+            tess.draw();
 
             RenderSystem.enableCull();
         }
 
         RenderSystem.lineWidth(2.5F);
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
+        buf.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-        buf.vertex(matrix, x1, y1, z1).color(r, g, b, a);
-        buf.vertex(matrix, x1, y1, z2).color(r, g, b, a);
+        buf.vertex(matrix, x1, y1, z1).color(r, g, b, a).next();
+        buf.vertex(matrix, x1, y1, z2).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x2, y1, z2).color(r, g, b, a);
+        buf.vertex(matrix, x2, y1, z2).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x2, y1, z1).color(r, g, b, a);
+        buf.vertex(matrix, x2, y1, z1).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x1, y1, z1).color(r, g, b, a);
+        buf.vertex(matrix, x1, y1, z1).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x1, y2, z1).color(r, g, b, a);
+        buf.vertex(matrix, x1, y2, z1).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x1, y2, z2).color(r, g, b, a);
+        buf.vertex(matrix, x1, y2, z2).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x2, y2, z2).color(r, g, b, a);
+        buf.vertex(matrix, x2, y2, z2).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x2, y2, z1).color(r, g, b, a);
+        buf.vertex(matrix, x2, y2, z1).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x1, y2, z1).color(r, g, b, a);
+        buf.vertex(matrix, x1, y2, z1).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x1, y2, z1).color(r, g, b, 0);
-        buf.vertex(matrix, x2, y1, z1).color(r, g, b, 0);
+        buf.vertex(matrix, x1, y2, z1).color(r, g, b, 0).next();
+        buf.vertex(matrix, x2, y1, z1).color(r, g, b, 0).next();
 
-        buf.vertex(matrix, x2, y1, z1).color(r, g, b, a);
-        buf.vertex(matrix, x2, y2, z1).color(r, g, b, a);
+        buf.vertex(matrix, x2, y1, z1).color(r, g, b, a).next();
+        buf.vertex(matrix, x2, y2, z1).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x2, y2, z1).color(r, g, b, 0);
-        buf.vertex(matrix, x1, y1, z2).color(r, g, b, 0);
+        buf.vertex(matrix, x2, y2, z1).color(r, g, b, 0).next();
+        buf.vertex(matrix, x1, y1, z2).color(r, g, b, 0).next();
 
-        buf.vertex(matrix, x1, y1, z2).color(r, g, b, a);
-        buf.vertex(matrix, x1, y2, z2).color(r, g, b, a);
+        buf.vertex(matrix, x1, y1, z2).color(r, g, b, a).next();
+        buf.vertex(matrix, x1, y2, z2).color(r, g, b, a).next();
 
-        buf.vertex(matrix, x1, y2, z2).color(r, g, b, 0);
-        buf.vertex(matrix, x2, y1, z2).color(r, g, b, 0);
+        buf.vertex(matrix, x1, y2, z2).color(r, g, b, 0).next();
+        buf.vertex(matrix, x2, y1, z2).color(r, g, b, 0).next();
 
-        buf.vertex(matrix, x2, y1, z2).color(r, g, b, a);
-        buf.vertex(matrix, x2, y2, z2).color(r, g, b, a);
+        buf.vertex(matrix, x2, y1, z2).color(r, g, b, a).next();
+        buf.vertex(matrix, x2, y2, z2).color(r, g, b, a).next();
 
-        BufferRenderer.drawWithGlobalProgram(buf.end());
+        tess.draw();
 
         if (cull) {
             RenderSystem.enableDepthTest();

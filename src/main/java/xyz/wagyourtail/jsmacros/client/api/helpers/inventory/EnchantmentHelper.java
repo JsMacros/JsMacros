@@ -1,11 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -25,23 +21,22 @@ import java.util.stream.Collectors;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
+public class EnchantmentHelper extends BaseHelper<Enchantment> {
 
     private final int level;
 
-    public EnchantmentHelper(RegistryEntry<Enchantment> base) {
+    public EnchantmentHelper(Enchantment base) {
         this(base, 0);
     }
 
-    public EnchantmentHelper(RegistryEntry<Enchantment> base, int level) {
+    public EnchantmentHelper(Enchantment base, int level) {
         super(base);
         this.level = level;
     }
 
     @DocletReplaceParams("enchantment: CanOmitNamespace<EnchantmentId>")
     public EnchantmentHelper(String enchantment) {
-        this(mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Identifier.of(enchantment)).orElseThrow());
+        this(Registries.ENCHANTMENT.get(new Identifier(enchantment)));
     }
 
     /**
@@ -57,7 +52,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public int getMinLevel() {
-        return base.value().getMinLevel();
+        return base.getMinLevel();
     }
 
     /**
@@ -65,7 +60,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public int getMaxLevel() {
-        return base.value().getMaxLevel();
+        return base.getMaxLevel();
     }
 
     /**
@@ -74,7 +69,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public String getLevelName(int level) {
-        return Enchantment.getName(base, level).getString();
+        return base.getName(level).getString();
     }
 
     /**
@@ -97,8 +92,8 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public TextHelper getRomanLevelName(int level) {
-        MutableText mutableText = base.value().description().copy();
-        mutableText.formatted(base.isIn(EnchantmentTags.CURSE) ? Formatting.RED : Formatting.GRAY);
+        MutableText mutableText = Text.translatable(base.getTranslationKey());
+        mutableText.formatted(base.isCursed() ? Formatting.RED : Formatting.GRAY);
         if (level != 1 || this.getMaxLevel() != 1) {
             mutableText.append(" ").append(getRomanNumeral(level));
         }
@@ -126,7 +121,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public String getName() {
-        return base.value().description().getString();
+        return Text.translatable(base.getTranslationKey()).getString();
     }
 
     /**
@@ -135,7 +130,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      */
     @DocletReplaceReturn("EnchantmentId")
     public String getId() {
-        return base.getIdAsString();
+        return Registries.ENCHANTMENT.getId(base).toString();
     }
 
     /**
@@ -155,10 +150,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getConflictingEnchantments(boolean ignoreType) {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries()
-            .filter(e -> !Enchantment.canBeCombined(e, base))
-            .map(EnchantmentHelper::new)
-            .toList();
+        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.getApplicableItems().equals(base.getApplicableItems())) && !e.canCombine(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -178,10 +170,16 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getCompatibleEnchantments(boolean ignoreType) {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries()
-            .filter(e -> Enchantment.canBeCombined(e, base))
-            .map(EnchantmentHelper::new)
-            .toList();
+        return Registries.ENCHANTMENT.stream().filter(e -> e != base && (ignoreType || e.getApplicableItems().equals(base.getApplicableItems()))).map(EnchantmentHelper::new).collect(Collectors.toList());
+    }
+
+    /**
+     * @return the type of item this enchantment is compatible with.
+     * @since 1.8.4
+     */
+    @DocletReplaceReturn("EnchantmentTargetType")
+    public String getTargetType() {
+        return base.getApplicableItems().id().toString();
     }
 
     /**
@@ -193,7 +191,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public int getWeight() {
-        return base.value().getWeight();
+        return base.getWeight();
     }
 
     /**
@@ -206,7 +204,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public boolean isCursed() {
-        return base.isIn(EnchantmentTags.CURSE);
+        return base.isCursed();
     }
 
     /**
@@ -217,7 +215,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public boolean isTreasure() {
-        return base.isIn(EnchantmentTags.TREASURE);
+        return base.isTreasure();
     }
 
     /**
@@ -227,7 +225,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public boolean canBeApplied(ItemHelper item) {
-        return base.value().isAcceptableItem(item.getRaw().getDefaultStack());
+        return base.isAcceptableItem(item.getRaw().getDefaultStack());
     }
 
     /**
@@ -237,7 +235,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public boolean canBeApplied(ItemStackHelper item) {
-        return base.value().isAcceptableItem(item.getRaw()) && item.getRaw().getEnchantments().getEnchantments().stream().allMatch(e -> Enchantment.canBeCombined(e, base));
+        return base.isAcceptableItem(item.getRaw()) && item.getEnchantments().stream().allMatch(e -> e.isCompatible(this));
     }
 
     /**
@@ -245,7 +243,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public List<ItemHelper> getAcceptableItems() {
-        return base.value().definition().supportedItems().stream().map(e -> new ItemHelper(e.value())).toList();
+        return Registries.ITEM.stream().filter(item -> base.isAcceptableItem(item.getDefaultStack())).map(ItemHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -256,7 +254,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      */
     @DocletReplaceParams("enchantment: CanOmitNamespace<EnchantmentId>")
     public boolean isCompatible(String enchantment) {
-        return Enchantment.canBeCombined(mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Identifier.of(enchantment)).orElseThrow(), base);
+        return base.canCombine(Registries.ENCHANTMENT.get(RegistryHelper.parseIdentifier(enchantment)));
     }
 
     /**
@@ -266,7 +264,7 @@ public class EnchantmentHelper extends BaseHelper<RegistryEntry<Enchantment>> {
      * @since 1.8.4
      */
     public boolean isCompatible(EnchantmentHelper enchantment) {
-        return Enchantment.canBeCombined(enchantment.getRaw(), base);
+        return base.canCombine(enchantment.getRaw());
     }
 
     /**

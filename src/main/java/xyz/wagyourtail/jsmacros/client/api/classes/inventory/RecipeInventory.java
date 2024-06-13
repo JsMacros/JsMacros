@@ -30,9 +30,9 @@ import java.util.stream.Stream;
  * @since 1.8.4
  */
 @SuppressWarnings("unused")
-public abstract class RecipeInventory<T extends HandledScreen<? extends AbstractRecipeScreenHandler<?, ?>>> extends Inventory<T> {
+public abstract class RecipeInventory<T extends HandledScreen<? extends AbstractRecipeScreenHandler<?>>> extends Inventory<T> {
 
-    private final AbstractRecipeScreenHandler<?, ?> handler;
+    private final AbstractRecipeScreenHandler<?> handler;
 
     protected RecipeInventory(T inventory) {
         super(inventory);

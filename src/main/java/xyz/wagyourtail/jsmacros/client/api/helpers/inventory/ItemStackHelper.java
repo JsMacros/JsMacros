@@ -14,9 +14,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.predicate.BlockPredicate;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
@@ -116,7 +114,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
         List<EnchantmentHelper> enchantments = new ArrayList<>();
         ItemEnchantmentsComponent lv = base.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT);
         for (RegistryEntry<Enchantment> enchantment : lv.getEnchantments()) {
-            enchantments.add(new EnchantmentHelper(enchantment, lv.getLevel(enchantment)));
+            enchantments.add(new EnchantmentHelper(enchantment.value(), lv.getLevel(enchantment.value())));
         }
         return enchantments;
     }
@@ -170,9 +168,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantments() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries()
-            .filter(enchantment -> enchantment.value().isAcceptableItem(base))
-            .map(EnchantmentHelper::new).toList();
+        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.isAcceptableItem(base)).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -180,11 +176,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getPossibleEnchantmentsFromTable() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntryList(EnchantmentTags.IN_ENCHANTING_TABLE)
-            .map(registryEntries -> registryEntries.stream()
-                .filter(enchantment -> enchantment.value().isAcceptableItem(base))
-                .map(EnchantmentHelper::new).toList())
-            .orElse(Collections.emptyList());
+        return Registries.ENCHANTMENT.stream().filter(enchantment -> enchantment.isAcceptableItem(base) && !enchantment.isCursed() && !enchantment.isTreasure()).map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -453,7 +445,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.6.5
      */
     public float getCooldownProgress() {
-        return mc.player.getItemCooldownManager().getCooldownProgress(base.getItem(), mc.getRenderTickCounter().getTickDelta(false));
+        return mc.player.getItemCooldownManager().getCooldownProgress(base.getItem(), mc.getTickDelta());
     }
 
     /**

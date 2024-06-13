@@ -13,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -813,7 +812,6 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
      * @since 1.8.4
      */
     public int calculateMiningSpeed(ItemStackHelper usedItem, BlockStateHelper blockState) {
-        var enchRegistry = mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT);
         PlayerEntity player = mc.player;
         BlockState state = blockState.getRaw();
         ItemStack item = usedItem.getRaw();
@@ -829,7 +827,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
         }
         float speedMultiplier = item.getMiningSpeedMultiplier(state);
         if (speedMultiplier > 1.0F) {
-            int efficiency = enchRegistry.getEntry(Enchantments.EFFICIENCY).map(e -> EnchantmentHelper.getLevel(e, item)).orElse(0);
+            int efficiency = EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, item);
             if (efficiency > 0 && !item.isEmpty()) {
                 speedMultiplier += (efficiency * efficiency + 1F);
             }
@@ -853,7 +851,7 @@ public class ClientPlayerEntityHelper<T extends ClientPlayerEntity> extends Play
                     break;
             }
         }
-        if (player.isSubmergedIn(FluidTags.WATER) && enchRegistry.getEntry(Enchantments.AQUA_AFFINITY).map(e -> EnchantmentHelper.getLevel(e, item)).orElse(0) == 0) {
+        if (player.isSubmergedIn(FluidTags.WATER) && EnchantmentHelper.getLevel(Enchantments.AQUA_AFFINITY, item) == 0) {
             speedMultiplier /= 5;
         }
         if (!player.isOnGround()) {

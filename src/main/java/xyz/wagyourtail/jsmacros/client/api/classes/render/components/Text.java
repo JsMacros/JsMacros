@@ -4,7 +4,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
@@ -274,7 +273,8 @@ public class Text implements RenderElement, Alignable<Text> {
         MatrixStack matrices = drawContext.getMatrices();
         matrices.push();
         setupMatrix(matrices, x, y, (float) scale, rotation, getWidth(), getHeight(), rotateCenter);
-        VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(new BufferAllocator(1536));
+        Tessellator tess = Tessellator.getInstance();
+        VertexConsumerProvider.Immediate buffer = VertexConsumerProvider.immediate(tess.getBuffer());
         mc.textRenderer.draw(
                 text,
                 (float) x,
