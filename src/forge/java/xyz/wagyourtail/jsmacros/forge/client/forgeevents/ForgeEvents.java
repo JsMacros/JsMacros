@@ -104,7 +104,7 @@ public class ForgeEvents {
         for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
             try {
                 DrawContext drawContext = DRAW_CONTEXT_CONSTRUCTOR.newInstance(client, e.getPoseStack(), client.getBufferBuilders().getEntityVertexConsumers());
-                d.render(drawContext, e.getPartialTick().getLastFrameDuration());
+                d.render(drawContext, e.getPartialTick().getLastDuration());
             } catch (Throwable t) {
                 t.printStackTrace();
             }

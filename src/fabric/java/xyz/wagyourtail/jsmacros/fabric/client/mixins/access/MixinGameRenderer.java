@@ -60,7 +60,7 @@ public class MixinGameRenderer {
             DrawContext drawContext = DRAW_CONTEXT_CONSTRUCTOR.newInstance(client, ms, client.getBufferBuilders().getEntityVertexConsumers());
             for (Draw3D d : ImmutableSet.copyOf(FHud.renders)) {
                 try {
-                    d.render(drawContext, tickCounter.getLastFrameDuration());
+                    d.render(drawContext, tickCounter.getLastDuration());
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
