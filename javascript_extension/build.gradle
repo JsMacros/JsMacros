@@ -68,7 +68,7 @@ tasks.withType(JavaCompile).configureEach {
 
 processResources {
     filesMatching("jsmacros.ext.graal.json") {
-        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+        expand "dependencies": configurations.jsmacrosExtensionInclude.filter{ it.name.endsWith("jar") }.collect { it.name }.join(" ")
     }
 }
 

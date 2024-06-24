@@ -15,6 +15,9 @@ public class BaseEvent {
         return cancellable() || this.getClass().getAnnotation(Event.class).joinable();
     }
 
+    /**
+     * Cancel the event
+     */
     public final void cancel() {
         if (cancellable()) {
             cancelled = true;

@@ -257,7 +257,9 @@ class MixinClientPlayNetworkHandler {
             assert client.player != null;
             new EventContainerUpdate(new InventoryScreen(client.player)).trigger();
         } else {
-            new EventContainerUpdate((HandledScreen<?>) this.client.currentScreen).trigger();
+            if (this.client.currentScreen instanceof HandledScreen<?>) {
+                new EventContainerUpdate((HandledScreen<?>) this.client.currentScreen).trigger();
+            }
         }
     }
 
