@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 
 import java.io.*;
+import java.lang.ref.Cleaner;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
@@ -160,12 +161,21 @@ public class FileHandler {
     }
 
     public static class FileLineIterator implements Iterator<String>, AutoCloseable {
+        private static final Cleaner CLEANER = Cleaner.create();
+
         private final BufferedReader reader;
         private String nextLine;
 
         public FileLineIterator(File file, Charset charset) throws IOException {
-            this.reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
             this.nextLine = reader.readLine();
+            CLEANER.register(this, () -> {
+                try {
+                    reader.close();
+                } catch (IOException ignored) {
+                }
+            });
+            this.reader = reader;
         }
 
         @Override
@@ -187,12 +197,6 @@ public class FileHandler {
         @Override
         public void close() throws IOException {
             reader.close();
-        }
-
-        @Override
-        protected void finalize() throws Throwable {
-            super.finalize();
-            close();
         }
 
     }
