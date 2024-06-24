@@ -12,9 +12,6 @@ base {
 java {
     sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
     targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(project.java_version))
-    }
 }
 
 version = project.mod_version
@@ -172,7 +169,7 @@ dependencies {
 
         fabricRuntimeOnly(project(":javascript_extension")) { transitive = false }
         fabricRuntimeOnly "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-        fabricRuntimeOnly "org.graalvm.js:js:${project.graal_version}"
+        fabricRuntimeOnly "org.graalvm.polyglot:js:${project.graal_version}"
         fabricRuntimeOnly "org.graalvm.truffle:truffle-api:${project.graal_version}"
         fabricRuntimeOnly "org.graalvm.regex:regex:${project.graal_version}"
 
@@ -190,7 +187,7 @@ dependencies {
 
         forgeRuntimeOnly(project(":javascript_extension")) { transitive = false }
         forgeRuntimeOnly "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-        forgeRuntimeOnly "org.graalvm.js:js:${project.graal_version}"
+        forgeRuntimeOnly "org.graalvm.polyglot:js:${project.graal_version}"
         forgeRuntimeOnly "org.graalvm.truffle:truffle-api:${project.graal_version}"
         forgeRuntimeOnly "org.graalvm.regex:regex:${project.graal_version}"
 

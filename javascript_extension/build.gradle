@@ -10,11 +10,15 @@ base {
 java {
     sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
     targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+}
 
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(project.java_version))
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+
+    var javaVersion = project.java_version.toInteger()
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release.set javaVersion
     }
-
 }
 
 configurations {
@@ -32,14 +36,14 @@ dependencies {
     implementation "it.unimi.dsi:fastutil:8.5.6"
 
     implementation "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    implementation "org.graalvm.js:js:${project.graal_version}"
+    implementation "org.graalvm.polyglot:js:${project.graal_version}"
     implementation "org.graalvm.truffle:truffle-api:${project.graal_version}"
     implementation "org.graalvm.regex:regex:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler:${project.graal_version}"
 //		implementation "org.graalvm.compiler:compiler-management:${project.graal_version}"
 
     jsmacrosExtensionInclude "org.graalvm.sdk:graal-sdk:${project.graal_version}"
-    jsmacrosExtensionInclude "org.graalvm.js:js:${project.graal_version}"
+    jsmacrosExtensionInclude "org.graalvm.polyglot:js:${project.graal_version}"
     jsmacrosExtensionInclude "org.graalvm.truffle:truffle-api:${project.graal_version}"
     jsmacrosExtensionInclude "org.graalvm.regex:regex:${project.graal_version}"
 //		jsmacrosExtensionInclude "org.graalvm.compiler:compiler:${project.graal_version}"
@@ -64,7 +68,7 @@ tasks.withType(JavaCompile).configureEach {
 
 processResources {
     filesMatching("jsmacros.ext.graal.json") {
-        expand "dependencies": configurations.jsmacrosExtensionInclude.files.collect { it.name }.join(" ")
+        expand "dependencies": configurations.jsmacrosExtensionInclude.filter{ it.name.endsWith("jar") }.collect { it.name }.join(" ")
     }
 }
 

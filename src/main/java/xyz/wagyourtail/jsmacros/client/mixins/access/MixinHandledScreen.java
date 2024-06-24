@@ -39,12 +39,12 @@ public class MixinHandledScreen<T extends ScreenHandler> extends Screen implemen
     protected int y;
 
     @Override
-    public int getX() {
+    public int jsmacros$getX() {
         return x;
     }
 
     @Override
-    public int getY() {
+    public int jsmacros$getY() {
         return y;
     }
 
