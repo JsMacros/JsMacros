@@ -151,9 +151,9 @@ dependencies {
     compileOnly "org.spongepowered:mixin:0.8.5"
     implementation "org.ow2.asm:asm:9.3"
 
-    coreImplementation "org.jooq:joor:0.9.14"
-    coreImplementation "com.neovisionaries:nv-websocket-client:2.10"
-    coreImplementation "org.javassist:javassist:3.28.0-GA"
+    coreImplementation 'org.jooq:joor:0.9.15'
+    coreImplementation "com.neovisionaries:nv-websocket-client:2.14"
+    coreImplementation 'org.javassist:javassist:3.30.2-GA'
 
     jsmacrosExtensionInclude(project(":javascript_extension")) { transitive = false }
 
@@ -172,8 +172,8 @@ dependencies {
         fabricInclude fabricApi.fabricModule("fabric-command-api-v2", project.fapi_version)
 
         fabricInclude "io.noties:prism4j:${project.prism_version}"
-        fabricInclude "com.neovisionaries:nv-websocket-client:2.10"
-        fabricInclude "org.javassist:javassist:3.28.0-GA"
+        fabricInclude "com.neovisionaries:nv-websocket-client:2.14"
+        fabricInclude "org.javassist:javassist:3.30.2-GA"
         fabricInclude "org.jooq:joor:0.9.14"
 
         fabricModImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
@@ -189,12 +189,12 @@ dependencies {
 
     if (enabled_loaders.contains("forge")) {
 
-        shadowForge "io.noties:prism4j:${project.prism_version}", {
+        forgeInclude "io.noties:prism4j:${project.prism_version}", {
             exclude module: "annotations-java5"
         }
-        shadowForge "com.neovisionaries:nv-websocket-client:2.10"
-        shadowForge "org.javassist:javassist:3.28.0-GA"
-        shadowForge "org.jooq:joor:0.9.14"
+        forgeInclude "com.neovisionaries:nv-websocket-client:2.14"
+        forgeInclude "org.javassist:javassist:3.30.2-GA"
+        forgeInclude "org.jooq:joor:0.9.14"
 
 
         forgeRuntimeOnly(project(":javascript_extension")) { transitive = false }
