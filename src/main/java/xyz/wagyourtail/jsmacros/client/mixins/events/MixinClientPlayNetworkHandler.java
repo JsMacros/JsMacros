@@ -95,6 +95,17 @@ class MixinClientPlayNetworkHandler {
         }
     }
 
+    @ModifyArg(method = "onOverlayMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;setOverlayMessage(Lnet/minecraft/text/Text;Z)V"))
+    public Text onOverlayMessage(Text title) {
+        EventTitle et = new EventTitle("ACTIONBAR", title);
+        et.trigger();
+        if (et.message == null || et.isCanceled()) {
+            return null;
+        } else {
+            return et.message.getRaw();
+        }
+    }
+
     @Inject(at = @At("TAIL"), method = "onBossBar")
     public void onBossBar(BossBarS2CPacket packet, CallbackInfo info) {
         packet.accept(new BossBarConsumer());
@@ -206,7 +217,9 @@ class MixinClientPlayNetworkHandler {
             assert client.player != null;
             new EventContainerUpdate(new InventoryScreen(client.player)).trigger();
         } else {
-            new EventContainerUpdate((HandledScreen<?>) this.client.currentScreen).trigger();
+            if (this.client.currentScreen instanceof HandledScreen<?>) {
+                new EventContainerUpdate((HandledScreen<?>) this.client.currentScreen).trigger();
+            }
         }
     }
 

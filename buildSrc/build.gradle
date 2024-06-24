@@ -10,9 +10,10 @@ repositories {
     mavenCentral()
 }
 
-
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 dependencies {
     implementation gradleApi()
@@ -20,4 +21,10 @@ dependencies {
     implementation group: 'commons-io', name: 'commons-io', version: '2.7'
 
     implementation "xyz.wagyourtail.unimined:unimined:1.2.6-SNAPSHOT"
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+
+    options.release.set 17
 }

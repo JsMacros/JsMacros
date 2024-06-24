@@ -559,8 +559,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     @Override
-    public String getTitleText() {
-        return title.getString();
+    public TextHelper getTitleText() {
+        return TextHelper.wrap(title);
     }
 
     @Override
