@@ -60,8 +60,6 @@ public class MixinGameRenderer {
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-        } catch (Throwable e) {
-            e.printStackTrace();
         }
         client.getProfiler().pop();
     }
