@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec2D;
@@ -29,9 +30,9 @@ public interface IScreen extends IDraw2D<IScreen> {
 
     /**
      * @return
-     * @since 1.0.5
+     * @since 1.0.5 (TextHelper since 1.9.3)
      */
-    String getTitleText();
+    TextHelper getTitleText();
 
     /**
      * in {@code 1.3.1} updated to work with all button widgets not just ones added by scripts.
