@@ -177,12 +177,12 @@ dependencies {
 
     if (enabled_loaders.contains("forge")) {
 
-        forgeInclude "io.noties:prism4j:${project.prism_version}", {
+        shadowForge "io.noties:prism4j:${project.prism_version}", {
             exclude module: "annotations-java5"
         }
-        forgeInclude "com.neovisionaries:nv-websocket-client:2.14"
-        forgeInclude "org.javassist:javassist:3.30.2-GA"
-        forgeInclude "org.jooq:joor:0.9.14"
+        shadowForge "com.neovisionaries:nv-websocket-client:2.14"
+        shadowForge "org.javassist:javassist:3.30.2-GA"
+        shadowForge "org.jooq:joor:0.9.14"
 
 
         forgeRuntimeOnly(project(":javascript_extension")) { transitive = false }
