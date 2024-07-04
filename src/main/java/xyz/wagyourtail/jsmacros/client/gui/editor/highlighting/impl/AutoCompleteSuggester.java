@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl;
 import xyz.wagyourtail.StringHashTrie;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.extensions.Extension;
+import xyz.wagyourtail.jsmacros.core.extensions.LanguageExtension;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;
 
@@ -42,7 +43,7 @@ public class AutoCompleteSuggester {
 
     private void generateSuggestionTree() {
         LibraryRegistry registry = Core.getInstance().libraryRegistry;
-        Extension ex = Core.getInstance().extensions.getExtensionForFile(new File(language));
+        LanguageExtension ex = Core.getInstance().extensions.getExtensionForFile(new File(language));
         if (ex == null) {
             ex = Core.getInstance().extensions.getHighestPriorityExtension();
         }

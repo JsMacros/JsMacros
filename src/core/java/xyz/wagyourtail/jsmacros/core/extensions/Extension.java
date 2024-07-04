@@ -1,13 +1,9 @@
 package xyz.wagyourtail.jsmacros.core.extensions;
 
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
-import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
-import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 
-import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
@@ -19,12 +15,14 @@ import java.util.stream.Collectors;
 
 public interface Extension {
 
+    String getExtensionName();
+
     /**
      * @return the *minimum* version of the jsMacros core that this extension is compatible with.
      * @since 1.9.0
      */
     default String minCoreVersion() {
-        return "1.8.0";
+        return "2.0.0";
     }
 
     /**
@@ -33,33 +31,13 @@ public interface Extension {
      * @return
      */
     default String maxCoreVersion() {
-        //TODO: update this when there's a breaking change
-        switch (minCoreVersion()) {
-            case "1.8.0":
-            default:
-                return "1.9.0";
-        }
+        return "2.0.0";
     }
 
     void init();
 
-    int getPriority();
-
-    String getLanguageImplName();
-
-    ExtMatch extensionMatch(File file);
-
-    String defaultFileExtension();
-
-    /**
-     * @return a single static instance of the language definition
-     */
-    BaseLanguage<?, ?> getLanguage(Core<?, ?> runner);
-
-    Set<Class<? extends BaseLibrary>> getLibraries();
-
     default Set<URL> getDependencies() {
-        return getDependenciesInternal(this.getClass(), "jsmacros.ext." + getLanguageImplName() + ".json");
+        return getDependenciesInternal(this.getClass(), "jsmacros.ext." + getExtensionName() + ".json");
     }
 
     static Set<URL> getDependenciesInternal(Class<?> clazz, String fname) {
@@ -90,10 +68,8 @@ public interface Extension {
         return dependenciesSet;
     }
 
-    BaseWrappedException<?> wrapException(Throwable t);
-
     default Map<String, String> getTranslations(String lang) {
-        return getTranslationsInternal(this.getClass(), "assets/jsmacros/" + getLanguageImplName() + "/lang/" + lang + ".json");
+        return getTranslationsInternal(this.getClass(), "assets/jsmacros/" + getExtensionName() + "/lang/" + lang + ".json");
     }
 
     static Map<String, String> getTranslationsInternal(Class<?> clazz, String fname) {
@@ -108,24 +84,6 @@ public interface Extension {
             return json.getAsJsonObject().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, v -> v.getValue().getAsString()));
         }
         return new HashMap<>();
-    }
-
-    boolean isGuestObject(Object o);
-
-    enum ExtMatch {
-        NOT_MATCH(false),
-        MATCH(true),
-        MATCH_WITH_NAME(true);
-
-        boolean match;
-
-        ExtMatch(boolean match) {
-            this.match = match;
-        }
-
-        public boolean isMatch() {
-            return match;
-        }
     }
 
 }

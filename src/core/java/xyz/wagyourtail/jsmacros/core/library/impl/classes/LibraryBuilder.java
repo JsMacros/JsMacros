@@ -3,6 +3,8 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
 import xyz.wagyourtail.jsmacros.core.Core;
+import xyz.wagyourtail.jsmacros.core.extensions.Extension;
+import xyz.wagyourtail.jsmacros.core.extensions.LanguageExtension;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.*;
@@ -24,10 +26,14 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
         super(name, (Class<BaseLibrary>) (perExec ? (allowedLangs.length > 0 ? PerExecLanguageLibrary.class : PerExecLibrary.class) : (allowedLangs.length > 0 ?
                 PerLanguageLibrary.class : BaseLibrary.class)));
         AnnotationBuilder b = this.addAnnotation(Library.class).putString("value", name);
-        Class<?>[] allowed = new Class<?>[allowedLangs.length];
+        List<Class<?>> allowed = new ArrayList<>();
         for (int i = 0; i < allowedLangs.length; i++) {
-            int finalI = i;
-            allowed[i] = Optional.ofNullable(Core.getInstance().extensions.getExtensionForName(allowedLangs[i]).getLanguage(Core.getInstance()).getClass()).orElseThrow(() -> new AssertionError("Language " + allowedLangs[finalI] + " not found!"));
+            Extension ext = Core.getInstance().extensions.getExtensionForName(allowedLangs[i]);
+            if (ext instanceof LanguageExtension l) {
+                allowed.add(l.getLanguage(Core.getInstance()).getClass());
+            } else {
+                throw new IllegalArgumentException("Language not found: " + allowedLangs[i]);
+            }
         }
         AnnotationBuilder.AnnotationArrayBuilder ab = b.putArray("allowedLanguages");
         for (Class<?> c : allowed) {

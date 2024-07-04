@@ -1,0 +1,21 @@
+
+
+dependencies {
+    jsmacrosExtensionInclude "org.graalvm.sdk:graal-sdk:${project.graal_version}"
+    jsmacrosExtensionInclude "org.graalvm.truffle:truffle-api:${project.graal_version}"
+    jsmacrosExtensionInclude "org.graalvm.regex:regex:${project.graal_version}"
+}
+
+var projectPath = project.path
+
+subprojects {
+
+    dependencies {
+        implementation project(projectPath)
+        implementation(parent.configurations.jsmacrosExtensionInclude.dependencies)
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

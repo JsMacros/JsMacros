@@ -1,0 +1,68 @@
+plugins {
+    id "java"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    base {
+        archivesName = project.archives_base_name + "-${project.name}-extension"
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+        targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+
+        var javaVersion = project.java_version.toInteger()
+        if (JavaVersion.current().isJava9Compatible()) {
+            options.release.set javaVersion
+        }
+    }
+
+    configurations {
+        jsmacrosExtensionInclude
+        implementation.extendsFrom(jsmacrosExtensionInclude)
+    }
+
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://libraries.minecraft.net/"
+        }
+    }
+
+    dependencies {
+        implementation rootProject.configurations.minecraftLibraries.dependencies
+        implementation rootProject.configurations.implementation.dependencies
+        implementation rootProject.sourceSets.core.output
+
+
+    }
+
+    afterEvaluate {
+        var includeFiles = files(configurations.jsmacrosExtensionInclude) - files(parent.configurations.findByName("jsmacrosExtensionInclude") ?: []).filter{ it.name.endsWith("jar") }
+
+        jar {
+            from(includeFiles) {
+                include '*'
+                into "META-INF/jsmacrosdeps"
+            }
+
+            preserveFileTimestamps = false
+            reproducibleFileOrder = true
+        }
+
+        processResources {
+            filesMatching("jsmacros.ext.*.json") {
+                expand "dependencies": includeFiles.collect { it.name }.join(" ")
+            }
+        }
+    }
+
+}
