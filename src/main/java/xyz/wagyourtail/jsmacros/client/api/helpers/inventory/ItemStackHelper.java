@@ -127,10 +127,12 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * enchanted with the specified enchantment.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: EnchantmentId")
+    @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>")
     @Nullable
     public EnchantmentHelper getEnchantment(String id) {
-        return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getName().equals(id)).findFirst().orElse(null);
+        String fullId = RegistryHelper.parseNameSpace(id);
+        // name filter stays for backward compatibility
+        return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getId().equals(fullId) || enchantmentHelper.getName().equals(id)).findFirst().orElse(null);
     }
 
     /**
