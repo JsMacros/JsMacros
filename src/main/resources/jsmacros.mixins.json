@@ -44,6 +44,8 @@
     "access.MixinPackedIntegerArray",
     "access.MixinPalettedContainer",
     "access.MixinPalettedContainerData",
+    "access.MixinParticle",
+    "access.MixinParticleManager",
     "access.MixinPhaseType",
     "access.MixinPlayerEntity",
     "access.MixinPlayerListHud",
