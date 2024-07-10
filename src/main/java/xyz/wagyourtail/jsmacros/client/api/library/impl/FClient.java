@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.MessageScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.multiplayer.ConnectScreen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.realms.gui.screen.RealmsMainScreen;
@@ -481,7 +482,10 @@ public class FClient extends PerExecLibrary {
      * @since 1.8.4
      */
     public void sendPacket(Packet<?> packet) {
-        mc.getNetworkHandler().sendPacket(packet);
+        ClientPlayNetworkHandler network = mc.getNetworkHandler();
+        if (network != null) {
+            network.sendPacket(packet);
+        }
     }
 
     /**
