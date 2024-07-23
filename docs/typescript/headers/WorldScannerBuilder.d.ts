@@ -72,6 +72,7 @@ declare namespace TypedWorldScannerBuilder {
 
   interface StringFilter<T extends string = string> {
 
+    is(operation: 'EQUALS', compareTo: T): Main; // for ts performance
     is<M extends StringFilterOperation, S extends string>(operation: M, compareTo: StringCompareTo<M, T, S>): Main;
     // test<M extends StringFilterOperation>(operation: M, compareTo: StringCompareTo<M, T>): Main;
     // is<M extends StringFilterOperation>(methodArgs: []?, filterArgs: [operation: M, compareTo: StringCompareTo<M, T>]): Main;

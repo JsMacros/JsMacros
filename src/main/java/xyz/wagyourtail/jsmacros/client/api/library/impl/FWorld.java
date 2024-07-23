@@ -432,7 +432,7 @@ public class FWorld extends BaseLibrary {
      */
     @Nullable
     @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
-    @DocletReplaceParams("...types: E[]")
+    @DocletReplaceParams("...types: JavaVarArgs<E>")
     @DocletReplaceReturn("JavaList<EntityTypeFromId<E>> | null")
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
@@ -461,7 +461,7 @@ public class FWorld extends BaseLibrary {
      */
     @Nullable
     @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
-    @DocletReplaceParams("distance: double, ...types: E[]")
+    @DocletReplaceParams("distance: double, ...types: JavaVarArgs<E>")
     @DocletReplaceReturn("JavaList<EntityTypeFromId<E>> | null")
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         ClientPlayerEntity player = mc.player;

@@ -219,7 +219,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * empty slots.
      * @since 1.8.4
      */
-    @DocletReplaceParams("...mapIdentifiers: InvMapId[]")
+    @DocletReplaceParams("...mapIdentifiers: JavaVarArgs<InvMapId>")
     public int findFreeSlot(String... mapIdentifiers) {
         for (int slot : getSlots(mapIdentifiers)) {
             if (getSlot(slot).isEmpty()) {
@@ -253,7 +253,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return a list of all items in the given inventory sections.
      * @since 1.8.4
      */
-    @DocletReplaceParams("...mapIdentifiers: InvMapId[]")
+    @DocletReplaceParams("...mapIdentifiers: JavaVarArgs<InvMapId>")
     public List<ItemStackHelper> getItems(String... mapIdentifiers) {
         return Arrays.stream(getSlots(mapIdentifiers)).mapToObj(this::getSlot).filter(i -> !i.isEmpty()).collect(Collectors.toList());
     }
@@ -294,7 +294,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @return all slots indexes in the given inventory sections.
      * @since 1.8.4
      */
-    @DocletReplaceParams("...mapIdentifiers: InvMapId[]")
+    @DocletReplaceParams("...mapIdentifiers: JavaVarArgs<InvMapId>")
     public int[] getSlots(String... mapIdentifiers) {
         Map<String, int[]> map = getMap();
         IntList slots = new IntArrayList();
@@ -532,7 +532,7 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     @SuppressWarnings("SpellCheckingInspection")
     @DocletReplaceTypeParams("T extends ScreenName")
-    @DocletReplaceParams("...anyOf: T[]")
+    @DocletReplaceParams("...anyOf: JavaVarArgs<T>")
     @DocletReplaceReturn("this is T extends keyof InvNameToTypeMap ? InvNameToTypeMap[keyof InvNameToTypeMap] extends InvNameToTypeMap[T] ? Inventory : InvNameToTypeMap[T] : this")
     @DocletDeclareType(name = "InvNameToTypeMap", type =
             """
