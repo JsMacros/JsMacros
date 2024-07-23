@@ -330,6 +330,7 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
                 } catch (Exception e) {
                     Core.getInstance().profile.logError(e);
                 }
+                clickedOn(screen);
             });
             b.set(new CyclingButtonWidgetHelper<>(cyclingButton, getZIndex()));
             return b.get();
