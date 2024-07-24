@@ -39,7 +39,8 @@ public class EventService extends BaseEvent {
     @Nullable
     BaseScriptContext<?> ctx = null;
 
-    public EventService(String name) {
+    public EventService(Core<?, ?> runner, String name) {
+        super(runner);
         this.serviceName = name;
     }
 
@@ -135,7 +136,7 @@ public class EventService extends BaseEvent {
      * @since 1.6.5
      */
     public Object putObject(String name, Object o) {
-        if (Core.getInstance().extensions.isGuestObject(o)) {
+        if (runner.extensions.isGuestObject(o)) {
             throw new AssertionError("Cannot put a guest object into event");
         }
         args.put(name, o);

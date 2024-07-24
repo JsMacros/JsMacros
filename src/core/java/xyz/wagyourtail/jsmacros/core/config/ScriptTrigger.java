@@ -15,7 +15,7 @@ public class ScriptTrigger {
     public boolean joined;
 
     public ScriptTrigger(TriggerType triggerType, String event, File scriptFile, boolean enabled, boolean joined) {
-        this(triggerType, event, Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(scriptFile.getAbsoluteFile().toPath()).toString(), enabled, joined);
+        this(triggerType, event, scriptFile.getPath(), enabled, joined);
     }
 
     @Deprecated

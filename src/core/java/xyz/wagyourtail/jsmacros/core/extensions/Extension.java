@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.extensions;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -34,7 +35,7 @@ public interface Extension {
         return "2.0.0";
     }
 
-    void init();
+    void init(Core<?, ?> runner);
 
     default Set<URL> getDependencies() {
         return getDependenciesInternal(this.getClass(), "jsmacros.ext." + getExtensionName() + ".json");

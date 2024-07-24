@@ -26,7 +26,6 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
-import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.function.Predicate;
 import java.util.stream.Collectors;

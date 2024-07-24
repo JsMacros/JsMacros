@@ -20,26 +20,17 @@ public class IllagerEntityHelper<T extends IllagerEntity> extends MobEntityHelpe
 
     public String getState() {
         // Yarn and mojang mappings have the same names
-        switch (base.getState()) {
-            case CROSSED:
-                return "CROSSED";
-            case ATTACKING:
-                return "ATTACKING";
-            case SPELLCASTING:
-                return "SPELLCASTING";
-            case BOW_AND_ARROW:
-                return "BOW_AND_ARROW";
-            case CROSSBOW_HOLD:
-                return "CROSSBOW_HOLD";
-            case CROSSBOW_CHARGE:
-                return "CROSSBOW_CHARGE";
-            case CELEBRATING:
-                return "CELEBRATING";
-            case NEUTRAL:
-                return "NEUTRAL";
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (base.getState()) {
+            case CROSSED -> "CROSSED";
+            case ATTACKING -> "ATTACKING";
+            case SPELLCASTING -> "SPELLCASTING";
+            case BOW_AND_ARROW -> "BOW_AND_ARROW";
+            case CROSSBOW_HOLD -> "CROSSBOW_HOLD";
+            case CROSSBOW_CHARGE -> "CROSSBOW_CHARGE";
+            case CELEBRATING -> "CELEBRATING";
+            case NEUTRAL -> "NEUTRAL";
+            default -> throw new IllegalArgumentException();
+        };
     }
 
 }

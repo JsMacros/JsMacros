@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import xyz.wagyourtail.jsmacros.core.library.impl.FJsMacros;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -135,7 +136,7 @@ public class ServiceManager {
             return ServiceStatus.UNKNOWN;
         }
         if (service.getU() == null || service.getU().getCtx().isContextClosed()) {
-            EventService event = new EventService(name);
+            EventService event = new EventService(runner, name);
             EventContainer<?> container = runner.exec(service.getT().toScriptTrigger(), event);
             service.setU(container);
             event.ctx = container.getCtx();
@@ -171,7 +172,7 @@ public class ServiceManager {
             runner.profile.logError(t);
         }
 
-        BaseEventRegistry reg = Core.getInstance().eventRegistry;
+        BaseEventRegistry reg = runner.eventRegistry;
         if (event.offEventsOnStop) {
             for (Map.Entry<IEventListener, String> ent : ctx.eventListeners.entrySet()) {
                 reg.removeListener(ent.getValue(), ent.getKey());
@@ -429,17 +430,17 @@ public class ServiceManager {
             return;
         }
         for (Map.Entry<String, Pair<ServiceTrigger, EventContainer<?>>> service : registeredServices.entrySet()) {
-            String file = service.getValue().getT().file;
+            File file = service.getValue().getT().file;
             String name = service.getKey();
             // Only restart enabled and running services, i.e. services that are supposed to be running
             // If the service is not running because it crashed, try to restart it
             if (isEnabled(name) && (isRunning(name) || crashedServices.contains(name))) {
-                long lastModified = runner.config.macroFolder.getAbsoluteFile().toPath().resolve(file).toFile().lastModified();
-                if (!lastModifiedMap.containsKey(file)) {
-                    lastModifiedMap.put(file, lastModified);
+                long lastModified = file.lastModified();
+                if (!lastModifiedMap.containsKey(file.getPath())) {
+                    lastModifiedMap.put(file.getPath(), lastModified);
                     // Just assume that if the file was changed so was its content. Otherwise, use Adler-32 or MD5 checksum
                 } else if (lastModifiedMap.getLong(file) != lastModified) {
-                    lastModifiedMap.put(file, lastModified);
+                    lastModifiedMap.put(file.getPath(), lastModified);
                     crashedServices.remove(name);
                     restartService(name);
                 }

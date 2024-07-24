@@ -1,12 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.api.library.impl;
 
 import net.minecraft.util.math.Vec3d;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
+import xyz.wagyourtail.jsmacros.api.math.Pos2D;
+import xyz.wagyourtail.jsmacros.api.math.Pos3D;
+import xyz.wagyourtail.jsmacros.api.math.Vec2D;
+import xyz.wagyourtail.jsmacros.api.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
@@ -18,6 +19,11 @@ import xyz.wagyourtail.jsmacros.core.library.Library;
 @Library("PositionCommon")
 @SuppressWarnings("unused")
 public class FPositionCommon extends BaseLibrary {
+
+    public FPositionCommon(Core<?, ?> runner) {
+        super(runner);
+    }
+
     /**
      * create a new vector object
      *

@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
+import xyz.wagyourtail.jsmacros.client.access.access.IScreenInternal;
 
 @Mixin(Keyboard.class)
 public class MixinKeyboard {

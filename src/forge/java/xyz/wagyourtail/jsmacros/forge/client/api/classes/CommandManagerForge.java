@@ -6,8 +6,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.neoforged.neoforge.client.ClientCommandHandler;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
-import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandBuilder;
-import xyz.wagyourtail.jsmacros.client.api.classes.inventory.CommandManager;
+import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.command.CommandManager;
 import xyz.wagyourtail.jsmacros.client.api.helpers.CommandNodeHelper;
 
 public class CommandManagerForge extends CommandManager {

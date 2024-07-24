@@ -39,7 +39,7 @@ public class JsTest {
     @Test
     public void test() throws InterruptedException {
         Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
-        EventCustom custom = new EventCustom("test");
+        EventCustom custom = new EventCustom(core, "test");
         EventContainer<?> ev = core.exec("js",
                 TEST_SCRIPT,
                 null,
@@ -78,7 +78,7 @@ public class JsTest {
     @Test
     public void test2() throws InterruptedException {
         Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
-        EventCustom custom = new EventCustom("test");
+        EventCustom custom = new EventCustom(core, "test");
         EventContainer<?> ev = core.exec("js",
                 TEST_SCRIPT_2,
                 null,
@@ -86,7 +86,7 @@ public class JsTest {
                 null,
                 null
         );
-        EventLockWatchdog.startWatchdog(ev, IEventListener.NULL, 3000);
+        EventLockWatchdog.startWatchdog(ev, null, 3000);
         ev.awaitLock(() -> {
         });
         assertEquals("[\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"a\",\"b\",\"c\"]", custom.getString("test"));
@@ -133,7 +133,7 @@ public class JsTest {
     @Test
     public void test3() throws InterruptedException {
         Core<ProfileStub, EventRegistryStub> core = CoreInstanceCreator.createCore();
-        EventCustom custom = new EventCustom("test");
+        EventCustom custom = new EventCustom(core, "test");
         EventContainer<?> ev = core.exec("js",
                 TEST_SCRIPT_3,
                 null,
@@ -141,7 +141,7 @@ public class JsTest {
                 null,
                 null
         );
-        EventLockWatchdog.startWatchdog(ev, IEventListener.NULL, 10000);
+        EventLockWatchdog.startWatchdog(ev, null, 10000);
         ev.awaitLock(() -> {
         });
         System.out.println("Time: " + custom.getDouble("time"));

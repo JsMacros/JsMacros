@@ -17,11 +17,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
-import xyz.wagyourtail.jsmacros.client.api.classes.InteractionProxy;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
-import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
+import xyz.wagyourtail.jsmacros.client.access.access.IScreenInternal;
+import xyz.wagyourtail.jsmacros.client.api.InteractionProxy;
+import xyz.wagyourtail.jsmacros.client.api.render.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.render.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.library.FHud;
 
 import java.lang.reflect.Constructor;
 
@@ -73,7 +73,9 @@ public class MixinGameRenderer {
 
     @Inject(at = @At("HEAD"), method = "updateCrosshairTarget", cancellable = true)
     public void onTargetUpdate(float tickDelta, CallbackInfo ci) {
-        InteractionProxy.Target.onUpdate(tickDelta, ci);
+        if (InteractionProxy.Target.onUpdate(tickDelta)) {
+            ci.cancel();
+        }
     }
 
 }

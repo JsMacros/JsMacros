@@ -13,7 +13,7 @@ public class PythonExtension implements Extension {
     }
 
     @Override
-    public void init() {
+    public void init(Core<?, ?> runner) {
         Thread t = new Thread(() -> {
             Context.Builder build = Context.newBuilder("python");
             Context con = build.build();
@@ -22,7 +22,7 @@ public class PythonExtension implements Extension {
         });
         t.start();
         try {
-            Core.getInstance().config.addOptions("python", GraalConfig.class);
+            runner.config.addOptions("python", GraalConfig.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

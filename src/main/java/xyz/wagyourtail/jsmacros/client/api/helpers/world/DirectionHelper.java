@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world;
 
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
+import xyz.wagyourtail.jsmacros.api.math.Pos3D;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 /**

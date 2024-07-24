@@ -4,6 +4,7 @@ import com.neovisionaries.ws.client.*;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -52,7 +53,12 @@ public class Websocket {
                     try {
                         onConnect.accept(ws, headers);
                     } catch (Throwable e) {
-                        Core.getInstance().profile.logError(e);
+                        BaseScriptContext<?> ctx = onConnect.getCtx();
+                        if (ctx != null) {
+                            ctx.runner.profile.logError(e);
+                        } else {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -63,7 +69,12 @@ public class Websocket {
                     try {
                         onDisconnect.accept(ws, new Disconnected(serverFrame, clientFrame, isServer));
                     } catch (Throwable e) {
-                        Core.getInstance().profile.logError(e);
+                        BaseScriptContext<?> ctx = onConnect.getCtx();
+                        if (ctx != null) {
+                            ctx.runner.profile.logError(e);
+                        } else {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -79,7 +90,12 @@ public class Websocket {
                     try {
                         onError.accept(websocket, ex);
                     } catch (Throwable e) {
-                        Core.getInstance().profile.logError(e);
+                        BaseScriptContext<?> ctx = onConnect.getCtx();
+                        if (ctx != null) {
+                            ctx.runner.profile.logError(e);
+                        } else {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -90,7 +106,12 @@ public class Websocket {
                     try {
                         onFrame.accept(ws, frame);
                     } catch (Throwable e) {
-                        Core.getInstance().profile.logError(e);
+                        BaseScriptContext<?> ctx = onConnect.getCtx();
+                        if (ctx != null) {
+                            ctx.runner.profile.logError(e);
+                        } else {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -101,7 +122,12 @@ public class Websocket {
                     try {
                         onTextMessage.accept(ws, text);
                     } catch (Throwable e) {
-                        Core.getInstance().profile.logError(e);
+                        BaseScriptContext<?> ctx = onConnect.getCtx();
+                        if (ctx != null) {
+                            ctx.runner.profile.logError(e);
+                        } else {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

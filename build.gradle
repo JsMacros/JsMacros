@@ -53,26 +53,24 @@ sourceSets {
         compileClasspath += configurations.implementation
         runtimeClasspath += configurations.implementation
     }
+    client {
+        compileClasspath += core.output + core.compileClasspath + main.output
+        runtimeClasspath += core.output + core.runtimeClasspath + main.output
+    }
     main {
-        java {
-            srcDir "common/src/main/java"
-        }
-        resources {
-            srcDir "common/src/main/resources"
-        }
         compileClasspath += core.output + core.compileClasspath
         runtimeClasspath += core.output + core.runtimeClasspath
     }
     if (enabled_loaders.contains("forge")) {
         forge {
-            compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
-            runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation
+            compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation + client.output
+            runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation + client.output
         }
     }
     if (enabled_loaders.contains("fabric")) {
         fabric {
-            compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
-            runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation
+            compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation + client.output
+            runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation + client.output
         }
     }
 }
@@ -80,9 +78,8 @@ sourceSets {
 unimined.useGlobalCache = false
 
 unimined.minecraft {
-    combineWith(":core")
-
     version project.minecraft_version
+    side("server")
 
     mappings {
         intermediary()
@@ -106,10 +103,20 @@ unimined.minecraft {
         devFallbackNamespace "intermediary"
     }
 
-    if (sourceSet == sourceSets.main) {
+    accessWidener {
+        accessWidener(file("src/main/resources/jsmacros.accesswidener"))
+    }
+
+    if (sourceSet == sourceSets.main || sourceSet == sourceSets.client) {
         defaultRemapJar = false
         runs.off = true
     }
+}
+
+unimined.minecraft(sourceSets.client) {
+    combineWith(":core")
+    combineWith(":main")
+    side("combined")
 }
 
 sourceSets {
@@ -122,14 +129,9 @@ sourceSets {
 
 if (enabled_loaders.contains("forge")) {
 
-    tasks.register("forgeJar", Jar) {
-        from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
-
-        archiveClassifier = "forge"
-    }
-
     unimined.minecraft(sourceSets.forge) {
         combineWith(sourceSets.main)
+        side("combined")
 
         minecraftRemapper.config {
             ignoreConflicts(true)
@@ -137,8 +139,13 @@ if (enabled_loaders.contains("forge")) {
 
         neoForged {
             loader project.forge_version
+            accessTransformer(aw2at(file("src/main/resources/jsmacros.accesswidener")))
 
-            mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
+            mixinConfig = [
+                "jsmacros-forge.mixins.json",
+                "jsmacros-client.mixins.json",
+                "jsmacros-common.mixins.json",
+            ]
         }
     }
 
@@ -146,20 +153,20 @@ if (enabled_loaders.contains("forge")) {
 
 if (enabled_loaders.contains("fabric")) {
 
-    tasks.register("fabricJar", Jar) {
-        from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
-
-        archiveClassifier = "fabric"
-    }
-
     unimined.minecraft(sourceSets.fabric) {
         combineWith(sourceSets.main)
+        side("combined")
 
         fabric {
             loader project.fabric_loader_version
+            accessWidener(file("src/main/resources/jsmacros.accesswidener"))
         }
     }
 
+}
+
+configurations {
+    clientCompileOnly.extendsFrom compileOnly
 }
 
 dependencies {
@@ -254,7 +261,7 @@ if (enabled_loaders.contains("forge")) {
         dependsOn(":extension:graal:jar")
         dependsOn(":extension:graal:js:jar")
         archiveClassifier = "forge-dev"
-        from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
+        from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output, sourceSets.client.output
 
         preserveFileTimestamps = false
         reproducibleFileOrder = true
@@ -308,7 +315,7 @@ if (enabled_loaders.contains("fabric")) {
     fabricJar {
         dependsOn(":extension:graal:jar")
         dependsOn(":extension:graal:js:jar")
-        from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
+        from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output, sourceSets.client.output
 
         preserveFileTimestamps = false
         reproducibleFileOrder = true

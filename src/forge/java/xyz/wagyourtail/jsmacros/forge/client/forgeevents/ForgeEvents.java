@@ -10,12 +10,12 @@ import net.minecraft.util.Identifier;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
-import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.render.ScriptScreen;
-import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
+import xyz.wagyourtail.jsmacros.client.access.access.IScreenInternal;
+import xyz.wagyourtail.jsmacros.client.api.render.Draw2D;
+import xyz.wagyourtail.jsmacros.client.api.render.Draw3D;
+import xyz.wagyourtail.jsmacros.client.api.render.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.api.render.ScriptScreen;
+import xyz.wagyourtail.jsmacros.client.api.library.FHud;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.forge.client.api.classes.CommandBuilderForge;
 

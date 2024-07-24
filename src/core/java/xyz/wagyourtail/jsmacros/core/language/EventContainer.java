@@ -64,7 +64,7 @@ public class EventContainer<T extends BaseScriptContext<?>> {
             try {
                 then.run();
             } catch (Throwable t) {
-                Core.getInstance().profile.logError(t);
+                ctx.runner.profile.logError(t);
             }
         }
     }
@@ -76,12 +76,12 @@ public class EventContainer<T extends BaseScriptContext<?>> {
      */
     public synchronized void releaseLock() {
         locked = false;
-        Core.getInstance().profile.joinedThreadStack.remove(lockThread);
+        ctx.runner.profile.joinedThreadStack.remove(lockThread);
         for (Runnable runnable : then) {
             try {
                 runnable.run();
             } catch (Throwable t) {
-                Core.getInstance().profile.logError(t);
+                ctx.runner.profile.logError(t);
             }
         }
         then.clear();

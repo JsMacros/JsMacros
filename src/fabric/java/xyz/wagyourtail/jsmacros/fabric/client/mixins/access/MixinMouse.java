@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import xyz.wagyourtail.jsmacros.client.access.IScreenInternal;
+import xyz.wagyourtail.jsmacros.client.access.access.IScreenInternal;
 
 @Mixin(Mouse.class)
 public class MixinMouse {

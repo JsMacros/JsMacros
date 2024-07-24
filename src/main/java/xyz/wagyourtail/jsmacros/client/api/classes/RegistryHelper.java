@@ -7,6 +7,7 @@ import net.minecraft.command.argument.BlockArgumentParser;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
@@ -33,7 +34,11 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unused")
 public class RegistryHelper {
-    MinecraftClient mc = MinecraftClient.getInstance();
+    final DynamicRegistryManager registryManager;
+
+    public RegistryHelper(DynamicRegistryManager registryManager) {
+        this.registryManager = registryManager;
+    }
 
     /**
      * @param id the item's id
@@ -64,7 +69,7 @@ public class RegistryHelper {
      */
     @DocletReplaceParams("id: CanOmitNamespace<ItemId>, nbt: string")
     public ItemStackHelper getItemStack(String id, String nbt) throws CommandSyntaxException {
-        ItemStringReader reader = new ItemStringReader(Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager());
+        ItemStringReader reader = new ItemStringReader(registryManager);
         ItemStringReader.ItemResult itemResult = reader.consume(new StringReader(parseNameSpace(id) + nbt));
         ItemStack stack = new ItemStack(itemResult.item());
         stack.applyUnvalidatedChanges(itemResult.components());
@@ -172,7 +177,7 @@ public class RegistryHelper {
      */
     @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>, level: int")
     public EnchantmentHelper getEnchantment(String id, int level) {
-        return new EnchantmentHelper(mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(parseIdentifier(id)).orElseThrow(), level);
+        return new EnchantmentHelper(registryManager.get(RegistryKeys.ENCHANTMENT).getEntry(parseIdentifier(id)).orElseThrow(), level);
     }
 
     /**
@@ -181,7 +186,7 @@ public class RegistryHelper {
      */
     @DocletReplaceReturn("JavaList<EnchantmentId>")
     public List<String> getEnchantmentIds() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
+        return registryManager.get(RegistryKeys.ENCHANTMENT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**
@@ -189,7 +194,7 @@ public class RegistryHelper {
      * @since 1.8.4
      */
     public List<EnchantmentHelper> getEnchantments() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.ENCHANTMENT).streamEntries().map(EnchantmentHelper::new).collect(Collectors.toList());
+        return registryManager.get(RegistryKeys.ENCHANTMENT).streamEntries().map(EnchantmentHelper::new).collect(Collectors.toList());
     }
 
     /**
@@ -200,8 +205,9 @@ public class RegistryHelper {
     @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
     @DocletReplaceParams("type: E")
     @DocletReplaceReturn("EntityTypeFromId<E>")
+    @Deprecated(forRemoval = true)
     public EntityHelper<?> getEntity(String type) {
-        return EntityHelper.create(Registries.ENTITY_TYPE.get(parseIdentifier(type)).create(MinecraftClient.getInstance().world));
+        return null;
     }
 
     /**
@@ -257,7 +263,7 @@ public class RegistryHelper {
      */
     @DocletReplaceReturn("JavaList<PaintingId>")
     public List<String> getPaintingIds() {
-        return mc.getNetworkHandler().getRegistryManager().get(RegistryKeys.PAINTING_VARIANT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
+        return registryManager.get(RegistryKeys.PAINTING_VARIANT).getIds().stream().map(Identifier::toString).collect(Collectors.toList());
     }
 
     /**

@@ -3,15 +3,11 @@ package xyz.wagyourtail.jsmacros.core.library.impl;
 import com.google.common.collect.ImmutableList;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
-import org.jetbrains.annotations.Nullable;
 import org.joor.Reflect;
 import xyz.wagyourtail.Util;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
-import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.classes.Mappings;
-import xyz.wagyourtail.jsmacros.core.classes.WrappedClassInstance;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
@@ -47,7 +43,6 @@ import java.util.*;
 public class FReflection extends PerExecLibrary {
     private static final Map<String, List<Class<?>>> JAVA_CLASS_CACHE = new HashMap<>();
     public static final CombinedVariableClassLoader classLoader = new CombinedVariableClassLoader(FReflection.class.getClassLoader());
-    private static Mappings remapper = null;
 
     public FReflection(BaseScriptContext<?> context) {
         super(context);
@@ -335,7 +330,7 @@ public class FReflection extends PerExecLibrary {
     }
 
     public LibraryBuilder createLibraryBuilder(String name, boolean perExec, String... acceptedLangs) throws NotFoundException, CannotCompileException {
-        return new LibraryBuilder(name, perExec, acceptedLangs);
+        return new LibraryBuilder(runner, name, perExec, acceptedLangs);
     }
 
     /**
@@ -351,7 +346,7 @@ public class FReflection extends PerExecLibrary {
      * @since 1.8.4
      */
     public void createLibrary(String className, String javaCode) {
-        Core.getInstance().libraryRegistry.addLibrary((Class<? extends BaseLibrary>) compileJavaClass(className, javaCode));
+        runner.libraryRegistry.addLibrary((Class<? extends BaseLibrary>) compileJavaClass(className, javaCode));
     }
 
     /**
@@ -426,15 +421,6 @@ public class FReflection extends PerExecLibrary {
     }
 
     /**
-     * @return the previous mapping helper generated with {@link #loadMappingHelper(String)}
-     * @since 1.3.1
-     */
-    @Nullable
-    public Mappings loadCurrentMappingHelper() {
-        return remapper;
-    }
-
-    /**
      * @param o class you want the name of
      * @return the fully qualified class name (with "."'s not "/"'s)
      * @since 1.3.1
@@ -445,38 +431,6 @@ public class FReflection extends PerExecLibrary {
         } else {
             return o.getClass().getCanonicalName();
         }
-    }
-
-    /**
-     * @param urlorfile a url or file path the the yarn mappings {@code -v2.jar} file, or {@code .tiny} file. for example {@code https://maven.fabricmc.net/net/fabricmc/yarn/1.16.5%2Bbuild.3/yarn-1.16.5%2Bbuild.3-v2.jar}, if same url/path as previous this will load from cache.
-     * @return the associated mapping helper.
-     * @since 1.3.1
-     */
-    public Mappings loadMappingHelper(String urlorfile) {
-        if (remapper != null && remapper.mappingsource.equals(urlorfile)) {
-            return remapper;
-        }
-        return remapper = new Mappings(urlorfile);
-    }
-
-    /**
-     * @param instance
-     * @param <T>
-     * @return
-     * @since 1.6.5
-     */
-    public <T> WrappedClassInstance<T> wrapInstace(T instance) {
-        return new WrappedClassInstance<>(instance);
-    }
-
-    /**
-     * @param className
-     * @return
-     * @throws ClassNotFoundException
-     * @since 1.6.5
-     */
-    public WrappedClassInstance<?> getWrappedClass(String className) throws ClassNotFoundException {
-        return new WrappedClassInstance(null, Class.forName(className.replace("/", ".")));
     }
 
     /**

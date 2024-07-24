@@ -19,7 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Library("GlobalVars")
 @SuppressWarnings("unused")
 public class FGlobalVars extends BaseLibrary {
-    public static Map<String, Object> globalRaw = new ConcurrentHashMap<>();
+    public Map<String, Object> globalRaw = new ConcurrentHashMap<>();
+
+    public FGlobalVars(Core<?, ?> runner) {
+        super(runner);
+    }
 
     /**
      * Put an Integer into the global variable space.
@@ -82,7 +86,7 @@ public class FGlobalVars extends BaseLibrary {
      * @since 1.1.7
      */
     public Object putObject(String name, Object o) {
-        if (Core.getInstance().extensions.isGuestObject(o)) {
+        if (runner.extensions.isGuestObject(o)) {
             throw new AssertionError("Cannot put a guest object into global variables");
         }
         globalRaw.put(name, o);

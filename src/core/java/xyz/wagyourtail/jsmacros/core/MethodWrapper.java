@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.util.Comparator;
@@ -37,6 +38,7 @@ public abstract class MethodWrapper<T, U, R, C extends BaseScriptContext<?>> imp
         syncObject = ctx.getSyncObject();
     }
 
+    @Nullable
     public C getCtx() {
         return ctx;
     }

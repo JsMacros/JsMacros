@@ -18,19 +18,21 @@ import java.util.Optional;
  * @since 1.6.5
  */
 public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
+    final Core<?, ?> runner;
     final boolean languages;
     final boolean perExec;
     boolean hasConstructorSet = false;
 
-    public LibraryBuilder(String name, boolean perExec, String... allowedLangs) throws NotFoundException, CannotCompileException {
+    public LibraryBuilder(Core<?, ?> runner, String name, boolean perExec, String... allowedLangs) throws NotFoundException, CannotCompileException {
         super(name, (Class<BaseLibrary>) (perExec ? (allowedLangs.length > 0 ? PerExecLanguageLibrary.class : PerExecLibrary.class) : (allowedLangs.length > 0 ?
                 PerLanguageLibrary.class : BaseLibrary.class)));
+        this.runner = runner;
         AnnotationBuilder b = this.addAnnotation(Library.class).putString("value", name);
         List<Class<?>> allowed = new ArrayList<>();
         for (int i = 0; i < allowedLangs.length; i++) {
-            Extension ext = Core.getInstance().extensions.getExtensionForName(allowedLangs[i]);
+            Extension ext = runner.extensions.getExtensionForName(allowedLangs[i]);
             if (ext instanceof LanguageExtension l) {
-                allowed.add(l.getLanguage(Core.getInstance()).getClass());
+                allowed.add(l.getLanguage(runner).getClass());
             } else {
                 throw new IllegalArgumentException("Language not found: " + allowedLangs[i]);
             }
@@ -89,7 +91,7 @@ public class LibraryBuilder extends ClassBuilder<BaseLibrary> {
             cb.body(body.toString());
         }
         Class<? extends BaseLibrary> clazz = super.finishBuildAndFreeze();
-        Core.getInstance().libraryRegistry.addLibrary(clazz);
+        runner.libraryRegistry.addLibrary(clazz);
         return clazz;
     }
 

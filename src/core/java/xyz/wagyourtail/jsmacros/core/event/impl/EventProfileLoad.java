@@ -13,6 +13,7 @@ public class EventProfileLoad extends BaseEvent {
     public final String profileName;
 
     public EventProfileLoad(BaseProfile profile, String profileName) {
+        super(profile.runner);
         this.profileName = profileName;
     }
 

@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "package": "xyz.wagyourtail.jsmacros.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

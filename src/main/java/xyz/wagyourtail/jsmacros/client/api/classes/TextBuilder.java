@@ -1,18 +1,14 @@
 package xyz.wagyourtail.jsmacros.client.api.classes;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
-import xyz.wagyourtail.jsmacros.client.access.CustomClickEvent;
 import xyz.wagyourtail.jsmacros.client.api.helpers.FormattingHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.StyleHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
-import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -28,7 +24,7 @@ import java.util.Locale;
 @SuppressWarnings("unused")
 public class TextBuilder {
     private final MutableText head = Text.literal("");
-    private MutableText self = head;
+    protected MutableText self = head;
 
     public TextBuilder() {
 
@@ -168,24 +164,6 @@ public class TextBuilder {
     }
 
     /**
-     * custom click event.
-     *
-     * @param action
-     * @return
-     * @since 1.3.0
-     */
-    public TextBuilder withCustomClickEvent(MethodWrapper<Object, Object, Object, ?> action) {
-        self.styled(style -> style.withClickEvent(new CustomClickEvent(() -> {
-            try {
-                action.run();
-            } catch (Throwable ex) {
-                Core.getInstance().profile.logError(ex);
-            }
-        })));
-        return this;
-    }
-
-    /**
      * normal click events like: {@code open_url}, {@code open_file}, {@code run_command}, {@code suggest_command}, {@code change_page}, and {@code copy_to_clipboard}
      *
      * @param action
@@ -209,8 +187,9 @@ public class TextBuilder {
      * @return the width of this text.
      * @since 1.8.4
      */
+    @Deprecated(forRemoval = true)
     public int getWidth() {
-        return MinecraftClient.getInstance().textRenderer.getWidth(head);
+        return -1;
     }
 
     /**

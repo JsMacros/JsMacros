@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.library;
 
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
@@ -9,13 +10,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class LibraryRegistry {
+    private final Core<?, ?> runner;
 
     public final Map<Library, BaseLibrary> libraries = new LinkedHashMap<>();
     public final Map<Library, Class<? extends PerExecLibrary>> perExec = new LinkedHashMap<>();
     public final Map<Class<? extends BaseLanguage<?, ?>>, Map<Library, PerLanguageLibrary>> perLanguage = new LinkedHashMap<>();
     public final Map<Class<? extends BaseLanguage<?, ?>>, Map<Library, Class<? extends PerExecLanguageLibrary<?, ?>>>> perExecLanguage = new LinkedHashMap<>();
 
-    public LibraryRegistry() {
+    public LibraryRegistry(Core<?, ?> runner) {
+        this.runner = runner;
     }
 
     public Map<String, BaseLibrary> getLibraries(BaseLanguage<?, ?> language, BaseScriptContext<?> context) {
@@ -95,7 +98,7 @@ public class LibraryRegistry {
                         perLanguage.put(lang, new LinkedHashMap<>());
                     }
                     try {
-                        perLanguage.get(lang).put(ann, clazz.asSubclass(PerLanguageLibrary.class).getConstructor(Class.class).newInstance(lang));
+                        perLanguage.get(lang).put(ann, clazz.asSubclass(PerLanguageLibrary.class).getConstructor(Core.class, Class.class).newInstance(runner, lang));
                     } catch (IllegalAccessException | InstantiationException | NoSuchMethodException |
                              InvocationTargetException e) {
                         throw new RuntimeException("Failed to instantiate library, ", e);
@@ -103,8 +106,8 @@ public class LibraryRegistry {
                 }
             } else {
                 try {
-                    libraries.put(ann, clazz.newInstance());
-                } catch (IllegalAccessException | InstantiationException e) {
+                    libraries.put(ann, clazz.getConstructor(Core.class).newInstance(runner));
+                } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
                     throw new RuntimeException("Failed to instantiate library, ", e);
                 }
             }

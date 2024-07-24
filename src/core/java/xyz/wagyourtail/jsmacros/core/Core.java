@@ -11,6 +11,8 @@ import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.extensions.ExtensionLoader;
 import xyz.wagyourtail.jsmacros.core.extensions.LanguageExtension;
+import xyz.wagyourtail.jsmacros.core.helper.ClassWrapperTree;
+import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.BaseWrappedException;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
@@ -28,14 +30,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
-    /**
-     * static reference to instance created by {@link #createInstance(Function, BiFunction, File, File, Logger)}
-     */
-    private static Core<?, ?> instance;
-
     private final Set<BaseScriptContext<?>> contexts = new SynchronizedWeakHashSet<>();
 
-    public final LibraryRegistry libraryRegistry = new LibraryRegistry();
+    public final ClassWrapperTree<Object, BaseHelper<?>> helperRegistry = new ClassWrapperTree<>(Object.class, a -> null);
+    public final LibraryRegistry libraryRegistry = new LibraryRegistry(this);
     public final BaseEventRegistry eventRegistry;
 
     public final ExtensionLoader extensions;
@@ -46,32 +44,15 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
 
     public final JsMacrosThreadPool threadPool = new JsMacrosThreadPool();
 
-    private boolean deferredInit = false;
-
-    protected Core(Function<Core<T, U>, U> eventRegistryFunction, BiFunction<Core<T, U>, Logger, T> profileFunction, File configFolder, File macroFolder, Logger logger) {
-        instance = this;
+    public Core(Function<Core<T, U>, U> eventRegistryFunction, BiFunction<Core<T, U>, Logger, T> profileFunction, File configFolder, File macroFolder, Logger logger) {
         eventRegistry = eventRegistryFunction.apply(this);
-        config = new ConfigManager(configFolder, macroFolder, logger);
+        config = new ConfigManager(this, configFolder, macroFolder, logger);
         profile = profileFunction.apply(this, logger);
 
         extensions = new ExtensionLoader(this);
         this.services = new ServiceManager(this);
-    }
-
-    /**
-     * static reference to instance created by {@link #createInstance(Function, BiFunction, File, File, Logger)}
-     */
-    public static Core<?, ?> getInstance() {
-        return instance;
-    }
-
-    public void deferredInit() {
-        if (deferredInit) {
-            throw new RuntimeException("deferredInit has already ran!");
-        }
-        instance.profile.init(instance.config.getOptions(CoreConfigV2.class).defaultProfile);
-        instance.services.load();
-        deferredInit = true;
+        profile.init(config.getOptions(CoreConfigV2.class).defaultProfile);
+        services.load();
     }
 
     /**
@@ -86,27 +67,6 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
      */
     public Set<BaseScriptContext<?>> getContexts() {
         return contexts;
-    }
-
-    /**
-     * start by running this function, supplying implementations of {@link BaseEventRegistry} and {@link BaseProfile} and a {@link Supplier} for
-     * creating the config manager with the folder paths it needs.
-     *
-     * @param eventRegistryFunction
-     * @param profileFunction
-     * @param configFolder
-     * @param macroFolder
-     * @param logger
-     * @return
-     */
-    public static <V extends BaseProfile, R extends BaseEventRegistry> Core<V, R> createInstance(Function<Core<V, R>, R> eventRegistryFunction, BiFunction<Core<V, R>, Logger, V> profileFunction, File configFolder, File macroFolder, Logger logger) {
-        if (instance != null) {
-            throw new RuntimeException("Can't declare RunScript instance more than once");
-        }
-
-        new Core<>(eventRegistryFunction, profileFunction, configFolder, macroFolder, logger);
-
-        return (Core<V, R>) instance;
     }
 
     /**
@@ -166,7 +126,7 @@ public class Core<T extends BaseProfile, U extends BaseEventRegistry> {
         if (ex == null) {
             return null;
         }
-        for (LanguageExtension lang : Core.getInstance().extensions.getAllLanguageExtensions()) {
+        for (LanguageExtension lang : extensions.getAllLanguageExtensions()) {
             BaseWrappedException<?> e = lang.wrapException(ex);
             if (e != null) {
                 return e;

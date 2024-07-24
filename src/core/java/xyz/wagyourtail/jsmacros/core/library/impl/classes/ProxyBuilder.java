@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.Util;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
+import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -142,7 +143,12 @@ public class ProxyBuilder<T> {
                 } else if (e.getCause() instanceof RuntimeException) {
                     throw e.getCause();
                 } else {
-                    Core.getInstance().profile.logError(e.getCause());
+                    BaseScriptContext<?> ctx = wrapper.getCtx();
+                    if (ctx != null) {
+                        ctx.runner.profile.logError(e.getCause());
+                    } else {
+                        e.printStackTrace();
+                    }
                 }
             }
             return null;
@@ -191,28 +197,18 @@ public class ProxyBuilder<T> {
     }
 
     private static Class<?> getPrimitive(char c) {
-        switch (c) {
-            case 'Z':
-                return boolean.class;
-            case 'B':
-                return byte.class;
-            case 'C':
-                return char.class;
-            case 'S':
-                return short.class;
-            case 'I':
-                return int.class;
-            case 'J':
-                return long.class;
-            case 'F':
-                return float.class;
-            case 'D':
-                return double.class;
-            case 'V':
-                return void.class;
-            default:
-                throw new NullPointerException("Unknown Primitive: " + c);
-        }
+        return switch (c) {
+            case 'Z' -> boolean.class;
+            case 'B' -> byte.class;
+            case 'C' -> char.class;
+            case 'S' -> short.class;
+            case 'I' -> int.class;
+            case 'J' -> long.class;
+            case 'F' -> float.class;
+            case 'D' -> double.class;
+            case 'V' -> void.class;
+            default -> throw new NullPointerException("Unknown Primitive: " + c);
+        };
     }
 
     private static Class<?> boxPrimitive(Class<?> primitive) {

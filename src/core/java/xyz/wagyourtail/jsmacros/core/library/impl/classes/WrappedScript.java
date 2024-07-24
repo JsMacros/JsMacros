@@ -3,10 +3,8 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
-import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
-import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.event.impl.EventWrappedScript;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
@@ -14,47 +12,48 @@ import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 import java.util.function.Function;
 
 public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptContext<?>> {
-    private static final BaseProfile p = Core.getInstance().profile;
+    private final Core<?, ?> runner;
     public final Function<BaseEvent, EventContainer<BaseScriptContext<?>>> f;
     public final boolean _async;
 
-    public WrappedScript(Function<BaseEvent, EventContainer<BaseScriptContext<?>>> f, boolean _async) {
+    public WrappedScript(Core<?, ?> runner, Function<BaseEvent, EventContainer<BaseScriptContext<?>>> f, boolean _async) {
         super();
+        this.runner = runner;
         this.f = f;
         this._async = _async;
     }
 
     @Override
     public void accept(T t) {
-        BaseEvent event = t instanceof BaseEvent ? (BaseEvent) t : new EventWrappedScript<>(t, null);
+        BaseEvent event = t instanceof BaseEvent ? (BaseEvent) t : new EventWrappedScript<>(runner, t, null);
         EventContainer<BaseScriptContext<?>> t1 = f.apply(event);
         if (!_async) {
-            boolean joinedMain = p.checkJoinedThreadStack();
+            boolean joinedMain = runner.profile.checkJoinedThreadStack();
             if (joinedMain) {
-                p.joinedThreadStack.add(t1.getLockThread());
+                runner.profile.joinedThreadStack.add(t1.getLockThread());
             }
-            EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(t1, null, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
             try {
-                t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
+                t1.awaitLock(() -> runner.profile.joinedThreadStack.remove(t1.getLockThread()));
             } catch (InterruptedException ignored) {
-                p.joinedThreadStack.remove(t1.getLockThread());
+                runner.profile.joinedThreadStack.remove(t1.getLockThread());
             }
         }
     }
 
     @Override
     public void accept(T t, U u) {
-        EventContainer<BaseScriptContext<?>> t1 = f.apply(new EventWrappedScript<>(t, u));
+        EventContainer<BaseScriptContext<?>> t1 = f.apply(new EventWrappedScript<>(runner, t, u));
         if (!_async) {
-            boolean joinedMain = p.checkJoinedThreadStack();
+            boolean joinedMain = runner.profile.checkJoinedThreadStack();
             if (joinedMain) {
-                p.joinedThreadStack.add(t1.getLockThread());
+                runner.profile.joinedThreadStack.add(t1.getLockThread());
             }
-            EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(t1, null, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
             try {
-                t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
+                t1.awaitLock(() -> runner.profile.joinedThreadStack.remove(t1.getLockThread()));
             } catch (InterruptedException ignored) {
-                p.joinedThreadStack.remove(t1.getLockThread());
+                runner.profile.joinedThreadStack.remove(t1.getLockThread());
             }
         }
     }
@@ -62,16 +61,16 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
     @Override
     public V apply(T t) {
         EventWrappedScript<T, U, V> e;
-        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(t, null));
-        boolean joinedMain = p.checkJoinedThreadStack();
+        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(runner, t, null));
+        boolean joinedMain = runner.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            p.joinedThreadStack.add(t1.getLockThread());
+            runner.profile.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, null, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
-            t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
+            t1.awaitLock(() -> runner.profile.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
-            p.joinedThreadStack.remove(t1.getLockThread());
+            runner.profile.joinedThreadStack.remove(t1.getLockThread());
         }
         return e.result;
     }
@@ -79,16 +78,16 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
     @Override
     public V apply(T t, U u) {
         EventWrappedScript<T, U, V> e;
-        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(t, u));
-        boolean joinedMain = p.checkJoinedThreadStack();
+        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(runner, t, u));
+        boolean joinedMain = runner.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            p.joinedThreadStack.add(t1.getLockThread());
+            runner.profile.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, null, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
-            t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
+            t1.awaitLock(() -> runner.profile.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
-            p.joinedThreadStack.remove(t1.getLockThread());
+            runner.profile.joinedThreadStack.remove(t1.getLockThread());
         }
         return e.result;
     }
@@ -96,16 +95,16 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
     @Override
     public boolean test(T t) {
         EventWrappedScript<T, U, V> e;
-        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(t, null));
-        boolean joinedMain = p.checkJoinedThreadStack();
+        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(runner, t, null));
+        boolean joinedMain = runner.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            p.joinedThreadStack.add(t1.getLockThread());
+            runner.profile.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, null, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
-            t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
+            t1.awaitLock(() -> runner.profile.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
-            p.joinedThreadStack.remove(t1.getLockThread());
+            runner.profile.joinedThreadStack.remove(t1.getLockThread());
         }
         return (Boolean) e.result;
     }
@@ -113,33 +112,33 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
     @Override
     public boolean test(T t, U u) {
         EventWrappedScript<T, U, V> e;
-        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(t, u));
-        boolean joinedMain = p.checkJoinedThreadStack();
+        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(runner, t, u));
+        boolean joinedMain = runner.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            p.joinedThreadStack.add(t1.getLockThread());
+            runner.profile.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, null, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
-            t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
+            t1.awaitLock(() -> runner.profile.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
-            p.joinedThreadStack.remove(t1.getLockThread());
+            runner.profile.joinedThreadStack.remove(t1.getLockThread());
         }
         return (Boolean) e.result;
     }
 
     @Override
     public void run() {
-        EventContainer<BaseScriptContext<?>> t1 = f.apply(new EventWrappedScript<>(null, null));
+        EventContainer<BaseScriptContext<?>> t1 = f.apply(new EventWrappedScript<>(runner, null, null));
         if (!_async) {
-            boolean joinedMain = p.checkJoinedThreadStack();
+            boolean joinedMain = runner.profile.checkJoinedThreadStack();
             if (joinedMain) {
-                p.joinedThreadStack.add(t1.getLockThread());
+                runner.profile.joinedThreadStack.add(t1.getLockThread());
             }
-            EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+            EventLockWatchdog.startWatchdog(t1, null, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
             try {
-                t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
+                t1.awaitLock(() -> runner.profile.joinedThreadStack.remove(t1.getLockThread()));
             } catch (InterruptedException ignored) {
-                p.joinedThreadStack.remove(t1.getLockThread());
+                runner.profile.joinedThreadStack.remove(t1.getLockThread());
             }
         }
     }
@@ -147,16 +146,16 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
     @Override
     public int compare(T o1, T o2) {
         EventWrappedScript<T, U, V> e;
-        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(o1, null));
-        boolean joinedMain = p.checkJoinedThreadStack();
+        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(runner, o1, null));
+        boolean joinedMain = runner.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            p.joinedThreadStack.add(t1.getLockThread());
+            runner.profile.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, null, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
-            t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
+            t1.awaitLock(() -> runner.profile.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
-            p.joinedThreadStack.remove(t1.getLockThread());
+            runner.profile.joinedThreadStack.remove(t1.getLockThread());
         }
         return (Integer) e.result;
     }
@@ -164,16 +163,16 @@ public class WrappedScript<T, U, V> extends MethodWrapper<T, U, V, BaseScriptCon
     @Override
     public V get() {
         EventWrappedScript<T, U, V> e;
-        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(null, null));
-        boolean joinedMain = p.checkJoinedThreadStack();
+        EventContainer<BaseScriptContext<?>> t1 = f.apply(e = new EventWrappedScript<>(runner, null, null));
+        boolean joinedMain = runner.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            p.joinedThreadStack.add(t1.getLockThread());
+            runner.profile.joinedThreadStack.add(t1.getLockThread());
         }
-        EventLockWatchdog.startWatchdog(t1, IEventListener.NULL, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+        EventLockWatchdog.startWatchdog(t1, null, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
         try {
-            t1.awaitLock(() -> p.joinedThreadStack.remove(t1.getLockThread()));
+            t1.awaitLock(() -> runner.profile.joinedThreadStack.remove(t1.getLockThread()));
         } catch (InterruptedException ignored) {
-            p.joinedThreadStack.remove(t1.getLockThread());
+            runner.profile.joinedThreadStack.remove(t1.getLockThread());
         }
         return e.result;
     }

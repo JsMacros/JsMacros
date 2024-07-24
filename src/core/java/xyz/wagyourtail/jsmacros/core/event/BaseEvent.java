@@ -4,8 +4,12 @@ import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 
 public class BaseEvent {
-    public static final BaseProfile profile = Core.getInstance().profile;
+    public final Core<?, ?> runner;
     protected boolean cancelled;
+
+    public BaseEvent(Core<?, ?> runner) {
+        this.runner = runner;
+    }
 
     public boolean cancellable() {
         return this.getClass().getAnnotation(Event.class).cancellable();
@@ -35,7 +39,7 @@ public class BaseEvent {
     }
 
     public void trigger() {
-        profile.triggerEvent(this);
+        runner.profile.triggerEvent(this);
     }
 
 }

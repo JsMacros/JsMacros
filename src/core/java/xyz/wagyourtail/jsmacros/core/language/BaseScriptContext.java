@@ -21,6 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.4.0
  */
 public abstract class BaseScriptContext<T> {
+    public final Core<?, ?> runner;
     protected boolean closed = false;
     public final long startTime = System.currentTimeMillis();
 
@@ -45,7 +46,8 @@ public abstract class BaseScriptContext<T> {
 
     public boolean hasMethodWrapperBeenInvoked = false;
 
-    public BaseScriptContext(BaseEvent event, File file) {
+    public BaseScriptContext(Core<?, ?> runner, BaseEvent event, File file) {
+        this.runner = runner;
         this.triggeringEvent = event;
         this.mainFile = file;
     }
@@ -184,7 +186,7 @@ public abstract class BaseScriptContext<T> {
         // fix concurrency issue the "fun" way
         ImmutableList.copyOf(getBoundEvents().values()).forEach(EventContainer::releaseLock);
         ImmutableSet.copyOf(getBoundThreads()).forEach(Thread::interrupt);
-        Core.getInstance().getContexts().remove(this);
+        runner.getContexts().remove(this);
     }
 
     /**
@@ -201,7 +203,7 @@ public abstract class BaseScriptContext<T> {
      * @since 1.6.0
      */
     public File getContainedFolder() {
-        return mainFile == null ? Core.getInstance().config.macroFolder.getAbsoluteFile() : mainFile.getParentFile().getAbsoluteFile();
+        return mainFile == null ? runner.config.macroFolder.getAbsoluteFile() : mainFile.getParentFile().getAbsoluteFile();
     }
 
     public abstract boolean isMultiThreaded();

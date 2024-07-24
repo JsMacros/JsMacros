@@ -13,7 +13,7 @@ public class JsExtension implements Extension {
     }
 
     @Override
-    public void init() {
+    public void init(Core<?, ?> runner) {
         Thread t = new Thread(() -> {
             Context.Builder build = Context.newBuilder("js");
             Context con = build.build();
@@ -22,7 +22,7 @@ public class JsExtension implements Extension {
         });
         t.start();
         try {
-            Core.getInstance().config.addOptions("js", GraalConfig.class);
+            runner.config.addOptions("js", GraalConfig.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

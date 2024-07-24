@@ -1,15 +1,17 @@
 package xyz.wagyourtail.jsmacros.core;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.core.event.BaseListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
+import java.util.Objects;
+
 public class EventLockWatchdog {
 
-    private static Core<?, ?> core = Core.getInstance();
-
-    public static void startWatchdog(EventContainer<?> lock, IEventListener listener, long maxTime) {
-        core.threadPool.runTask(() -> {
+    public static void startWatchdog(@NotNull EventContainer<?> lock, @Nullable IEventListener listener, long maxTime) {
+        lock.getCtx().runner.threadPool.runTask(() -> {
             Thread t = new Thread(() -> {
                 try {
                     Thread.sleep(maxTime);
@@ -23,8 +25,7 @@ public class EventLockWatchdog {
                     if (listener instanceof BaseListener) {
                         ((BaseListener) listener).getRawTrigger().enabled = false;
                     }
-                    WatchdogException ex = new WatchdogException(String.format("Script \n\"%s\"\n joined longer than allowed time of %d ms.", listener.toString(), maxTime));
-                    Core.getInstance().profile.logError(ex);
+                    lock.getCtx().runner.profile.logError(new WatchdogException(String.format("Script \n\"%s\"\n joined longer than allowed time of %d ms.", listener, maxTime)));
                 } catch (InterruptedException ignored) {
                 }
             });

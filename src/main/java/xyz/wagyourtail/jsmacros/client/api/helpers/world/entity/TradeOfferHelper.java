@@ -1,11 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
-import com.mojang.serialization.JsonOps;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradedItem;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.VillagerInventory;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -13,7 +11,6 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("unused")
 public class TradeOfferHelper extends BaseHelper<TradeOffer> {

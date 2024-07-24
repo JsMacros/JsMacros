@@ -19,11 +19,9 @@ import java.util.*;
  * @since 1.2.7
  */
 public abstract class BaseProfile {
-    protected final Core runner;
+    public final Core runner;
     public final Logger LOGGER;
     public final Set<Thread> joinedThreadStack = new HashSet<>();
-
-    public final Set<String> events = new HashSet<>();
 
     public String profileName;
 
@@ -148,7 +146,7 @@ public abstract class BaseProfile {
         try {
             if (joinedMain) {
                 joinedThreadStack.add(t.getLockThread());
-                EventLockWatchdog.startWatchdog(t, macroListener, Core.getInstance().config.getOptions(CoreConfigV2.class).maxLockTime);
+                EventLockWatchdog.startWatchdog(t, macroListener, runner.config.getOptions(CoreConfigV2.class).maxLockTime);
             }
             t.awaitLock(() -> joinedThreadStack.remove(t.getLockThread()));
         } catch (InterruptedException ignored) {

@@ -1,0 +1,15 @@
+accessWidener v2 named
+
+accessible field net/minecraft/client/gui/hud/BossBarHud bossBars Ljava/util/Map;
+accessible field net/minecraft/client/gui/screen/ingame/BeaconScreen primaryEffect Lnet/minecraft/registry/entry/RegistryEntry;
+accessible field net/minecraft/client/gui/screen/ingame/BeaconScreen secondaryEffect Lnet/minecraft/registry/entry/RegistryEntry;
+
+accessible field net/minecraft/client/MinecraftClient fontManager Lnet/minecraft/client/font/FontManager;
+accessible method net/minecraft/client/MinecraftClient doItemUse ()V
+accessible method net/minecraft/client/MinecraftClient doAttack ()Z
+
+accessible field net/minecraft/client/gui/hud/ChatHud messages Ljava/util/List;
+
+accessible method net/minecraft/world/World getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;
+
+accessible field net/minecraft/client/option/SimpleOption value Ljava/lang/Object;

@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.core.config;
 import com.google.common.io.Files;
 import com.google.gson.*;
 import org.slf4j.Logger;
+import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.io.File;
 import java.io.FileReader;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 public class ConfigManager {
     protected final static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final Core<?, ?> runner;
     public final Map<String, Class<?>> optionClasses = new LinkedHashMap<>();
     public final Map<Class<?>, Object> options = new LinkedHashMap<>();
     public final File configFolder;
@@ -24,7 +26,8 @@ public class ConfigManager {
     int loadedAsVers = 3;
     public JsonObject rawOptions = null;
 
-    public ConfigManager(File configFolder, File macroFolder, Logger logger) {
+    public ConfigManager(Core<?, ?> runner, File configFolder, File macroFolder, Logger logger) {
+        this.runner = runner;
         this.configFolder = configFolder.getAbsoluteFile();
         this.macroFolder = macroFolder.getAbsoluteFile();
         this.LOGGER = logger;
@@ -71,11 +74,11 @@ public class ConfigManager {
     public synchronized void convertConfigFormat(Class<?> clazz) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
         try {
             Method m = clazz.getDeclaredMethod("fromV" + loadedAsVers, JsonObject.class);
-            Object option = clazz.getDeclaredConstructor().newInstance();
+            Object option = clazz.getDeclaredConstructor(Core.class).newInstance(runner);
             m.invoke(option, rawOptions);
             options.put(clazz, option);
         } catch (NoSuchMethodException ignored) {
-            options.put(clazz, clazz.getDeclaredConstructor().newInstance());
+            options.put(clazz, clazz.getDeclaredConstructor(Core.class).newInstance(runner));
         }
     }
 
@@ -93,15 +96,7 @@ public class ConfigManager {
         }
         optionClasses.put(key, optionClass);
         try {
-            if (loadedAsVers != 3) {
-                convertConfigFormat(optionClass);
-            }
-            if (loadedAsVers != 1) {
-                if (!rawOptions.has(key)) {
-                    throw new NullPointerException();
-                }
-                options.put(optionClass, gson.fromJson(rawOptions.get(key), optionClass));
-            }
+            convertConfigFormat(optionClass);
         } catch (Exception ex) {
             ex.printStackTrace();
             options.put(optionClass, optionClass.newInstance());
@@ -115,10 +110,10 @@ public class ConfigManager {
             if (rawOptions == null) {
                 reloadRawConfigFromFile();
             }
-            if (loadedAsVers != 3) {
-                try {
-                    convertConfigFormat();
-                } finally {
+            try {
+                convertConfigFormat();
+            } finally {
+                if (loadedAsVers != 3) {
                     final File back = new File(configFolder, "options.json.v" + loadedAsVers + ".bak");
                     if (back.exists()) {
                         back.delete();

@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.core.service;
 
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -8,17 +7,16 @@ import java.io.File;
 import java.util.Objects;
 
 public class ServiceTrigger {
-    public String file;
+    public File file;
     public boolean enabled;
 
     public ServiceTrigger(File file, boolean enabled) {
-        this.file = Core.getInstance().config.macroFolder.getAbsoluteFile().toPath().relativize(file.getAbsoluteFile().toPath()).toString();
+        this.file = file;
         this.enabled = enabled;
     }
 
     public ScriptTrigger toScriptTrigger() {
-        return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), new File(
-                Core.getInstance().config.macroFolder, file), enabled, false);
+        return new ScriptTrigger(ScriptTrigger.TriggerType.EVENT, EventService.class.getAnnotation(Event.class).value(), file, enabled, false);
     }
 
     @Override

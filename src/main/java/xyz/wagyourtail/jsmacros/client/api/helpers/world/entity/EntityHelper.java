@@ -24,8 +24,11 @@ import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
@@ -33,8 +36,8 @@ import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
 import xyz.wagyourtail.jsmacros.client.access.IMixinEntity;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos2D;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Pos3D;
+import xyz.wagyourtail.jsmacros.api.math.Pos2D;
+import xyz.wagyourtail.jsmacros.api.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
@@ -66,6 +69,8 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -262,7 +267,26 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     @Nullable
     public EntityHelper<?> rayTraceEntity(int distance) {
-        return DebugRenderer.getTargetedEntity(base, distance).map(EntityHelper::create).orElse(null);
+        return getTargetedEntity(base, distance).map(EntityHelper::create).orElse(null);
+    }
+
+    private static Optional<Entity> getTargetedEntity(@Nullable Entity entity, int maxDistance) {
+        if (entity == null) {
+            return Optional.empty();
+        } else {
+            Vec3d lv = entity.getEyePos();
+            Vec3d lv2 = entity.getRotationVec(1.0F).multiply(maxDistance);
+            Vec3d lv3 = lv.add(lv2);
+            Box lv4 = entity.getBoundingBox().stretch(lv2).expand(1.0);
+            int j = maxDistance * maxDistance;
+            Predicate<Entity> predicate = entityx -> !entityx.isSpectator() && entityx.canHit();
+            EntityHitResult lv5 = ProjectileUtil.raycast(entity, lv, lv3, lv4, predicate, j);
+            if (lv5 == null) {
+                return Optional.empty();
+            } else {
+                return lv.squaredDistanceTo(lv5.getPos()) > j ? Optional.empty() : Optional.of(lv5.getEntity());
+            }
+        }
     }
 
     /**
@@ -459,234 +483,9 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         return new ChunkHelper(base.getWorld().getChunk(base.getBlockPos()));
     }
 
-    /**
-     * @return the name of the biome this entity is in.
-     * @since 1.8.4
-     */
-    @DocletReplaceReturn("Biome")
-    public String getBiome() {
-        return MinecraftClient.getInstance().world.getRegistryManager().get(RegistryKeys.BIOME).getId(MinecraftClient.getInstance().world.getBiome(base.getBlockPos()).value()).toString();
-    }
-
     @Override
     public String toString() {
         return String.format("%s:{\"name\": \"%s\", \"type\": \"%s\"}", getClass().getSimpleName(), this.getName(), this.getType());
-    }
-
-    /**
-     * mostly for internal use.
-     *
-     * @param e mc entity.
-     * @return correct subclass of this.
-     */
-    public static EntityHelper<?> create(@NotNull Entity e) {
-        Objects.requireNonNull(e, "Entity cannot be null.");
-
-        // Players
-        if (e instanceof ClientPlayerEntity) {
-            return new ClientPlayerEntityHelper<>((ClientPlayerEntity) e);
-        }
-        if (e instanceof PlayerEntity) {
-            return new PlayerEntityHelper<>((PlayerEntity) e);
-        }
-
-        if (e instanceof MobEntity) {
-            // Merchants
-            if (e instanceof VillagerEntity) {
-                return new VillagerEntityHelper((VillagerEntity) e);
-            }
-            if (e instanceof MerchantEntity) {
-                return new MerchantEntityHelper<>((MerchantEntity) e);
-            }
-
-            // Bosses
-            if (e instanceof EnderDragonEntity) {
-                return new EnderDragonEntityHelper(((EnderDragonEntity) e));
-            } else if (e instanceof WitherEntity) {
-                return new WitherEntityHelper(((WitherEntity) e));
-            }
-
-            // Hostile mobs
-            if (e instanceof AbstractPiglinEntity) {
-                if (e instanceof PiglinEntity) {
-                    return new PiglinEntityHelper(((PiglinEntity) e));
-                } else {
-                    return new AbstractPiglinEntityHelper<>(((AbstractPiglinEntity) e));
-                }
-            } else if (e instanceof CreeperEntity) {
-                return new CreeperEntityHelper(((CreeperEntity) e));
-            } else if (e instanceof ZombieEntity) {
-                if (e instanceof DrownedEntity) {
-                    return new DrownedEntityHelper(((DrownedEntity) e));
-                } else if (e instanceof ZombieVillagerEntity) {
-                    return new ZombieVillagerEntityHelper(((ZombieVillagerEntity) e));
-                } else {
-                    return new ZombieEntityHelper<>(((ZombieEntity) e));
-                }
-            } else if (e instanceof EndermanEntity) {
-                return new EndermanEntityHelper(((EndermanEntity) e));
-            } else if (e instanceof GhastEntity) {
-                return new GhastEntityHelper(((GhastEntity) e));
-            } else if (e instanceof BlazeEntity) {
-                return new BlazeEntityHelper(((BlazeEntity) e));
-            } else if (e instanceof GuardianEntity) {
-                return new GuardianEntityHelper(((GuardianEntity) e));
-            } else if (e instanceof PhantomEntity) {
-                return new PhantomEntityHelper(((PhantomEntity) e));
-            } else if (e instanceof IllagerEntity) {
-                if (e instanceof VindicatorEntity) {
-                    return new VindicatorEntityHelper(((VindicatorEntity) e));
-                } else if (e instanceof PillagerEntity) {
-                    return new PillagerEntityHelper(((PillagerEntity) e));
-                } else if (e instanceof SpellcastingIllagerEntity) {
-                    return new SpellcastingIllagerEntityHelper<>(((SpellcastingIllagerEntity) e));
-                } else {
-                    return new IllagerEntityHelper<>(((IllagerEntity) e));
-                }
-            } else if (e instanceof ShulkerEntity) {
-                return new ShulkerEntityHelper(((ShulkerEntity) e));
-            } else if (e instanceof SlimeEntity) {
-                return new SlimeEntityHelper(((SlimeEntity) e));
-            } else if (e instanceof SpiderEntity) {
-                return new SpiderEntityHelper(((SpiderEntity) e));
-            } else if (e instanceof VexEntity) {
-                return new VexEntityHelper(((VexEntity) e));
-            } else if (e instanceof WardenEntity) {
-                return new WardenEntityHelper(((WardenEntity) e));
-            } else if (e instanceof WitchEntity) {
-                return new WitchEntityHelper(((WitchEntity) e));
-            }
-
-            // Animals
-            if (e instanceof AnimalEntity) {
-                if (e instanceof AbstractHorseEntity) {
-                    if (e instanceof HorseEntity) {
-                        return new HorseEntityHelper(((HorseEntity) e));
-                    } else if (e instanceof AbstractDonkeyEntity) {
-                        if (e instanceof LlamaEntity) {
-                            return new LlamaEntityHelper<>(((LlamaEntity) e));
-                        } else {
-                            return new DonkeyEntityHelper<>(((AbstractDonkeyEntity) e));
-                        }
-                    } else {
-                        return new AbstractHorseEntityHelper<>(((AbstractHorseEntity) e));
-                    }
-                } else if (e instanceof AxolotlEntity) {
-                    return new AxolotlEntityHelper(((AxolotlEntity) e));
-                } else if (e instanceof BeeEntity) {
-                    return new BeeEntityHelper(((BeeEntity) e));
-                } else if (e instanceof FoxEntity) {
-                    return new FoxEntityHelper(((FoxEntity) e));
-                } else if (e instanceof FrogEntity) {
-                    return new FrogEntityHelper(((FrogEntity) e));
-                } else if (e instanceof GoatEntity) {
-                    return new GoatEntityHelper(((GoatEntity) e));
-                } else if (e instanceof MooshroomEntity) {
-                    return new MooshroomEntityHelper(((MooshroomEntity) e));
-                } else if (e instanceof OcelotEntity) {
-                    return new OcelotEntityHelper(((OcelotEntity) e));
-                } else if (e instanceof PandaEntity) {
-                    return new PandaEntityHelper(((PandaEntity) e));
-                } else if (e instanceof PigEntity) {
-                    return new PigEntityHelper(((PigEntity) e));
-                } else if (e instanceof PolarBearEntity) {
-                    return new PolarBearEntityHelper(((PolarBearEntity) e));
-                } else if (e instanceof RabbitEntity) {
-                    return new RabbitEntityHelper(((RabbitEntity) e));
-                } else if (e instanceof SheepEntity) {
-                    return new SheepEntityHelper(((SheepEntity) e));
-                } else if (e instanceof StriderEntity) {
-                    return new StriderEntityHelper(((StriderEntity) e));
-                } else if (e instanceof TameableEntity) {
-                    if (e instanceof CatEntity) {
-                        return new CatEntityHelper(((CatEntity) e));
-                    } else if (e instanceof WolfEntity) {
-                        return new WolfEntityHelper(((WolfEntity) e));
-                    } else if (e instanceof ParrotEntity) {
-                        return new ParrotEntityHelper(((ParrotEntity) e));
-                    } else {
-                        return new TameableEntityHelper<>(((TameableEntity) e));
-                    }
-                } else {
-                    return new AnimalEntityHelper<>(((AnimalEntity) e));
-                }
-            }
-
-            // Neutral mobs
-            if (e instanceof AllayEntity) {
-                return new AllayEntityHelper(((AllayEntity) e));
-            } else if (e instanceof BatEntity) {
-                return new BatEntityHelper(((BatEntity) e));
-            } else if (e instanceof DolphinEntity) {
-                return new DolphinEntityHelper(((DolphinEntity) e));
-            } else if (e instanceof IronGolemEntity) {
-                return new IronGolemEntityHelper(((IronGolemEntity) e));
-            } else if (e instanceof SnowGolemEntity) {
-                return new SnowGolemEntityHelper(((SnowGolemEntity) e));
-            } else if (e instanceof FishEntity) {
-                if (e instanceof PufferfishEntity) {
-                    return new PufferfishEntityHelper(((PufferfishEntity) e));
-                } else if (e instanceof TropicalFishEntity) {
-                    return new TropicalFishEntityHelper(((TropicalFishEntity) e));
-                } else {
-                    return new FishEntityHelper<>(((FishEntity) e));
-                }
-            }
-        }
-
-        // Projectiles
-        if (e instanceof ProjectileEntity) {
-            if (e instanceof ArrowEntity) {
-                return new ArrowEntityHelper(((ArrowEntity) e));
-            } else if (e instanceof FishingBobberEntity) {
-                return new FishingBobberEntityHelper(((FishingBobberEntity) e));
-            } else if (e instanceof TridentEntity) {
-                return new TridentEntityHelper(((TridentEntity) e));
-            } else if (e instanceof WitherSkullEntity) {
-                return new WitherSkullEntityHelper(((WitherSkullEntity) e));
-            }
-        }
-
-        // Decorations
-        if (e instanceof ArmorStandEntity) {
-            return new ArmorStandEntityHelper(((ArmorStandEntity) e));
-        } else if (e instanceof EndCrystalEntity) {
-            return new EndCrystalEntityHelper(((EndCrystalEntity) e));
-        } else if (e instanceof ItemFrameEntity) {
-            return new ItemFrameEntityHelper(((ItemFrameEntity) e));
-        } else if (e instanceof PaintingEntity) {
-            return new PaintingEntityHelper(((PaintingEntity) e));
-        }
-
-        // Vehicles
-        if (e instanceof BoatEntity) {
-            return new BoatEntityHelper(((BoatEntity) e));
-        } else if (e instanceof FurnaceMinecartEntity) {
-            return new FurnaceMinecartEntityHelper(((FurnaceMinecartEntity) e));
-        } else if (e instanceof TntMinecartEntity) {
-            return new TntMinecartEntityHelper(((TntMinecartEntity) e));
-        }
-
-        if (e instanceof LivingEntity) {
-            return new LivingEntityHelper<>((LivingEntity) e);
-        }
-        if (e instanceof ItemEntity) {
-            return new ItemEntityHelper((ItemEntity) e);
-        }
-        if (e instanceof DisplayEntity) {
-            if (e instanceof DisplayEntity.ItemDisplayEntity) {
-                return new ItemDisplayEntityHelper((DisplayEntity.ItemDisplayEntity) e);
-            } else if (e instanceof DisplayEntity.TextDisplayEntity) {
-                return new TextDisplayEntityHelper((DisplayEntity.TextDisplayEntity) e);
-            } else if (e instanceof DisplayEntity.BlockDisplayEntity) {
-                return new BlockDisplayEntityHelper((DisplayEntity.BlockDisplayEntity) e);
-            }
-            return new DisplayEntityHelper<>((DisplayEntity) e);
-        }
-        if (e instanceof InteractionEntity) {
-            return new InteractionEntityHelper((InteractionEntity) e);
-        }
-        return new EntityHelper<>(e);
     }
 
     /**
@@ -743,24 +542,6 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     public ItemEntityHelper asItem() {
         return (ItemEntityHelper) this;
-    }
-
-    /**
-     * @return the entity as a server entity if an integrated server is running and {@code null} otherwise.
-     * @since 1.8.4
-     */
-    @Nullable
-    public EntityHelper<?> asServerEntity() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (!client.isIntegratedServerRunning()) {
-            return null;
-        }
-        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).getServerWorld().getEntity(base.getUuid());
-        if (entity == null) {
-            return null;
-        } else {
-            return create(entity);
-        }
     }
 
 }

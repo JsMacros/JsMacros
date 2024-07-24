@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.worldscanner;
 
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IAdvancedFilter;
 import xyz.wagyourtail.jsmacros.client.api.classes.worldscanner.filter.api.IFilter;
@@ -51,6 +51,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
  */
 @SuppressWarnings("unused")
 public final class WorldScannerBuilder {
+    private final World world;
 
     @Nullable
     private IAdvancedFilter<BlockHelper> blockFilter;
@@ -61,9 +62,10 @@ public final class WorldScannerBuilder {
     private Operation operation;
     private String method;
 
-    public WorldScannerBuilder() {
+    public WorldScannerBuilder(World world) {
         selectedCategory = FilterCategory.NONE;
         operation = Operation.NONE;
+        this.world = world;
     }
 
     @Nullable
@@ -278,7 +280,7 @@ public final class WorldScannerBuilder {
     }
 
     public WorldScanner build() {
-        return new WorldScanner(MinecraftClient.getInstance().world, blockFilter, stateFilter);
+        return new WorldScanner(world, blockFilter, stateFilter);
     }
 
     private enum Operation {

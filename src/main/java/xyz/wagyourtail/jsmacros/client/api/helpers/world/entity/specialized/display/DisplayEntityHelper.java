@@ -3,7 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.specialized.dis
 import net.minecraft.entity.decoration.Brightness;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.util.math.Box;
-import xyz.wagyourtail.jsmacros.client.api.classes.math.Vec3D;
+import xyz.wagyourtail.jsmacros.api.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinDisplayEntity;
 

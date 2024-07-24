@@ -1,6 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.library.impl;
 
 import org.jetbrains.annotations.Nullable;
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 import xyz.wagyourtail.jsmacros.core.library.impl.classes.HTTPRequest;
@@ -21,6 +22,10 @@ import java.util.Map;
  */
 @Library("Request")
 public class FRequest extends BaseLibrary {
+
+    public FRequest(Core<?, ?> runner) {
+        super(runner);
+    }
 
     /**
      * create a HTTPRequest handler to the specified URL

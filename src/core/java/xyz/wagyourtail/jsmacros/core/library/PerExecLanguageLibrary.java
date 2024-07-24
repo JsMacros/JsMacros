@@ -8,6 +8,7 @@ public class PerExecLanguageLibrary<U, T extends BaseScriptContext<U>> extends B
     protected final Class<? extends BaseLanguage<U, T>> language;
 
     public PerExecLanguageLibrary(T context, Class<? extends BaseLanguage<U, T>> language) {
+        super(context.runner);
         this.language = language;
         this.ctx = context;
     }

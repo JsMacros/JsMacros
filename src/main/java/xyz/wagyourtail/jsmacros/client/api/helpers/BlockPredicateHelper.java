@@ -1,12 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers;
 
 import net.minecraft.block.pattern.CachedBlockPosition;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.predicate.BlockPredicate;
 import net.minecraft.registry.entry.RegistryEntry;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.world.WorldHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.List;
@@ -15,7 +15,6 @@ import java.util.List;
  * @since 1.9.1
  */
 public class BlockPredicateHelper extends BaseHelper<BlockPredicate> {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
 
     public BlockPredicateHelper(BlockPredicate base) {
         super(base);
@@ -54,8 +53,8 @@ public class BlockPredicateHelper extends BaseHelper<BlockPredicate> {
      * @param state
      * @return
      */
-    public boolean test(BlockPosHelper state) {
-        return base.test(new CachedBlockPosition(mc.world, state.getRaw(), true));
+    public boolean test(WorldHelper world, BlockPosHelper state) {
+        return base.test(new CachedBlockPosition(world.getRaw(), state.getRaw(), true));
     }
 
 }

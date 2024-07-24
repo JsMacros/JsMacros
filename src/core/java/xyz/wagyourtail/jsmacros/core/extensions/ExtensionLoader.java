@@ -189,7 +189,7 @@ public class ExtensionLoader {
         Thread.currentThread().setContextClassLoader(classLoader);
         for (Extension extension : extensions) {
             try {
-                extension.init();
+                extension.init(core);
                 if (extension instanceof LibraryExtension libExt) {
                     libraryExtensions.add(libExt);
                     for (Class<? extends BaseLibrary> lib : libExt.getLibraries()) {

@@ -37,7 +37,8 @@ public class EventCustom extends BaseEvent {
     /**
      * @param eventName name of the event. please don't use an existing one... your scripts might not like that.
      */
-    public EventCustom(String eventName) {
+    public EventCustom(Core<?, ?> runner, String eventName) {
+        super(runner);
         this.eventName = eventName;
     }
 
@@ -48,7 +49,7 @@ public class EventCustom extends BaseEvent {
      * @since 1.2.8
      */
     public void trigger() {
-        profile.triggerEvent(this);
+        runner.profile.triggerEvent(this);
     }
 
     /**
@@ -58,12 +59,12 @@ public class EventCustom extends BaseEvent {
      * @since 1.9.0
      */
     public void triggerAsync(MethodWrapper<Object, Object, Object, ?> callback) {
-        Core.getInstance().threadPool.runTask(() -> {
-            profile.triggerEvent(this);
+        runner.threadPool.runTask(() -> {
+            runner.profile.triggerEvent(this);
             try {
                 callback.run();
             } catch (Throwable e) {
-                Core.getInstance().profile.logError(e);
+                runner.profile.logError(e);
             }
         });
     }
@@ -129,7 +130,7 @@ public class EventCustom extends BaseEvent {
      * @since 1.2.8
      */
     public Object putObject(String name, Object o) {
-        if (Core.getInstance().extensions.isGuestObject(o)) {
+        if (runner.extensions.isGuestObject(o)) {
             throw new AssertionError("Cannot put a guest object into an event");
         }
         args.put(name, o);
@@ -256,7 +257,7 @@ public class EventCustom extends BaseEvent {
      * @since 1.3.0
      */
     public void registerEvent() {
-        Core.getInstance().eventRegistry.addEvent(eventName);
+        runner.eventRegistry.addEvent(eventName);
     }
 
 }

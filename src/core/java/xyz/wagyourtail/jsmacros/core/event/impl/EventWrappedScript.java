@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.event.impl;
 
+import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
@@ -17,7 +18,8 @@ public class EventWrappedScript<T, U, R> extends BaseEvent {
 
     public R result;
 
-    public EventWrappedScript(T arg1, U arg2) {
+    public EventWrappedScript(Core<?, ?> runner, T arg1, U arg2) {
+        super(runner);
         this.arg1 = arg1;
         this.arg2 = arg2;
     }
