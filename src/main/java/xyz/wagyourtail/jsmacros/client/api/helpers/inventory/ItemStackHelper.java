@@ -9,9 +9,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.text.Style;
@@ -289,7 +287,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
     public NBTElementHelper<?> getNBT() {
         ComponentChanges changes = base.getComponentChanges();
         if (changes.isEmpty()) return null;
-        NbtElement elem = ComponentChanges.CODEC.encodeStart(NbtOps.INSTANCE, changes).getOrThrow();
+        NbtElement elem = ComponentChanges.CODEC.encodeStart(RegistryHelper.NBT_OPS_UNLIMITED, changes).getOrThrow();
         return NBTElementHelper.wrap(elem);
     }
 
