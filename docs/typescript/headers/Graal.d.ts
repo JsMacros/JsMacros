@@ -143,7 +143,9 @@ namespace GetJava {
 
 }
 
-type CanOmitNamespace<T extends string> = T extends `minecraft:${infer P}` ? T | P : T;
+type CanOmitNamespace<T extends string> = T | OmitNamespace<T>;
+type OmitNamespace<T extends string> = T extends `minecraft:${infer P}` ? P : T;
+type CompleteNamespace<T extends string> = T extends `${string}:${string}` ? T : `minecraft:${T}`;
 
 type IsStrictAny<T> = 0 | 1 extends (T extends never ? 1 : 0) ? true : false;
 
@@ -289,7 +291,7 @@ declare namespace Packages {
                 /** @deprecated */ static caller: undefined;
                 /** @deprecated */ static prototype: undefined;
 
-                equals(obj: any): boolean;
+                equals(obj: Object | null | undefined): boolean;
                 getClass(): Class<any>;
                 hashCode(): number;
                 notify(): void;

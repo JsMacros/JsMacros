@@ -3,10 +3,10 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.registry.Registries;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @return
      * @since 1.3.1
      */
+    @DocletReplaceReturn("RecipeId")
     public String getId() {
         return base.id().toString();
     }
@@ -107,6 +108,7 @@ public class RecipeHelper extends BaseHelper<RecipeEntry<?>> {
      * @return the type of this recipe.
      * @since 1.8.4
      */
+    @DocletReplaceReturn("RecipeTypeId")
     public String getType() {
         return Registries.RECIPE_TYPE.getId(base.value().getType()).toString();
     }

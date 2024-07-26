@@ -6,6 +6,7 @@ import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("unused")
 public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
+    private static final Comparator<ScoreboardEntry> SCOREBOARD_ENTRY_COMPARATOR = Comparator.comparing(ScoreboardEntry::value).reversed().thenComparing(ScoreboardEntry::owner, String.CASE_INSENSITIVE_ORDER);
 
     public ScoreboardObjectiveHelper(ScoreboardObjective o) {
         super(o);
@@ -40,10 +42,25 @@ public class ScoreboardObjectiveHelper extends BaseHelper<ScoreboardObjective> {
     public Map<Integer, TextHelper> scoreToDisplayName() {
         Map<Integer, TextHelper> scores = new LinkedHashMap<>();
         for (ScoreboardEntry pl : base.getScoreboard().getScoreboardEntries(base)) {
-            Team team = base.getScoreboard().getTeam(pl.owner());
+            Team team = base.getScoreboard().getScoreHolderTeam(pl.owner());
             scores.put(pl.value(), TextHelper.wrap(Team.decorateName(team, pl.name())));
         }
         return scores;
+    }
+
+    /**
+     * @since 2.0.0
+     */
+    public List<TextHelper> getTexts() {
+        return base.getScoreboard().getScoreboardEntries(base).stream()
+                .filter(ent -> !ent.hidden())
+                .sorted(SCOREBOARD_ENTRY_COMPARATOR)
+                .limit(15L)
+                .map(ent -> {
+                    Team team = base.getScoreboard().getScoreHolderTeam(ent.owner());
+                    return TextHelper.wrap(Team.decorateName(team, ent.name()));
+                })
+                .toList();
     }
 
     /**

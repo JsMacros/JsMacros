@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.doclet.DocletReplaceTypeParams;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.access.IBossBarHud;
 import xyz.wagyourtail.jsmacros.client.access.IPlayerListHud;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -431,7 +432,7 @@ public class FWorld extends BaseLibrary {
      */
     @Nullable
     @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
-    @DocletReplaceParams("...types: E[]")
+    @DocletReplaceParams("...types: JavaVarArgs<E>")
     @DocletReplaceReturn("JavaList<EntityTypeFromId<E>> | null")
     public List<EntityHelper<?>> getEntities(String... types) {
         Set<String> uniqueTypes = Arrays.stream(types).map(RegistryHelper::parseNameSpace).collect(Collectors.toUnmodifiableSet());
@@ -460,7 +461,7 @@ public class FWorld extends BaseLibrary {
      */
     @Nullable
     @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
-    @DocletReplaceParams("distance: double, ...types: E[]")
+    @DocletReplaceParams("distance: double, ...types: JavaVarArgs<E>")
     @DocletReplaceReturn("JavaList<EntityTypeFromId<E>> | null")
     public List<EntityHelper<?>> getEntities(double distance, String... types) {
         ClientPlayerEntity player = mc.player;
@@ -481,7 +482,7 @@ public class FWorld extends BaseLibrary {
         ClientWorld world = mc.world;
         if (world == null) return null;
         List<EntityHelper<?>> entities = new ArrayList<>();
-        for (Entity e : ImmutableList.copyOf(world.getEntities())) {
+        for (Entity e : tryCopyEntities(world, 0)) {
             EntityHelper<?> entity = EntityHelper.create(e);
             if (filter.test(entity)) {
                 entities.add(entity);
@@ -495,12 +496,28 @@ public class FWorld extends BaseLibrary {
         ClientWorld world = mc.world;
         if (world == null) return null;
         List<EntityHelper<?>> entities = new ArrayList<>();
-        for (Entity e : ImmutableList.copyOf(world.getEntities())) {
+        for (Entity e : tryCopyEntities(world, 0)) {
             if (filter.test(e)) {
                 entities.add(EntityHelper.create(e));
             }
         }
         return entities;
+    }
+
+    /**
+     * @param tried always input 0 please. don't want to create an overload for private method.
+     */
+    private List<Entity> tryCopyEntities(ClientWorld world, int tried) {
+        try {
+            List<Entity> list = ImmutableList.copyOf(world.getEntities());
+            if (tried != 0) {
+                JsMacros.LOGGER.warn("FWorld.tryCopyEntities() did {} tries", tried + 1);
+            }
+            return list;
+        } catch (NullPointerException e) {
+            if (tried > 40) throw e; // give up, I wouldn't imagine that it exceeds 40 times
+            return tryCopyEntities(world, tried + 1);
+        }
     }
 
     /**

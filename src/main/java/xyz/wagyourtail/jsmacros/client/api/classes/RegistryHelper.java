@@ -2,13 +2,16 @@ package xyz.wagyourtail.jsmacros.client.api.classes;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.DynamicOps;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.argument.BlockArgumentParser;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.*;
+import net.minecraft.registry.entry.RegistryEntryOwner;
 import net.minecraft.util.Identifier;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -25,7 +28,9 @@ import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.EntityHelper;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Etheradon
@@ -34,6 +39,50 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class RegistryHelper {
     MinecraftClient mc = MinecraftClient.getInstance();
+    /**
+     * implemented in mixins to make this equal to any owner. used by NBT_PASS_OPS
+     */
+    public static final RegistryEntryOwner<?> ALL_EQUALITY_OWNER = new RegistryEntryOwner<>() {
+        @Override
+        public boolean ownerEquals(RegistryEntryOwner<Object> other) {
+            return true;
+        }
+    };
+    private static final RegistryOps.RegistryInfoGetter REGISTRY_INFO_GETTER_UNLIMITED = new RegistryOps.RegistryInfoGetter() {
+        private final RegistryOps.RegistryInfo<?> INFO = new RegistryOps.RegistryInfo<>(ALL_EQUALITY_OWNER, null, null);
+
+        @Override
+        public <T> Optional<RegistryOps.RegistryInfo<T>> getRegistryInfo(RegistryKey<? extends Registry<? extends T>> registryRef) {
+            //noinspection unchecked
+            return Optional.of((RegistryOps.RegistryInfo<T>) INFO);
+        }
+
+    };
+    /**
+     * for encoding unlimited data into NbtElement for getNBT methods
+     */
+    public static final RegistryOps<NbtElement> NBT_OPS_UNLIMITED = RegistryOps.of(NbtOps.INSTANCE, REGISTRY_INFO_GETTER_UNLIMITED);
+    /**
+     * for encoding unlimited data into NbtElement for getNBT methods<br>
+     * for methods accepts WrapperLookup and only uses WrapperLookup#getOps()
+     */
+    public static final RegistryWrapper.WrapperLookup WRAPPER_LOOKUP_UNLIMITED = new RegistryWrapper.WrapperLookup() {
+        @Override
+        public Stream<RegistryKey<? extends Registry<?>>> streamAllRegistryKeys() {
+            throw new RuntimeException("Unsupported operation.");
+        }
+
+        @Override
+        public <T> Optional<RegistryWrapper.Impl<T>> getOptionalWrapper(RegistryKey<? extends Registry<? extends T>> registryRef) {
+            throw new RuntimeException("Unsupported operation.");
+        }
+
+        @Override
+        public <V> RegistryOps<V> getOps(DynamicOps<V> delegate) {
+            return RegistryOps.of(delegate, REGISTRY_INFO_GETTER_UNLIMITED);
+        }
+
+    };
 
     /**
      * @param id the item's id

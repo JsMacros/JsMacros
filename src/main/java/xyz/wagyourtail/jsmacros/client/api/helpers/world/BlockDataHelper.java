@@ -10,6 +10,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -17,7 +18,6 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 
 /**
  * @author Wagyourtail
@@ -82,7 +82,7 @@ public class BlockDataHelper extends BaseHelper<BlockState> {
      */
     @Nullable
     public NBTElementHelper.NBTCompoundHelper getNBT() {
-        return e == null ? null : NBTElementHelper.wrapCompound(e.createNbt(Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager()));
+        return e == null ? null : NBTElementHelper.wrapCompound(e.createNbt(RegistryHelper.WRAPPER_LOOKUP_UNLIMITED));
     }
 
     /**

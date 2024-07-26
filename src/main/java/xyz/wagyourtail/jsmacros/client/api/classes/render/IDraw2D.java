@@ -468,7 +468,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.2.7
      */
-    @DocletReplaceParams("x: int, y: int, id: ItemId")
+    @DocletReplaceParams("x: int, y: int, id: CanOmitNamespace<ItemId>")
     Item addItem(int x, int y, String id);
 
     /**
@@ -479,7 +479,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.4.0
      */
-    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId")
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: CanOmitNamespace<ItemId>")
     Item addItem(int x, int y, int zIndex, String id);
 
     /**
@@ -490,7 +490,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.2.7
      */
-    @DocletReplaceParams("x: int, y: int, id: ItemId, overlay: boolean")
+    @DocletReplaceParams("x: int, y: int, id: CanOmitNamespace<ItemId>, overlay: boolean")
     Item addItem(int x, int y, String id, boolean overlay);
 
     /**
@@ -502,7 +502,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.4.0
      */
-    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId, overlay: boolean")
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: CanOmitNamespace<ItemId>, overlay: boolean")
     Item addItem(int x, int y, int zIndex, String id, boolean overlay);
 
     /**
@@ -515,7 +515,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.2.7
      */
-    @DocletReplaceParams("x: int, y: int, id: ItemId, overlay: boolean, scale: double, rotation: double")
+    @DocletReplaceParams("x: int, y: int, id: CanOmitNamespace<ItemId>, overlay: boolean, scale: double, rotation: double")
     Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation);
 
     /**
@@ -529,7 +529,7 @@ public interface IDraw2D<T> {
      * @return added item
      * @since 1.4.0
      */
-    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId, overlay: boolean, scale: double, rotation: double")
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: CanOmitNamespace<ItemId>, overlay: boolean, scale: double, rotation: double")
     Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation);
 
     /**

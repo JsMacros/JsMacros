@@ -39,6 +39,9 @@ public class MixinHandledScreen<T extends ScreenHandler> extends Screen implemen
     @Shadow
     protected int y;
 
+    @Shadow
+    private boolean cancelNextRelease;
+
     @Override
     public int jsmacros$getX() {
         return x;
@@ -70,6 +73,11 @@ public class MixinHandledScreen<T extends ScreenHandler> extends Screen implemen
             }
         }
         matrices.pop();
+    }
+
+    @Override
+    public void jsmacros_cancelNextRelease() {
+        cancelNextRelease = true;
     }
 
 }

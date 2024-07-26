@@ -1,29 +1,19 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.inventory;
 
-import com.google.gson.JsonParseException;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.*;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.predicate.BlockPredicate;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.EnchantmentTags;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.Texts;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -31,7 +21,6 @@ import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.BlockPredicateHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.mixins.access.MixinBlockPredicatesChecker;
@@ -127,10 +116,12 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * enchanted with the specified enchantment.
      * @since 1.8.4
      */
-    @DocletReplaceParams("id: EnchantmentId")
+    @DocletReplaceParams("id: CanOmitNamespace<EnchantmentId>")
     @Nullable
     public EnchantmentHelper getEnchantment(String id) {
-        return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getName().equals(id)).findFirst().orElse(null);
+        String fullId = RegistryHelper.parseNameSpace(id);
+        // name filter stays for backward compatibility
+        return getEnchantments().stream().filter(enchantmentHelper -> enchantmentHelper.getId().equals(fullId) || enchantmentHelper.getName().equals(id)).findFirst().orElse(null);
     }
 
     /**
@@ -292,8 +283,12 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.1.6, was a {@link String} until 1.5.1
      */
     @Nullable
-    public NBTElementHelper getNBT() {
-        return NBTElementHelper.wrap(base.encode(Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager()));
+    @DocletReplaceReturn("NBTElementHelper$NBTCompoundHelper")
+    public NBTElementHelper<?> getNBT() {
+        ComponentChanges changes = base.getComponentChanges();
+        if (changes.isEmpty()) return null;
+        NbtElement elem = ComponentChanges.CODEC.encodeStart(RegistryHelper.NBT_OPS_UNLIMITED, changes).getOrThrow();
+        return NBTElementHelper.wrap(elem);
     }
 
     /**

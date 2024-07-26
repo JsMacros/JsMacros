@@ -5,7 +5,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
@@ -92,6 +91,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
                 } catch (Throwable e) {
                     Core.getInstance().profile.logError(e);
                 }
+                clickedOn(screen);
             }).position(getX(), getY()).size(getWidth(), 20).build();
             b.set(new ButtonWidgetHelper<>(button, getZIndex()));
             return b.get();
@@ -234,6 +234,7 @@ public class ButtonWidgetHelper<T extends ButtonWidget> extends ClickableWidgetH
                 } catch (Throwable e) {
                     Core.getInstance().profile.logError(e);
                 }
+                clickedOn(screen);
             }, getMessage().getRaw());
             b.set(new ButtonWidgetHelper<>(button, getZIndex()));
             return b.get();

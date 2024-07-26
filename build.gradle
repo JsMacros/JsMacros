@@ -89,8 +89,8 @@ unimined.minecraft {
         yarn project.yarn_mappings
 
         stub.withMappings("official", ["intermediary", "yarn"]) {
-            c("fzc", []) {
-                m("b", "(Lzg;)V", ["method_14364", "sendPacket"])
+            c("net/neoforged/neoforge/common/extensions/ICommonPacketListener", []) {
+                m("b", "(Lzg;)V", ["method_52787", "sendPacket"])
             }
         }
 

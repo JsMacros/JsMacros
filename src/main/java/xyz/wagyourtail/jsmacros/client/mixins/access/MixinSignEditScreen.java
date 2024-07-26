@@ -14,18 +14,25 @@ public abstract class MixinSignEditScreen implements ISignEditScreen {
 
     @Shadow
     @Final
-    private SignBlockEntity blockEntity;
+    private String[] messages;
 
-    @Shadow
-    @Final
-    private boolean front;
+//    @Shadow
+//    @Final
+//    private SignBlockEntity blockEntity;
+//
+//    @Shadow
+//    @Final
+//    private boolean front;
 
     @Shadow
     private SignText text;
 
     @Override
     public void jsmacros_setLine(int line, String text) {
-        this.blockEntity.setText(this.text.withMessage(line, Text.of(text)), this.front);
+        this.messages[line] = text; // actual
+        this.text = this.text.withMessage(line, Text.of(text)); // gui visual
+        // this needs to be called on main thread when sodium is installed
+//        this.blockEntity.setText(this.text, this.front); // block visual
     }
 
 }

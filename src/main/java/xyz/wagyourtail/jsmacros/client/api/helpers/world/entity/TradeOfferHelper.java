@@ -1,11 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.helpers.world.entity;
 
-import com.mojang.serialization.JsonOps;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradedItem;
+import xyz.wagyourtail.doclet.DocletReplaceReturn;
+import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.inventory.VillagerInventory;
 import xyz.wagyourtail.jsmacros.client.api.helpers.NBTElementHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
@@ -13,7 +12,6 @@ import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @SuppressWarnings("unused")
 public class TradeOfferHelper extends BaseHelper<TradeOffer> {
@@ -102,8 +100,9 @@ public class TradeOfferHelper extends BaseHelper<TradeOffer> {
     /**
      * @return trade offer as nbt tag
      */
+    @DocletReplaceReturn("NBTElementHelper$NBTCompoundHelper")
     public NBTElementHelper<?> getNBT() {
-        return NBTElementHelper.wrap(TradeOffer.CODEC.encodeStart(NbtOps.INSTANCE, base).getOrThrow());
+        return NBTElementHelper.wrap(TradeOffer.CODEC.encodeStart(RegistryHelper.NBT_OPS_UNLIMITED, base).getOrThrow());
     }
 
     /**
