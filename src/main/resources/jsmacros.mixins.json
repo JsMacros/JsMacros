@@ -49,6 +49,7 @@
     "access.MixinPlayerListHud",
     "access.MixinRecipeBookResults",
     "access.MixinRecipeBookWidget",
+    "access.MixinRegistryEntryReference",
     "access.MixinResourcePackManager",
     "access.MixinScreen",
     "access.MixinShulkerEntity",

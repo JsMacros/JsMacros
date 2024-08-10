@@ -1050,6 +1050,34 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
         return base.get(Properties.CRACKED);
     }
 
+    /**
+     * @since 2.0.0
+     */
+    public boolean isCrafting() {
+        return base.get(Properties.CRAFTING);
+    }
+
+    /**
+     * @since 2.0.0
+     */
+    public String getTrialSpawnerState() {
+        return base.get(Properties.TRIAL_SPAWNER_STATE).asString();
+    }
+
+    /**
+     * @since 2.0.0
+     */
+    public String getVaultState() {
+        return base.get(Properties.VAULT_STATE).asString();
+    }
+
+    /**
+     * @since 2.0.0
+     */
+    public boolean isOminous() {
+        return base.get(Properties.OMINOUS);
+    }
+
     @Ignore
     private static String SCREAMING_SNAKE_CASE_TO_PascalCase(String input) {
         StringBuilder result = new StringBuilder();

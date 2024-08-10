@@ -469,13 +469,13 @@ public class Draw2D implements IDraw2D<Draw2D>, Registrable<Draw2D> {
      * @since 1.0.5
      */
     @Override
-    @DocletReplaceParams("x: int, y: int, id: ItemId")
+    @DocletReplaceParams("x: int, y: int, id: CanOmitNamespace<ItemId>")
     public Item addItem(int x, int y, String id) {
         return addItem(x, y, id, true);
     }
 
     @Override
-    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId")
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: CanOmitNamespace<ItemId>")
     public Item addItem(int x, int y, int zIndex, String id) {
         return null;
     }
@@ -485,13 +485,13 @@ public class Draw2D implements IDraw2D<Draw2D>, Registrable<Draw2D> {
      * @since 1.2.0
      */
     @Override
-    @DocletReplaceParams("x: int, y: int, id: ItemId, overlay: boolean")
+    @DocletReplaceParams("x: int, y: int, id: CanOmitNamespace<ItemId>, overlay: boolean")
     public Item addItem(int x, int y, String id, boolean overlay) {
         return addItem(x, y, 0, id, overlay, 1, 0);
     }
 
     @Override
-    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId, overlay: boolean")
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: CanOmitNamespace<ItemId>, overlay: boolean")
     public Item addItem(int x, int y, int zIndex, String id, boolean overlay) {
         return addItem(x, y, zIndex, id, overlay, 1, 0);
     }
@@ -501,13 +501,13 @@ public class Draw2D implements IDraw2D<Draw2D>, Registrable<Draw2D> {
      * @since 1.2.0
      */
     @Override
-    @DocletReplaceParams("x: int, y: int, id: ItemId, overlay: boolean, scale: double, rotation: double")
+    @DocletReplaceParams("x: int, y: int, id: CanOmitNamespace<ItemId>, overlay: boolean, scale: double, rotation: double")
     public Item addItem(int x, int y, String id, boolean overlay, double scale, double rotation) {
         return addItem(x, y, 0, id, overlay, scale, rotation);
     }
 
     @Override
-    @DocletReplaceParams("x: int, y: int, zIndex: int, id: ItemId, overlay: boolean, scale: double, rotation: double")
+    @DocletReplaceParams("x: int, y: int, zIndex: int, id: CanOmitNamespace<ItemId>, overlay: boolean, scale: double, rotation: double")
     public Item addItem(int x, int y, int zIndex, String id, boolean overlay, double scale, double rotation) {
         return reAddElement(new Item(x, y, zIndex, id, overlay, scale, (float) rotation).setParent(this));
     }

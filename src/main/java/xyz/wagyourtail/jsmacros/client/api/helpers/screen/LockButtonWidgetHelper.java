@@ -108,6 +108,7 @@ public class LockButtonWidgetHelper extends ClickableWidgetHelper<LockButtonWidg
                 } catch (Exception e) {
                     Core.getInstance().profile.logError(e);
                 }
+                clickedOn(screen);
             });
             if (locked) {
                 lockButton.setLocked(true);

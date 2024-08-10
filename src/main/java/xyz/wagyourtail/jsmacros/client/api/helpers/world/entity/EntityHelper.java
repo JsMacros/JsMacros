@@ -178,7 +178,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.9.0
      */
     @DocletReplaceTypeParams("E extends CanOmitNamespace<EntityId>")
-    @DocletReplaceParams("...anyOf: E[]")
+    @DocletReplaceParams("...anyOf: JavaVarArgs<E>")
     @DocletReplaceReturn("this is EntityTypeFromId<E>")
     public boolean is(String ...types) {
         return Arrays.stream(types).map(RegistryHelper::parseNameSpace).anyMatch(getType()::equals);

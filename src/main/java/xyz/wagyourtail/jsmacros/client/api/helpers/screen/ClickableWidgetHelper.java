@@ -2,9 +2,13 @@ package xyz.wagyourtail.jsmacros.client.api.helpers.screen;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.access.IInventory;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.components.RenderElement;
 import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
@@ -24,6 +28,12 @@ import java.util.stream.Collectors;
 public class ClickableWidgetHelper<B extends ClickableWidgetHelper<B, T>, T extends ClickableWidget> extends BaseHelper<T> implements RenderElement, Alignable<B> {
     public int zIndex;
     public List<Text> tooltips;
+
+    public static void clickedOn(IScreen screen) {
+        if (screen instanceof HandledScreen<?> handled) {
+            ((IInventory) handled).jsmacros_cancelNextRelease();
+        }
+    }
 
     public ClickableWidgetHelper(T btn) {
         this(btn, 0);

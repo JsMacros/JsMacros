@@ -76,7 +76,7 @@ public class LivingEntityHelper<T extends LivingEntity> extends EntityHelper<T> 
     @DocletReplaceParams("id: CanOmitNamespace<StatusEffectId>")
     public boolean hasStatusEffect(String id) {
         StatusEffect effect = Registries.STATUS_EFFECT.get(RegistryHelper.parseIdentifier(id));
-        return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().equals(effect));
+        return base.getStatusEffects().stream().anyMatch(statusEffectInstance -> statusEffectInstance.getEffectType().value().equals(effect));
     }
 
     /**

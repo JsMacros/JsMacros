@@ -171,21 +171,39 @@ public class FPlayer extends BaseLibrary {
     }
 
     /**
-     * Write to a sign screen if a sign screen is currently open.
-     *
+     * Write to a sign screen if a sign screen is currently open.<br>
+     * If the given string is null, the text will remain unchanged.
      * @param l1
      * @param l2
      * @param l3
      * @param l4
-     * @return of success.
+     * @return of success (sign screen is open).
      * @since 1.2.2
      */
-    public boolean writeSign(String l1, String l2, String l3, String l4) {
-        if (mc.currentScreen instanceof SignEditScreen) {
-            ((ISignEditScreen) mc.currentScreen).jsmacros_setLine(0, l1);
-            ((ISignEditScreen) mc.currentScreen).jsmacros_setLine(1, l2);
-            ((ISignEditScreen) mc.currentScreen).jsmacros_setLine(2, l3);
-            ((ISignEditScreen) mc.currentScreen).jsmacros_setLine(3, l4);
+    public boolean writeSign(@Nullable String l1, @Nullable String l2, @Nullable String l3, @Nullable String l4) {
+        if (mc.currentScreen instanceof SignEditScreen screen) {
+            if (l1 != null) ((ISignEditScreen) screen).jsmacros_setLine(0, l1);
+            if (l2 != null) ((ISignEditScreen) screen).jsmacros_setLine(1, l2);
+            if (l3 != null) ((ISignEditScreen) screen).jsmacros_setLine(2, l3);
+            if (l4 != null) ((ISignEditScreen) screen).jsmacros_setLine(3, l4);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Write a line to a sign screen if a sign screen is currently open.
+     * @param index the index of the message. should be in between 0 and 3
+     * @param message the message to write
+     * @return of success (sign screen is open).
+     * @since 2.0.0
+     */
+    public boolean writeSign(int index, String message) {
+        if ((index & ~3) != 0) {
+            throw new IndexOutOfBoundsException("Index should be in between 0 and 3!!  provided: " + index);
+        }
+        if (mc.currentScreen instanceof SignEditScreen screen) {
+            ((ISignEditScreen) screen).jsmacros_setLine(index, message);
             return true;
         }
         return false;
