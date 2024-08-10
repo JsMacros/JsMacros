@@ -66,3 +66,5 @@ subprojects {
     }
 
 }
+
+project.evaluationDependsOnChildren()

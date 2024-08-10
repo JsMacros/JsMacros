@@ -88,12 +88,6 @@ unimined.minecraft {
         intermediary()
         yarn project.yarn_mappings
 
-        stub.withMappings("official", ["intermediary", "yarn"]) {
-            c("net/neoforged/neoforge/common/extensions/ICommonPacketListener", []) {
-                m("b", "(Lzg;)V", ["method_52787", "sendPacket"])
-            }
-        }
-
         stub.withMappings("intermediary", ["yarn"]) {
             c("net/minecraft/class_1496", []) {
                 m("method_56680", "()Lnet/minecraft/class_1263;", ["getInventoryVanilla"])
@@ -102,7 +96,7 @@ unimined.minecraft {
                 m("method_1759", "(Lnet/minecraft/class_332;Lnet/minecraft/class_9779;)V", ["renderHotbarVanilla"])
             }
         }
-
+        devNamespace "yarn"
         devFallbackNamespace "intermediary"
     }
 
@@ -216,6 +210,8 @@ dependencies {
 
     }
 }
+
+project.evaluationDependsOnChildren()
 
 tasks.register('removeDist', Delete) {
     delete new File(rootProject.rootDir, "dist")
