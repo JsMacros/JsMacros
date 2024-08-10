@@ -1742,6 +1742,27 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("LoginQueryResponseC2SPacket", net.minecraft.network.packet.c2s.login.LoginQueryResponseC2SPacket.class);
         PACKETS.put("StatisticsS2CPacket", net.minecraft.network.packet.s2c.play.StatisticsS2CPacket.class);
         PACKETS.put("CommandTreeS2CPacket", net.minecraft.network.packet.s2c.play.CommandTreeS2CPacket.class);
+        PACKETS.put("ChatCommandSignedC2SPacket", net.minecraft.network.packet.c2s.play.ChatCommandSignedC2SPacket.class);
+        PACKETS.put("SlotChangedStateC2SPacket", net.minecraft.network.packet.c2s.play.SlotChangedStateC2SPacket.class);
+        PACKETS.put("ResourcePackRemoveS2CPacket", net.minecraft.network.packet.s2c.common.ResourcePackRemoveS2CPacket.class);
+        PACKETS.put("ServerTransferS2CPacket", net.minecraft.network.packet.s2c.common.ServerTransferS2CPacket.class);
+        PACKETS.put("SelectKnownPacksS2CPacket", net.minecraft.network.packet.s2c.config.SelectKnownPacksS2CPacket.class);
+        PACKETS.put("StoreCookieS2CPacket", net.minecraft.network.packet.s2c.common.StoreCookieS2CPacket.class);
+        PACKETS.put("DebugSampleS2CPacket", net.minecraft.network.packet.s2c.play.DebugSampleS2CPacket.class);
+        PACKETS.put("ProjectilePowerS2CPacket", net.minecraft.network.packet.s2c.play.ProjectilePowerS2CPacket.class);
+        PACKETS.put("TickStepS2CPacket", net.minecraft.network.packet.s2c.play.TickStepS2CPacket.class);
+        PACKETS.put("SelectKnownPacksC2SPacket", net.minecraft.network.packet.c2s.config.SelectKnownPacksC2SPacket.class);
+        PACKETS.put("CookieRequestS2CPacket", net.minecraft.network.packet.s2c.common.CookieRequestS2CPacket.class);
+        PACKETS.put("ResetChatS2CPacket", net.minecraft.network.packet.s2c.config.ResetChatS2CPacket.class);
+        PACKETS.put("ScoreboardScoreUpdateS2CPacket", net.minecraft.network.packet.s2c.play.ScoreboardScoreUpdateS2CPacket.class);
+        PACKETS.put("DebugSampleSubscriptionC2SPacket", net.minecraft.network.packet.c2s.play.DebugSampleSubscriptionC2SPacket.class);
+        PACKETS.put("ServerLinksS2CPacket", net.minecraft.network.packet.s2c.common.ServerLinksS2CPacket.class);
+        PACKETS.put("CookieResponseC2SPacket", net.minecraft.network.packet.c2s.common.CookieResponseC2SPacket.class);
+        PACKETS.put("ChangeUnlockedRecipesS2CPacket", net.minecraft.network.packet.s2c.play.ChangeUnlockedRecipesS2CPacket.class);
+        PACKETS.put("UpdateTickRateS2CPacket", net.minecraft.network.packet.s2c.play.UpdateTickRateS2CPacket.class);
+        PACKETS.put("BundleDelimiterS2CPacket", net.minecraft.network.packet.s2c.play.BundleDelimiterS2CPacket.class);
+        PACKETS.put("CustomReportDetailsS2CPacket", net.minecraft.network.packet.s2c.common.CustomReportDetailsS2CPacket.class);
+        PACKETS.put("ScoreboardScoreResetS2CPacket", net.minecraft.network.packet.s2c.play.ScoreboardScoreResetS2CPacket.class);
 
         PACKETS.forEach((name, clazz) -> PACKET_NAMES.put(clazz, name));
     }
