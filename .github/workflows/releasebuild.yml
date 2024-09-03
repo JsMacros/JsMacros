@@ -80,7 +80,7 @@ jobs:
             return process.env.branch.replace(/\//g, '_')
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: ${{ steps.artifact_id.outputs.result }}
 
@@ -206,7 +206,7 @@ jobs:
             return process.env.branch.replace(/\//g, '_')      
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: ${{ steps.artifact_id.outputs.result }}
 
