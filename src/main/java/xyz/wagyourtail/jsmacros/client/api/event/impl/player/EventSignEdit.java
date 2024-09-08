@@ -15,12 +15,14 @@ import java.util.List;
 public class EventSignEdit extends BaseEvent {
     public final Pos3D pos;
     public boolean closeScreen = false;
+    public boolean front;
     @Nullable
     public List<String> signText;
 
     @SuppressWarnings("NullableProblems")
-    public EventSignEdit(List<String> signText, int x, int y, int z) {
+    public EventSignEdit(List<String> signText, int x, int y, int z, boolean front) {
         this.pos = new Pos3D(x, y, z);
+        this.front = front;
         this.signText = signText;
     }
 

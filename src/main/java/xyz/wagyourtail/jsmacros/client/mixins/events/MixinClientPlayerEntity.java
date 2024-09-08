@@ -32,6 +32,7 @@ import xyz.wagyourtail.jsmacros.client.movement.MovementQueue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mixin(ClientPlayerEntity.class)
 abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
@@ -68,8 +69,11 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
     @Inject(at = @At("HEAD"), method = "openEditSignScreen", cancellable = true)
     public void onOpenEditSignScreen(SignBlockEntity sign, boolean front, CallbackInfo ci) {
-        List<String> lines = new ArrayList<>(Arrays.asList("", "", "", ""));
-        final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ());
+        List<String> lines = Arrays.stream(sign.getText(front)
+                .getMessages(client.shouldFilterText()))
+                .map(Text::getString)
+                .collect(Collectors.toList());
+        final EventSignEdit event = new EventSignEdit(lines, sign.getPos().getX(), sign.getPos().getY(), sign.getPos().getZ(), front);
         event.trigger();
         lines = event.signText;
         if (lines == null) lines = Arrays.asList("", "", "", "");
@@ -99,6 +103,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
                 //noinspection DataFlowIssue
                 ((ISignEditScreen) signScreen).jsmacros_setLine(i, lines.get(i));
             }
+            ((ISignEditScreen) signScreen).jsmacros_fixSelection();
             ci.cancel();
         }
     }
