@@ -1,9 +1,12 @@
 package xyz.wagyourtail.jsmacros.client.mixins.events;
 
 import com.mojang.authlib.GameProfile;
+import net.minecraft.block.entity.HangingSignBlockEntity;
 import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
+import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.input.Input;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -97,7 +100,13 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
             }
         } //else
         if (cancel) {
-            final SignEditScreen signScreen = new SignEditScreen(sign, front, true);
+            // we're checking the type of block entity to choose the correct screen here.
+            AbstractSignEditScreen signScreen;
+            if (sign instanceof HangingSignBlockEntity hs) {
+                signScreen = new HangingSignEditScreen(hs, front, client.shouldFilterText());
+            } else {
+                signScreen = new SignEditScreen(sign, front, client.shouldFilterText());
+            }
             client.setScreen(signScreen);
             for (int i = 0; i < 4; ++i) {
                 //noinspection DataFlowIssue
