@@ -11,19 +11,10 @@ subprojects {
         archivesName = project.archives_base_name + "-${project.name}-extension"
     }
 
-    java {
-        sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
-        targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = "UTF-8"
-
-        var javaVersion = project.java_version.toInteger()
-        if (JavaVersion.current().isJava9Compatible()) {
-            options.release.set javaVersion
-        }
-    }
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = "UTF-8"
+		options.release = java_version.toInteger()
+	}
 
     configurations {
         jsmacrosExtensionInclude
@@ -41,8 +32,6 @@ subprojects {
         implementation rootProject.configurations.minecraftLibraries.dependencies
         implementation rootProject.configurations.implementation.dependencies
         implementation rootProject.sourceSets.core.output
-
-
     }
 
     afterEvaluate {

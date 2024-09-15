@@ -77,7 +77,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Final
     protected Text title;
     @Shadow
-    protected MinecraftClient client;
+	public MinecraftClient client;
     @Shadow
     public TextRenderer textRenderer;
 
@@ -698,19 +698,23 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         AtomicReference<CyclingButtonWidgetHelper<?>> ref = new AtomicReference<>(null);
         CyclingButtonWidget<String> cyclingButton;
         CyclingButtonWidget.Builder<String> builder = CyclingButtonWidget.builder(net.minecraft.text.Text::literal);
+
         if (alternatives != null) {
             BooleanSupplier supplier = alternateToggle == null ? Screen::hasAltDown : alternateToggle::get;
             builder.values(supplier, Arrays.asList(values), Arrays.asList(alternatives));
         } else {
             builder.values(values);
         }
+
         builder.initially(initial);
 
         if (prefix == null || StringUtils.isBlank(prefix)) {
             builder.omitKeyText();
         }
 
-        cyclingButton = builder.build(x, y, width, height, net.minecraft.text.Text.literal(prefix), (btn, val) -> {
+		assert prefix != null;
+
+		cyclingButton = builder.build(x, y, width, height, net.minecraft.text.Text.literal(prefix), (btn, val) -> {
             try {
                 callback.accept(ref.get(), this);
             } catch (Exception e) {
@@ -718,11 +722,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             }
             ClickableWidgetHelper.clickedOn(this);
         });
+
         ref.set(new CyclingButtonWidgetHelper<>(cyclingButton, zIndex));
+
         synchronized (elements) {
             elements.add(ref.get());
             children.add(cyclingButton);
         }
+
         return ref.get();
     }
 
@@ -893,11 +900,9 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
             while (iter.hasNext()) {
                 RenderElement e = iter.next();
                 e.render(drawContext, mouseX, mouseY, delta);
-                if (e instanceof xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text) {
-                    xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text t = (xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text) e;
-                    if (mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + textRenderer.fontHeight) {
-                        hoverText = t;
-                    }
+
+                if (e instanceof xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text t && mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + textRenderer.fontHeight) {
+                    hoverText = t;
                 }
             }
 
@@ -920,11 +925,8 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
 
         synchronized (elements) {
             for (RenderElement e : elements) {
-                if (e instanceof xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text) {
-                    xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text t = (xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text) e;
-                    if (mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + textRenderer.fontHeight) {
-                        hoverText = t;
-                    }
+                if (e instanceof xyz.wagyourtail.jsmacros.client.api.classes.render.components.Text t && mouseX > t.x && mouseX < t.x + t.width && mouseY > t.y && mouseY < t.y + textRenderer.fontHeight) {
+                    hoverText = t;
                 }
             }
         }
@@ -1023,6 +1025,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
         }
     }
 
+    @Nullable
     @Override
     public MethodWrapper<IScreen, Object, Object, ?> getOnClose() {
         return onClose;

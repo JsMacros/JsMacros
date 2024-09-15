@@ -31,6 +31,6 @@
   ],
   "depends": {
     "fabricloader": ">=0.15.0",
-    "minecraft": ["1.21"]
+    "minecraft": ">=${min_minecraft_version} <=${max_minecraft_version}"
   }
 }

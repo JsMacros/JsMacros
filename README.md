@@ -44,7 +44,7 @@ benefits.
 
 <https://www.patreon.com/wagyourtail>
 
-## Acknoledgements
+## Acknowledgements
 
 [
 ![JProfiler](https://www.ej-technologies.com/images/product_banners/jprofiler_small.png)
