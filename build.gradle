@@ -9,11 +9,6 @@ base {
     archivesName = project.archives_base_name
 }
 
-java {
-    sourceCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
-    targetCompatibility = JavaVersion.values()[project.java_version.toInteger() - 1]
-}
-
 version = project.mod_version
 group = project.maven_group
 
@@ -22,14 +17,17 @@ repositories {
         name "fabricmc repository"
         url 'https://maven.fabricmc.net/'
     }
+
     maven {
         name "modmenu repository"
         url 'https://maven.terraformersmc.com/releases/'
     }
+
     maven {
         name "forge repository"
         url 'https://files.minecraftforge.net/maven/'
     }
+
     maven { url 'https://jitpack.io' }
     mavenCentral()
 }
@@ -38,6 +36,7 @@ configurations {
     implementation {
         canBeResolved = true
     }
+
     jsmacrosExtensionInclude
     shadowForge
 }
@@ -47,28 +46,35 @@ sourceSets {
         java {
             srcDir "common/src/core/java"
         }
+
         resources {
             srcDir "common/src/core/resources"
         }
+
         compileClasspath += configurations.implementation
         runtimeClasspath += configurations.implementation
     }
+
     main {
         java {
             srcDir "common/src/main/java"
         }
+
         resources {
             srcDir "common/src/main/resources"
         }
+
         compileClasspath += core.output + core.compileClasspath
         runtimeClasspath += core.output + core.runtimeClasspath
     }
+
     if (enabled_loaders.contains("forge")) {
         forge {
             compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
             runtimeClasspath += core.output + core.runtimeClasspath + main.output + configurations.implementation
         }
     }
+
     if (enabled_loaders.contains("fabric")) {
         fabric {
             compileClasspath += core.output + core.compileClasspath + main.output + configurations.implementation
@@ -88,14 +94,22 @@ unimined.minecraft {
         intermediary()
         yarn project.yarn_mappings
 
+        stub.withMappings("official", ["intermediary", "yarn"]) {
+            c("fzc", []) {
+                m("b", "(Lzg;)V", ["method_14364", "sendPacket"])
+            }
+        }
+
         stub.withMappings("intermediary", ["yarn"]) {
             c("net/minecraft/class_1496", []) {
                 m("method_56680", "()Lnet/minecraft/class_1263;", ["getInventoryVanilla"])
             }
+
             c("net/minecraft/class_329", []) {
                 m("method_1759", "(Lnet/minecraft/class_332;Lnet/minecraft/class_9779;)V", ["renderHotbarVanilla"])
             }
         }
+
         devNamespace "yarn"
         devFallbackNamespace "intermediary"
     }
@@ -129,9 +143,8 @@ if (enabled_loaders.contains("forge")) {
             ignoreConflicts(true)
         }
 
-        neoForged {
+        neoForge {
             loader project.forge_version
-
             mixinConfig = ["jsmacros-forge.mixins.json", "jsmacros.mixins.json"]
         }
     }
@@ -214,30 +227,30 @@ dependencies {
 project.evaluationDependsOnChildren()
 
 tasks.register('removeDist', Delete) {
-    delete new File(rootProject.rootDir, "dist")
+    delete file("dist")
 }
 
 clean.finalizedBy(removeDist)
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
-
-    var javaVersion = project.java_version.toInteger()
-    if (JavaVersion.current().isJava9Compatible()) {
-        options.release.set javaVersion
-    }
+    options.release = java_version.toInteger()
 }
 
 jar {
     enabled = false
 }
 
+def filesProperties = [
+    "version": project.version,
+    "min_minecraft_version": project.min_minecraft_version,
+    "max_minecraft_version": project.max_minecraft_version
+]
+
 if (enabled_loaders.contains("forge")) {
     processForgeResources {
-        inputs.property "version", project.version
-
         filesMatching("META-INF/neoforge.mods.toml") {
-            expand "version": project.version
+            expand filesProperties
         }
 
         filesMatching("jsmacros.extension.json") {
@@ -256,7 +269,7 @@ if (enabled_loaders.contains("forge")) {
         reproducibleFileOrder = true
     }
 
-    task shadowForgeJar(type: ShadowJar) {
+    tasks.register('shadowForgeJar', ShadowJar) {
         archiveClassifier = "forge-dev-shadow"
         from(forgeJar)
 
@@ -266,7 +279,7 @@ if (enabled_loaders.contains("forge")) {
         mergeServiceFiles()
 
         configurations = [project.configurations.shadowForge]
-}
+    }
 
     remapForgeJar {
         dependsOn(shadowForgeJar)
@@ -290,10 +303,8 @@ if (enabled_loaders.contains("forge")) {
 
 if (enabled_loaders.contains("fabric")) {
     processFabricResources {
-        inputs.property "version", project.version
-
         filesMatching("fabric.mod.json") {
-            expand "version": project.version
+            expand filesProperties
         }
 
         filesMatching("jsmacros.extension.json") {
@@ -324,56 +335,58 @@ if (enabled_loaders.contains("fabric")) {
     }
 }
 
-task generatePyDoc(type: Javadoc) {
+tasks.register('generatePyDoc', Javadoc) {
     group = "documentation"
     description = "Generates the python documentation for the project"
     source = sourceSets.main.allJava + sourceSets.core.allJava
     doFirst {
         classpath = sourceSets.main.compileClasspath + sourceSets.core.compileClasspath
     }
-    destinationDir = new File(rootProject.buildDir, "docs/python/JsMacrosAC/")
+    destinationDir = layout.buildDirectory.file("docs/python/JsMacrosAC/").get().asFile
     options.doclet = "xyz.wagyourtail.doclet.pydoclet.Main"
-    options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
+    options.docletpath file("buildSrc/build/libs/buildSrc.jar")
     options.addStringOption "v", version
 }
 
-task copyPyDoc(type: Copy, dependsOn: generatePyDoc) {
+tasks.register('copyPyDoc', Copy) {
+    dependsOn generatePyDoc
     group = "documentation"
     description = "Copies the python documentation to the build folder"
-    from new File(rootProject.rootDir, "docs/python")
-    into new File(rootProject.buildDir, "docs/python")
+    from file("docs/python")
+    into layout.buildDirectory.file("docs/python")
 }
 
-task generateTSDoc(type: Javadoc) {
+tasks.register('generateTSDoc', Javadoc) {
     group = "documentation"
     description = "Generates the typescript documentation for the project"
     source = sourceSets.main.allJava + sourceSets.core.allJava
     doFirst {
         classpath = sourceSets.main.compileClasspath + sourceSets.core.compileClasspath
     }
-    destinationDir = new File(rootProject.buildDir, "docs/typescript/headers/")
+    destinationDir = layout.buildDirectory.file("docs/typescript/headers/").get().asFile
     options.doclet = "xyz.wagyourtail.doclet.tsdoclet.Main"
-    options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
+    options.docletpath file("buildSrc/build/libs/buildSrc.jar")
     options.addStringOption "v", version
 }
 
-task copyTSEnv(type: Copy, dependsOn: generateTSDoc) {
+tasks.register('copyTSEnv', Copy) {
+    dependsOn generateTSDoc
     group = "documentation"
     description = "Copies the typescript files to the build folder"
-    from new File(rootProject.rootDir, "docs/typescript")
-    into new File(rootProject.buildDir, "docs/typescript")
+    from file("docs/typescript")
+    into layout.buildDirectory.file("docs/typescript").get().asFile
 }
 
-task generateWebDoc(type: Javadoc) {
+tasks.register('generateWebDoc', Javadoc) {
     group = "documentation"
     description = "Generates the web documentation for the project"
     source = sourceSets.main.allJava + sourceSets.core.allJava
     doFirst {
         classpath = sourceSets.main.compileClasspath + sourceSets.core.compileClasspath
     }
-    destinationDir = new File(rootProject.buildDir, "docs/web/")
+    destinationDir = layout.buildDirectory.file("docs/web/").get().asFile
     options.doclet = "xyz.wagyourtail.doclet.webdoclet.Main"
-    options.docletpath new File(rootProject.rootDir, "buildSrc/build/libs/buildSrc.jar")
+    options.docletpath file("buildSrc/build/libs/buildSrc.jar")
     options.addStringOption "v", version
     options.addStringOption "mcv", rootProject.minecraft_version
     options {
@@ -381,26 +394,26 @@ task generateWebDoc(type: Javadoc) {
     }
 }
 
-task copyWebDoc(type: Copy, dependsOn: generateWebDoc) {
+tasks.register('copyWebDoc', Copy) {
+    dependsOn generateWebDoc
     group = "documentation"
     description = "Copies the web documentation to the build folder"
-    from new File(rootProject.rootDir, "docs/web")
-    into new File(rootProject.buildDir, "docs/web")
-
-    inputs.property "version", project.version
+    from file("docs/web")
+    into layout.buildDirectory.file("docs/web")
 
     filesMatching("index.html") {
-        expand "version": project.version
+        expand filesProperties
     }
 }
 
-task createDist(type: Copy) {
+tasks.register('createDist', Copy) {
     group = "build"
     description = "Creates all files for the distribution of the project"
     dependsOn copyPyDoc, copyTSEnv, copyWebDoc
-    from(new File(rootProject.buildDir, "docs"))
-    from(new File(project.buildDir, "libs"))
-    into new File(rootProject.rootDir, "dist")
+
+    from layout.buildDirectory.file("docs")
+    from layout.buildDirectory.file("libs")
+    into file("dist")
 }
 
 build.finalizedBy(createDist)
