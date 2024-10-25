@@ -24,7 +24,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventOpenContain
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventOpenScreen;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventDimensionChange;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventDisconnect;
-import xyz.wagyourtail.jsmacros.client.mixins.access.MixinDisconnectedScreen;
+import xyz.wagyourtail.jsmacros.client.mixin.access.MixinDisconnectedScreen;
 
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient {

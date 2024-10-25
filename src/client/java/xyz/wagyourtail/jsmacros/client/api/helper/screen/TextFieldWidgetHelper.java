@@ -4,8 +4,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.jsmacros.client.api.render.IScreen;
-import xyz.wagyourtail.jsmacros.client.mixins.access.MixinTextFieldWidget;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.mixin.access.MixinTextFieldWidget;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -290,7 +290,7 @@ public class TextFieldWidgetHelper extends ClickableWidgetHelper<TextFieldWidget
                         action.accept(text, screen);
                     }
                 } catch (Throwable e) {
-                    action.getCtx().runner.profile.logError(e);
+                    Core.getInstance().profile.logError(e);
                 }
             });
             textField.setSuggestion(suggestion);

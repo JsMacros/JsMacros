@@ -4,9 +4,9 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.render.IScreen;
-import xyz.wagyourtail.jsmacros.client.api.render.components.Alignable;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.components.Alignable;
+import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 
 /**
  * @author Etheradon

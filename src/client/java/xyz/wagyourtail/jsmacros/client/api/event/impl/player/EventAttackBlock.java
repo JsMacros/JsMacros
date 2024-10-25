@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockDataHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockDataHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

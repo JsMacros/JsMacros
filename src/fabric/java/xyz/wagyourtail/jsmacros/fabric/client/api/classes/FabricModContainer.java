@@ -4,7 +4,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModDependency;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.fabricmc.loader.api.metadata.Person;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
+import xyz.wagyourtail.jsmacros.api.helper.ModContainerHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;

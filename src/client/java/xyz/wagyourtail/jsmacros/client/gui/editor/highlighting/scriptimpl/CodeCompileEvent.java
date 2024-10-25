@@ -2,8 +2,8 @@ package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.scriptimpl;
 
 import io.noties.prism4j.Prism4j;
 import xyz.wagyourtail.StringHashTrie;
-import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.api.TextBuilder;
+import xyz.wagyourtail.jsmacros.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.editor.SelectCursor;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;

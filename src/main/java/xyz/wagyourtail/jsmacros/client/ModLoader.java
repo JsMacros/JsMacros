@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
+import xyz.wagyourtail.jsmacros.api.helper.ModContainerHelper;
 
 import java.util.List;
 

@@ -14,8 +14,8 @@ import net.neoforged.neoforge.client.ClientCommandHandler;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import xyz.wagyourtail.Pair;
 import xyz.wagyourtail.jsmacros.client.access.CommandNodeAccessor;
-import xyz.wagyourtail.jsmacros.client.api.classes.CommandBuilder;
-import xyz.wagyourtail.jsmacros.client.api.helpers.CommandContextHelper;
+import xyz.wagyourtail.jsmacros.api.command.CommandBuilder;
+import xyz.wagyourtail.jsmacros.client.api.helper.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.HashMap;

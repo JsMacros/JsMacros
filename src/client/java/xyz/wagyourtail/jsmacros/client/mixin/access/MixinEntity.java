@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import xyz.wagyourtail.jsmacros.access.IEntity;
+import xyz.wagyourtail.jsmacros.client.access.IEntity;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity implements IEntity {

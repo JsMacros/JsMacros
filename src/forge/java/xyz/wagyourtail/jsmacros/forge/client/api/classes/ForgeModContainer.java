@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.forge.client.api.classes;
 
 import net.neoforged.neoforgespi.language.IModInfo;
-import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
+import xyz.wagyourtail.jsmacros.api.helper.ModContainerHelper;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.api.math;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.BlockPosHelper;
 
 import java.util.Objects;
 
@@ -180,13 +179,13 @@ public class Pos3D extends Pos2D {
         return new Vec3D(this, new Pos3D(end_x, end_y, end_z));
     }
 
-    /**
-     * @return
-     * @since 1.8.0
-     */
-    public BlockPosHelper toBlockPos() {
-        return new BlockPosHelper(BlockPos.ofFloored(x, y, z));
-    }
+//    /**
+//     * @return
+//     * @since 1.8.0
+//     */
+//    public BlockPosHelper toBlockPos() {
+//        return new BlockPosHelper(BlockPos.ofFloored(x, y, z));
+//    }
 
     /**
      * @return

@@ -4,7 +4,7 @@ import net.minecraft.client.gui.hud.ClientBossBar;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.client.api.helpers.world.entity.BossBarHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.BossBarHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

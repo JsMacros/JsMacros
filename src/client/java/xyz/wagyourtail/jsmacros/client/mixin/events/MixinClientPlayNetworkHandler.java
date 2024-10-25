@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixin.events;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientCommonNetworkHandler;
@@ -17,7 +16,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket.Entry;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Final;
@@ -37,7 +35,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventSlotUpdate;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventDeath;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventStatusEffectUpdate;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.*;
-import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.StatusEffectHelper;
 
 import java.util.*;
 

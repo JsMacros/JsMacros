@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.EventNameChange;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.mixins.access.MixinEntity2;
+import xyz.wagyourtail.jsmacros.api.helper.TextHelper;
+import xyz.wagyourtail.jsmacros.client.mixin.access.MixinEntity2;
 
 import java.util.Optional;
 

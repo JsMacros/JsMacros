@@ -4,9 +4,9 @@ import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
-import xyz.wagyourtail.jsmacros.client.api.render.IScreen;
-import xyz.wagyourtail.jsmacros.client.mixins.access.MixinCyclingButton;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
+import xyz.wagyourtail.jsmacros.client.mixin.access.MixinCyclingButton;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -328,8 +328,9 @@ public class CyclingButtonWidgetHelper<T> extends ClickableWidgetHelper<CyclingB
                         action.accept(b.get(), screen);
                     }
                 } catch (Exception e) {
-                    action.getCtx().runner.profile.logError(e);
+                    Core.getInstance().profile.logError(e);
                 }
+                clickedOn(screen);
             });
             b.set(new CyclingButtonWidgetHelper<>(cyclingButton, getZIndex()));
             return b.get();

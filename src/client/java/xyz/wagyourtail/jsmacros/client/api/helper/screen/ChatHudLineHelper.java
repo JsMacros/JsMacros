@@ -3,12 +3,12 @@ package xyz.wagyourtail.jsmacros.client.api.helper.screen;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import xyz.wagyourtail.jsmacros.client.access.IChatHud;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 @SuppressWarnings("unused")
 public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
-    private final ChatHud hud;
+    private ChatHud hud;
 
     public ChatHudLineHelper(ChatHudLine base, ChatHud hud) {
         super(base);
@@ -19,12 +19,16 @@ public class ChatHudLineHelper extends BaseHelper<ChatHudLine> {
         return TextHelper.wrap(base.content());
     }
 
+//    public int getId() {
+//        return base.getId();
+//    }
+
     public int getCreationTick() {
         return base.creationTick();
     }
 
-    public ChatHudLineHelper delete() {
-        hud.messages.removeIf((line) -> line == base);
+    public ChatHudLineHelper deleteById() {
+        ((IChatHud) hud).jsmacros_removeMessageById(0);
         return this;
     }
 

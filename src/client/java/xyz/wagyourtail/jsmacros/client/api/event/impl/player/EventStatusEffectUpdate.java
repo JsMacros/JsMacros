@@ -1,6 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
-import xyz.wagyourtail.jsmacros.client.api.helpers.StatusEffectHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.StatusEffectHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

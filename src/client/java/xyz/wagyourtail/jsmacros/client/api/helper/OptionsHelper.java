@@ -24,7 +24,7 @@ import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.access.IResourcePackManager;
-import xyz.wagyourtail.jsmacros.client.mixins.access.MixinSimpleOption;
+import xyz.wagyourtail.jsmacros.client.mixin.access.MixinSimpleOption;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.*;
@@ -264,7 +264,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      * @since 1.1.7
      */
     public OptionsHelper setFov(int fov) {
-        base.getFov().value = fov;
+        getBase(base.getFov()).forceSetValue(fov);
         return this;
     }
 
@@ -349,6 +349,10 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
         Window win = mc.getWindow();
         GLFW.glfwSetWindowSize(win.getHandle(), w, h);
         return this;
+    }
+
+    private MixinSimpleOption getBase(SimpleOption<?> option) {
+        return (MixinSimpleOption) (Object) option;
     }
 
     public class SkinOptionsHelper {
@@ -566,7 +570,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setBiomeBlendRadius(int radius) {
-            base.getBiomeBlendRadius().value = radius;
+            getBase(base.getBiomeBlendRadius()).forceSetValue(radius);
             return this;
         }
 
@@ -864,7 +868,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setBrightness(double gamma) {
-            base.getGamma().value = gamma;
+            getBase(base.getGamma()).forceSetValue(gamma);
             return this;
         }
 
@@ -1063,7 +1067,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public VideoOptionsHelper setFovEffects(double val) {
-            base.getFovEffectScale().value = val;
+            getBase(base.getFovEffectScale()).forceSetValue(val);
             return this;
         }
 
@@ -1397,7 +1401,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ControlOptionsHelper setMouseSensitivity(double val) {
-            base.getMouseSensitivity().value = val;
+            getBase(base.getMouseSensitivity()).forceSetValue(val);
             return this;
         }
 
@@ -1433,7 +1437,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ControlOptionsHelper setMouseWheelSensitivity(double val) {
-            base.getMouseWheelSensitivity().value = val;
+            getBase(base.getMouseWheelSensitivity()).forceSetValue(val);
             return this;
         }
 
@@ -1760,7 +1764,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setTextBackgroundOpacity(double val) {
-            base.getTextBackgroundOpacity().value = val;
+            getBase(base.getTextBackgroundOpacity()).forceSetValue(val);
             return this;
         }
 
@@ -1786,7 +1790,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setTextSize(double val) {
-            base.getChatScale().value = val;
+            getBase(base.getChatScale()).forceSetValue(val);
             return this;
         }
 
@@ -1804,7 +1808,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatLineSpacing(double val) {
-            base.getChatLineSpacing().value = val;
+            getBase(base.getChatLineSpacing()).forceSetValue(val);
             return this;
         }
 
@@ -1840,7 +1844,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatWidth(double val) {
-            base.getChatWidth().value = val;
+            getBase(base.getChatWidth()).forceSetValue(val);
             return this;
         }
 
@@ -1858,7 +1862,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatFocusedHeight(double val) {
-            base.getChatHeightFocused().value = val;
+            getBase(base.getChatHeightFocused()).forceSetValue(val);
             return this;
         }
 
@@ -1876,7 +1880,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public ChatOptionsHelper setChatUnfocusedHeight(double val) {
-            base.getChatHeightUnfocused().value = val;
+            getBase(base.getChatHeightUnfocused()).forceSetValue(val);
             return this;
         }
 
@@ -2117,7 +2121,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public AccessibilityOptionsHelper setChatLineSpacing(double val) {
-            base.getChatLineSpacing().value = val;
+            getBase(base.getChatLineSpacing()).forceSetValue(val);
             return this;
         }
 
@@ -2135,7 +2139,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public AccessibilityOptionsHelper setChatDelay(double val) {
-            base.getChatDelay().value = val;
+            getBase(base.getChatDelay()).forceSetValue(val);
             return this;
         }
 
@@ -2209,7 +2213,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public AccessibilityOptionsHelper setDistortionEffect(double val) {
-            base.getDistortionEffectScale().value = val;
+            getBase(base.getDistortionEffectScale()).forceSetValue(val);
             return this;
         }
 
@@ -2263,7 +2267,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
          * @since 1.8.4
          */
         public AccessibilityOptionsHelper setFovEffect(boolean val) {
-            base.getHideLightningFlashes().value = val;
+            getBase(base.getHideLightningFlashes()).forceSetValue(val);
             return this;
         }
 
@@ -2277,11 +2281,14 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     @Deprecated
     @DocletReplaceReturn("Trit")
     public int getCloudMode() {
-        return switch (base.getCloudRenderMode().getValue()) {
-            case FANCY -> 2;
-            case FAST -> 1;
-            default -> 0;
-        };
+        switch (base.getCloudRenderMode().getValue()) {
+            case FANCY:
+                return 2;
+            case FAST:
+                return 1;
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -2294,11 +2301,16 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     @DocletReplaceParams("mode: Trit")
     public OptionsHelper setCloudMode(int mode) {
         switch (mode) {
-            case 2 -> base.getCloudRenderMode().setValue(CloudRenderMode.FANCY);
-            case 1 -> base.getCloudRenderMode().setValue(CloudRenderMode.FAST);
-            default -> base.getCloudRenderMode().setValue(CloudRenderMode.OFF);
+            case 2:
+                base.getCloudRenderMode().setValue(CloudRenderMode.FANCY);
+                return this;
+            case 1:
+                base.getCloudRenderMode().setValue(CloudRenderMode.FAST);
+                return this;
+            default:
+                base.getCloudRenderMode().setValue(CloudRenderMode.OFF);
+                return this;
         }
-        return this;
     }
 
     /**
@@ -2308,11 +2320,14 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      */
     @Deprecated
     public int getGraphicsMode() {
-        return switch (base.getGraphicsMode().getValue()) {
-            case FABULOUS -> 2;
-            case FANCY -> 1;
-            default -> 0;
-        };
+        switch (base.getGraphicsMode().getValue()) {
+            case FABULOUS:
+                return 2;
+            case FANCY:
+                return 1;
+            default:
+                return 0;
+        }
     }
 
     /**
@@ -2324,11 +2339,16 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
     @Deprecated
     public OptionsHelper setGraphicsMode(int mode) {
         switch (mode) {
-            case 2 -> base.getGraphicsMode().setValue(GraphicsMode.FABULOUS);
-            case 1 -> base.getGraphicsMode().setValue(GraphicsMode.FANCY);
-            default -> base.getGraphicsMode().setValue(GraphicsMode.FAST);
+            case 2:
+                base.getGraphicsMode().setValue(GraphicsMode.FABULOUS);
+                return this;
+            case 1:
+                base.getGraphicsMode().setValue(GraphicsMode.FANCY);
+                return this;
+            default:
+                base.getGraphicsMode().setValue(GraphicsMode.FAST);
+                return this;
         }
-        return this;
     }
 
     /**
@@ -2373,7 +2393,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      */
     @Deprecated
     public OptionsHelper setRenderDistance(int d) {
-        base.getViewDistance().value = d;
+        ((MixinSimpleOption) (Object) base.getViewDistance()).forceSetValue(d);
         return this;
     }
 
@@ -2392,7 +2412,7 @@ public class OptionsHelper extends BaseHelper<GameOptions> {
      */
     @Deprecated
     public OptionsHelper setGamma(double gamma) {
-        base.getGamma().value = gamma;
+        ((MixinSimpleOption) (Object) base.getGamma()).forceSetValue(gamma);
         return this;
     }
 

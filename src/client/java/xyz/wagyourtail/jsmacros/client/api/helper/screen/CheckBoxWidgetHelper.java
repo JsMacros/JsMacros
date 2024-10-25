@@ -2,7 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helper.screen;
 
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.jsmacros.client.api.render.IScreen;
+import xyz.wagyourtail.jsmacros.client.api.classes.render.IScreen;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -116,7 +116,7 @@ public class CheckBoxWidgetHelper extends ClickableWidgetHelper<CheckBoxWidgetHe
                         action.accept(b.get(), screen);
                     }
                 } catch (Exception e) {
-                    action.getCtx().runner.profile.logError(e);
+                    Core.getInstance().profile.logError(e);
                 }
             }).pos(getX(), getY()).checked(isChecked()).build();
             checkBox.setWidth(getWidth());

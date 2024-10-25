@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.player;
 
 import net.minecraft.item.ItemStack;
-import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemStackHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

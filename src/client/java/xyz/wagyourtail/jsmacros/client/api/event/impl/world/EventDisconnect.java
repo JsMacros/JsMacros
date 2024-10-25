@@ -1,7 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.event.impl.world;
 
 import net.minecraft.text.Text;
-import xyz.wagyourtail.jsmacros.client.api.helpers.TextHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 
