@@ -116,12 +116,6 @@ sourceSets {
 
 if (enabled_loaders.contains("forge")) {
 
-    tasks.register("forgeJar", Jar) {
-        from sourceSets.forge.output, sourceSets.main.output, sourceSets.core.output
-
-        archiveClassifier = "forge"
-    }
-
     unimined.minecraft(sourceSets.forge) {
         combineWith(sourceSets.main)
 
@@ -139,12 +133,6 @@ if (enabled_loaders.contains("forge")) {
 }
 
 if (enabled_loaders.contains("fabric")) {
-
-    tasks.register("fabricJar", Jar) {
-        from sourceSets.fabric.output, sourceSets.main.output, sourceSets.core.output
-
-        archiveClassifier = "fabric"
-    }
 
     unimined.minecraft(sourceSets.fabric) {
         combineWith(sourceSets.main)
