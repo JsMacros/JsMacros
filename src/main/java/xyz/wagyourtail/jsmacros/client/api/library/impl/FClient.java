@@ -21,6 +21,7 @@ import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.ModContainerHelper;
+import xyz.wagyourtail.jsmacros.client.api.helpers.network.NetworkHandlerHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.OptionsHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.PacketByteBufferHelper;
 import xyz.wagyourtail.jsmacros.client.api.helpers.inventory.ItemHelper;
@@ -73,6 +74,14 @@ public class FClient extends PerExecLibrary {
      */
     public MinecraftClient getMinecraft() {
         return mc;
+    }
+
+    /**
+     * @return a helper for interacting with minecraft's networking and sending packets
+     * @since 1.9.2
+     */
+    public NetworkHandlerHelper getNetworkHandler() {
+        return new NetworkHandlerHelper(mc.getNetworkHandler());
     }
 
     /**
