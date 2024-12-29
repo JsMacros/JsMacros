@@ -75,5 +75,6 @@
   "jsmacros.showrunningservices": "Show running services",
   "jsmacros.serviceautoreload": "Auto reload services on change",
   "jsmacros.sortservices": "Service List Sort Method",
-  "jsmacros.showslotindexes": "Show slot indexes"
+  "jsmacros.showslotindexes": "Show slot indexes",
+  "jsmacros.search": "Search"
 }

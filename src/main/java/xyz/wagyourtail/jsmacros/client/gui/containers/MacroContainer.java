@@ -169,6 +169,10 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
         selectkey = false;
     }
 
+    public boolean isSelectKeyActive() {
+        return selectkey;
+    }
+
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         BaseEventRegistry reg = Core.getInstance().eventRegistry;

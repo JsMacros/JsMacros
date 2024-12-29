@@ -112,25 +112,27 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        int w = width - 12;
-        //seperate
-        drawContext.fill(x + w * 2 / 12, y + 1, x + w * 2 / 12 + 1, y + height - 1, 0xFFFFFFFF);
-        drawContext.fill(x + w * 10 / 12, y + 1, x + w * 10 / 12 + 1, y + height - 1, 0xFFFFFFFF);
-        drawContext.fill(x + w * 11 / 12, y + 1, x + w * 11 / 12 + 1, y + height - 1, 0xFFFFFFFF);
-        drawContext.fill(x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
-
-        // border
-        drawContext.fill(x, y, x + width, y + 1, 0xFFFFFFFF);
-        drawContext.fill(x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
-        drawContext.fill(x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
-        drawContext.fill(x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
-
-        if (getRunning()) {
-            runningBtn.setColor(0x7000FF00);
-            runningBtn.setMessage(Text.translatable("jsmacros.running"));
-        } else {
-            runningBtn.setColor(0x70FF0000);
-            runningBtn.setMessage(Text.translatable("jsmacros.stopped"));
+        if (visible) {
+            int w = width - 12;
+            //seperate
+            drawContext.fill(x + w * 2 / 12, y + 1, x + w * 2 / 12 + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + w * 10 / 12, y + 1, x + w * 10 / 12 + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + w * 11 / 12, y + 1, x + w * 11 / 12 + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
+    
+            // border
+            drawContext.fill(x, y, x + width, y + 1, 0xFFFFFFFF);
+            drawContext.fill(x, y + height - 1, x + width, y + height, 0xFFFFFFFF);
+            drawContext.fill(x, y + 1, x + 1, y + height - 1, 0xFFFFFFFF);
+            drawContext.fill(x + width - 1, y + 1, x + width, y + height - 1, 0xFFFFFFFF);
+    
+            if (getRunning()) {
+                runningBtn.setColor(0x7000FF00);
+                runningBtn.setMessage(Text.translatable("jsmacros.running"));
+            } else {
+                runningBtn.setColor(0x70FF0000);
+                runningBtn.setMessage(Text.translatable("jsmacros.stopped"));
+            }
         }
     }
 

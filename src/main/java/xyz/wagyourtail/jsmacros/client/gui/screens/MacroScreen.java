@@ -1,12 +1,16 @@
 package xyz.wagyourtail.jsmacros.client.gui.screens;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroContainer;
 import xyz.wagyourtail.jsmacros.client.gui.containers.MacroListTopbar;
@@ -22,12 +26,16 @@ import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.wagyourgui.overlays.ConfirmOverlay;
 
+import org.lwjgl.glfw.GLFW;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MacroScreen extends BaseScreen {
+    private static final Identifier search_tex = Identifier.of(JsMacros.MOD_ID, "resources/search.png");
+
     protected MultiElementContainer<MacroScreen> topbar;
     protected Scrollbar macroScroll;
     protected List<MultiElementContainer<MacroScreen>> macros = new ArrayList<>();
@@ -37,6 +45,7 @@ public class MacroScreen extends BaseScreen {
     protected Button serviceScreen;
     protected Button runningBtn;
     protected Button aboutBtn;
+    protected TextFieldWidget searchTextInput;
 
     public MacroScreen(Screen parent) {
         super(Text.translatable("jsmacros.title"), parent);
@@ -71,6 +80,10 @@ public class MacroScreen extends BaseScreen {
             openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
         }));
 
+        searchTextInput = this.addDrawableChild(new TextFieldWidget(textRenderer, this.width * 3 / 6 + 14, 3, this.width / 6 - 16, 14, Text.literal("")));
+        searchTextInput.setChangedListener(this::onSearchInput);
+        searchTextInput.setPlaceholder(Text.translatable("jsmacros.search"));
+
         topbar = createTopbar();
 
         topScroll = 40;
@@ -89,6 +102,32 @@ public class MacroScreen extends BaseScreen {
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if(macros.stream().anyMatch(x -> x instanceof MacroContainer && ((MacroContainer)x).isSelectKeyActive())) return true;
+        if (this.getChildOverlay() != null) return super.keyPressed(keyCode, scanCode, modifiers);
+        
+        if(!searchTextInput.isFocused()) searchTextInput.setFocused(true);
+        
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE && searchTextInput.getText().length() > 0) {
+            searchTextInput.setText("");
+            return true;
+        }
+        else if (keyCode == GLFW.GLFW_KEY_ESCAPE) return super.keyPressed(keyCode, scanCode, modifiers);
+        else {
+            searchTextInput.keyPressed(keyCode, scanCode, modifiers);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean charTyped(char charIn, int modifiers) {
+        if(macros.stream().anyMatch(x -> x instanceof MacroContainer && ((MacroContainer)x).isSelectKeyActive())) return true;
+        if(this.getChildOverlay() != null) return super.charTyped(charIn, modifiers);
+        searchTextInput.charTyped(charIn, modifiers);
+        return true;
+    }
+
+    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horiz, double vert) {
         if (overlay == null) {
             macroScroll.mouseDragged(mouseX, mouseY, 0, 0, -vert * 2);
@@ -98,7 +137,7 @@ public class MacroScreen extends BaseScreen {
 
     public void addMacro(ScriptTrigger macro) {
         macros.add(new MacroContainer(this.width / 12, topScroll + macros.size() * 16, this.width * 5 / 6, 14, this.textRenderer, macro, this));
-        macroScroll.setScrollPages(((macros.size() + 1) * 16) / (double) Math.max(1, this.height - 40));
+        setMacroPos();
     }
 
     public void setFile(MultiElementContainer<MacroScreen> macro) {
@@ -135,14 +174,28 @@ public class MacroScreen extends BaseScreen {
 
     private void onScrollbar(double page) {
         topScroll = 40 - (int) (page * (height - 40));
+        setMacroPos(false);
+    }
+
+    private void onSearchInput(String value) {
         setMacroPos();
     }
 
     public void setMacroPos() {
+        setMacroPos(true);
+    }
+
+    public void setMacroPos(boolean updateScrollbarPages) {
         int i = 0;
         for (MultiElementContainer<MacroScreen> m : macros) {
-            m.setVisible(topScroll + i * 16 >= 40);
-            m.setPos(this.width / 12, topScroll + (i++) * 16, this.width * 5 / 6, 14);
+            if (searchTextInput.getText().length() == 0 || m.getButtons().stream().anyMatch(x -> x.getMessage().getString().toLowerCase().contains(searchTextInput.getText().toLowerCase()))) {
+                m.setVisible(topScroll + i * 16 >= 40);
+                m.setPos(this.width / 12, topScroll + (i++) * 16, this.width * 5 / 6, 14);
+            }
+            else m.setVisible(false);
+        }
+        if (updateScrollbarPages) {
+            macroScroll.setScrollPages(((i + 1) * 16) / (double) Math.max(1, this.height - 40));
         }
     }
 
@@ -206,12 +259,17 @@ public class MacroScreen extends BaseScreen {
             macro.render(drawContext, mouseX, mouseY, delta);
         }
 
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 8 / 12, 5, 0x7F7F7F);
+        RenderSystem.enableBlend();
+        drawContext.drawTexture(search_tex, this.width * 3 / 6 + 3, 5, 10, 10, 0, 0, 32, 32, 32, 32);
+        RenderSystem.disableBlend();
+
+        drawContext.drawCenteredTextWithShadow(this.textRenderer, Core.getInstance().profile.getCurrentProfileName(), this.width * 9 / 12, 5, 0x7F7F7F);
 
         drawContext.fill(this.width * 5 / 6 - 1, 0, this.width * 5 / 6 + 1, 20, 0xFFFFFFFF);
         drawContext.fill(this.width / 6 - 1, 0, this.width / 6 + 1, 20, 0xFFFFFFFF);
         drawContext.fill(this.width / 6 * 2, 0, this.width / 6 * 2 + 2, 20, 0xFFFFFFFF);
         drawContext.fill(this.width / 6 * 3 + 1, 0, this.width / 6 * 3 + 3, 20, 0xFFFFFFFF);
+        drawContext.fill(this.width / 6 * 4 + 1, 0, this.width / 6 * 4 + 3, 20, 0xFFFFFFFF);
         drawContext.fill(0, 20, width, 22, 0xFFFFFFFF);
 
         super.render(drawContext, mouseX, mouseY, delta);

@@ -108,5 +108,6 @@
   "jsmacros.event.sound": "Geräusch",
   "jsmacros.event.tick": "Tick",
   "jsmacros.event.title": "Titel",
-  "jsmacros.event.profileload": "Profil geladen"
+  "jsmacros.event.profileload": "Profil geladen",
+  "jsmacros.search": "Suchen"
 }
