@@ -24,20 +24,6 @@ benefits.
 
 #### [More about extensions](https://jsmacros.wagyourtail.xyz/?/extensions.html)
 
-## Beta Builds
-
-1.18: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=main-1.18)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Amain-1.18)
-
-1.17.1: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.17.1)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.17.1)
-
-1.16.5: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.16.5)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.16.5)
-
-1.15.2: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.15.2)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.15.2)
-
-1.14.4: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.14.4)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.14.4)
-
-1.8.9: [![Build Beta](https://github.com/JsMacros/JsMacros/actions/workflows/betabuild.yml/badge.svg?branch=backport-1.8.9)](https://github.com/wagyourtail/JsMacros/actions?query=branch%3Abackport-1.8.9)
-
 ## Support me
 
 <https://ko-fi.com/wagyourtail>
