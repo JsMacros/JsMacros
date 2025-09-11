@@ -4,7 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "access.MixinGameRenderer",
-    "access.MixinInGameHud",
+    "access.MixinDebugHud",
     "access.MixinKeyboard",
     "access.MixinMouse"
   ],

@@ -3,6 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.helper.world.entity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.debug.DebugRenderer;
@@ -23,6 +24,8 @@ import net.minecraft.entity.vehicle.FurnaceMinecartEntity;
 import net.minecraft.entity.vehicle.TntMinecartEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.storage.NbtWriteView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
@@ -67,6 +70,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static xyz.wagyourtail.jsmacros.client.api.classes.render.components.RenderElement.mc;
 
 /**
  * @author Wagyourtail
@@ -282,8 +287,13 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      */
     public NBTElementHelper.NBTCompoundHelper getNBT() {
         NbtCompound nbt = new NbtCompound();
-        base.writeNbt(nbt);
-        return NBTElementHelper.wrapCompound(nbt);
+        WriteView view = NbtWriteView.create(
+                ErrorReporter.EMPTY,
+                Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager()
+        );
+        base.writeData(view);
+        NbtCompound result = ((NbtWriteView) view).getNbt();
+        return NBTElementHelper.wrapCompound(result);
     }
 
     /**
@@ -398,8 +408,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public double getSpeed() {
-        double dx = Math.abs(base.getX() - base.prevX);
-        double dz = Math.abs(base.getZ() - base.prevZ);
+        double dx = Math.abs(base.getX() - base.lastX);
+        double dz = Math.abs(base.getZ() - base.lastZ);
         return Math.sqrt(dx * dx + dz * dz) * 20;
     }
 
@@ -755,7 +765,7 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
         if (!client.isIntegratedServerRunning()) {
             return null;
         }
-        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).getServerWorld().getEntity(base.getUuid());
+        Entity entity = client.getServer().getPlayerManager().getPlayer(client.player.getUuid()).getWorld().getEntity(base.getUuid());
         if (entity == null) {
             return null;
         } else {

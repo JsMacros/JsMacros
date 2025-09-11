@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.passive;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.passive.FrogEntity;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
@@ -12,6 +14,7 @@ import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
  */
 @SuppressWarnings("unused")
 public class FrogEntityHelper extends AnimalEntityHelper<FrogEntity> {
+    MinecraftClient mc = MinecraftClient.getInstance();
 
     public FrogEntityHelper(FrogEntity base) {
         super(base);
@@ -23,7 +26,7 @@ public class FrogEntityHelper extends AnimalEntityHelper<FrogEntity> {
      */
     @DocletReplaceReturn("FrogVariant")
     public String getVariant() {
-        return Registries.FROG_VARIANT.getId(base.getVariant().value()).toString();
+        return mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.FROG_VARIANT).getId(base.getVariant().value()).toString();
     }
 
     /**

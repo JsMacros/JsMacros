@@ -38,7 +38,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
     public void init() {
         super.init();
         scroll = addDrawableChild(new Scrollbar(x + width - 10, y + 12, 10, height - 12, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        addDrawableChild(new Button(x, y, 40, 10, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.add"), (btn) -> {
+        addDrawableChild(new Button(x, y, 40, 10, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("jsmacros.add"), (btn) -> {
             if (setting.hasOptions()) {
                 try {
                     List<String> options = ((List<String>) (List) setting.getOptions()).stream().filter(e -> !map.containsKey(e)).collect(Collectors.toList());
@@ -122,7 +122,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        drawContext.drawText(textRenderer, settingName, (int) (x + width / 2F - textRenderer.getWidth(settingName) / 2F + 20), y + 1, 0xFFFFFF, false);
+        drawContext.drawText(textRenderer, settingName, (int) (x + width / 2F - textRenderer.getWidth(settingName) / 2F + 20), y + 1, 0xFFFFFFFF, false);
         drawContext.fill(x, y + 10, x + width, y + 11, 0xFFFFFFFF);
     }
 
@@ -143,7 +143,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
         public void init() {
             super.init();
             int w = width - height;
-            keyBtn = addDrawableChild(new Button(x, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(key), (btn) -> {
+            keyBtn = addDrawableChild(new Button(x, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal(key), (btn) -> {
                 if (parent.setting.hasOptions()) {
                     try {
                         List<String> options = ((List<String>) (List) parent.setting.getOptions()).stream().filter(e -> !parent.map.containsKey(e)).collect(Collectors.toList());
@@ -165,7 +165,7 @@ public abstract class AbstractMapSettingContainer<T, U extends AbstractMapSettin
                     }));
                 }
             }));
-            addDrawableChild(new Button(x + w, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal("X"), (btn) -> {
+            addDrawableChild(new Button(x + w, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal("X"), (btn) -> {
                 try {
                     parent.removeField(key);
                 } catch (InvocationTargetException | IllegalAccessException e) {

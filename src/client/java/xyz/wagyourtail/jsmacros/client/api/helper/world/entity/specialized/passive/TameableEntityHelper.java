@@ -37,7 +37,8 @@ public class TameableEntityHelper<T extends TameableEntity> extends AnimalEntity
      */
     @Nullable
     public String getOwner() {
-        return base.getOwnerUuid() == null ? null : base.getOwnerUuid().toString();
+        var owner = base.getOwnerReference();
+        return owner != null ? owner.getUuid().toString() : null;
     }
 
     /**

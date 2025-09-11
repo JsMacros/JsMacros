@@ -2,6 +2,7 @@ package xyz.wagyourtail.jsmacros.client.api.helper.inventory;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.component.ComponentChanges;
+import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.*;
 import net.minecraft.enchantment.Enchantment;
@@ -14,6 +15,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.EnchantmentTags;
 import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
+import net.minecraft.component.type.BlockPredicatesComponent;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
@@ -24,7 +26,6 @@ import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockStateHelper;
 import xyz.wagyourtail.jsmacros.client.mixin.access.MixinBlockPredicatesChecker;
-import xyz.wagyourtail.jsmacros.client.mixin.access.MixinItemEnchantmentsComponent;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
@@ -339,7 +340,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.2
      */
     public boolean isTool() {
-        return base.getItem() instanceof MiningToolItem;
+        return base.get(DataComponentTypes.TOOL) != null;
     }
 
     /**
@@ -448,7 +449,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.6.5
      */
     public float getCooldownProgress() {
-        return mc.player.getItemCooldownManager().getCooldownProgress(base, mc.getRenderTickCounter().getTickDelta(false));
+        return mc.player.getItemCooldownManager().getCooldownProgress(base, mc.getRenderTickCounter().getTickProgress(false));
     }
 
     /**
@@ -524,7 +525,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<BlockPredicateHelper> getDestroyRestrictions() {
-        BlockPredicatesChecker bpc = base.get(DataComponentTypes.CAN_BREAK);
+        BlockPredicatesComponent bpc = base.get(DataComponentTypes.CAN_BREAK);
         if (bpc != null) {
             return ((MixinBlockPredicatesChecker) bpc).getPredicates().stream().map(BlockPredicateHelper::new).collect(Collectors.toList());
         }
@@ -536,7 +537,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public List<BlockPredicateHelper> getPlaceRestrictions() {
-        BlockPredicatesChecker nbtList = base.get(DataComponentTypes.CAN_PLACE_ON);
+        BlockPredicatesComponent nbtList = base.get(DataComponentTypes.CAN_PLACE_ON);
         if (nbtList != null) {
             return ((MixinBlockPredicatesChecker) nbtList).getPredicates().stream().map(BlockPredicateHelper::new).collect(Collectors.toList());
         }
@@ -548,8 +549,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean areEnchantmentsHidden() {
-        ItemEnchantmentsComponent iec = base.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT);
-        return !((MixinItemEnchantmentsComponent) iec).getShowInTooltip();
+        return isHidden(DataComponentTypes.TOOLTIP_DISPLAY);
     }
 
     /**
@@ -557,8 +557,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean areModifiersHidden() {
-        AttributeModifiersComponent amc = base.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT);
-        return !amc.showInTooltip();
+        return isHidden(DataComponentTypes.TOOLTIP_DISPLAY);
     }
 
     /**
@@ -566,8 +565,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isUnbreakableHidden() {
-        UnbreakableComponent uc = base.get(DataComponentTypes.UNBREAKABLE);
-        return uc != null && !uc.showInTooltip();
+        return isHidden(DataComponentTypes.TOOLTIP_DISPLAY);
     }
 
     /**
@@ -575,8 +573,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isCanDestroyHidden() {
-        BlockPredicatesChecker bph = base.get(DataComponentTypes.CAN_BREAK);
-        return bph != null && !bph.showInTooltip();
+        return isHidden(DataComponentTypes.CAN_BREAK);
     }
 
     /**
@@ -584,8 +581,7 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isCanPlaceHidden() {
-        BlockPredicatesChecker bph = base.get(DataComponentTypes.CAN_PLACE_ON);
-        return bph != null && !bph.showInTooltip();
+        return isHidden(DataComponentTypes.CAN_PLACE_ON);
     }
 
 
@@ -594,8 +590,12 @@ public class ItemStackHelper extends BaseHelper<ItemStack> {
      * @since 1.8.4
      */
     public boolean isDyeHidden() {
-        DyedColorComponent dyed = base.get(DataComponentTypes.DYED_COLOR);
-        return dyed != null && !dyed.showInTooltip();
+        return isHidden(DataComponentTypes.DYED_COLOR);
+    }
+
+    private boolean isHidden(ComponentType<?> type) {
+        var display = base.get(DataComponentTypes.TOOLTIP_DISPLAY);
+        return display != null && display.hiddenComponents().contains(type);
     }
 
 }

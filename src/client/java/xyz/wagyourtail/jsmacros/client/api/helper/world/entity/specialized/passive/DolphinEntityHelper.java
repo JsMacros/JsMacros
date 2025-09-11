@@ -30,7 +30,7 @@ public class DolphinEntityHelper extends MobEntityHelper<DolphinEntity> {
      * @since 1.8.4
      */
     public BlockPosHelper getTreasurePos() {
-        return new BlockPosHelper(base.getTreasurePos());
+        return new BlockPosHelper(base.treasurePos);
     }
 
     /**

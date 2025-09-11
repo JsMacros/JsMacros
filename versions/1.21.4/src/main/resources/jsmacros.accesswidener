@@ -1,0 +1,25 @@
+accessWidener v2 named
+
+accessible field net/minecraft/client/gui/hud/BossBarHud bossBars Ljava/util/Map;
+accessible field net/minecraft/client/gui/screen/ingame/BeaconScreen primaryEffect Lnet/minecraft/registry/entry/RegistryEntry;
+accessible field net/minecraft/client/gui/screen/ingame/BeaconScreen secondaryEffect Lnet/minecraft/registry/entry/RegistryEntry;
+
+accessible field net/minecraft/client/MinecraftClient fontManager Lnet/minecraft/client/font/FontManager;
+accessible method net/minecraft/client/MinecraftClient doItemUse ()V
+accessible method net/minecraft/client/MinecraftClient doAttack ()Z
+
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen cancelNextRelease Z
+
+accessible field net/minecraft/client/gui/hud/ChatHud messages Ljava/util/List;
+
+accessible method net/minecraft/world/World getEntityLookup ()Lnet/minecraft/world/entity/EntityLookup;
+
+accessible field net/minecraft/client/option/SimpleOption value Ljava/lang/Object;
+
+accessible field net/minecraft/client/gui/screen/ingame/RecipeBookScreen recipeBook Lnet/minecraft/client/gui/screen/recipebook/RecipeBookWidget;
+accessible field net/minecraft/client/gui/screen/recipebook/RecipeBookWidget tabs Ljava/util/List;
+accessible field net/minecraft/recipe/RecipeFinder recipeMatcher Lnet/minecraft/recipe/RecipeMatcher;
+
+accessible field net/minecraft/item/FuelRegistry fuelValues Lit/unimi/dsi/fastutil/objects/Object2IntSortedMap;
+
+accessible field net/minecraft/entity/vehicle/AbstractBoatEntity location Lnet/minecraft/entity/vehicle/AbstractBoatEntity$Location;

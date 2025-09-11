@@ -105,7 +105,7 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
         packet.accept(new BossBarConsumer());
     }
 
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;playSound(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), method = "onItemPickupAnimation")
+    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;playSoundClient(DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FFZ)V"), method = "onItemPickupAnimation")
     public void onItemPickupAnimation(ItemPickupAnimationS2CPacket packet, CallbackInfo info) {
         assert client.world != null;
         final Entity e = client.world.getEntityById(packet.getEntityId());
@@ -209,7 +209,7 @@ public abstract class MixinClientPlayNetworkHandler extends ClientCommonNetworkH
 
     @Inject(method = "onInventory", at = @At("TAIL"))
     public void onInventoryUpdate(InventoryS2CPacket packet, CallbackInfo ci) {
-        if (packet.getSyncId() == 0) {
+        if (packet.syncId() == 0) {
             assert client.player != null;
             new EventContainerUpdate(new InventoryScreen(client.player)).trigger();
         } else {

@@ -16,7 +16,6 @@ public class JsMacrosFabric implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitializeClient() {
         JsMacrosClient.onInitializeClient();
-
         ClientTickEvents.END_CLIENT_TICK.register(TickBasedEvents::onTick);
         KeyBindingHelper.registerKeyBinding(JsMacrosClient.keyBinding);
         CommandBuilderFabric.registerEvent();

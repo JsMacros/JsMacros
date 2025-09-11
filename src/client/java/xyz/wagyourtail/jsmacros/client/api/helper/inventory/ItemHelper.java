@@ -209,7 +209,7 @@ public class ItemHelper extends BaseHelper<Item> {
      * @since 1.8.4
      */
     public boolean isTool() {
-        return base instanceof MiningToolItem;
+        return base.getComponents().get(DataComponentTypes.TOOL) != null;
     }
 
     /**

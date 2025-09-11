@@ -80,7 +80,7 @@ public class ScriptScreen extends BaseScreen {
         }
 
         if (drawTitle) {
-            drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+            drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFFFF);
         }
 
         super.render(drawContext, mouseX, mouseY, delta);

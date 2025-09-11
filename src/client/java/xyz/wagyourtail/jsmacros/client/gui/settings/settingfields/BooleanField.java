@@ -19,7 +19,7 @@ public class BooleanField extends AbstractSettingField<Boolean> {
     public void init() {
         super.init();
         try {
-            this.addDrawableChild(new AnnotatedCheckBox(x, y, width, height, textRenderer, 0xFFFFFFFF, 0xFF242424, 0x7FFFFFFF, 0xFFFFFF, settingName, setting.get(), button -> {
+            this.addDrawableChild(new AnnotatedCheckBox(x, y, width, height, textRenderer, 0xFFFFFFFF, 0xFF242424, 0x7FFFFFFF, 0xFFFFFFFF, settingName, setting.get(), button -> {
                 try {
                     setting.set(((AnnotatedCheckBox) button).value);
                 } catch (IllegalAccessException | InvocationTargetException e) {

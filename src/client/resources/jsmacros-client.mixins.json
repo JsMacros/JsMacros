@@ -75,7 +75,8 @@
     "events.MixinSoundSystem",
     "events.MixinSplashOverlay",
     "access.MixinBlockPredicatesChecker",
-    "access.MixinItemEnchantmentsComponent"
+    "access.MixinInGameHud",
+    "events.MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

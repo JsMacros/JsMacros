@@ -1,13 +1,13 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 
@@ -159,7 +159,7 @@ public class Line implements RenderElement, Alignable<Line> {
      * @since 1.8.4
      */
     public Line setColor(int color) {
-        if (color < 0xFFFFFF) {
+        if (color < 0xFFFFFFFF) {
             color = color | 0xFF000000;
         }
         this.color = color;
@@ -173,7 +173,7 @@ public class Line implements RenderElement, Alignable<Line> {
      * @since 1.8.4
      */
     public Line setColor(int color, int alpha) {
-        this.color = (alpha << 24) | (color & 0xFFFFFF);
+        this.color = (alpha << 24) | (color & 0xFFFFFFFF);
         return this;
     }
 
@@ -191,7 +191,7 @@ public class Line implements RenderElement, Alignable<Line> {
      * @since 1.8.4
      */
     public Line setAlpha(int alpha) {
-        this.color = (alpha << 24) | (color & 0xFFFFFF);
+        this.color = (alpha << 24) | (color & 0xFFFFFFFF);
         return this;
     }
 
@@ -275,38 +275,42 @@ public class Line implements RenderElement, Alignable<Line> {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
-        setupMatrix(matrices, x1, y1, 1, rotation, getScaledWidth(), getScaledHeight(), rotateCenter);
+        Matrix3x2fStack matrices = drawContext.getMatrices();
+        matrices.pushMatrix();
+        try {
+            if (this.rotation != 0) {
+                float pivotX, pivotY;
+                if (this.rotateCenter) {
+                    pivotX = (this.x1 + this.x2) / 2f;
+                    pivotY = (this.y1 + this.y2) / 2f;
+                } else {
+                    pivotX = this.x1;
+                    pivotY = this.y1;
+                }
+                matrices.translate(pivotX, pivotY);
+                matrices.rotate((float) Math.toRadians(this.rotation));
+                matrices.translate(-pivotX, -pivotY);
+            }
 
-        Tessellator tess = Tessellator.getInstance();
+            float dx = this.x2 - this.x1;
+            float dy = this.y2 - this.y1;
+            float length = (float) Math.sqrt(dx * dx + dy * dy);
+            float angle = (float) Math.atan2(dy, dx);
+            float halfWidth = this.width / 2.0f;
 
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
+            matrices.translate(this.x1, this.y1);
+            matrices.rotate(angle);
 
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
-        //draw a line with the given width using triangle strips
-
-        float halfWidth = width / 2;
-        float dx = x2 - x1;
-        float dy = y2 - y1;
-        float length = (float) Math.sqrt(dx * dx + dy * dy);
-        dx /= length;
-        dy /= length;
-        float px = -dy * halfWidth;
-        float py = dx * halfWidth;
-
-        buf.vertex(matrix, x1 + px, y1 + py, 0).color(color);
-        buf.vertex(matrix, x2 + px, y2 + py, 0).color(color);
-        buf.vertex(matrix, x1 - px, y1 - py, 0).color(color);
-        buf.vertex(matrix, x2 - px, y2 - py, 0).color(color);
-        BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        RenderSystem.disableBlend();
-
-        matrices.pop();
+            drawContext.fill(
+                    0,
+                    (int) -halfWidth,
+                    (int) length,
+                    (int) halfWidth,
+                    this.color
+            );
+        } finally {
+            matrices.popMatrix();
+        }
     }
 
     public Line setParent(IDraw2D<?> parent) {
@@ -361,7 +365,7 @@ public class Line implements RenderElement, Alignable<Line> {
         private int y2 = 0;
         private float rotation = 0;
         private boolean rotateCenter = true;
-        private int color = 0xFFFFFF;
+        private int color = 0xFFFFFFFF;
         private int alpha = 0xFF;
         private int zIndex = 0;
         private float width = 1;
@@ -635,7 +639,7 @@ public class Line implements RenderElement, Alignable<Line> {
                     y1,
                     x2,
                     y2,
-                    (alpha << 24) | (color & 0xFFFFFF),
+                    (alpha << 24) | (color & 0xFFFFFFFF),
                     rotation,
                     width,
                     zIndex

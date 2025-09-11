@@ -33,7 +33,6 @@ import xyz.wagyourtail.jsmacros.client.api.classes.render.components.RenderEleme
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.screen.*;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.wagyourgui.elements.Slider;
 
@@ -83,9 +82,14 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Final
     protected Text title;
     @Shadow
-    protected MinecraftClient client;
+    public MinecraftClient client;
     @Shadow
     public TextRenderer textRenderer;
+
+    @Inject(method = "handleTextClick", at = @At("HEAD"), cancellable = true)
+    private void onHandleTextClick(Style style, CallbackInfoReturnable<Boolean> cir) {
+        handleCustomClickEvent(style, cir);
+    }
 
     @Shadow(aliases = {"method_37063", "m_142416_"})
     protected abstract <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement);
@@ -1019,7 +1023,6 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     }
 
     //TODO: switch to enum extension with mixin 9.0 or whenever Mumfrey gets around to it
-    @Inject(at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;)V", remap = false), method = "handleTextClick", cancellable = true)
     public void handleCustomClickEvent(Style style, CallbackInfoReturnable<Boolean> cir) {
         ClickEvent clickEvent = style.getClickEvent();
         if (clickEvent instanceof CustomClickEvent) {

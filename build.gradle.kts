@@ -44,11 +44,6 @@ val client by sourceSets.creating {
     runtimeClasspath += core.output + core.runtimeClasspath + sourceSets.main.get().output
 }
 
-val forge by sourceSets.creating {
-    compileClasspath += core.output + core.compileClasspath + sourceSets.main.get().output + client.output
-    runtimeClasspath += core.output + core.runtimeClasspath + sourceSets.main.get().output + client.output
-}
-
 val fabric by sourceSets.creating {
     compileClasspath += core.output + core.compileClasspath + sourceSets.main.get().output + client.output
     runtimeClasspath += core.output + core.runtimeClasspath + sourceSets.main.get().output + client.output
@@ -66,26 +61,15 @@ unimined.minecraft {
     mappings {
         intermediary()
         yarn(libs.versions.yarn.get())
-
-        stubs("intermediary", "yarn") {
-            c("net/minecraft/class_1496") {
-                m("method_56680;()Lnet/minecraft/class_1263;", "getInventoryVanilla")
-            }
-            c("net/minecraft/class_329") {
-                m("method_1759;(Lnet/minecraft/class_332;Lnet/minecraft/class_9779;)V", "renderHotbarVanilla")
-            }
-        }
-
         devNamespace("yarn")
     }
 
     accessWidener {
         accessWidener(file("src/main/resources/jsmacros.accesswidener"))
     }
-
     if (sourceSet == sourceSets.main.get() || sourceSet == client) {
         defaultRemapJar = false
-        runs.off = true
+        runs.off = true // This disables run configurations!
     }
 }
 
@@ -93,26 +77,6 @@ unimined.minecraft(client) {
     combineWith(":core")
     combineWith(":main")
     side("joined")
-}
-
-unimined.minecraft(forge) {
-    combineWith(":main")
-    side("joined")
-
-    minecraftRemapper.config {
-        ignoreConflicts(true)
-    }
-
-    neoForge {
-        loader(libs.versions.neoforge.get())
-        accessTransformer(aw2at(file("src/main/resources/jsmacros.accesswidener")))
-
-        mixinConfig = listOf(
-            "jsmacros-forge.mixins.json",
-            "jsmacros-client.mixins.json",
-            "jsmacros-common.mixins.json",
-        )
-    }
 }
 
 unimined.minecraft(fabric) {
@@ -132,7 +96,6 @@ configurations.implementation.configure {
 
 val minecraftLibraries by configurations.getting
 val jsmacrosExtensionInclude by configurations.creating
-val shadowForge by configurations.creating
 
 val clientCompileOnly by configurations.getting {
     extendsFrom(configurations.compileOnly.get())
@@ -148,8 +111,6 @@ dependencies {
     val fabricModImplementation by configurations.getting
     val fabricInclude by configurations.getting
     val fabricRuntimeOnly by configurations.getting
-    val forgeInclude by configurations.getting
-    val forgeRuntimeOnly by configurations.getting
 
     compileOnly(libs.mixin)
     compileOnly(libs.mixin.extra)
@@ -168,11 +129,13 @@ dependencies {
     fabricModImplementation(fabricApi.fabricModule("fabric-key-binding-api-v1", libs.versions.fapi.get()))
     fabricModImplementation(fabricApi.fabricModule("fabric-resource-loader-v0", libs.versions.fapi.get()))
     fabricModImplementation(fabricApi.fabricModule("fabric-command-api-v2", libs.versions.fapi.get()))
+    fabricModImplementation(fabricApi.fabricModule("fabric-rendering-v1", libs.versions.fapi.get()))
 
     fabricModImplementation(libs.modmenu)
     fabricModImplementation(fabricApi.fabricModule("fabric-screen-api-v1", libs.versions.fapi.get()))
 
     fabricInclude(fabricApi.fabricModule("fabric-api-base", libs.versions.fapi.get()))
+    fabricInclude(fabricApi.fabricModule("fabric-rendering-v1", libs.versions.fapi.get()))
     fabricInclude(fabricApi.fabricModule("fabric-lifecycle-events-v1", libs.versions.fapi.get()))
     fabricInclude(fabricApi.fabricModule("fabric-key-binding-api-v1", libs.versions.fapi.get()))
     fabricInclude(fabricApi.fabricModule("fabric-resource-loader-v0", libs.versions.fapi.get()))
@@ -183,28 +146,19 @@ dependencies {
     fabricInclude(libs.javassist)
     fabricInclude(libs.joor)
 
-    forgeInclude(libs.prism4j) {
-        exclude(module = "annotations-java5")
-    }
-    forgeInclude(libs.nv.websocket)
-    forgeInclude(libs.javassist)
-    forgeInclude(libs.joor)
 
 
     for (file in file("extension").listFiles() ?: emptyArray()) {
         if (!file.isDirectory || file.name in listOf("build", "src", ".gradle", "gradle")) continue
 
         fabricRuntimeOnly(project(":extension:${file.name}"))
-        forgeRuntimeOnly(project(":extension:${file.name}"))
 
         if (file.resolve("subprojects.txt").exists()) {
             for (subproject in file.resolve("subprojects.txt").readLines()) {
                 fabricRuntimeOnly(project(":extension:${file.name}:$subproject"))
-                forgeRuntimeOnly(project(":extension:${file.name}:$subproject"))
             }
         }
     }
-
 }
 
 val removeDist by tasks.registering(Delete::class) {
@@ -225,56 +179,6 @@ val processCoreResources by tasks.getting(ProcessResources::class) {
 
 tasks.jar {
     enabled = false
-}
-
-val processForgeResources by tasks.getting(ProcessResources::class) {
-    inputs.property("version", project.version)
-
-    filesMatching("META-INF/neoforge.mods.toml") {
-        expand("version" to project.version)
-    }
-}
-
-
-val forgeJar by tasks.getting(Zip::class) {
-    dependsOn(":extension:graal:jar")
-    dependsOn(":extension:graal:js:jar")
-    archiveClassifier.set("forge-dev")
-    from(forge.output, sourceSets.main.get().output, core.output, client.output)
-
-    isPreserveFileTimestamps = false
-    isReproducibleFileOrder = true
-}
-
-val shadowForgeJar by tasks.registering(ShadowJar::class) {
-    archiveClassifier = "forge-dev-shadow"
-    from(forgeJar)
-
-    // exclude icu that"s "accidentally" (I hope) included in graaljs jar
-    exclude("com/ibm/**")
-
-    mergeServiceFiles()
-
-    configurations = listOf(shadowForge)
-}
-
-val remapForgeJar by tasks.getting(RemapJarTaskImpl::class) {
-    dependsOn(shadowForgeJar)
-    inputFile = shadowForgeJar.get().archiveFile.get().asFile
-
-    from(jsmacrosExtensionInclude.files) {
-        include("*")
-        into("META-INF/jsmacrosdeps")
-    }
-
-    manifest {
-        attributes(
-            "MixinConnector" to "xyz.wagyourtail.jsmacros.forge.client.JsMacrosEarlyRiser",
-        )
-    }
-
-    isPreserveFileTimestamps = false
-    isReproducibleFileOrder = true
 }
 
 val processFabricResources by tasks.getting(ProcessResources::class) {

@@ -4,6 +4,7 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.argument.NbtPathArgumentType;
 import net.minecraft.nbt.*;
+import net.minecraft.util.Uuids;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
@@ -100,7 +101,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
      * @since 1.5.1
      */
     public String asString() {
-        return base.asString();
+        return base.asString().orElseGet(base::toString);
     }
 
     /**
@@ -180,7 +181,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             case NbtElement.LIST_TYPE: //9
             case NbtElement.INT_ARRAY_TYPE: //11
             case NbtElement.LONG_ARRAY_TYPE: //12
-                return new NBTListHelper((AbstractNbtList<?>) element);
+                return new NBTListHelper((AbstractNbtList) element);
             case NbtElement.COMPOUND_TYPE: //10
                 return new NBTCompoundHelper((NbtCompound) element);
             case NbtElement.STRING_TYPE: //8
@@ -251,9 +252,9 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
     /**
      * @since 1.5.1
      */
-    public static class NBTListHelper extends NBTElementHelper<AbstractNbtList<?>> {
+    public static class NBTListHelper extends NBTElementHelper<AbstractNbtList> {
 
-        public NBTListHelper(AbstractNbtList<?> base) {
+        public NBTListHelper(AbstractNbtList base) {
             super(base);
         }
 
@@ -274,7 +275,7 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
             if (!isPossiblyUUID()) {
                 return null;
             }
-            return NbtHelper.toUuid(base);
+            return Uuids.toUuid(base.asIntArray().orElseThrow());
         }
 
         /**
@@ -297,7 +298,12 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public int getHeldType() {
-            return base.getHeldType();
+            return switch (base.getType()) {
+                case NbtElement.BYTE_ARRAY_TYPE -> NbtElement.BYTE_TYPE;
+                case NbtElement.INT_ARRAY_TYPE -> NbtElement.INT_TYPE;
+                case NbtElement.LONG_ARRAY_TYPE -> NbtElement.LONG_TYPE;
+                default -> NbtElement.COMPOUND_TYPE;
+            };
         }
 
     }
@@ -323,7 +329,8 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public int getType(String key) {
-            return base.getType(key);
+            var child = base.get(key);
+            return child == null ? -1 : child.getType();
         }
 
         /**
@@ -345,7 +352,8 @@ public class NBTElementHelper<T extends NbtElement> extends BaseHelper<T> {
          * @since 1.5.1
          */
         public String asString(String key) {
-            return base.get(key).asString();
+            var child = base.get(key);
+            return child == null ? null : child.asString().orElseGet(child::toString);
         }
 
     }

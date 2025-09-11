@@ -19,7 +19,7 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
      */
     @DocletReplaceReturn("VillagerProfession")
     public String getProfession() {
-        return base.getVillagerData().getProfession().id();
+        return base.getVillagerData().profession().getIdAsString();
     }
 
     /**
@@ -28,7 +28,7 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
      */
     @DocletReplaceReturn("VillagerStyle")
     public String getStyle() {
-        return base.getVillagerData().getType().toString();
+        return base.getVillagerData().type().toString();
     }
 
     /**
@@ -36,7 +36,7 @@ public class VillagerEntityHelper extends MerchantEntityHelper<VillagerEntity> {
      * @since 1.6.3
      */
     public int getLevel() {
-        return base.getVillagerData().getLevel();
+        return base.getVillagerData().level();
     }
 
 }

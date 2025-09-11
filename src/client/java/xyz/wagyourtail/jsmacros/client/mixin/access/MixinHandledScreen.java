@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.mixin.access;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -7,6 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
+import org.joml.Matrix3x2fStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -55,22 +57,14 @@ public class MixinHandledScreen<T extends ScreenHandler> extends Screen implemen
         return getSlotAt(x, y);
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/DrawContext;II)V", shift = At.Shift.BEFORE))
-    public void onDrawForeground(DrawContext drawContext, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (!JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).showSlotIndexes) {
-            return;
-        }
-        MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
-        // Make them render in front of the slot sprites, but still behind the tooltip
-        matrices.translate(0, 0, 150);
-        for (int i = 0; i < handler.slots.size(); i++) {
-            Slot slot = handler.slots.get(i);
-            if (slot.isEnabled()) {
-                drawContext.drawText(textRenderer, String.valueOf(i), slot.x, slot.y, 0xFFFFFF, false);
-            }
-        }
-        matrices.pop();
+    @Inject(method = "drawSlot", at = @At("TAIL"))
+    private void onDrawSlot(DrawContext context, Slot slot, CallbackInfo ci) {
+        if (!JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).showSlotIndexes) return;
+
+        if (!slot.isEnabled()) return;
+
+        int index = handler.slots.indexOf(slot);
+        context.drawText(MinecraftClient.getInstance().textRenderer, String.valueOf(index), slot.x, slot.y, 0xCCFFFFFF, false);
     }
 
 }

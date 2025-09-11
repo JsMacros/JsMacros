@@ -31,7 +31,7 @@ public class MovementDummy extends LivingEntity {
     private int jumpingCooldown;
 
     public MovementDummy(MovementDummy player) {
-        this(player.getEntityWorld(), player.getPos(), player.getVelocity(), player.getBoundingBox(), player.isOnGround(), player.isSprinting(), player.isSneaking());
+        this(player.getWorld(), player.getPos(), player.getVelocity(), player.getBoundingBox(), player.isOnGround(), player.isSprinting(), player.isSneaking());
         this.inputs = new ArrayList<>(player.getInputs());
         this.coordsHistory = new ArrayList<>(player.getCoordsHistory());
         this.jumpingCooldown = player.jumpingCooldown;
@@ -39,7 +39,7 @@ public class MovementDummy extends LivingEntity {
     }
 
     public MovementDummy(ClientPlayerEntity player) {
-        this(player.getEntityWorld(), player.getPos(), player.getVelocity(), player.getBoundingBox(), player.isOnGround(), player.isSprinting(), player.isSneaking());
+        this(player.getWorld(), player.getPos(), player.getVelocity(), player.getBoundingBox(), player.isOnGround(), player.isSprinting(), player.isSneaking());
         for (EquipmentSlot value : EquipmentSlot.values()) {
             equippedStack.put(value, player.getEquippedStack(value).copy());
         }
@@ -165,11 +165,6 @@ public class MovementDummy extends LivingEntity {
     @Override
     public ItemStack getMainHandStack() {
         return new ItemStack(Items.AIR);
-    }
-
-    @Override
-    public Iterable<ItemStack> getArmorItems() {
-        return new ArrayList<>();
     }
 
     @Override

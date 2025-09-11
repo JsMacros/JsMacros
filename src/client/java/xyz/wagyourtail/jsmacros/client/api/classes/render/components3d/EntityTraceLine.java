@@ -1,6 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
@@ -54,20 +56,25 @@ public class EntityTraceLine extends TraceLine {
     }
 
     @Override
-    public void render(DrawContext drawContext, float tickDelta) {
+    public void render(MatrixStack matrixStack, VertexConsumerProvider consumers, float tickDelta) {
+        // This logic checks if the entity is still valid and should be drawn.
         if (shouldRemove || entity == null || entity.isRemoved() || entity.getWorld() != mc.world) {
             shouldRemove = true;
             dirty = true;
             return;
         }
 
-        Vec3d vec = (entity.prevX == 0.0 && entity.prevY == 0.0 && entity.prevZ == 0.0)
-                ? entity.getPos()
-                : entity.getLerpedPos(tickDelta);
+        // Get the entity's interpolated position for smooth movement.
+        Vec3d vec = entity.getLerpedPos(tickDelta);
+
+        // Update this trace line's target position.
         pos.x = vec.x;
         pos.y = vec.y + yOffset;
         pos.z = vec.z;
-        super.render(drawContext, tickDelta);
+
+        // THIS IS THE FIX:
+        // Call the parent's (TraceLine's) corrected render method with the correct arguments.
+        super.render(matrixStack, consumers, tickDelta);
     }
 
     public static class Builder {

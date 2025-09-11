@@ -38,7 +38,7 @@ public class MixinClientPlayerInteractionManager {
                     hand != Hand.MAIN_HAND,
                     cir.getReturnValue().isAccepted(),
                     new BlockDataHelper(player.getWorld().getBlockState(pos), player.getWorld().getBlockEntity(pos), pos),
-                    hitResult.getSide().getId()
+                    hitResult.getSide().getIndex()
             ).trigger();
         }
     }
@@ -49,7 +49,7 @@ public class MixinClientPlayerInteractionManager {
             assert client.world != null;
             new EventAttackBlock(
                     new BlockDataHelper(client.world.getBlockState(pos), client.world.getBlockEntity(pos), pos),
-                    direction.getId()
+                    direction.getIndex()
             ).trigger();
         }
     }

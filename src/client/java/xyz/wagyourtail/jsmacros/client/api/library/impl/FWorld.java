@@ -853,7 +853,7 @@ public class FWorld extends BaseLibrary {
         if (world == null) return;
         SoundEvent sound = SoundEvent.of(Identifier.of(id));
         assert sound != null;
-        mc.execute(() -> world.playSound(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true));
+        mc.execute(() -> world.playSoundClient(x, y, z, sound, SoundCategory.MASTER, (float) volume, (float) pitch, true));
     }
 
     /**

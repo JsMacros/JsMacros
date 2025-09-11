@@ -1,15 +1,18 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawContext;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.jsmacros.api.math.Pos2D;
 import xyz.wagyourtail.jsmacros.api.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
@@ -23,6 +26,18 @@ public class TraceLine implements RenderElement3D<TraceLine> {
      * it needs fov and aspect ratio info to render normally when not on center<br>
      * but for customize availability I just put it here as a field
      */
+    private static final Field lineDepthTestFunction;
+    private static final DepthTestFunction oldlineDepthTestFunction;
+
+    static {
+        try {
+            lineDepthTestFunction = RenderPipelines.LINES.getClass().getDeclaredField("depthTestFunction");
+            lineDepthTestFunction.setAccessible(true);
+            oldlineDepthTestFunction = (DepthTestFunction) lineDepthTestFunction.get(RenderPipelines.LINES);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("JS-Macros 3D Rendering failed to reflect into RenderLayer for TraceLine", e);
+        }
+    }
     public Pos2D screenPos = new Pos2D(0.0, 0.0);
     public Pos3D pos;
     public int color;
@@ -108,23 +123,50 @@ public class TraceLine implements RenderElement3D<TraceLine> {
         return pos.compareTo(other.pos);
     }
 
-    public void render(DrawContext drawContext, float tickDelta) {
-        MatrixStack matrixStack = drawContext.getMatrices();
-        RenderSystem.disableDepthTest();
+    public void render(MatrixStack matrixStack, VertexConsumerProvider consumers, float tickDelta) {
+        VertexConsumerProvider.Immediate immediate = (VertexConsumerProvider.Immediate) consumers;
 
-        int a = (color >> 24) & 0xFF;
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = color & 0xFF;
-        Tessellator tess = Tessellator.getInstance();
-        Matrix4f model = matrixStack.peek().getPositionMatrix();
-        RenderSystem.lineWidth(2.5F);
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-        buf.vertex((float) screenPos.x, (float) screenPos.y, -4.0f).color(r, g, b, a);
-        buf.vertex(model, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ()).color(r, g, b, a);
-        BufferRenderer.drawWithGlobalProgram(buf.end());
+        try {
+            lineDepthTestFunction.set(RenderPipelines.LINES, DepthTestFunction.NO_DEPTH_TEST);
 
-        RenderSystem.enableDepthTest();
+            Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+            Vec3d cameraPos = camera.getPos();
+
+            float pitch = (float)Math.toRadians(camera.getPitch());
+            float yaw = (float)Math.toRadians(camera.getYaw());
+
+            float x = -((float) (Math.sin(yaw) * Math.cos(pitch)));
+            float y = -((float) Math.sin(pitch));
+            float z = (float) (Math.cos(yaw) * Math.cos(pitch));
+            Vec3d lookVec = new Vec3d(x, y, z);
+
+            Vec3d start = cameraPos.add(lookVec.multiply(0.05));
+
+            VertexConsumer buffer = immediate.getBuffer(RenderLayer.getLines());
+            MatrixStack.Entry matrices = matrixStack.peek();
+            Matrix4f positionMatrix = matrices.getPositionMatrix();
+
+            float a = ((color >> 24) & 0xFF) / 255.0F;
+            float r = ((color >> 16) & 0xFF) / 255.0F;
+            float g = ((color >> 8) & 0xFF) / 255.0F;
+            float b = (color & 0xFF) / 255.0F;
+
+            buffer.vertex(positionMatrix, (float) start.x, (float) start.y, (float) start.z).color(r, g, b, a).normal(matrices, 0, 1, 0);
+            buffer.vertex(positionMatrix, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ()).color(r, g, b, a).normal(matrices, 0, 1, 0);
+            buffer.vertex(positionMatrix, (float) start.x, (float) start.y, (float) start.z).color(r, g, b, a).normal(matrices, 1, 0, 0);
+            buffer.vertex(positionMatrix, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ()).color(r, g, b, a).normal(matrices, 1, 0, 0);
+            immediate.draw();
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // Restore the original state AFTER drawing.
+                lineDepthTestFunction.set(RenderPipelines.LINES, oldlineDepthTestFunction);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static class Builder {

@@ -102,7 +102,7 @@ public class FPlayer extends BaseLibrary {
     public String getGameMode() {
         assert mc.interactionManager != null;
         GameMode mode = mc.interactionManager.getCurrentGameMode();
-        return mode.getName();
+        return mode.getId();
     }
 
     /**
@@ -112,7 +112,7 @@ public class FPlayer extends BaseLibrary {
     @DocletReplaceParams("gameMode: Gamemode")
     public void setGameMode(String gameMode) {
         assert mc.interactionManager != null;
-        mc.interactionManager.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), mc.interactionManager.getCurrentGameMode()));
+        mc.interactionManager.setGameMode(GameMode.byId(gameMode.toLowerCase(Locale.ROOT), mc.interactionManager.getCurrentGameMode()));
     }
 
     /**
@@ -241,7 +241,7 @@ public class FPlayer extends BaseLibrary {
      */
     public void takeScreenshot(String folder, String file, @Nullable MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null && file != null;
-        ScreenshotRecorder.saveScreenshot(new File(runner.config.macroFolder, folder), file, mc.getFramebuffer(),
+        ScreenshotRecorder.saveScreenshot(new File(runner.config.macroFolder, folder), file, mc.getFramebuffer(), 0,
                 (text) -> {
                     if (callback != null) {
                         callback.accept(TextHelper.wrap(text));
@@ -258,7 +258,7 @@ public class FPlayer extends BaseLibrary {
      */
     public void takePanorama(String folder, int width, int height, @Nullable MethodWrapper<TextHelper, Object, Object, ?> callback) {
         assert folder != null;
-        Text result = mc.takePanorama(new File(runner.config.macroFolder, folder), width, height);
+        Text result = mc.takePanorama(new File(runner.config.macroFolder, folder));
         if (callback != null) {
             callback.accept(TextHelper.wrap(result));
         }
@@ -368,7 +368,10 @@ public class FPlayer extends BaseLibrary {
      */
     public PlayerInput getCurrentPlayerInput() {
         assert mc.player != null;
-        return new PlayerInput(mc.player.input.movementForward, mc.player.input.movementSideways, mc.player.getYaw(), mc.player.getPitch(), mc.player.input.playerInput.jump(), mc.player.input.playerInput.sneak(), mc.player.isSprinting());
+        var plIn = mc.player.input.playerInput;
+        int forward = (plIn.forward() ? 1 : 0) + (plIn.backward() ? -1 : 0);
+        int sideways = (plIn.left() ? 1 : 0) + (plIn.right() ? -1 : 0);
+        return new PlayerInput(forward, sideways, mc.player.getYaw(), mc.player.getPitch(), mc.player.input.playerInput.jump(), mc.player.input.playerInput.sneak(), mc.player.isSprinting());
     }
 
     /**

@@ -40,7 +40,7 @@ public class StringMapSetting extends AbstractMapSettingContainer<String, String
         public void init() {
             super.init();
             int w = width - height;
-            addDrawableChild(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(value), (btn) -> {
+            addDrawableChild(new Button(x + w / 2, y, w / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal(value), (btn) -> {
                 int x = parent.x;
                 int y = parent.y;
                 int width = parent.width;

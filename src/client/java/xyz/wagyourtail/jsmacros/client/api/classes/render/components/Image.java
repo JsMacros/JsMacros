@@ -1,16 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import xyz.wagyourtail.jsmacros.client.api.classes.CustomImage;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
@@ -217,7 +212,7 @@ public class Image implements RenderElement, Alignable<Image> {
      * @since 1.6.5
      */
     public Image setColor(int color) {
-        if (color <= 0xFFFFFF) {
+        if (color <= 0xFFFFFFFF) {
             color = color | 0xFF000000;
         }
         this.color = color;
@@ -231,7 +226,7 @@ public class Image implements RenderElement, Alignable<Image> {
      * @since 1.6.5
      */
     public Image setColor(int color, int alpha) {
-        this.color = (alpha << 24) | (color & 0xFFFFFF);
+        this.color = (alpha << 24) | (color & 0xFFFFFFFF);
         return this;
     }
 
@@ -305,37 +300,49 @@ public class Image implements RenderElement, Alignable<Image> {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
-        setupMatrix(matrices, x, y, 1, rotation, getWidth(), getHeight(), rotateCenter);
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX_COLOR);
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderTexture(0, imageid);
-        Tessellator tess = Tessellator.getInstance();
+        org.joml.Matrix3x2fStack matrices = drawContext.getMatrices();
+        matrices.pushMatrix();
 
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_TEXTURE_COLOR);
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
+        try {
+            if (this.rotation != 0) {
+                float pivotX;
+                float pivotY;
 
-        float x1 = x;
-        float y1 = y;
-        float x2 = x + width;
-        float y2 = y + height;
+                if (this.rotateCenter) {
+                    pivotX = this.x + this.width / 2f;
+                    pivotY = this.y + this.height / 2f;
+                } else {
+                    pivotX = this.x;
+                    pivotY = this.y;
+                }
 
-        float u1 = imageX / (float) textureWidth;
-        float v1 = imageY / (float) textureHeight;
-        float u2 = (imageX + regionWidth) / (float) textureWidth;
-        float v2 = (imageY + regionHeight) / (float) textureHeight;
+                matrices.translate(pivotX, pivotY);
+                matrices.rotate((float) Math.toRadians(this.rotation));
+                matrices.translate(-pivotX, -pivotY);
+            }
 
-        //draw a rectangle using triangle strips
-        buf.vertex(matrix, x1, y2, 0).texture(u1, v2).color(color); // Top-left
-        buf.vertex(matrix, x2, y2, 0).texture(u2, v2).color(color); // Top-right
-        buf.vertex(matrix, x1, y1, 0).texture(u1, v1).color(color); // Bottom-left
-        buf.vertex(matrix, x2, y1, 0).texture(u2, v1).color(color); // Bottom-right
-        BufferRenderer.drawWithGlobalProgram(buf.end());
+            float u = this.imageX / (float) this.textureWidth;
+            float v = this.imageY / (float) this.textureHeight;
+            float regionU = this.regionWidth / (float) this.textureWidth;
+            float regionV = this.regionHeight / (float) this.textureHeight;
 
-        matrices.pop();
-        RenderSystem.disableBlend();
+            drawContext.drawTexture(
+                    RenderPipelines.GUI_TEXTURED,
+                    this.imageid,
+                    this.x,
+                    this.y,
+                    u,
+                    v,
+                    this.width,
+                    this.height,
+                    this.textureWidth,
+                    this.textureHeight,
+                    this.color
+            );
+
+        } finally {
+            matrices.popMatrix();
+        }
     }
 
     public Image setParent(IDraw2D<?> parent) {
@@ -394,7 +401,7 @@ public class Image implements RenderElement, Alignable<Image> {
         private int regionHeight = 0;
         private int textureWidth = 256;
         private int textureHeight = 256;
-        private int color = 0xFFFFFF;
+        private int color = 0xFFFFFFFF;
         private int alpha = 0xFF;
         private float rotation = 0;
         private boolean rotateCenter = true;

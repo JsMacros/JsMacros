@@ -31,7 +31,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
      * @since 1.8.4
      */
     public boolean canBeSaddled() {
-        return horse.canBeSaddled();
+        return horse.canUseSlot(EquipmentSlot.SADDLE);
     }
 
     /**
@@ -39,7 +39,7 @@ public class HorseInventory extends Inventory<HorseScreen> {
      * @since 1.8.4
      */
     public boolean isSaddled() {
-        return horse.isSaddled();
+        return horse.hasSaddleEquipped();
     }
 
     /**

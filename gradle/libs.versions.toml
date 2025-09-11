@@ -1,12 +1,6 @@
 [versions]
 java = "21"
 
-minecraft = "1.21.4"
-yarn = "1"
-
-neoforge = "111-beta"
-fabric_loader = "0.16.10"
-
 mixin = "0.8.5"
 mixin_extra = "0.3.2"
 
@@ -18,10 +12,14 @@ junit = "5.8.1"
 jb_annotations = "20.1.0"
 javassist = "3.30.2-GA"
 
-fapi = "0.118.5+1.21.4"
-modmenu = "13.0.3"
-
+manifold = "2025.1.10"
 shadow = "8.3.6"
+
+slf4j = "2.0.16"
+gson = "2.9.0"
+guava = "33.3.1-jre"
+fastutil = "8.5.15"
+commons = "2.7"
 
 [libraries]
 prism4j = { module = "io.noties:prism4j", version.ref = "prism4j" }
@@ -34,12 +32,20 @@ joor = { module = "org.jooq:joor", version.ref = "joor" }
 nv_websocket = { module = "com.neovisionaries:nv-websocket-client", version.ref = "nv_websocket" }
 javassist = { module = "org.javassist:javassist", version.ref = "javassist" }
 
-modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
+manifold = { module = "systems.manifold:manifold", version.ref = "manifold" }
+
+modmenu = { module = "com.terraformersmc:modmenu" }
 
 junit_api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit_engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
 
 jb_annotations = { module = "org.jetbrains:annotations", version.ref = "jb_annotations" }
+
+slf4j_api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+fastutil = { module = "it.unimi.dsi:fastutil", version.ref = "fastutil" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commons" }
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }

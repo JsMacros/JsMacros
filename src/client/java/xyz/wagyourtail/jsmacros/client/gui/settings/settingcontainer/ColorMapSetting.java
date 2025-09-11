@@ -58,7 +58,7 @@ public class ColorMapSetting extends AbstractMapSettingContainer<short[], ColorM
         public void init() {
             super.init();
             int w = width - height;
-            this.addDrawableChild(new AnnotatedCheckBox(x + w / 2, y, w / 2, height, textRenderer, convertColorToInt(value), 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(convertColorToString(value)), true, (btn) -> {
+            this.addDrawableChild(new AnnotatedCheckBox(x + w / 2, y, w / 2, height, textRenderer, convertColorToInt(value), 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal(convertColorToString(value)), true, (btn) -> {
                 ((AnnotatedCheckBox) btn).value = true;
                 int x = parent.x;
                 int y = parent.y;

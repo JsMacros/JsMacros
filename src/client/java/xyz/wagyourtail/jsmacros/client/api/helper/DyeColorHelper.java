@@ -21,7 +21,7 @@ public class DyeColorHelper extends BaseHelper<DyeColor> {
      */
     @DocletReplaceReturn("DyeColorName")
     public String getName() {
-        return base.getName();
+        return base.getId();
     }
 
     /**
@@ -29,7 +29,7 @@ public class DyeColorHelper extends BaseHelper<DyeColor> {
      * @since 1.8.4
      */
     public int getId() {
-        return base.getId();
+        return base.getIndex();
     }
 
     /**

@@ -1,7 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.api.helper;
 
+import com.mojang.serialization.JsonOps;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -40,9 +42,8 @@ public class TextHelper extends BaseHelper<Text> {
      * @deprecated use {@link xyz.wagyourtail.jsmacros.client.api.library.impl.FChat#createTextHelperFromJSON(String)} instead.
      */
     @Deprecated
-    public TextHelper replaceFromJson(String json) {
-        base = Text.Serialization.fromJson(json, Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager());
-        return this;
+    public String replaceFromJson(String json) {
+        return "dont use this";
     }
 
     /**
@@ -64,7 +65,8 @@ public class TextHelper extends BaseHelper<Text> {
      * @since 1.2.7
      */
     public String getJson() {
-        return Text.Serialization.toJsonString(base, Objects.requireNonNull(mc.getNetworkHandler()).getRegistryManager());
+        var registryManager = Objects.requireNonNull(mc.player).getRegistryManager();
+        return String.valueOf(TextCodecs.CODEC.encodeStart(registryManager.getOps(JsonOps.INSTANCE), base).getOrThrow());
     }
 
     /**

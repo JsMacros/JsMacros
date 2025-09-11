@@ -1,9 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
+import org.joml.Matrix3x2fStack;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
 
@@ -222,20 +221,20 @@ public class Draw2DElement implements RenderElement, Alignable<Draw2DElement> {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
-        matrices.translate(x, y, 0);
-        matrices.scale(scale, scale, 1);
+        Matrix3x2fStack matrices = drawContext.getMatrices();
+        matrices.pushMatrix();
+        matrices.translate(x, y);
+        matrices.scale(scale, scale);
         if (rotateCenter) {
-            matrices.translate(width.getAsInt() / 2d, height.getAsInt() / 2d, 0);
+            matrices.translate(width.getAsInt() / 2f, height.getAsInt() / 2f);
         }
-        matrices.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotation)));
+        matrices.rotate((float) Math.toRadians(rotation));
         if (rotateCenter) {
-            matrices.translate(-width.getAsInt() / 2d, -height.getAsInt() / 2d, 0);
+            matrices.translate(-width.getAsInt() / 2f, -height.getAsInt() / 2f);
         }
         //don't translate back
         draw2D.render(drawContext);
-        matrices.pop();
+        matrices.popMatrix();
     }
 
     public Draw2DElement setParent(IDraw2D<?> parent) {

@@ -1,8 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.*;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import org.joml.Matrix4f;
 import xyz.wagyourtail.doclet.DocletIgnore;
@@ -11,6 +13,7 @@ import xyz.wagyourtail.jsmacros.api.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
@@ -18,6 +21,18 @@ import java.util.Objects;
  */
 @SuppressWarnings("unused")
 public class Line3D implements RenderElement3D<Line3D> {
+    private static final Field lineDepthTestFunction;
+    private static final DepthTestFunction oldlineDepthTestFunction;
+
+    static {
+        try {
+            lineDepthTestFunction = RenderPipelines.LINES.getClass().getDeclaredField("depthTestFunction");
+            lineDepthTestFunction.setAccessible(true);
+            oldlineDepthTestFunction = (DepthTestFunction) lineDepthTestFunction.get(RenderPipelines.LINES);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("JS-Macros 3D Rendering failed to reflect into RenderLayer for Line3D", e);
+        }
+    }
     public Vec3D pos;
     public int color;
     public boolean cull;
@@ -95,30 +110,49 @@ public class Line3D implements RenderElement3D<Line3D> {
 
     @Override
     @DocletIgnore
-    public void render(DrawContext drawContext, float tickDelta) {
-        MatrixStack matrixStack = drawContext.getMatrices();
-        final boolean cull = !this.cull;
-        if (cull) {
-            RenderSystem.disableDepthTest();
-        }
+    public void render(MatrixStack matrixStack, VertexConsumerProvider consumers, float tickDelta) {
+        boolean seeThrough = !this.cull;
+        VertexConsumerProvider.Immediate immediate = (VertexConsumerProvider.Immediate) consumers;
 
-        int a = (color >> 24) & 0xFF;
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = color & 0xFF;
-        Tessellator tess = Tessellator.getInstance();
-        Matrix4f model = matrixStack.peek().getPositionMatrix();
-        RenderSystem.lineWidth(2.5F);
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-        buf.vertex(model, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a);
-        buf.vertex(model, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a);
-        BufferRenderer.drawWithGlobalProgram(buf.end());
+        try {
+            if (seeThrough) {
+                lineDepthTestFunction.set(RenderPipelines.LINES, DepthTestFunction.NO_DEPTH_TEST);
+            }
 
-        if (cull) {
-            RenderSystem.enableDepthTest();
+            VertexConsumer buffer = immediate.getBuffer(RenderLayer.getLines());
+            MatrixStack.Entry matrices = matrixStack.peek();
+            Matrix4f positionMatrix = matrices.getPositionMatrix();
+
+            float a = ((color >> 24) & 0xFF) / 255.0F;
+            float r = ((color >> 16) & 0xFF) / 255.0F;
+            float g = ((color >> 8) & 0xFF) / 255.0F;
+            float b = (color & 0xFF) / 255.0F;
+
+            buffer.vertex(positionMatrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).normal(matrices, 0, 1, 0);
+            buffer.vertex(positionMatrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).normal(matrices, 0, 1, 0);
+            buffer.vertex(positionMatrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).normal(matrices, 1, 0, 0);
+            buffer.vertex(positionMatrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).normal(matrices, 1, 0, 0);
+            buffer.vertex(positionMatrix, (float) pos.x1, (float) pos.y1, (float) pos.z1).color(r, g, b, a).normal(matrices, 0, 0, 1);
+            buffer.vertex(positionMatrix, (float) pos.x2, (float) pos.y2, (float) pos.z2).color(r, g, b, a).normal(matrices, 0, 0, 1);
+
+            if (seeThrough) {
+                immediate.draw();
+            }
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
+            if (seeThrough) {
+                try {
+                    lineDepthTestFunction.set(RenderPipelines.LINES, oldlineDepthTestFunction);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
+    // ... Builder class is unchanged and correct ...
     /**
      * @author Etheradon
      * @since 1.8.4

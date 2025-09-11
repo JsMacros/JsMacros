@@ -20,7 +20,7 @@ dependencies {
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
     implementation group: 'commons-io', name: 'commons-io', version: '2.7'
 
-    implementation "xyz.wagyourtail.unimined:unimined:1.4.1-SNAPSHOT"
+    implementation "xyz.wagyourtail.unimined:unimined:1.4.1"
 }
 
 tasks.withType(JavaCompile).configureEach {

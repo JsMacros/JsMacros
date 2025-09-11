@@ -11,10 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation(rootProject.sourceSets["core"].output)
-    for (dependency in rootProject.configurations["minecraftLibraries"].dependencies) {
-        implementation(dependency)
-    }
+    implementation(rootProject.sourceSets.main.get().output)
 
     for (dependency in rootProject.configurations.implementation.get().dependencies) {
         implementation(dependency)

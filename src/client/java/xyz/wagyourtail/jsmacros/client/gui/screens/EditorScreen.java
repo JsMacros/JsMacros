@@ -231,9 +231,9 @@ public class EditorScreen extends BaseScreen {
         int width = this.width - 10;
 
         scrollbar = addDrawableChild(new Scrollbar(width, 12, 10, height - 24, 0, 0xFF000000, 0xFFFFFFFF, 1, this::setScroll));
-        saveBtn = this.addDrawableChild(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFF, Text.translatable("jsmacros.save"), (btn) -> save()));
-        this.addDrawableChild(new Button(width * 4 / 6, 0, width / 6, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.close"), (btn) -> openParent()));
-        this.addDrawableChild(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(client.world == null ? "X" : "-"), (btn) -> close()));
+        saveBtn = this.addDrawableChild(new Button(width / 2, 0, width / 6, 12, textRenderer, needSave() ? 0xFFA0A000 : 0xFF00A000, 0xFF000000, needSave() ? 0xFF707000 : 0xFF007000, 0xFFFFFFFF, Text.translatable("jsmacros.save"), (btn) -> save()));
+        this.addDrawableChild(new Button(width * 4 / 6, 0, width / 6, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("jsmacros.close"), (btn) -> openParent()));
+        this.addDrawableChild(new Button(width, 0, 10, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal(client.world == null ? "X" : "-"), (btn) -> close()));
 
         if (language == null) {
             setLanguage(getDefaultLanguage());
@@ -260,7 +260,7 @@ public class EditorScreen extends BaseScreen {
             }
         };
 
-        this.addDrawableChild(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(language), (btn) -> {
+        this.addDrawableChild(new Button(this.width - width / 8, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal(language), (btn) -> {
             int height = langs.size() * (textRenderer.fontHeight + 1) + 4;
             openOverlay(new SelectorDropdownOverlay(btn.getX(), btn.getY() - height, btn.getWidth(), height, langs.stream().map(Text::literal).collect(Collectors.toList()), textRenderer, this, (i) -> {
                 setLanguage(langs.get(i));
@@ -268,7 +268,7 @@ public class EditorScreen extends BaseScreen {
             }));
         }));
 
-        this.addDrawableChild(new Button(this.width - width / 4, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.settings"), (btn) -> {
+        this.addDrawableChild(new Button(this.width - width / 4, height - 12, width / 8, 12, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("jsmacros.settings"), (btn) -> {
             openOverlay(new SettingsOverlay(this.width / 4, this.height / 4, this.width / 2, this.height / 2, textRenderer, this));
         }));
 
@@ -666,10 +666,10 @@ public class EditorScreen extends BaseScreen {
         assert client != null;
         renderBackground(drawContext, mouseX, mouseY, delta);
 
-        drawContext.drawTextWithShadow(textRenderer, fileName, 2, 2, 0xFFFFFF);
+        drawContext.drawTextWithShadow(textRenderer, fileName, 2, 2, 0xFFFFFFFF);
 
-        drawContext.drawTextWithShadow(textRenderer, String.format("%d ms", (int) textRenderTime), 2, height - 10, 0xFFFFFF);
-        drawContext.drawTextWithShadow(textRenderer, lineCol, (int) (width - textRenderer.getWidth(lineCol) - (width - 10) / 4F - 2), height - 10, 0xFFFFFF);
+        drawContext.drawTextWithShadow(textRenderer, String.format("%d ms", (int) textRenderTime), 2, height - 10, 0xFFFFFFFF);
+        drawContext.drawTextWithShadow(textRenderer, lineCol, (int) (width - textRenderer.getWidth(lineCol) - (width - 10) / 4F - 2), height - 10, 0xFFFFFFFF);
 
         drawContext.fill(0, 12, width - 10, height - 12, 0xFF2B2B2B);
         drawContext.fill(28, 12, 29, height - 12, 0xFF707070);
@@ -678,7 +678,7 @@ public class EditorScreen extends BaseScreen {
         drawContext.fill(1, 12, width - 11, 13, 0xFF707070);
         drawContext.fill(1, height - 13, width - 11, height - 12, 0xFF707070);
 
-        Style lineNumStyle = defaultStyle.withColor(TextColor.fromRgb(0xD8D8D8));
+        Style lineNumStyle = defaultStyle.withColor(TextColor.fromRgb(0xFFD8D8D8));
         int add = lineSpread - scroll % lineSpread;
         if (add == lineSpread) {
             add = 0;
@@ -698,8 +698,8 @@ public class EditorScreen extends BaseScreen {
                 drawContext.fill(29, y + add + i * lineSpread, 30 + cursor.endCol, y + add + (i + 1) * lineSpread, 0xFF33508F);
             }
             Text lineNum = Text.literal(String.format("%d.", j + 1)).setStyle(lineNumStyle);
-            drawContext.drawText(client.textRenderer, lineNum, 28 - client.textRenderer.getWidth(lineNum), y + add + i * lineSpread, 0xFFFFFF, false);
-            drawContext.drawText(client.textRenderer, trim(renderedText[j]), 30, y + add + i * lineSpread, 0xFFFFFF, false);
+            drawContext.drawText(client.textRenderer, lineNum, 28 - client.textRenderer.getWidth(lineNum), y + add + i * lineSpread, 0xFFFFFFFF, false);
+            drawContext.drawText(client.textRenderer, trim(renderedText[j]), 30, y + add + i * lineSpread, 0xFFFFFFFF, false);
         }
 
         for (Element b : ImmutableList.copyOf(this.children())) {

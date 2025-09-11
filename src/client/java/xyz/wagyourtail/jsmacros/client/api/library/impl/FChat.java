@@ -21,6 +21,7 @@ import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.library.BaseLibrary;
 import xyz.wagyourtail.jsmacros.core.library.Library;
 
+import java.util.Objects;
 import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -384,7 +385,8 @@ public class FChat extends BaseLibrary {
      */
     @Nullable
     public TextHelper createTextHelperFromJSON(String json) {
-        TextHelper t = TextHelper.wrap(Text.Serialization.fromJson(json, mc.getNetworkHandler().getRegistryManager()));
+        Text s = Text.of(json);
+        TextHelper t = TextHelper.wrap(s);
         return t;
     }
 
