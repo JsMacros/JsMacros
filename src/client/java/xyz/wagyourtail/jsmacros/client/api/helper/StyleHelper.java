@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helper;
 
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -120,16 +121,21 @@ public class StyleHelper extends BaseHelper<Style> {
 
     @Nullable
     public String getClickValue() {
-        return base.getClickEvent() == null ? null : base.getClickEvent().getValue();
+        return switch (base.getClickEvent()) {
+            case ClickEvent.OpenUrl ce -> ce.uri().toString();
+            case ClickEvent.OpenFile ce -> ce.path();
+            case ClickEvent.RunCommand ce -> ce.command();
+            case ClickEvent.SuggestCommand ce -> ce.command();
+            case ClickEvent.ChangePage ce -> Integer.toString(ce.page());
+            case ClickEvent.CopyToClipboard ce -> ce.value();
+            case null, default -> null;
+        };
     }
 
     @Nullable
     public Runnable getCustomClickValue() {
-        if (base.getClickEvent() == null) {
-            return null;
-        }
-        if (base.getClickEvent() instanceof CustomClickEvent) {
-            return ((CustomClickEvent) base.getClickEvent()).getEvent();
+        if (base.getClickEvent() instanceof CustomClickEvent ce) {
+            return ce.getEvent();
         }
         return null;
     }
@@ -142,20 +148,12 @@ public class StyleHelper extends BaseHelper<Style> {
 
     @Nullable
     public Object getHoverValue() {
-        if (base.getHoverEvent() == null) {
-            return null;
-        }
-        Object value = base.getHoverEvent().getValue(base.getHoverEvent().getAction());
-        if (value instanceof Text) {
-            return TextHelper.wrap((Text) value);
-        }
-        if (value instanceof HoverEvent.ItemStackContent) {
-            return new ItemStackHelper(((HoverEvent.ItemStackContent) value).asStack());
-        }
-        if (value instanceof HoverEvent.EntityContent) {
-            return ((HoverEvent.EntityContent) value).asTooltip().stream().map(TextHelper::wrap).collect(Collectors.toList());
-        }
-        return value;
+        return switch (base.getHoverEvent()) {
+            case HoverEvent.ShowText s -> TextHelper.wrap(s.value());
+            case HoverEvent.ShowItem i -> new ItemStackHelper(i.item());
+            case HoverEvent.ShowEntity e -> e.entity().asTooltip().stream().map(TextHelper::wrap).collect(Collectors.toList());
+            case null, default -> null;
+        };
     }
 
     public String getInsertion() {

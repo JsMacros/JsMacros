@@ -56,7 +56,7 @@ public class PlayerListEntryHelper extends BaseHelper<PlayerListEntry> {
     @Nullable
     public String getGamemode() {
         GameMode gm = base.getGameMode();
-        return gm == null ? null : gm.getName();
+        return gm == null ? null : gm.getId();
     }
 
     /**

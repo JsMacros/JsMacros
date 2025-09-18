@@ -6,7 +6,8 @@
     "access.MixinGameRenderer",
     "access.MixinInGameHud",
     "access.MixinKeyboard",
-    "access.MixinMouse"
+    "access.MixinMouse",
+    "access.MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

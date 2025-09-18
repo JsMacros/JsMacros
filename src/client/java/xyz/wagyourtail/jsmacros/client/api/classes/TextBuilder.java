@@ -15,6 +15,7 @@ import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -139,7 +140,7 @@ public class TextBuilder {
      * @since 1.3.0
      */
     public TextBuilder withShowTextHover(TextHelper text) {
-        self.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, text.getRaw())));
+        self.styled(style -> style.withHoverEvent(new HoverEvent.ShowText(text.getRaw())));
         return this;
     }
 
@@ -151,7 +152,7 @@ public class TextBuilder {
      * @since 1.3.0
      */
     public TextBuilder withShowItemHover(ItemStackHelper item) {
-        self.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new HoverEvent.ItemStackContent(item.getRaw()))));
+        self.styled(style -> style.withHoverEvent(new HoverEvent.ShowItem(item.getRaw())));
         return this;
     }
 
@@ -164,7 +165,7 @@ public class TextBuilder {
      */
     public TextBuilder withShowEntityHover(EntityHelper<Entity> entity) {
         Entity raw = entity.getRaw();
-        self.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ENTITY, new HoverEvent.EntityContent(raw.getType(), raw.getUuid(), raw.getName()))));
+        self.styled(style -> style.withHoverEvent(new HoverEvent.ShowEntity(new HoverEvent.EntityContent(raw.getType(), raw.getUuid(), raw.getName()))));
         return this;
     }
 
@@ -197,7 +198,14 @@ public class TextBuilder {
     @DocletReplaceParams("action: TextClickAction, value: string")
     public TextBuilder withClickEvent(String action, String value) {
         ClickEvent.Action clickAction = ClickEvent.Action.valueOf(action.toUpperCase(Locale.ROOT));
-        self.styled(style -> style.withClickEvent(new ClickEvent(clickAction, value)));
+        self.styled(style -> style.withClickEvent(switch (clickAction) {
+            case OPEN_URL -> new ClickEvent.OpenUrl(URI.create(value));
+            case OPEN_FILE -> new ClickEvent.OpenFile(value);
+            case RUN_COMMAND -> new ClickEvent.RunCommand(value);
+            case SUGGEST_COMMAND -> new ClickEvent.SuggestCommand(value);
+            case CHANGE_PAGE -> new ClickEvent.ChangePage(Integer.parseInt(value));
+            case COPY_TO_CLIPBOARD -> new ClickEvent.CopyToClipboard(value);
+        }));
         return this;
     }
 

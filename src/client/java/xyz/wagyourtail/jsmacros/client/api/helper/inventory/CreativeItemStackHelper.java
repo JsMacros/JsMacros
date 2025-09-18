@@ -1,5 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.api.helper.inventory;
 
+import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.*;
 import net.minecraft.enchantment.Enchantment;
@@ -9,6 +10,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Unit;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.TextBuilder;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
@@ -189,7 +191,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      */
     public CreativeItemStackHelper setUnbreakable(boolean unbreakable) {
         if (unbreakable) {
-            base.set(DataComponentTypes.UNBREAKABLE, new UnbreakableComponent(true));
+            base.set(DataComponentTypes.UNBREAKABLE, Unit.INSTANCE);
         } else {
             base.remove(DataComponentTypes.UNBREAKABLE);
         }
@@ -202,8 +204,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideEnchantments(boolean hide) {
-        base.set(DataComponentTypes.ENCHANTMENTS, base.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT).withShowInTooltip(!hide));
-        return this;
+        return hideComponent(DataComponentTypes.ENCHANTMENTS, hide);
     }
 
     /**
@@ -212,8 +213,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideModifiers(boolean hide) {
-        base.set(DataComponentTypes.ATTRIBUTE_MODIFIERS, base.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT).withShowInTooltip(!hide));
-        return this;
+        return hideComponent(DataComponentTypes.ATTRIBUTE_MODIFIERS, hide);
     }
 
     /**
@@ -223,11 +223,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      */
 
     public CreativeItemStackHelper hideUnbreakable(boolean hide) {
-        UnbreakableComponent unbreakable = base.get(DataComponentTypes.UNBREAKABLE);
-        if (unbreakable != null) {
-            base.set(DataComponentTypes.UNBREAKABLE, unbreakable.withShowInTooltip(!hide));
-        }
-        return this;
+        return hideComponent(DataComponentTypes.UNBREAKABLE, hide);
     }
 
     /**
@@ -236,11 +232,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideCanDestroy(boolean hide) {
-        BlockPredicatesChecker checker = base.get(DataComponentTypes.CAN_BREAK);
-        if (checker != null) {
-            base.set(DataComponentTypes.CAN_BREAK, checker.withShowInTooltip(!hide));
-        }
-        return this;
+        return hideComponent(DataComponentTypes.CAN_BREAK, hide);
     }
 
     /**
@@ -249,11 +241,7 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideCanPlace(boolean hide) {
-        BlockPredicatesChecker checker = base.get(DataComponentTypes.CAN_PLACE_ON);
-        if (checker != null) {
-            base.set(DataComponentTypes.CAN_PLACE_ON, checker.withShowInTooltip(!hide));
-        }
-        return this;
+        return hideComponent(DataComponentTypes.CAN_PLACE_ON, hide);
     }
 
     /**
@@ -262,10 +250,12 @@ public class CreativeItemStackHelper extends ItemStackHelper {
      * @since 1.8.4
      */
     public CreativeItemStackHelper hideDye(boolean hide) {
-        DyedColorComponent color = base.get(DataComponentTypes.DYED_COLOR);
-        if (color != null) {
-            base.set(DataComponentTypes.DYED_COLOR, color.withShowInTooltip(!hide));
-        }
+        return hideComponent(DataComponentTypes.DYED_COLOR, hide);
+    }
+
+    private CreativeItemStackHelper hideComponent(ComponentType<?> type, boolean hide) {
+        base.set(DataComponentTypes.TOOLTIP_DISPLAY,
+            base.getOrDefault(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplayComponent.DEFAULT).with(type, hide));
         return this;
     }
 

@@ -398,8 +398,8 @@ public class EntityHelper<T extends Entity> extends BaseHelper<T> {
      * @since 1.8.4
      */
     public double getSpeed() {
-        double dx = Math.abs(base.getX() - base.prevX);
-        double dz = Math.abs(base.getZ() - base.prevZ);
+        double dx = Math.abs(base.getX() - base.lastX);
+        double dz = Math.abs(base.getZ() - base.lastZ);
         return Math.sqrt(dx * dx + dz * dz) * 20;
     }
 

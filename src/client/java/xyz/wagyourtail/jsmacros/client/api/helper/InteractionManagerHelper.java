@@ -77,7 +77,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceReturn("Gamemode")
     public String getGameMode() {
         checkBase(autoUpdateBase);
-        return base.getCurrentGameMode().getName();
+        return base.getCurrentGameMode().getId();
     }
 
     /**
@@ -88,7 +88,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceParams("gameMode: Gamemode")
     public InteractionManagerHelper setGameMode(String gameMode) {
         checkBase(autoUpdateBase);
-        base.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), base.getCurrentGameMode()));
+        base.setGameMode(GameMode.byId(gameMode.toLowerCase(Locale.ROOT), base.getCurrentGameMode()));
         return this;
     }
 
@@ -111,7 +111,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletDeclareType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
     public InteractionManagerHelper setTarget(int x, int y, int z, String direction) {
         //noinspection DataFlowIssue
-        setTarget(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
+        setTarget(x, y, z, Direction.byId(direction.toLowerCase(Locale.ROOT)).getId());
         return this;
     }
 
@@ -144,7 +144,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceParams("bpos: BlockPosHelper, direction: Direction")
     public InteractionManagerHelper setTarget(BlockPosHelper pos, String direction) {
         //noinspection DataFlowIssue
-        setTarget(pos, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
+        setTarget(pos, Direction.byId(direction.toLowerCase(Locale.ROOT)).getId());
         return this;
     }
 
@@ -358,7 +358,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
     public InteractionManagerHelper attack(int x, int y, int z, String direction) throws InterruptedException {
         //noinspection DataFlowIssue
-        return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
+        return attack(x, y, z, Direction.byId(direction.toLowerCase(Locale.ROOT)).getId(), false);
     }
 
     /**
@@ -385,7 +385,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, await: boolean")
     public InteractionManagerHelper attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
         //noinspection DataFlowIssue
-        return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
+        return attack(x, y, z, Direction.byId(direction.toLowerCase(Locale.ROOT)).getId(), await);
     }
 
     /**
@@ -535,7 +535,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         int side = 0;
         HitResult target = mc.crosshairTarget;
         if (target != null && target.getType() == HitResult.Type.BLOCK) {
-            side = ((BlockHitResult) target).getSide().getId();
+            side = ((BlockHitResult) target).getSide().getIndex();
         }
         attack(pos.getX(), pos.getY(), pos.getZ(), side, true);
         return new InteractionProxy.Break.BreakBlockResult("SUCCESS", new BlockPosHelper(pos));
@@ -698,7 +698,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
         //noinspection DataFlowIssue
-        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
+        return interactBlock(x, y, z, Direction.byId(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
     }
 
     /**
@@ -726,7 +726,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean, await: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
         //noinspection DataFlowIssue
-        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
+        return interactBlock(x, y, z, Direction.byId(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
     }
 
     /**

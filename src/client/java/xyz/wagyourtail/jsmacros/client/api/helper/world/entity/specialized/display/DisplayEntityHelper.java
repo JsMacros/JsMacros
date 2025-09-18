@@ -22,35 +22,35 @@ public class DisplayEntityHelper<T extends DisplayEntity> extends EntityHelper<T
      * @since 1.9.1
      */
     public double getLerpTargetX() {
-        return base.getLerpTargetX();
+        return base.getLerpedPos(getLerpProgress(0)).x;
     }
 
     /**
      * @since 1.9.1
      */
     public double getLerpTargetY() {
-        return base.getLerpTargetY();
+        return base.getLerpedPos(getLerpProgress(0)).y;
     }
 
     /**
      * @since 1.9.1
      */
     public double getLerpTargetZ() {
-        return base.getLerpTargetZ();
+        return base.getLerpedPos(getLerpProgress(0)).z;
     }
 
     /**
      * @since 1.9.1
      */
     public float getLerpTargetPitch() {
-        return base.getLerpTargetPitch();
+        return base.getLerpedPitch(getLerpProgress(0));
     }
 
     /**
      * @since 1.9.1
      */
     public float getLerpTargetYaw() {
-        return base.getLerpTargetYaw();
+        return base.getLerpedYaw(getLerpProgress(0));
     }
 
     /**

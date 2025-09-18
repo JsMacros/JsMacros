@@ -66,7 +66,7 @@ public abstract class MixinMinecraftClient {
     public void afterOpenScreen(Screen screen, CallbackInfo info) {
         if (screen instanceof HandledScreen<?>) {
             assert interactionManager != null;
-            if (interactionManager.hasCreativeInventory() && !(screen instanceof CreativeInventoryScreen)) {
+            if (interactionManager.getCurrentGameMode().isCreative() && !(screen instanceof CreativeInventoryScreen)) {
                 return;
             }
             EventOpenContainer event = new EventOpenContainer(((HandledScreen<?>) screen));

@@ -312,7 +312,7 @@ public class Inventory<T extends HandledScreen<?>> {
      * @since 1.2.5
      */
     public int getSelectedHotbarSlotIndex() {
-        return player.getInventory().selectedSlot;
+        return player.getInventory().getSelectedSlot();
     }
 
     /**
@@ -321,7 +321,7 @@ public class Inventory<T extends HandledScreen<?>> {
      */
     public void setSelectedHotbarSlotIndex(int index) {
         if (PlayerInventory.isValidHotbarIndex(index)) {
-            player.getInventory().selectedSlot = index;
+            player.getInventory().setSelectedSlot(index);
         }
     }
 
@@ -717,7 +717,7 @@ public class Inventory<T extends HandledScreen<?>> {
                 map.put("input", new int[]{slots - 9 - 27 - 2});
             } else if (inventory instanceof HorseScreen) {
                 AbstractHorseEntity h = (AbstractHorseEntity) ((IHorseScreen) this.inventory).jsmacros_getEntity();
-                if (h.canBeSaddled()) {
+                if (h.canUseSlot(EquipmentSlot.SADDLE)) {
                     map.put("saddle", new int[]{0});
                 }
                 if (h.canUseSlot(EquipmentSlot.BODY)) {

@@ -1,15 +1,16 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawContext;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import org.joml.Matrix4f;
-import xyz.wagyourtail.jsmacros.api.math.Pos2D;
+import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.jsmacros.api.math.Pos3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
@@ -23,24 +24,35 @@ public class TraceLine implements RenderElement3D<TraceLine> {
      * it needs fov and aspect ratio info to render normally when not on center<br>
      * but for customize availability I just put it here as a field
      */
-    public Pos2D screenPos = new Pos2D(0.0, 0.0);
-    public Pos3D pos;
-    public int color;
+    private static final Field lineDepthTestFunction;
+    private static final DepthTestFunction oldlineDepthTestFunction;
+
+    static {
+        try {
+            lineDepthTestFunction = RenderPipelines.LINES.getClass().getDeclaredField("depthTestFunction");
+            lineDepthTestFunction.setAccessible(true);
+            oldlineDepthTestFunction = (DepthTestFunction) lineDepthTestFunction.get(RenderPipelines.LINES);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("JS-Macros 3D Rendering failed to reflect into RenderLayer for TraceLine", e);
+        }
+    }
+
+    private final Line3D render;
 
     public TraceLine(double x, double y, double z, int color) {
-        setPos(x, y, z).setColor(color);
+        render = new Line3D(0, 0, 0, x, y, z, color, false);
     }
 
     public TraceLine(double x, double y, double z, int color, int alpha) {
-        setPos(x, y, z).setColor(color, alpha);
+        render = new Line3D(0,0,0, x, y, z, color, alpha, false);
     }
 
     public TraceLine(Pos3D pos, int color) {
-        setPos(pos).setColor(color);
+        render = new Line3D(0, 0, 0, pos.getX(), pos.getY(), pos.getZ(), color, false);
     }
 
     public TraceLine(Pos3D pos, int color, int alpha) {
-        setPos(pos).setColor(color, alpha);
+        render = new Line3D(0, 0, 0, pos.getX(), pos.getY(), pos.getZ(), color, alpha, false);
     }
 
     /**
@@ -48,7 +60,7 @@ public class TraceLine implements RenderElement3D<TraceLine> {
      * @since 1.9.0
      */
     public TraceLine setPos(double x, double y, double z) {
-        pos = new Pos3D(x, y, z);
+        render.setPos(0, 0, 0, x, y, z);
         return this;
     }
 
@@ -57,7 +69,7 @@ public class TraceLine implements RenderElement3D<TraceLine> {
      * @since 1.9.0
      */
     public TraceLine setPos(Pos3D pos) {
-        this.pos = pos;
+        render.setPos(0, 0, 0, pos.x, pos.y, pos.z);
         return this;
     }
 
@@ -66,10 +78,7 @@ public class TraceLine implements RenderElement3D<TraceLine> {
      * @since 1.9.0
      */
     public TraceLine setColor(int color) {
-        if (color <= 0xFFFFFF) {
-            color = color | 0xFF000000;
-        }
-        this.color = color;
+        render.setColor(color);
         return this;
     }
 
@@ -78,7 +87,7 @@ public class TraceLine implements RenderElement3D<TraceLine> {
      * @since 1.9.0
      */
     public TraceLine setColor(int color, int alpha) {
-        this.color = (alpha << 24) | (color & 0xFFFFFF);
+        render.setColor(color, alpha);
         return this;
     }
 
@@ -87,7 +96,7 @@ public class TraceLine implements RenderElement3D<TraceLine> {
      * @since 1.9.0
      */
     public TraceLine setAlpha(int alpha) {
-        return setColor(color, alpha);
+        return setColor(render.color, alpha);
     }
 
     @Override
@@ -95,42 +104,31 @@ public class TraceLine implements RenderElement3D<TraceLine> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TraceLine traceLine = (TraceLine) o;
-        return Objects.equals(pos, traceLine.pos);
+        return Objects.equals(render.pos.getEnd(), traceLine.render.pos.getEnd());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pos);
+        return Objects.hash(render.pos.getEnd());
     }
 
     @Override
     public int compareToSame(TraceLine other) {
-        return pos.compareTo(other.pos);
+        return render.pos.getEnd().compareTo(other.render.pos.getEnd());
     }
 
-    public void render(DrawContext drawContext, float tickDelta) {
-        MatrixStack matrixStack = drawContext.getMatrices();
-        RenderSystem.disableDepthTest();
+    @Override
+    public void render(MatrixStack matrixStack, VertexConsumerProvider consumers, float tickDelta) {
+        Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+        Vec3d p1 = camera.getPos().add(Vec3d.fromPolar(camera.getPitch(), camera.getYaw()));
 
-        int a = (color >> 24) & 0xFF;
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = color & 0xFF;
-        Tessellator tess = Tessellator.getInstance();
-        Matrix4f model = matrixStack.peek().getPositionMatrix();
-        RenderSystem.lineWidth(2.5F);
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-        buf.vertex((float) screenPos.x, (float) screenPos.y, -4.0f).color(r, g, b, a);
-        buf.vertex(model, (float) pos.getX(), (float) pos.getY(), (float) pos.getZ()).color(r, g, b, a);
-        BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        RenderSystem.enableDepthTest();
+        render.setPos(p1.x, p1.y, p1.z, render.pos.x2, render.pos.y2, render.pos.z2);
+        render.render(matrixStack, consumers, tickDelta);
     }
 
     public static class Builder {
         private final Draw3D parent;
 
-        public Pos2D screenPos = new Pos2D(0.0, 0.0);
         private Pos3D pos = new Pos3D(0.0, 0.0, 0.0);
         private int color = 0xFFFFFF;
         private int alpha = 0xFF;
@@ -272,9 +270,7 @@ public class TraceLine implements RenderElement3D<TraceLine> {
          * @since 1.9.0
          */
         public TraceLine build() {
-            TraceLine line = new TraceLine(pos, color, alpha);
-            line.screenPos = screenPos;
-            return line;
+            return new TraceLine(pos, color, alpha);
         }
 
     }

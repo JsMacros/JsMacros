@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.ingame.AbstractSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.HangingSignEditScreen;
 import net.minecraft.client.gui.screen.ingame.SignEditScreen;
 import net.minecraft.client.input.Input;
+import net.minecraft.client.input.KeyboardInput;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -16,6 +17,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.c2s.play.UpdateSignC2SPacket;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec2f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -122,6 +124,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
         if (moveInput == null) {
             return;
         }
+        // Replicates KeyboardInput#tick
         this.input.playerInput = new net.minecraft.util.PlayerInput(
                 moveInput.movementForward > 0,
                 moveInput.movementForward < 0,
@@ -131,33 +134,10 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
                 moveInput.sneaking,
                 moveInput.sprinting
         );
-
-        this.input.movementForward = moveInput.movementForward;
-        this.input.movementSideways = moveInput.movementSideways;
-        if (moveInput.jumping) {
-            this.input.jump();
-        }
-        if (moveInput.sneaking) {
-            net.minecraft.util.PlayerInput playerInput = this.input.playerInput;
-            this.input.playerInput = new net.minecraft.util.PlayerInput (
-                    playerInput.forward(),
-                    playerInput.backward(),
-                    playerInput.left(),
-                    playerInput.right(),
-                    playerInput.sneak(),
-                    true,
-                    playerInput.sprint()
-            );
-        }
-        this.client.options.sprintKey.setPressed(moveInput.sprinting);
-        this.setYaw(moveInput.yaw);
-        this.setPitch(moveInput.pitch);
-
-        if (this.shouldSlowDown()) {
-            // Don't ask me, this is the way minecraft does it.
-            this.input.movementSideways = (float) ((double) this.input.movementSideways * 0.3D);
-            this.input.movementForward = (float) ((double) this.input.movementForward * 0.3D);
-        }
+        var plIn = this.input.playerInput;
+        float f = KeyboardInput.getMovementMultiplier(plIn.forward(), plIn.backward());
+        float g = KeyboardInput.getMovementMultiplier(plIn.left(), plIn.right());
+        this.input.movementVector = new Vec2f(g, f).normalize();
     }
 
     @Inject(method = "startRiding", at = @At(value = "RETURN", ordinal = 1))
@@ -174,7 +154,7 @@ abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity {
 
     @Inject(method = "dropSelectedItem", at = @At("HEAD"), cancellable = true)
     public void onDropSelected(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
-        int selectedHotbarIndex = getInventory().selectedSlot;
+        int selectedHotbarIndex = getInventory().getSelectedSlot();
         EventDropSlot event = new EventDropSlot(null, 36 + selectedHotbarIndex, entireStack);
         event.trigger();
         if (event.isCanceled()) {

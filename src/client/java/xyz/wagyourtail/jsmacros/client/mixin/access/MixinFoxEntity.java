@@ -1,11 +1,14 @@
 package xyz.wagyourtail.jsmacros.client.mixin.access;
 
+import net.minecraft.entity.LazyEntityReference;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.FoxEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * @author Etheradon
@@ -18,6 +21,9 @@ public interface MixinFoxEntity {
     boolean invokeIsAggressive();
 
     @Invoker
-    List<UUID> invokeGetTrustedUuids();
+    Stream<LazyEntityReference<LivingEntity>> invokeGetTrustedEntities();
+
+    @Invoker
+    boolean invokeCanTrust(LivingEntity entity);
 
 }

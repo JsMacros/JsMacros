@@ -1,11 +1,8 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Camera;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
 import xyz.wagyourtail.doclet.DocletIgnore;
@@ -17,7 +14,9 @@ import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FHud;
 import xyz.wagyourtail.jsmacros.core.classes.Registrable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * {@link Draw2D} is cool
@@ -694,36 +693,22 @@ public class Draw3D implements Registrable<Draw3D> {
     }
 
     @DocletIgnore
-    public void render(DrawContext drawContext, float tickDelta) {
-        MinecraftClient mc = MinecraftClient.getInstance();
+    public void render(MatrixStack matrixStack, VertexConsumerProvider consumers, float tickDelta) {
+        /*Camera camera = MinecraftClient.getInstance().gameRenderer.getCamera();
+        Vec3d cameraPos = camera.getPos();
 
-        MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
-        //setup
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-
-        Vec3d camPos = mc.gameRenderer.getCamera().getPos();
-        matrixStack.translate(-camPos.x, -camPos.y, -camPos.z);
+        matrixStack.translate(-cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ());*/
 
         EntityTraceLine.dirty = false;
 
-
         synchronized (elements) {
-            //sort elements by type (should be O(n) after first time)
             Collections.sort(elements);
 
-            //TODO: pull setup out of render as they should be sorted by type
-            for (RenderElement3D element : elements) {
-                element.render(drawContext, tickDelta);
+            for (RenderElement3D<?> element : elements) {
+                element.render(matrixStack, consumers, tickDelta);
             }
         }
-
-        //reset
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX);
-
-        matrixStack.pop();
 
         if (EntityTraceLine.dirty) {
             synchronized (elements) {
@@ -731,6 +716,6 @@ public class Draw3D implements Registrable<Draw3D> {
             }
         }
 
+        //matrixStack.pop();
     }
-
 }

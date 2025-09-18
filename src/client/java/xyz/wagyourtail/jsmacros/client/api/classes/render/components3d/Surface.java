@@ -1,8 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -251,63 +250,8 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
 
     @Override
     @DocletIgnore
-    public void render(DrawContext drawContext, float delta) {
-        MatrixStack matrixStack = drawContext.getMatrices();
-        matrixStack.push();
-        if (boundEntity != null && boundEntity.isAlive()) {
-            Pos3D entityPos = boundEntity.getPos().add(boundOffset);
-            if (entityPos.toVector(pos).getMagnitudeSq() <= 3) {
-                pos.x += (entityPos.x - pos.x) * delta;
-                pos.y += (entityPos.y - pos.y) * delta;
-                pos.z += (entityPos.z - pos.z) * delta;
-            } else {
-                pos.x += entityPos.x;
-                pos.y += entityPos.y;
-                pos.z += entityPos.z;
-            }
-        }
-
-        matrixStack.translate(pos.x, pos.y, pos.z);
-
-        if (rotateToPlayer) {
-            Vector3f rot = toEulerDegrees(MinecraftClient.getInstance().gameRenderer.getCamera().getRotation());
-            rotations.x = rot.x();
-            rotations.y = rot.y();
-            rotations.z = 0;
-        }
-        if (rotateCenter) {
-            matrixStack.translate(sizes.x / 2, 0, 0);
-            matrixStack.multiply(new Quaternionf().rotateLocalY((float) Math.toRadians(rotations.y)));
-            matrixStack.translate(-sizes.x / 2, 0, 0);
-            matrixStack.translate(0, -sizes.y / 2, 0);
-            matrixStack.multiply(new Quaternionf().rotateLocalX((float) Math.toRadians(rotations.x)));
-            matrixStack.translate(0, sizes.y / 2, 0);
-            matrixStack.translate(sizes.x / 2, -sizes.y / 2, 0);
-            matrixStack.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotations.z)));
-            matrixStack.translate(-sizes.x / 2, sizes.y / 2, 0);
-        } else {
-            Quaternionf q = new Quaternionf();
-            q.rotateLocalY((float) Math.toRadians(rotations.y));
-            q.rotateLocalX((float) Math.toRadians(rotations.x));
-            q.rotateLocalZ((float) Math.toRadians(rotations.z));
-            matrixStack.multiply(q);
-        }
-        // fix it so that y-axis goes down instead of up
-        matrixStack.scale(1, -1, 1);
-        // scale so that x or y have minSubdivisions units between them
-        matrixStack.scale((float) scale, (float) scale, (float) scale);
-
-        synchronized (elements) {
-            renderElements3D(drawContext, getElementsByZIndex());
-        }
-        matrixStack.pop();
-
-        if (!cull) {
-            RenderSystem.enableDepthTest();
-        }
-        if (renderBack) {
-            RenderSystem.enableCull();
-        }
+    public void render(MatrixStack matrices, VertexConsumerProvider consumers, float tickDelta) {
+        // TODO: I cba to update rendering code
     }
 
     private static Vector3f toEulerDegrees(Quaternionf quaternion) {
@@ -370,16 +314,7 @@ public class Surface extends Draw2D implements RenderElement, RenderElement3D<Su
     }
 
     private void renderElement3D(DrawContext drawContext, RenderElement element) {
-        if (renderBack) {
-            RenderSystem.disableCull();
-        } else {
-            RenderSystem.enableCull();
-        }
-        if (!cull) {
-            RenderSystem.disableDepthTest();
-        } else {
-            RenderSystem.enableDepthTest();
-        }
+        // TODO: I cba to update rendering code
         MatrixStack matrixStack = drawContext.getMatrices();
         matrixStack.push();
         matrixStack.translate(0, 0, zIndexScale * element.getZIndex());

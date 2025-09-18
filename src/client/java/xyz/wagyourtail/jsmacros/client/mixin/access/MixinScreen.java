@@ -83,7 +83,7 @@ public abstract class MixinScreen extends AbstractParentElement implements IScre
     @Final
     protected Text title;
     @Shadow
-    protected MinecraftClient client;
+    public MinecraftClient client;
     @Shadow
     public TextRenderer textRenderer;
 

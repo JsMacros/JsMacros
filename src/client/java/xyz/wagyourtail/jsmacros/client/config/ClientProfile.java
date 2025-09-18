@@ -138,7 +138,7 @@ public class ClientProfile extends BaseProfile {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
                     if (loc.file != null) {
                         locationStyle = locationStyle.withHoverEvent(
-                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("jsmacros.clicktoview"))
+                                new HoverEvent.ShowText(Text.translatable("jsmacros.clicktoview"))
                         ).withClickEvent(new CustomClickEvent(() -> {
                             if (loc.startIndex > -1) {
                                 EditorScreen.openAndScrollToIndex(loc.file, loc.startIndex, loc.endIndex);

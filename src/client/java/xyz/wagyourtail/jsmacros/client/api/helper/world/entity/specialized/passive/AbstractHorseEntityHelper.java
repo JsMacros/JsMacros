@@ -23,7 +23,8 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      */
     @Nullable
     public String getOwner() {
-        return base.getOwnerUuid() == null ? null : base.getOwnerUuid().toString();
+        var owner = base.getOwnerReference();
+        return owner != null ? owner.getUuid().toString() : null;
     }
 
     /**
@@ -39,7 +40,7 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      * @since 1.8.4
      */
     public boolean isSaddled() {
-        return base.isSaddled();
+        return base.hasSaddleEquipped();
     }
 
     /**
@@ -80,7 +81,7 @@ public class AbstractHorseEntityHelper<T extends AbstractHorseEntity> extends An
      * @since 1.8.4
      */
     public boolean canBeSaddled() {
-        return base.canBeSaddled();
+        return base.canUseSlot(EquipmentSlot.SADDLE);
     }
 
     /**

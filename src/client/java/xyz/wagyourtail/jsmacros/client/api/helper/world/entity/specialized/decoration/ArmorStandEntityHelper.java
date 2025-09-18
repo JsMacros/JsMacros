@@ -116,7 +116,7 @@ public class ArmorStandEntityHelper extends LivingEntityHelper<ArmorStandEntity>
     }
 
     private float[] toArray(EulerAngle angle) {
-        return new float[]{angle.getWrappedYaw(), angle.getWrappedPitch(), angle.getWrappedRoll()};
+        return new float[]{angle.yaw(), angle.pitch(), angle.roll()};
     }
 
 }

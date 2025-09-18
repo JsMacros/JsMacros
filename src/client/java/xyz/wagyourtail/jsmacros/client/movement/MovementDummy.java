@@ -168,11 +168,6 @@ public class MovementDummy extends LivingEntity {
     }
 
     @Override
-    public Iterable<ItemStack> getArmorItems() {
-        return new ArrayList<>();
-    }
-
-    @Override
     public ItemStack getEquippedStack(EquipmentSlot slot) {
         return equippedStack.get(slot);
     }

@@ -1,16 +1,16 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import org.joml.Matrix4f;
 import xyz.wagyourtail.doclet.DocletIgnore;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import net.minecraft.client.gl.RenderPipelines;
 import xyz.wagyourtail.jsmacros.api.math.Pos3D;
 import xyz.wagyourtail.jsmacros.api.math.Vec3D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
@@ -18,6 +18,23 @@ import java.util.Objects;
  */
 @SuppressWarnings("unused")
 public class Box implements RenderElement3D<Box> {
+    private static final Field lineDepthTestFunction;
+    private static final DepthTestFunction oldlineDepthTestFunction;
+    private static final Field boxDepthTestFunction;
+    private static final DepthTestFunction oldboxDepthTestFunction;
+
+    static {
+        try {
+            lineDepthTestFunction = RenderPipelines.LINES.getClass().getDeclaredField("depthTestFunction");
+            lineDepthTestFunction.setAccessible(true);
+            oldlineDepthTestFunction = (DepthTestFunction) lineDepthTestFunction.get(RenderPipelines.LINES);
+            boxDepthTestFunction = RenderPipelines.DEBUG_FILLED_BOX.getClass().getDeclaredField("depthTestFunction");
+            boxDepthTestFunction.setAccessible(true);
+            oldboxDepthTestFunction = (DepthTestFunction) boxDepthTestFunction.get(RenderPipelines.DEBUG_FILLED_BOX);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public Vec3D pos;
     public int color;
     public int fillColor;
@@ -167,16 +184,10 @@ public class Box implements RenderElement3D<Box> {
         return 0;
     }
 
+
     @Override
     @DocletIgnore
-    public void render(DrawContext drawContext, float tickDelta) {
-        MatrixStack matrixStack = drawContext.getMatrices();
-        final boolean cull = !this.cull;
-        int a = (color >> 24) & 0xFF;
-        int r = (color >> 16) & 0xFF;
-        int g = (color >> 8) & 0xFF;
-        int b = color & 0xFF;
-
+    public void render(MatrixStack matrixStack, VertexConsumerProvider consumers, float tickDelta) {
         float x1 = (float) pos.x1;
         float y1 = (float) pos.y1;
         float z1 = (float) pos.z1;
@@ -184,90 +195,44 @@ public class Box implements RenderElement3D<Box> {
         float y2 = (float) pos.y2;
         float z2 = (float) pos.z2;
 
-        if (cull) {
-            RenderSystem.disableDepthTest();
-        }
+        boolean seeThrough = !this.cull;
+        VertexConsumerProvider.Immediate immediate = (VertexConsumerProvider.Immediate) consumers;
+        try {
+            if (seeThrough) {
+                lineDepthTestFunction.set(RenderPipelines.LINES, DepthTestFunction.NO_DEPTH_TEST);
+                boxDepthTestFunction.set(RenderPipelines.DEBUG_FILLED_BOX, DepthTestFunction.NO_DEPTH_TEST);
+            }
+            RenderLayer linesLayer = RenderLayer.getLines();
+            RenderLayer fillLayer = RenderLayer.getDebugFilledBox();
 
-        Tessellator tess = Tessellator.getInstance();
+            if (this.fill) {
+                float fa = ((fillColor >> 24) & 0xFF) / 255.0F;
+                float fr = ((fillColor >> 16) & 0xFF) / 255.0F;
+                float fg = ((fillColor >> 8) & 0xFF) / 255.0F;
+                float fb = (fillColor & 0xFF) / 255.0F;
+                VertexRendering.drawFilledBox(matrixStack, consumers.getBuffer(fillLayer), x1, y1, z1, x2, y2, z2, fr, fg, fb, fa);
+            }
 
-        Matrix4f matrix = matrixStack.peek().getPositionMatrix();
+            float r = ((color >> 16) & 0xFF) / 255.0F;
+            float g = ((color >> 8) & 0xFF) / 255.0F;
+            float b = (color & 0xFF) / 255.0F;
+            float a = ((color >> 24) & 0xFF) / 255.0F;
+            VertexRendering.drawBox(matrixStack, consumers.getBuffer(linesLayer), x1, y1, z1, x2, y2, z2, r, g, b, a);
+            if (seeThrough) {
+                immediate.draw();
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } finally {
 
-        if (this.fill) {
-            float fa = ((fillColor >> 24) & 0xFF) / 255F;
-            float fr = ((fillColor >> 16) & 0xFF) / 255F;
-            float fg = ((fillColor >> 8) & 0xFF) / 255F;
-            float fb = (fillColor & 0xFF) / 255F;
-
-            //1.15+ culls insides
-            RenderSystem.disableCull();
-
-            BufferBuilder buf = tess.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-
-            //draw a cube using triangle strips
-            buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa); // Front-top-left
-            buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa); // Front-top-right
-            buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa); // Front-bottom-left
-            buf.vertex(matrix, x2, y1, z2).color(fr, fg, fb, fa); // Front-bottom-right
-            buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa); // Front-bottom-left
-            buf.vertex(matrix, x2, y2, z2).color(fr, fg, fb, fa); // Front-top-right
-            buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa); // Back-top-right
-            buf.vertex(matrix, x1, y2, z2).color(fr, fg, fb, fa); // Front-top-left
-            buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa); // Back-top-left
-            buf.vertex(matrix, x1, y1, z2).color(fr, fg, fb, fa); // Front-bottom-left
-            buf.vertex(matrix, x1, y1, z1).color(fr, fg, fb, fa); // Back-bottom-left
-            buf.vertex(matrix, x2, y1, z1).color(fr, fg, fb, fa); // Back-bottom-right
-            buf.vertex(matrix, x1, y2, z1).color(fr, fg, fb, fa); // Back-top-left
-            buf.vertex(matrix, x2, y2, z1).color(fr, fg, fb, fa); // Back-top-right
-
-            BufferRenderer.drawWithGlobalProgram(buf.end());
-
-            RenderSystem.enableCull();
-        }
-
-        RenderSystem.lineWidth(2.5F);
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
-
-        buf.vertex(matrix, x1, y1, z1).color(r, g, b, a);
-        buf.vertex(matrix, x1, y1, z2).color(r, g, b, a);
-
-        buf.vertex(matrix, x2, y1, z2).color(r, g, b, a);
-
-        buf.vertex(matrix, x2, y1, z1).color(r, g, b, a);
-
-        buf.vertex(matrix, x1, y1, z1).color(r, g, b, a);
-
-        buf.vertex(matrix, x1, y2, z1).color(r, g, b, a);
-
-        buf.vertex(matrix, x1, y2, z2).color(r, g, b, a);
-
-        buf.vertex(matrix, x2, y2, z2).color(r, g, b, a);
-
-        buf.vertex(matrix, x2, y2, z1).color(r, g, b, a);
-
-        buf.vertex(matrix, x1, y2, z1).color(r, g, b, a);
-
-        buf.vertex(matrix, x1, y2, z1).color(r, g, b, 0);
-        buf.vertex(matrix, x2, y1, z1).color(r, g, b, 0);
-
-        buf.vertex(matrix, x2, y1, z1).color(r, g, b, a);
-        buf.vertex(matrix, x2, y2, z1).color(r, g, b, a);
-
-        buf.vertex(matrix, x2, y2, z1).color(r, g, b, 0);
-        buf.vertex(matrix, x1, y1, z2).color(r, g, b, 0);
-
-        buf.vertex(matrix, x1, y1, z2).color(r, g, b, a);
-        buf.vertex(matrix, x1, y2, z2).color(r, g, b, a);
-
-        buf.vertex(matrix, x1, y2, z2).color(r, g, b, 0);
-        buf.vertex(matrix, x2, y1, z2).color(r, g, b, 0);
-
-        buf.vertex(matrix, x2, y1, z2).color(r, g, b, a);
-        buf.vertex(matrix, x2, y2, z2).color(r, g, b, a);
-
-        BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        if (cull) {
-            RenderSystem.enableDepthTest();
+            if (seeThrough) {
+                try {
+                    lineDepthTestFunction.set(RenderPipelines.LINES, oldlineDepthTestFunction);
+                    boxDepthTestFunction.set(RenderPipelines.DEBUG_FILLED_BOX, oldboxDepthTestFunction);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -659,5 +624,4 @@ public class Box implements RenderElement3D<Box> {
         }
 
     }
-
 }

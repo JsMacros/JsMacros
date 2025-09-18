@@ -22,22 +22,17 @@ public interface RenderElement extends Drawable {
     }
 
     @DocletIgnore
-    default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation) {
-        setupMatrix(matrices, x, y, scale, rotation, 0, 0, false);
-    }
-
-    @DocletIgnore
     default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation, double width, double height, boolean rotateAroundCenter) {
-        matrices.translate(x, y, 0);
+        matrices.translate((float) x, (float) y, 1);
         matrices.scale(scale, scale, 1);
         if (rotateAroundCenter) {
-            matrices.translate(width / 2, height / 2, 0);
+            matrices.translate((float) (width / 2), (float) (height / 2), 1);
         }
         matrices.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotation)));
         if (rotateAroundCenter) {
-            matrices.translate(-width / 2, -height / 2, 0);
+            matrices.translate((float) (-width / 2), (float) (-height / 2), 1);
         }
-        matrices.translate(-x, -y, 0);
+        matrices.translate((float) -x, (float) -y, 1);
     }
 
 }

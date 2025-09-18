@@ -1,12 +1,9 @@
 package xyz.wagyourtail.jsmacros.client.gui.containers;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.opengl.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
@@ -16,14 +13,12 @@ import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.util.TranslationUtil;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 import xyz.wagyourtail.jsmacros.core.event.BaseEventRegistry;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
 
 public class MacroContainer extends MultiElementContainer<MacroScreen> {
@@ -208,7 +203,7 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
             drawContext.fill(x + (w / 12), y + 1, x + (w / 12) + 1, y + height - 1, 0xFFFFFFFF);
             drawContext.fill(x + (w / 4), y + 1, x + (w / 4) + 1, y + height - 1, 0xFFFFFFFF);
             drawContext.fill(x + width - 14, y + 1, x + width - 13, y + height - 1, 0xFFFFFFFF);
-            RenderSystem.setShader(ShaderProgramKeys.POSITION_TEX);
+            //RenderSystem.setShader(VertexFormats.POSITION_TEXTURE);
             // icon for keystate
             Identifier tex;
             if (macro.triggerType != ScriptTrigger.TriggerType.EVENT) {
@@ -217,9 +212,9 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                 } else {
                     tex = script_fork_tex;
                 }
-                RenderSystem.enableBlend();
+                GlStateManager._enableBlend();
                 drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - 2 * height + 2, y + 2, 0, 0, height - 4, height - 4, 32, 32, 32, 32);
-                RenderSystem.disableBlend();
+                GlStateManager._disableBlend();
                 switch (macro.triggerType) {
                     default:
                     case KEY_FALLING:
@@ -232,18 +227,18 @@ public class MacroContainer extends MultiElementContainer<MacroScreen> {
                         tex = key_both_tex;
                         break;
                 }
-                RenderSystem.enableBlend();
+                GlStateManager._enableBlend();
                 drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - height + 2, y + 2, 0, 0, height - 4, height - 4, 32, 32, 32, 32);
-                RenderSystem.disableBlend();
+                GlStateManager._disableBlend();
             } else {
                 if (macro.joined) {
                     tex = script_join_tex;
                 } else {
                     tex = script_fork_tex;
                 }
-                RenderSystem.enableBlend();
+                GlStateManager._enableBlend();
                 drawContext.drawTexture(RenderLayer::getGuiTextured, tex, x + w / 4 - height + 2, y + 2, 0, 0, height - 4, height - 4, 32, 32, 32, 32);
-                RenderSystem.disableBlend();
+                GlStateManager._disableBlend();
             }
 
             // border

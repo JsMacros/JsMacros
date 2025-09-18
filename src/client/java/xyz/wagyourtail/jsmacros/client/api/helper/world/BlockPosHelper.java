@@ -153,7 +153,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.6.5
      */
     public BlockPosHelper offset(String direction) {
-        return new BlockPosHelper(base.offset(Direction.byName(direction)));
+        return new BlockPosHelper(base.offset(Direction.byId(direction)));
     }
 
     /**
@@ -163,7 +163,7 @@ public class BlockPosHelper extends BaseHelper<BlockPos> {
      * @since 1.6.5
      */
     public BlockPosHelper offset(String direction, int distance) {
-        return new BlockPosHelper(base.offset(Direction.byName(direction), distance));
+        return new BlockPosHelper(base.offset(Direction.byId(direction), distance));
     }
 
     /**

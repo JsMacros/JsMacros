@@ -284,7 +284,7 @@ public class Text implements RenderElement, Alignable<Text> {
                 buffer,
                 TextRenderer.TextLayerType.NORMAL,
                 0,
-                0xF000F0
+                0xFFF000F0
         );
         buffer.draw();
         matrices.pop();

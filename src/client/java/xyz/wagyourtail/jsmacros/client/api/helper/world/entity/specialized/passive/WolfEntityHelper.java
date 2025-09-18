@@ -44,7 +44,7 @@ public class WolfEntityHelper extends TameableEntityHelper<WolfEntity> {
      * @since 1.8.4
      */
     public boolean isWet() {
-        return base.isWet();
+        return base.furWet;
     }
 
 }
