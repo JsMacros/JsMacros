@@ -25,7 +25,7 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
     public void init() {
         super.init();
 
-        checkBox = this.addDrawableChild(new Button(x, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(state ? "\u2713" : ""), btn -> {
+        checkBox = this.addDrawableChild(new Button(x, y, height, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal(state ? "\u2713" : ""), btn -> {
             state = !state;
             if (setState != null) {
                 setState.accept(state);
@@ -42,7 +42,7 @@ public class CheckBoxContainer extends MultiElementContainer<IContainerParent> {
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
-            drawContext.drawWrappedText(textRenderer, message, x + height, y + 2, width - height - 2, 0xFFFFFF, false);
+            drawContext.drawWrappedText(textRenderer, message, x + height, y + 2, width - height - 2, 0xFFFFFFFF, false);
         }
     }
 

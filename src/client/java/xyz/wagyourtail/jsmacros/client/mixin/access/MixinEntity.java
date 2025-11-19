@@ -19,7 +19,7 @@ public abstract class MixinEntity implements IMixinEntity {
 
     @Override
     public void jsmacros_setGlowingColor(int glowingColor) {
-        this.jsmacros$glowingColor = glowingColor & 0xFFFFFF;
+        this.jsmacros$glowingColor = glowingColor;
     }
 
     @Override

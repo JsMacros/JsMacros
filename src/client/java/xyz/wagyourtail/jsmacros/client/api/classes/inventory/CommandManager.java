@@ -7,8 +7,8 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.tree.CommandNode;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientCommandSource;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.command.CommandSource;
 import xyz.wagyourtail.jsmacros.client.api.helper.CommandNodeHelper;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
@@ -64,8 +64,8 @@ public abstract class CommandManager {
      */
     public void getArgumentAutocompleteOptions(String commandPart, MethodWrapper<List<String>, Object, Object, ?> callback) {
         assert mc.player != null;
-        CommandDispatcher<CommandSource> commandDispatcher = mc.player.networkHandler.getCommandDispatcher();
-        ParseResults<CommandSource> parse = commandDispatcher.parse(commandPart, mc.player.networkHandler.getCommandSource());
+        CommandDispatcher<ClientCommandSource> commandDispatcher = mc.player.networkHandler.getCommandDispatcher();
+        ParseResults<ClientCommandSource> parse = commandDispatcher.parse(commandPart, mc.player.networkHandler.getCommandSource());
         CompletableFuture<Suggestions> suggestions = commandDispatcher.getCompletionSuggestions(parse);
         suggestions.thenAccept(
                 (s) -> {

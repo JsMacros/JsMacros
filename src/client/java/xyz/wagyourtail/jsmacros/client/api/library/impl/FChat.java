@@ -384,7 +384,8 @@ public class FChat extends BaseLibrary {
      */
     @Nullable
     public TextHelper createTextHelperFromJSON(String json) {
-        TextHelper t = TextHelper.wrap(Text.Serialization.fromJson(json, mc.getNetworkHandler().getRegistryManager()));
+        Text s = Text.of(json);
+        TextHelper t = TextHelper.wrap(s);
         return t;
     }
 

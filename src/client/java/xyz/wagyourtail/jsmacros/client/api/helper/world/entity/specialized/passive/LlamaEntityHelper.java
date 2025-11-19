@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.pass
 
 import net.minecraft.entity.passive.LlamaEntity;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
-import xyz.wagyourtail.jsmacros.client.api.helper.DyeColorHelper;
 
 /**
  * @author Etheradon

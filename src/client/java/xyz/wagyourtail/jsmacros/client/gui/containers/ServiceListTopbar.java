@@ -7,7 +7,6 @@ import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
 import xyz.wagyourtail.jsmacros.client.config.Sorting;
 import xyz.wagyourtail.jsmacros.client.gui.screens.ServiceScreen;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.service.ServiceTrigger;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
 import xyz.wagyourtail.wagyourgui.elements.Button;
@@ -28,22 +27,22 @@ public class ServiceListTopbar extends MultiElementContainer<ServiceScreen> {
 
         int w = width - 12;
 
-        addDrawableChild(new Button(x + 1, y + 1, w * 2 / 12 - 1, height - 3, textRenderer, JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod == Sorting.ServiceSortMethod.Name ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros.servicename"), (btn) -> {
+        addDrawableChild(new Button(x + 1, y + 1, w * 2 / 12 - 1, height - 3, textRenderer, JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod == Sorting.ServiceSortMethod.Name ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("jsmacros.servicename"), (btn) -> {
             JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod = Sorting.ServiceSortMethod.Name;
             parent.reload();
         }));
 
-        addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 3, textRenderer, JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod == Sorting.ServiceSortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros.file"), (btn) -> {
+        addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 3, textRenderer, JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod == Sorting.ServiceSortMethod.FileName ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("jsmacros.file"), (btn) -> {
             JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod = Sorting.ServiceSortMethod.FileName;
             parent.reload();
         }));
 
-        addDrawableChild(new Button(x + w * 10 / 12 + 1, y + 1, w / 12, height - 3, textRenderer, JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod == Sorting.ServiceSortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros.enabledstatus"), (btn) -> {
+        addDrawableChild(new Button(x + w * 10 / 12 + 1, y + 1, w / 12, height - 3, textRenderer, JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod == Sorting.ServiceSortMethod.Enabled ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("jsmacros.enabledstatus"), (btn) -> {
             JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod = Sorting.ServiceSortMethod.Enabled;
             parent.reload();
         }));
 
-        addDrawableChild(new Button(x + w * 11 / 12 + 1, y + 1, w / 12, height - 3, textRenderer, JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod == Sorting.ServiceSortMethod.Running ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros.runningstatus"), (btn) -> {
+        addDrawableChild(new Button(x + w * 11 / 12 + 1, y + 1, w / 12, height - 3, textRenderer, JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod == Sorting.ServiceSortMethod.Running ? 0x3FFFFFFF : 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("jsmacros.runningstatus"), (btn) -> {
             JsMacrosClient.clientCore.config.getOptions(ClientConfigV2.class).sortServicesMethod = Sorting.ServiceSortMethod.Running;
             parent.reload();
         }));

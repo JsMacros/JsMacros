@@ -130,10 +130,10 @@ public class CategoryTreeContainer extends MultiElementContainer<ICategoryTreePa
 
     private void initChild(boolean show) {
         if (children.size() > 0) {
-            expandBtn = addDrawableChild(new Button(x, y, btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(">"), (btn) -> this.toggleExpand()));
+            expandBtn = addDrawableChild(new Button(x, y, btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal(">"), (btn) -> this.toggleExpand()));
             expandBtn.visible = show;
         }
-        showBtn = addDrawableChild(new Button(x + btnHeight, y, width - btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable(category), (btn) -> this.selectCategory()));
+        showBtn = addDrawableChild(new Button(x + btnHeight, y, width - btnHeight, btnHeight, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable(category), (btn) -> this.selectCategory()));
         showBtn.visible = show;
         showBtn.horizCenter = false;
 

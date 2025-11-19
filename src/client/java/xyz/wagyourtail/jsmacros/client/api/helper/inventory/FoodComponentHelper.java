@@ -1,11 +1,7 @@
 package xyz.wagyourtail.jsmacros.client.api.helper.inventory;
 
-import it.unimi.dsi.fastutil.objects.Object2FloatArrayMap;
 import net.minecraft.component.type.FoodComponent;
-import xyz.wagyourtail.jsmacros.client.api.helper.StatusEffectHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
-
-import java.util.Map;
 
 /**
  * @author Etheradon

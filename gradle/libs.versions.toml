@@ -1,16 +1,15 @@
 [versions]
 java = "21"
 
-minecraft = "1.21.4"
+minecraft = "1.21.8"
 yarn = "1"
 
-neoforge = "111-beta"
-fabric_loader = "0.16.10"
+fabric_loader = "0.17.2"
 
-mixin = "0.8.5"
+mixin = "0.8.7"
 mixin_extra = "0.3.2"
 
-asm = "9.7.1"
+asm = "9.8"
 prism4j = "2.0.0"
 joor = "0.9.15"
 nv_websocket = "2.14"
@@ -18,8 +17,8 @@ junit = "5.8.1"
 jb_annotations = "20.1.0"
 javassist = "3.30.2-GA"
 
-fapi = "0.118.5+1.21.4"
-modmenu = "13.0.3"
+fapi = "0.136.0+1.21.8"
+modmenu = "15.0.0"
 
 shadow = "8.3.6"
 

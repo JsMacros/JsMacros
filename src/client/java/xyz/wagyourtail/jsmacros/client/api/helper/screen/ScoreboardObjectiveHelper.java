@@ -1,7 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.helper.screen;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.scoreboard.*;
+import net.minecraft.scoreboard.ScoreHolder;
+import net.minecraft.scoreboard.ScoreboardEntry;
+import net.minecraft.scoreboard.ScoreboardObjective;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.api.helper.TextHelper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;

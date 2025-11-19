@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer;
 import net.minecraft.client.font.TextRenderer;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.gui.settings.SettingsOverlay;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.ScriptTrigger;
 

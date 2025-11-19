@@ -28,7 +28,6 @@ import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.ServerInfoHelper;
 import xyz.wagyourtail.jsmacros.client.tick.TickBasedEvents;
 import xyz.wagyourtail.jsmacros.client.tick.TickSync;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
@@ -202,12 +201,12 @@ public class FClient extends PerExecLibrary {
         mc.execute(() -> {
             boolean bl = mc.isInSingleplayer();
             if (mc.world != null) {
-                mc.world.disconnect();
+                mc.world.disconnect(Text.of(""));
             }
             if (bl) {
-                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")), false);
             } else {
-                mc.disconnect();
+                mc.disconnect(null, false);
             }
             mc.createIntegratedServerLoader().start(folderName, () -> mc.setScreen(new TitleScreen()));
         });
@@ -234,12 +233,12 @@ public class FClient extends PerExecLibrary {
         mc.execute(() -> {
             boolean bl = mc.isInSingleplayer();
             if (mc.world != null) {
-                mc.world.disconnect();
+                mc.world.disconnect(Text.of(""));
             }
             if (bl) {
-                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.disconnect(new MessageScreen(Text.of("Saving World")),false);
             } else {
-                mc.disconnect();
+                mc.disconnect(new MessageScreen(Text.of("")),false);
             }
             ConnectScreen.connect(null, mc, new ServerAddress(ip, port), new ServerInfo("server", new ServerAddress(ip, port).toString(), ServerInfo.ServerType.OTHER), false, null);
         });
@@ -268,9 +267,9 @@ public class FClient extends PerExecLibrary {
             if (isWorld) {
                 // logic in death screen disconnect button
                 if (mc.world != null) {
-                    mc.world.disconnect();
+                    mc.world.disconnect(Text.of(""));
                 }
-                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")));
+                mc.disconnect(new MessageScreen(Text.translatable("menu.savingLevel")), false);
                 mc.setScreen(new TitleScreen());
             }
             if (isInSingleplayer) {

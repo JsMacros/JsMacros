@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.api.event.impl;
 
 import net.minecraft.client.MinecraftClient;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;
 

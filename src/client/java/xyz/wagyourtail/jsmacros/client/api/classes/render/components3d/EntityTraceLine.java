@@ -1,10 +1,10 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components3d;
 
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
-import xyz.wagyourtail.jsmacros.api.math.Pos2D;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.Draw3D;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 
@@ -54,26 +54,21 @@ public class EntityTraceLine extends TraceLine {
     }
 
     @Override
-    public void render(DrawContext drawContext, float tickDelta) {
+    public void render(MatrixStack matrixStack, VertexConsumerProvider consumers, float tickDelta) {
         if (shouldRemove || entity == null || entity.isRemoved() || entity.getWorld() != mc.world) {
             shouldRemove = true;
             dirty = true;
             return;
         }
 
-        Vec3d vec = (entity.prevX == 0.0 && entity.prevY == 0.0 && entity.prevZ == 0.0)
-                ? entity.getPos()
-                : entity.getLerpedPos(tickDelta);
-        pos.x = vec.x;
-        pos.y = vec.y + yOffset;
-        pos.z = vec.z;
-        super.render(drawContext, tickDelta);
+        Vec3d vec = entity.getLerpedPos(tickDelta);
+        setPos(vec.x, vec.y + yOffset, vec.z);
+        super.render(matrixStack, consumers, tickDelta);
     }
 
     public static class Builder {
         private final Draw3D parent;
 
-        public Pos2D screenPos = new Pos2D(0.0, 0.0);
         @Nullable
         private EntityHelper<?> entity = null;
         private double yOffset = 0.5;
@@ -236,9 +231,7 @@ public class EntityTraceLine extends TraceLine {
          * @since 1.9.0
          */
         public EntityTraceLine build() {
-            EntityTraceLine line = new EntityTraceLine(entity, color, alpha, yOffset);
-            line.screenPos = screenPos;
-            return line;
+            return new EntityTraceLine(entity, color, alpha, yOffset);
         }
 
     }

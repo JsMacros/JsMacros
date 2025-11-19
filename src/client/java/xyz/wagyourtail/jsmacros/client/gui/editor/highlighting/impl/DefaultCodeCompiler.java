@@ -9,7 +9,6 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AbstractRenderCod
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSuggestion;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.Prism;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
-import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.*;
 import java.util.regex.Matcher;

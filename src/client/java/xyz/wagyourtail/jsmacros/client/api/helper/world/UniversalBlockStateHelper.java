@@ -152,7 +152,7 @@ public class UniversalBlockStateHelper extends BlockStateHelper {
      * @since 1.8.4
      */
     public String getAxis() {
-        return base.get(Properties.AXIS).getName();
+        return base.get(Properties.AXIS).getId();
     }
 
     /**

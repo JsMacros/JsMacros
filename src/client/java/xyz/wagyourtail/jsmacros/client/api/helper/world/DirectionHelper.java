@@ -21,7 +21,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
      * @since 1.8.4
      */
     public String getName() {
-        return base.getName();
+        return base.getId();
     }
 
     /**
@@ -29,7 +29,7 @@ public class DirectionHelper extends BaseHelper<Direction> {
      * @since 1.8.4
      */
     public String getAxis() {
-        return base.getAxis().getName();
+        return base.getAxis().getId();
     }
 
     /**

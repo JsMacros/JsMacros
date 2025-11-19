@@ -19,7 +19,7 @@ public class AxolotlEntityHelper extends AnimalEntityHelper<AxolotlEntity> {
      * @since 1.8.4
      */
     public int getVariantId() {
-        return base.getVariant().getId();
+        return base.getVariant().getIndex();
     }
 
     /**
@@ -28,7 +28,7 @@ public class AxolotlEntityHelper extends AnimalEntityHelper<AxolotlEntity> {
      */
     @DocletReplaceReturn("AxolotlVariant")
     public String getVariantName() {
-        return base.getVariant().getName();
+        return base.getVariant().getId();
     }
 
     /**

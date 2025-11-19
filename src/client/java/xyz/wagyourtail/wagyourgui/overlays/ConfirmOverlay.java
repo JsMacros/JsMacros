@@ -37,11 +37,11 @@ public class ConfirmOverlay extends OverlayContainer {
     public void init() {
         super.init();
 
-        this.addDrawableChild(new Button(x + 2, y + height - 12, (width - 4) / 2, 10, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("gui.cancel"), (btn) -> {
+        this.addDrawableChild(new Button(x + 2, y + height - 12, (width - 4) / 2, 10, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("gui.cancel"), (btn) -> {
             this.close();
         }));
 
-        this.addDrawableChild(new Button(x + (width - 4) / 2 + 2, y + height - 12, (width - 4) / 2, 10, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
+        this.addDrawableChild(new Button(x + (width - 4) / 2 + 2, y + height - 12, (width - 4) / 2, 10, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
             if (this.accept != null) {
                 this.accept.accept(this);
             }
@@ -54,7 +54,7 @@ public class ConfirmOverlay extends OverlayContainer {
         for (int i = 0; i < lines; ++i) {
             int w = textRenderer.getWidth(text.get(i));
             int centeredX = (int) (hcenter ? x + width / 2F - w / 2F : x + 3);
-            drawContext.drawText(textRenderer, text.get(i), centeredX, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFF, false);
+            drawContext.drawText(textRenderer, text.get(i), centeredX, y + 2 + vcenter + (i * textRenderer.fontHeight), 0xFFFFFFFF, false);
         }
     }
 

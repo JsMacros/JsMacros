@@ -26,7 +26,7 @@ public class RunningContextContainer extends MultiElementContainer<CancelScreen>
     @Override
     public void init() {
         super.init();
-        cancelButton = this.addDrawableChild(new Button(x + 1, y + 1, height - 2, height - 2, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal("X"), (btn) -> {
+        cancelButton = this.addDrawableChild(new Button(x + 1, y + 1, height - 2, height - 2, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal("X"), (btn) -> {
             BaseScriptContext<?> ctx = t;
             if (ctx != null && !ctx.isContextClosed()) {
                 ctx.closeContext();
@@ -49,8 +49,8 @@ public class RunningContextContainer extends MultiElementContainer<CancelScreen>
                     JsMacros.LOGGER.warn("Closed context {} was still in list", t.getMainThread().getName());
                     parent.removeContainer(this);
                 } else if (this.visible) {
-                    drawContext.drawCenteredTextWithShadow(textRenderer, textRenderer.trimToWidth(service ? ((EventService) t.getTriggeringEvent()).serviceName : t.getMainThread().getName(), width - 105 - height), x + (width - 105 - height) / 2 + height + 4, y + 2, 0xFFFFFF);
-                    drawContext.drawCenteredTextWithShadow(textRenderer, textRenderer.trimToWidth(DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - t.startTime), 100), x + width - 50 + height, y + 2, 0xFFFFFF);
+                    drawContext.drawCenteredTextWithShadow(textRenderer, textRenderer.trimToWidth(service ? ((EventService) t.getTriggeringEvent()).serviceName : t.getMainThread().getName(), width - 105 - height), x + (width - 105 - height) / 2 + height + 4, y + 2, 0xFFFFFFFF);
+                    drawContext.drawCenteredTextWithShadow(textRenderer, textRenderer.trimToWidth(DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - t.startTime), 100), x + width - 50 + height, y + 2, 0xFFFFFFFF);
                     drawContext.fill(x + width - 101, y, x + width - 100, y + height, 0xFFFFFFFF);
                     drawContext.fill(x + height, y, x + height + 1, y + height, 0xFFFFFFFF);
                     // border

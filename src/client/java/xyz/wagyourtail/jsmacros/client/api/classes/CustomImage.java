@@ -43,7 +43,7 @@ public class CustomImage {
         this.image = image;
         this.graphics = image.createGraphics();
         this.name = name;
-        this.texture = createTexture(image);
+        this.texture = createTexture(image, PREFIX + name);
         identifier = Identifier.of(PREFIX + name);
         MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, texture);
         update();
@@ -112,7 +112,7 @@ public class CustomImage {
         try {
             final Semaphore semaphore = new Semaphore(0);
             MinecraftClient.getInstance().execute(() -> {
-                texture.bindTexture();
+                texture.upload();
                 updateTexture();
                 semaphore.release();
             });
@@ -606,12 +606,12 @@ public class CustomImage {
         return metrics.stringWidth(toAnalyze);
     }
 
-    private static NativeImageBackedTexture createTexture(BufferedImage image) {
+    private static NativeImageBackedTexture createTexture(BufferedImage image, String name) {
         AtomicReference<NativeImageBackedTexture> texture = new AtomicReference<>();
         try {
             final Semaphore semaphore = new Semaphore(0);
             MinecraftClient.getInstance().execute(() -> {
-                texture.set(new NativeImageBackedTexture(image.getWidth(), image.getHeight(), true));
+                texture.set(new NativeImageBackedTexture(name, image.getWidth(), image.getHeight(), true));
                 semaphore.release();
             });
             semaphore.acquire();

@@ -15,7 +15,6 @@ import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.helper.CommandContextHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.SuggestionsBuilderHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.EventLockWatchdog;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.classes.Registrable;
@@ -198,6 +197,15 @@ public abstract class CommandBuilder implements Registrable<CommandBuilder> {
 
     public CommandBuilder blockPosArg(String name) {
         argument(name, BlockPosArgumentType::new);
+        return this;
+    }
+
+    public CommandBuilder posArg(String name) {
+        return posArg(name, true);
+    }
+
+    public CommandBuilder posArg(String name, boolean centerArgs) {
+        argument(name, () -> Vec3ArgumentType.vec3(centerArgs));
         return this;
     }
 

@@ -26,7 +26,7 @@ public class OptionsField extends AbstractSettingField<Object> {
         try {
             List<Object> values = setting.getOptions();
             List<Text> textvalues = values.stream().map(e -> Text.literal(e.toString())).collect(Collectors.toList());
-            this.addDrawableChild(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.literal(setting.get().toString()), (btn) -> {
+            this.addDrawableChild(new Button(x + width / 2, y, width / 2, height, textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal(setting.get().toString()), (btn) -> {
                 getFirstOverlayParent().openOverlay(new SelectorDropdownOverlay(x + width / 2, y, width / 2, values.size() * (textRenderer.fontHeight + 1) + 4, textvalues, textRenderer, getFirstOverlayParent(), (choice) -> {
                     btn.setMessage(textvalues.get(choice));
                     try {
@@ -51,7 +51,7 @@ public class OptionsField extends AbstractSettingField<Object> {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        drawContext.drawText(textRenderer, BaseScreen.trimmed(textRenderer, settingName, width / 2), x, y + 1, 0xFFFFFF, false);
+        drawContext.drawText(textRenderer, BaseScreen.trimmed(textRenderer, settingName, width / 2), x, y + 1, 0xFFFFFFFF, false);
     }
 
 }

@@ -35,7 +35,7 @@ public class MovementQueue {
             if (diff.length() > 0.01D) {
                 LOGGER.debug("Pred of by x={}, y={}, z={}", diff.getX(), diff.getY(), diff.getZ());
                 LOGGER.debug("Player pos x={}, y={}, z={}", player.getX(), player.getY(), player.getZ());
-                predPoints.addPoint(player.getX(), player.getY(), player.getZ(), 0.02, 0xde070a);
+                predPoints.addPoint(player.getX(), player.getY(), player.getZ(), 0.02, 0xFFde070a);
                 reCalcPredictions = true;
             } else {
                 LOGGER.debug("No Diff");
@@ -71,7 +71,7 @@ public class MovementQueue {
     }
 
     private synchronized static void drawPredictions() {
-        predictions.forEach(point -> predPoints.addPoint(new Pos3D(point.getX(), point.getY(), point.getZ()), 0.01, 0xffd000));
+        predictions.forEach(point -> predPoints.addPoint(new Pos3D(point.getX(), point.getY(), point.getZ()), 0.01, 0xFFffd000));
     }
 
     public static void append(PlayerInput input, ClientPlayerEntity newPlayer) {

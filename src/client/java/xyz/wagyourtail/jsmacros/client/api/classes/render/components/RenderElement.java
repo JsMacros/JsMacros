@@ -3,8 +3,7 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.util.math.MatrixStack;
-import org.joml.Quaternionf;
+import org.joml.Matrix3x2fStack;
 import xyz.wagyourtail.doclet.DocletIgnore;
 
 /**
@@ -22,22 +21,17 @@ public interface RenderElement extends Drawable {
     }
 
     @DocletIgnore
-    default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation) {
-        setupMatrix(matrices, x, y, scale, rotation, 0, 0, false);
-    }
-
-    @DocletIgnore
-    default void setupMatrix(MatrixStack matrices, double x, double y, float scale, float rotation, double width, double height, boolean rotateAroundCenter) {
-        matrices.translate(x, y, 0);
-        matrices.scale(scale, scale, 1);
+    default void setupMatrix(Matrix3x2fStack matrices, double x, double y, float scale, float rotation, double width, double height, boolean rotateAroundCenter) {
+        matrices.translate((float) x, (float) y);
+        matrices.scale(scale, scale);
         if (rotateAroundCenter) {
-            matrices.translate(width / 2, height / 2, 0);
+            matrices.translate((float) (width / 2), (float) (height / 2));
         }
-        matrices.multiply(new Quaternionf().rotateLocalZ((float) Math.toRadians(rotation)));
+        matrices.rotate((float) Math.toRadians(rotation));
         if (rotateAroundCenter) {
-            matrices.translate(-width / 2, -height / 2, 0);
+            matrices.translate((float) (-width / 2), (float) (-height / 2));
         }
-        matrices.translate(-x, -y, 0);
+        matrices.translate((float) -x, (float) -y);
     }
 
 }

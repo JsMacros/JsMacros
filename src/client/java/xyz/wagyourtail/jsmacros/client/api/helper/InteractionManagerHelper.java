@@ -22,7 +22,6 @@ import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.HitResultHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.FClient;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
@@ -77,7 +76,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceReturn("Gamemode")
     public String getGameMode() {
         checkBase(autoUpdateBase);
-        return base.getCurrentGameMode().getName();
+        return base.getCurrentGameMode().getId();
     }
 
     /**
@@ -88,7 +87,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceParams("gameMode: Gamemode")
     public InteractionManagerHelper setGameMode(String gameMode) {
         checkBase(autoUpdateBase);
-        base.setGameMode(GameMode.byName(gameMode.toLowerCase(Locale.ROOT), base.getCurrentGameMode()));
+        base.setGameMode(GameMode.byId(gameMode.toLowerCase(Locale.ROOT), base.getCurrentGameMode()));
         return this;
     }
 
@@ -110,8 +109,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
     @DocletDeclareType(name = "Direction", type = "'up' | 'down' | 'north' | 'south' | 'east' | 'west'")
     public InteractionManagerHelper setTarget(int x, int y, int z, String direction) {
-        //noinspection DataFlowIssue
-        setTarget(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
+        InteractionProxy.Target.setTargetBlock(new BlockPos(x, y, z), Direction.byId(direction.toLowerCase(Locale.ROOT)));
         return this;
     }
 
@@ -122,7 +120,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit")
     public InteractionManagerHelper setTarget(int x, int y, int z, int direction) {
-        InteractionProxy.Target.setTargetBlock(new BlockPos(x, y, z), direction);
+        InteractionProxy.Target.setTargetBlock(new BlockPos(x, y, z), Direction.byIndex(direction));
         return this;
     }
 
@@ -143,8 +141,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("bpos: BlockPosHelper, direction: Direction")
     public InteractionManagerHelper setTarget(BlockPosHelper pos, String direction) {
-        //noinspection DataFlowIssue
-        setTarget(pos, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId());
+        InteractionProxy.Target.setTargetBlock(pos.getRaw(), Direction.byId(direction.toLowerCase(Locale.ROOT)));
         return this;
     }
 
@@ -155,7 +152,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("bpos: BlockPosHelper, direction: Hexit")
     public InteractionManagerHelper setTarget(BlockPosHelper pos, int direction) {
-        InteractionProxy.Target.setTargetBlock(pos.getRaw(), direction);
+        InteractionProxy.Target.setTargetBlock(pos.getRaw(), Direction.byIndex(direction));
         return this;
     }
 
@@ -357,8 +354,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction")
     public InteractionManagerHelper attack(int x, int y, int z, String direction) throws InterruptedException {
-        //noinspection DataFlowIssue
-        return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), false);
+        return attack(x, y, z, direction, false);
     }
 
     /**
@@ -384,8 +380,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, await: boolean")
     public InteractionManagerHelper attack(int x, int y, int z, String direction, boolean await) throws InterruptedException {
-        //noinspection DataFlowIssue
-        return attack(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), await);
+        return attack(x, y, z, Direction.byId(direction.toLowerCase(Locale.ROOT)), await);
     }
 
     /**
@@ -399,16 +394,20 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit, await: boolean")
     public InteractionManagerHelper attack(int x, int y, int z, int direction, boolean await) throws InterruptedException {
+        return attack(x, y, z, Direction.byIndex(direction), await);
+    }
+
+    private InteractionManagerHelper attack(int x, int y, int z, Direction direction, boolean await) throws InterruptedException {
         if (!checkBase(autoUpdateBase)) return this;
         boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
-            base.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
+            base.attackBlock(new BlockPos(x, y, z), direction);
             assert mc.player != null;
             mc.player.swingHand(Hand.MAIN_HAND);
         } else {
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
-                base.attackBlock(new BlockPos(x, y, z), Direction.values()[direction]);
+                base.attackBlock(new BlockPos(x, y, z), direction);
                 assert mc.player != null;
                 mc.player.swingHand(Hand.MAIN_HAND);
                 wait.release();
@@ -417,8 +416,6 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         }
         return this;
     }
-
-
 
     /**
      * breaks a block, will wait till it's done<br>
@@ -491,7 +488,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
     private InteractionProxy.Break.BreakBlockResult breakBlock(BlockPos pos) throws InterruptedException {
         InteractionProxy.Break.BreakBlockResult insta = checkInstaBreak(pos);
         if (insta != null) return insta;
-        InteractionProxy.Target.setTargetBlock(pos, 0);
+        InteractionProxy.Target.setTargetBlock(pos, Direction.DOWN);
         InteractionProxy.Break.BreakBlockResult res = null;
         BlockPosHelper pos2 = getTargetedBlock();
         if (pos2 != null && pos2.getRaw().equals(pos)) res = breakBlock();
@@ -535,7 +532,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
         int side = 0;
         HitResult target = mc.crosshairTarget;
         if (target != null && target.getType() == HitResult.Type.BLOCK) {
-            side = ((BlockHitResult) target).getSide().getId();
+            side = ((BlockHitResult) target).getSide().getIndex();
         }
         attack(pos.getX(), pos.getY(), pos.getZ(), side, true);
         return new InteractionProxy.Break.BreakBlockResult("SUCCESS", new BlockPosHelper(pos));
@@ -546,7 +543,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
             HitResult target = mc.crosshairTarget;
             if (target == null || target.getType() != HitResult.Type.BLOCK) return;
             BlockPos pos = ((BlockHitResult) target).getBlockPos();
-            attack(pos.getX(), pos.getY(), pos.getZ(), ((BlockHitResult) target).getSide().getId(), true);
+            attack(pos.getX(), pos.getY(), pos.getZ(), ((BlockHitResult) target).getSide(), true);
         }
     }
 
@@ -697,8 +694,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, String direction, boolean offHand) throws InterruptedException {
-        //noinspection DataFlowIssue
-        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, false);
+        return interactBlock(x, y, z, direction, offHand, false);
     }
 
     /**
@@ -725,8 +721,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Direction, offHand: boolean, await: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, String direction, boolean offHand, boolean await) throws InterruptedException {
-        //noinspection DataFlowIssue
-        return interactBlock(x, y, z, Direction.byName(direction.toLowerCase(Locale.ROOT)).getId(), offHand, await);
+        return interactBlock(x, y, z, Direction.byId(direction.toLowerCase(Locale.ROOT)), offHand, await);
     }
 
     /**
@@ -740,12 +735,16 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
      */
     @DocletReplaceParams("x: int, y: int, z: int, direction: Hexit, offHand: boolean, await: boolean")
     public InteractionManagerHelper interactBlock(int x, int y, int z, int direction, boolean offHand, boolean await) throws InterruptedException {
+        return interactBlock(x, y, z, Direction.byIndex(direction), offHand, await);
+    }
+
+    private InteractionManagerHelper interactBlock(int x, int y, int z, Direction direction, boolean offHand, boolean await) throws InterruptedException {
         if (!checkBase(autoUpdateBase)) return this;
         Hand hand = offHand ? Hand.OFF_HAND : Hand.MAIN_HAND;
         boolean joinedMain = JsMacrosClient.clientCore.profile.checkJoinedThreadStack();
         if (joinedMain) {
             ActionResult result = base.interactBlock(mc.player, hand,
-                    new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
+                    new BlockHitResult(new Vec3d(x, y, z), direction, new BlockPos(x, y, z), false)
             );
             assert mc.player != null;
             if (result.isAccepted()) {
@@ -755,7 +754,7 @@ public class InteractionManagerHelper extends BaseHelper<ClientPlayerInteraction
             Semaphore wait = new Semaphore(await ? 0 : 1);
             mc.execute(() -> {
                 ActionResult result = base.interactBlock(mc.player, hand,
-                        new BlockHitResult(new Vec3d(x, y, z), Direction.values()[direction], new BlockPos(x, y, z), false)
+                        new BlockHitResult(new Vec3d(x, y, z), direction, new BlockPos(x, y, z), false)
                 );
                 assert mc.player != null;
                 if (result.isAccepted()) {

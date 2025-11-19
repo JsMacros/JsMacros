@@ -1,15 +1,14 @@
 package xyz.wagyourtail.jsmacros.client.api.helper.world.entity.specialized.passive;
 
+import net.minecraft.entity.LazyEntityReference;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.FoxEntity;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.entity.EntityHelper;
 import xyz.wagyourtail.jsmacros.client.mixin.access.MixinFoxEntity;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author Etheradon
@@ -35,7 +34,7 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      * @since 1.8.4
      */
     public boolean isSnowFox() {
-        return base.getVariant() == FoxEntity.Type.SNOW;
+        return base.getVariant() == FoxEntity.Variant.SNOW;
     }
 
     /**
@@ -43,7 +42,7 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      * @since 1.8.4
      */
     public boolean isRedFox() {
-        return base.getVariant() == FoxEntity.Type.RED;
+        return base.getVariant() == FoxEntity.Variant.RED;
     }
 
     /**
@@ -52,7 +51,11 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      */
     @Nullable
     public String getOwner() {
-        return getTrustedUUIDs().get(0).map(UUID::toString).orElse(null);
+        return ((MixinFoxEntity) base).invokeGetTrustedEntities()
+            .findFirst()
+            .map(LazyEntityReference::getUuid)
+            .map(UUID::toString)
+            .orElse(null);
     }
 
     /**
@@ -61,11 +64,12 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      */
     @Nullable
     public String getSecondOwner() {
-        return getTrustedUUIDs().get(1).map(UUID::toString).orElse(null);
-    }
-
-    private List<Optional<UUID>> getTrustedUUIDs() {
-        return ((MixinFoxEntity) base).invokeGetTrustedUuids().stream().map(Optional::ofNullable).collect(Collectors.toList());
+        return ((MixinFoxEntity) base).invokeGetTrustedEntities()
+            .skip(1)
+            .findFirst()
+            .map(LazyEntityReference::getUuid)
+            .map(UUID::toString)
+            .orElse(null);
     }
 
     /**
@@ -74,7 +78,8 @@ public class FoxEntityHelper extends AnimalEntityHelper<FoxEntity> {
      * @since 1.8.4
      */
     public boolean canTrust(EntityHelper<?> entity) {
-        return entity.getUUID().equals(getOwner()) || entity.getUUID().equals(getSecondOwner());
+        var raw = entity.getRaw();
+        return raw instanceof LivingEntity e && ((MixinFoxEntity) base).invokeCanTrust(e);
     }
 
     /**

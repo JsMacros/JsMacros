@@ -120,10 +120,11 @@ public class FKeyBind extends BaseLibrary {
      * @param keyState
      */
     protected void key(Key keyBind, boolean keyState) {
+        if (MinecraftClient.getInstance().currentScreen != null) return;
+        KeyBinding.setKeyPressed(keyBind, keyState);
         if (keyState) {
             KeyBinding.onKeyPressed(keyBind);
         }
-        KeyBinding.setKeyPressed(keyBind, keyState);
 
         // add to pressed keys list
         if (keyState) {
@@ -144,12 +145,13 @@ public class FKeyBind extends BaseLibrary {
      */
     @DocletReplaceParams("keyBind: Bind, keyState: boolean")
     public void keyBind(String keyBind, boolean keyState) {
+        if (MinecraftClient.getInstance().currentScreen != null) return;
         for (KeyBinding key : mc.options.allKeys) {
             if (key.getTranslationKey().equals(keyBind)) {
+                key.setPressed(keyState);
                 if (keyState) {
                     KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(key.getBoundKeyTranslationKey()));
                 }
-                key.setPressed(keyState);
 
                 // add to pressed keys list
                 if (keyState) {
@@ -191,10 +193,11 @@ public class FKeyBind extends BaseLibrary {
      * @param keyState
      */
     protected void key(KeyBinding keyBind, boolean keyState) {
+        if (MinecraftClient.getInstance().currentScreen != null) return;
+        keyBind.setPressed(keyState);
         if (keyState) {
             KeyBinding.onKeyPressed(InputUtil.fromTranslationKey(keyBind.getBoundKeyTranslationKey()));
         }
-        keyBind.setPressed(keyState);
 
         // add to pressed keys list
         if (keyState) {

@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.StonecutterScreen;
 import net.minecraft.recipe.display.SlotDisplayContexts;
-import net.minecraft.util.context.ContextParameterMap;
 import xyz.wagyourtail.jsmacros.client.api.helper.inventory.ItemStackHelper;
 
 import java.util.List;

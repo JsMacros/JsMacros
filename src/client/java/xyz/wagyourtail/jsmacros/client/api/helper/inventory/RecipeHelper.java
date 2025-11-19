@@ -3,19 +3,16 @@ package xyz.wagyourtail.jsmacros.client.api.helper.inventory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.RecipeBookScreen;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeDisplayEntry;
+import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.recipe.display.SlotDisplayContexts;
 import net.minecraft.registry.Registries;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
-import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.core.helpers.BaseHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**

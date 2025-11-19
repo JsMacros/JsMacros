@@ -3,11 +3,11 @@ package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3x2fStack;
 import xyz.wagyourtail.doclet.DocletIgnore;
 import xyz.wagyourtail.doclet.DocletReplaceParams;
 import xyz.wagyourtail.jsmacros.client.api.classes.RegistryHelper;
@@ -265,30 +265,30 @@ public class Item implements RenderElement, Alignable<Item> {
         if (item == null) {
             return;
         }
-        MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
+        Matrix3x2fStack matrices = drawContext.getMatrices();
+        matrices.pushMatrix();
         setupMatrix(matrices, x, y, (float) scale, rotation, DEFAULT_ITEM_SIZE, DEFAULT_ITEM_SIZE, rotateCenter);
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
         if (is3dRender) {
             // The item has an offset of 100 and item texts of 200. This will make them render at the correct position
             // by translating them back and scaling the item down to be flat
             // Translate by -0.1 = scaleZ * 100 to get it to the render in the plane
-            matrices.translate(0, 0, -0.1);
+            matrices.translate(0, 0, matrices);
             // Don't make this to small, otherwise there will be z-fighting for items like anvils
             final float scaleZ = 0.001f;
-            matrices.scale(1, 1, scaleZ);
+            matrices.scale(1, 1, matrices);
             drawContext.drawItem(item, x, y);
-            matrices.scale(1, 1, 1 / scaleZ);
+            matrices.scale(1, 1, matrices);
         } else {
             drawContext.drawItem(item, x, y);
         }
         if (overlay) {
             if (is3dRender) {
-                matrices.translate(0, 0, -199.5);
+                matrices.translate(0, 0, matrices);
             }
             drawContext.drawStackOverlay(mc.textRenderer, item, x, y, ovText);
         }
-        matrices.pop();
+        matrices.popMatrix();
     }
 
     public Item setParent(IDraw2D<?> parent) {

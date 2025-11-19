@@ -6,8 +6,6 @@ import xyz.wagyourtail.jsmacros.core.event.BaseListener;
 import xyz.wagyourtail.jsmacros.core.event.IEventListener;
 import xyz.wagyourtail.jsmacros.core.language.EventContainer;
 
-import java.util.Objects;
-
 public class EventLockWatchdog {
 
     public static void startWatchdog(@NotNull EventContainer<?> lock, @Nullable IEventListener listener, long maxTime) {

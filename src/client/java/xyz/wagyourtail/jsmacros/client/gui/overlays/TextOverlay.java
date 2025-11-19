@@ -20,7 +20,7 @@ public class TextOverlay extends OverlayContainer {
     public void init() {
         super.init();
 
-        addDrawableChild(new Button(x + 2, y + this.height - 12, this.width - 4, 10, this.textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
+        addDrawableChild(new Button(x + 2, y + this.height - 12, this.width - 4, 10, this.textRenderer, 0, 0xFF000000, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
             this.close();
         }));
     }
@@ -29,7 +29,7 @@ public class TextOverlay extends OverlayContainer {
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         renderBackground(drawContext);
         int x = this.centered ? Math.max(this.x + 3, this.x + 3 + (this.width - 6) / 2 - this.textRenderer.getWidth(this.text) / 2) : this.x + 3;
-        drawContext.drawWrappedText(textRenderer, this.text, x, this.y + 5, width - 6, 0xFFFFFF, false);
+        drawContext.drawWrappedText(textRenderer, this.text, x, this.y + 5, width - 6, 0xFFFFFFFF, false);
         super.render(drawContext, mouseX, mouseY, delta);
     }
 

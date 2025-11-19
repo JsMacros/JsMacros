@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.PressableWidget;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import xyz.wagyourtail.jsmacros.client.util.ColorUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -27,10 +28,10 @@ public class Button extends PressableWidget {
     public Button(int x, int y, int width, int height, TextRenderer textRenderer, int color, int borderColor, int highlightColor, int textColor, Text message, Consumer<Button> onPress) {
         super(x, y, width, height, message);
         this.textRenderer = textRenderer;
-        this.color = color;
-        this.borderColor = borderColor;
-        this.highlightColor = highlightColor;
-        this.textColor = textColor;
+        setColor(color);
+        setBorderColor(borderColor);
+        setHighlightColor(highlightColor);
+        setTextColor(textColor);
         this.onPress = onPress;
         this.setMessage(message);
     }
@@ -60,11 +61,19 @@ public class Button extends PressableWidget {
     }
 
     public void setColor(int color) {
-        this.color = color;
+        this.color = ColorUtil.fixAlpha(color);
+    }
+
+    public void setBorderColor(int color) {
+        this.borderColor = ColorUtil.fixAlpha(color);
     }
 
     public void setHighlightColor(int color) {
-        this.highlightColor = color;
+        this.highlightColor = ColorUtil.fixAlpha(color);
+    }
+
+    public void setTextColor(int color) {
+        this.textColor = ColorUtil.fixAlpha(color);
     }
 
     protected void renderMessage(DrawContext drawContext) {

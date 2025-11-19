@@ -4,9 +4,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.MultiplayerServerListPinger;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
-import xyz.wagyourtail.jsmacros.client.JsMacros;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.EventItemDamage;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.EventArmorChange;
@@ -70,9 +69,7 @@ public class TickBasedEvents {
         }
 
         if (mc.player != null && mc.player.getInventory() != null) {
-            PlayerInventory inv = mc.player.getInventory();
-
-            ItemStack newMainHand = inv.getMainHandStack();
+            ItemStack newMainHand = mc.player.getMainHandStack();
             if (areNotEqual(newMainHand, mainHand)) {
                 if (areEqualIgnoreDamage(newMainHand, mainHand)) {
                     new EventItemDamage(newMainHand, newMainHand.getDamage()).trigger();
@@ -81,7 +78,7 @@ public class TickBasedEvents {
                 mainHand = newMainHand.copy();
             }
 
-            ItemStack newOffHand = inv.offHand.get(0);
+            ItemStack newOffHand = mc.player.getOffHandStack();
             if (areNotEqual(newOffHand, offHand)) {
                 if (areEqualIgnoreDamage(newOffHand, offHand)) {
                     new EventItemDamage(newOffHand, newOffHand.getDamage()).trigger();
@@ -90,7 +87,7 @@ public class TickBasedEvents {
                 offHand = newOffHand.copy();
             }
 
-            ItemStack newHeadArmor = inv.getArmorStack(3);
+            ItemStack newHeadArmor = mc.player.getEquippedStack(EquipmentSlot.HEAD);
             if (areNotEqual(newHeadArmor, headArmor)) {
                 if (areEqualIgnoreDamage(newHeadArmor, headArmor)) {
                     new EventItemDamage(newHeadArmor, newHeadArmor.getDamage()).trigger();
@@ -99,7 +96,7 @@ public class TickBasedEvents {
                 headArmor = newHeadArmor.copy();
             }
 
-            ItemStack newChestArmor = inv.getArmorStack(2);
+            ItemStack newChestArmor = mc.player.getEquippedStack(EquipmentSlot.CHEST);
             if (areNotEqual(newChestArmor, chestArmor)) {
                 if (areEqualIgnoreDamage(newChestArmor, chestArmor)) {
                     new EventItemDamage(newChestArmor, newChestArmor.getDamage()).trigger();
@@ -109,7 +106,7 @@ public class TickBasedEvents {
 
             }
 
-            ItemStack newLegArmor = inv.getArmorStack(1);
+            ItemStack newLegArmor = mc.player.getEquippedStack(EquipmentSlot.LEGS);
             if (areNotEqual(newLegArmor, legArmor)) {
                 if (areEqualIgnoreDamage(newLegArmor, legArmor)) {
                     new EventItemDamage(newLegArmor, newLegArmor.getDamage()).trigger();
@@ -118,7 +115,7 @@ public class TickBasedEvents {
                 legArmor = newLegArmor.copy();
             }
 
-            ItemStack newFootArmor = inv.getArmorStack(0);
+            ItemStack newFootArmor = mc.player.getEquippedStack(EquipmentSlot.FEET);
             if (areNotEqual(newFootArmor, footArmor)) {
                 if (areEqualIgnoreDamage(newFootArmor, footArmor)) {
                     new EventItemDamage(newFootArmor, newFootArmor.getDamage()).trigger();

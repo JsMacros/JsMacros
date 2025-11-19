@@ -486,7 +486,7 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
      * @since 1.8.4
      */
     public long[] readLongArray(int maxSize) {
-        return base.readLongArray(null, maxSize);
+        return base.readLongArray(); // TODO: does this exist?
     }
 
     /**
@@ -1709,7 +1709,6 @@ public class PacketByteBufferHelper extends BaseHelper<PacketByteBuf> {
         PACKETS.put("CloseHandledScreenC2SPacket", net.minecraft.network.packet.c2s.play.CloseHandledScreenC2SPacket.class);
         PACKETS.put("PlayerListHeaderS2CPacket", net.minecraft.network.packet.s2c.play.PlayerListHeaderS2CPacket.class);
         PACKETS.put("WorldBorderWarningBlocksChangedS2CPacket", net.minecraft.network.packet.s2c.play.WorldBorderWarningBlocksChangedS2CPacket.class);
-        PACKETS.put("ExperienceOrbSpawnS2CPacket", net.minecraft.network.packet.s2c.play.ExperienceOrbSpawnS2CPacket.class);
         PACKETS.put("CreativeInventoryActionC2SPacket", net.minecraft.network.packet.c2s.play.CreativeInventoryActionC2SPacket.class);
         PACKETS.put("EntitySpawnS2CPacket", net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket.class);
         PACKETS.put("TitleFadeS2CPacket", net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket.class);

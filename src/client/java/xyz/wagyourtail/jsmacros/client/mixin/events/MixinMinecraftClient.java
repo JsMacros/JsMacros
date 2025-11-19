@@ -6,7 +6,6 @@ import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.session.Session;
 import net.minecraft.client.world.ClientWorld;
@@ -66,7 +65,7 @@ public abstract class MixinMinecraftClient {
     public void afterOpenScreen(Screen screen, CallbackInfo info) {
         if (screen instanceof HandledScreen<?>) {
             assert interactionManager != null;
-            if (interactionManager.hasCreativeInventory() && !(screen instanceof CreativeInventoryScreen)) {
+            if (interactionManager.getCurrentGameMode().isCreative() && !(screen instanceof CreativeInventoryScreen)) {
                 return;
             }
             EventOpenContainer event = new EventOpenContainer(((HandledScreen<?>) screen));

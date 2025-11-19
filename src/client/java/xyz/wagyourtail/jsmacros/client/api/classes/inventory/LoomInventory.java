@@ -3,14 +3,12 @@ package xyz.wagyourtail.jsmacros.client.api.classes.inventory;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.client.gui.screen.ingame.LoomScreen;
-import net.minecraft.item.BannerPatternItem;
-import net.minecraft.item.Item;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.registry.tag.BannerPatternTags;
+import net.minecraft.registry.tag.TagKey;
 import xyz.wagyourtail.jsmacros.client.access.ILoomScreen;
 
 import java.util.List;
@@ -29,16 +27,13 @@ public class LoomInventory extends Inventory<LoomScreen> {
     }
 
     private List<RegistryEntry<BannerPattern>> getPatternsFor(ItemStack stack) {
+        var bannerPatternLookup = mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.BANNER_PATTERN);
+        // Taken from LoomScreenHandler#getPatternsFor
         if (stack.isEmpty()) {
-            return (List)mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.BANNER_PATTERN).getOptional(BannerPatternTags.NO_ITEM_REQUIRED).map(ImmutableList::copyOf).orElse(ImmutableList.of());
+            return bannerPatternLookup.getOptional(BannerPatternTags.NO_ITEM_REQUIRED).map(ImmutableList::copyOf).orElse(ImmutableList.of());
         } else {
-            Item var3 = stack.getItem();
-            if (var3 instanceof BannerPatternItem) {
-                BannerPatternItem bannerPatternItem = (BannerPatternItem)var3;
-                return (List)mc.getNetworkHandler().getRegistryManager().getOrThrow(RegistryKeys.BANNER_PATTERN).getOptional(bannerPatternItem.getPattern()).map(ImmutableList::copyOf).orElse(ImmutableList.of());
-            } else {
-                return List.of();
-            }
+            TagKey<BannerPattern> tagKey = stack.get(DataComponentTypes.PROVIDES_BANNER_PATTERNS);
+            return tagKey != null ? bannerPatternLookup.getOptional(tagKey).map(ImmutableList::copyOf).orElse(ImmutableList.of()) : List.of();
         }
     }
 

@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.core.event;
 
 import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.config.BaseProfile;
 
 public class BaseEvent {
     public final Core<?, ?> runner;

@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.mixin.access;
 
-import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementEntry;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.client.network.ClientAdvancementManager;

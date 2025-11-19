@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.core.language;
 
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 
 import java.util.ArrayList;

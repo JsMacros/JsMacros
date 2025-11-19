@@ -3,7 +3,6 @@ package xyz.wagyourtail.jsmacros.core.library.impl.classes;
 import javassist.util.proxy.ProxyFactory;
 import org.jetbrains.annotations.Nullable;
 import xyz.wagyourtail.Util;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.language.BaseScriptContext;
 

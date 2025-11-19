@@ -1,15 +1,11 @@
 package xyz.wagyourtail.jsmacros.client.api.classes.render.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gl.ShaderProgramKey;
-import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
+import org.joml.Matrix3x2fStack;
 import xyz.wagyourtail.jsmacros.client.api.classes.render.IDraw2D;
+import xyz.wagyourtail.jsmacros.client.util.ColorUtil;
 
 /**
  * @author Wagyourtail
@@ -215,10 +211,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
      * @since 1.0.5
      */
     public Rect setColor(int color) {
-        if (color <= 0xFFFFFF) {
-            color = color | 0xFF000000;
-        }
-        this.color = color;
+        this.color = ColorUtil.fixAlpha(color);
         return this;
     }
 
@@ -239,7 +232,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
      * @since 1.1.8
      */
     public Rect setAlpha(int alpha) {
-        this.color = (color & 0xFFFFFF) | (alpha << 24);
+        this.color = (color & 0x00FFFFFF) | (alpha << 24);
         return this;
     }
 
@@ -313,33 +306,11 @@ public class Rect implements RenderElement, Alignable<Rect> {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        MatrixStack matrices = drawContext.getMatrices();
-        matrices.push();
+        Matrix3x2fStack matrices = drawContext.getMatrices();
+        matrices.pushMatrix();
         setupMatrix(matrices, x1, y1, 1, rotation, getWidth(), getHeight(), rotateCenter);
-
-        Tessellator tess = Tessellator.getInstance();
-
-        float fa = ((color >> 24) & 0xFF) / 255F;
-        float fr = ((color >> 16) & 0xFF) / 255F;
-        float fg = ((color >> 8) & 0xFF) / 255F;
-        float fb = (color & 0xFF) / 255F;
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-
-        BufferBuilder buf = tess.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
-        Matrix4f matrix = matrices.peek().getPositionMatrix();
-        //draw a rectangle using triangle strips
-        buf.vertex(matrix, x1, y2, 0).color(fr, fg, fb, fa); // Top-left
-        buf.vertex(matrix, x2, y2, 0).color(fr, fg, fb, fa); // Top-right
-        buf.vertex(matrix, x1, y1, 0).color(fr, fg, fb, fa); // Bottom-left
-        buf.vertex(matrix, x2, y1, 0).color(fr, fg, fb, fa); // Bottom-right
-        BufferRenderer.drawWithGlobalProgram(buf.end());
-
-        RenderSystem.disableBlend();
-
-        matrices.pop();
+        drawContext.fill(x1, y1, x2, y2, this.color);
+        matrices.popMatrix();
     }
 
     public Rect setParent(IDraw2D<?> parent) {
@@ -391,7 +362,7 @@ public class Rect implements RenderElement, Alignable<Rect> {
         private int y1 = 0;
         private int x2 = 0;
         private int y2 = 0;
-        private int color = 0xFFFFFF;
+        private int color = 0xFFFFFFFF;
         private int alpha = 0xFF;
         private float rotation = 0;
         private boolean rotateCenter = true;

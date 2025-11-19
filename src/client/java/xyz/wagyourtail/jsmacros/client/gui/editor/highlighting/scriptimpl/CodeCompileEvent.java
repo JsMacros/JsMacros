@@ -11,7 +11,6 @@ import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.AutoCompleteSugge
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.Prism;
 import xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl.TextStyleCompiler;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.MethodWrapper;
 import xyz.wagyourtail.jsmacros.core.event.BaseEvent;
 import xyz.wagyourtail.jsmacros.core.event.Event;

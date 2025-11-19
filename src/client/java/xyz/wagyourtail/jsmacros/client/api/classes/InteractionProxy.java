@@ -11,13 +11,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import xyz.wagyourtail.doclet.DocletDeclareType;
 import xyz.wagyourtail.doclet.DocletReplaceReturn;
 import xyz.wagyourtail.jsmacros.client.api.helper.world.BlockPosHelper;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -58,8 +57,8 @@ public class InteractionProxy {
             Target.clearIfEmptyShape = false;
         }
 
-        public static void setTargetBlock(@Nullable BlockPos pos, int direction) {
-            setTarget(pos == null ? null : new BlockHitResult(pos.toCenterPos(), Direction.values()[direction], pos, false));
+        public static void setTargetBlock(@Nullable BlockPos pos, Direction direction) {
+            setTarget(pos == null ? null : new BlockHitResult(pos.toCenterPos(), direction, pos, false));
         }
 
         public static void setTarget(@Nullable HitResult value) {

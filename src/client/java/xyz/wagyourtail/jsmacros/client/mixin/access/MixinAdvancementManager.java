@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.mixin.access;
 
-import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementManager;
 import net.minecraft.advancement.PlacedAdvancement;
 import net.minecraft.util.Identifier;

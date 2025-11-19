@@ -2,7 +2,6 @@ package xyz.wagyourtail.jsmacros.client.gui.editor;
 
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.config.ClientConfigV2;
-import xyz.wagyourtail.jsmacros.core.Core;
 
 import java.util.ArrayList;
 import java.util.List;

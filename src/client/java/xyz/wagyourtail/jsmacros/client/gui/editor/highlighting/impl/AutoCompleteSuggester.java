@@ -2,8 +2,6 @@ package xyz.wagyourtail.jsmacros.client.gui.editor.highlighting.impl;
 
 import xyz.wagyourtail.StringHashTrie;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
-import xyz.wagyourtail.jsmacros.core.Core;
-import xyz.wagyourtail.jsmacros.core.extensions.Extension;
 import xyz.wagyourtail.jsmacros.core.extensions.LanguageExtension;
 import xyz.wagyourtail.jsmacros.core.language.BaseLanguage;
 import xyz.wagyourtail.jsmacros.core.library.LibraryRegistry;

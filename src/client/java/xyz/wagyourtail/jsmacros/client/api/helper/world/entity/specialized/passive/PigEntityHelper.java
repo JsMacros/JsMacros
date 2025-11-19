@@ -18,7 +18,7 @@ public class PigEntityHelper extends AnimalEntityHelper<PigEntity> {
      * @since 1.8.4
      */
     public boolean isSaddled() {
-        return base.isSaddled();
+        return base.hasSaddleEquipped();
     }
 
 }

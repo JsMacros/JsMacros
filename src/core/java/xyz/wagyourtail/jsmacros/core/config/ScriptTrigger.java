@@ -1,9 +1,7 @@
 package xyz.wagyourtail.jsmacros.core.config;
 
 import com.google.gson.annotations.SerializedName;
-import xyz.wagyourtail.jsmacros.core.Core;
 
-import java.io.File;
 import java.nio.file.Path;
 
 public class ScriptTrigger {

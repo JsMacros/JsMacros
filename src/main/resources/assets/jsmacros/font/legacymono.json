@@ -1,9 +1,0 @@
-{
-  "providers": [
-    {
-      "type": "legacy_unicode",
-      "sizes": "jsmacros:font/legacymono.bin",
-      "template": "minecraft:font/unicode_page_%s.png"
-    }
-  ]
-}

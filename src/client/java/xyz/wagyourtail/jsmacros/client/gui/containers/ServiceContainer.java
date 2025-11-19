@@ -8,7 +8,6 @@ import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.gui.overlays.TextOverlay;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.ServiceScreen;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.service.ServiceManager;
 import xyz.wagyourtail.jsmacros.core.service.ServiceTrigger;
 import xyz.wagyourtail.wagyourgui.containers.MultiElementContainer;
@@ -36,7 +35,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
         super.init();
 
         int w = width - 12;
-        nameBtn = addDrawableChild(new Button(x + 1, y + 1, w * 2 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.literal(service), (btn) -> {
+        nameBtn = addDrawableChild(new Button(x + 1, y + 1, w * 2 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal(service), (btn) -> {
             openOverlay(new TextPrompt(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, Text.literal("Enter new service name"), service, getFirstOverlayParent(), (newService) -> {
                 if (!JsMacrosClient.clientCore.services.renameService(service, newService)) {
                     openOverlay(new TextOverlay(parent.width / 4, parent.height / 4, parent.width / 2, parent.height / 2, textRenderer, getFirstOverlayParent(), Text.literal("Failed to rename service").styled(s -> s.withColor(Formatting.RED))));
@@ -47,14 +46,14 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
             }));
         }));
 
-        fileBtn = addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.literal("./" + getTrigger().file.toString().replaceAll("\\\\", "/")), (btn) -> {
+        fileBtn = addDrawableChild(new Button(x + w * 2 / 12 + 1, y + 1, w * 8 / 12 - 1, height - 2, textRenderer, 0, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.literal("./" + getTrigger().file.toString().replaceAll("\\\\", "/")), (btn) -> {
             parent.setFile(this);
         }));
 
         boolean enabled = getEnabled();
         boolean running = getRunning();
 
-        enableBtn = addDrawableChild(new Button(x + w * 10 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (enabled ? "enabled" : "disabled")), (btn) -> {
+        enableBtn = addDrawableChild(new Button(x + w * 10 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, enabled ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("jsmacros." + (enabled ? "enabled" : "disabled")), (btn) -> {
             if (getEnabled()) {
                 JsMacrosClient.clientCore.services.disableService(service);
                 btn.setColor(0x70FF0000);
@@ -66,7 +65,7 @@ public class ServiceContainer extends MultiElementContainer<MacroScreen> {
             }
         }));
 
-        runningBtn = addDrawableChild(new Button(x + w * 11 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, running ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFF, Text.translatable("jsmacros." + (running ? "running" : "stopped")), (btn) -> {
+        runningBtn = addDrawableChild(new Button(x + w * 11 / 12 + 1, y + 1, w / 12, height - 2, textRenderer, running ? 0x7000FF00 : 0x70FF0000, 0xFF000000, 0x7F7F7F7F, 0xFFFFFFFF, Text.translatable("jsmacros." + (running ? "running" : "stopped")), (btn) -> {
             if (getRunning()) {
                 JsMacrosClient.clientCore.services.stopService(service);
             } else {

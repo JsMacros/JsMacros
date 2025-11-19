@@ -7,7 +7,6 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.util.TranslationUtil;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.wagyourgui.elements.Button;
 import xyz.wagyourtail.wagyourgui.elements.Scrollbar;
 import xyz.wagyourtail.wagyourgui.overlays.IOverlayParent;
@@ -48,14 +47,14 @@ public class EventChooser extends OverlayContainer {
         super.init();
         int w = width - 4;
         topScroll = y + 13;
-        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.literal("X"), (btn) -> {
+        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal("X"), (btn) -> {
             this.close();
         }));
         scroll = this.addDrawableChild(new Scrollbar(x + width - 10, y + 13, 8, height - 28, 0, 0xFF000000, 0xFFFFFFFF, 2, this::onScrollbar));
-        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("gui.cancel"), (btn) -> {
+        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("gui.cancel"), (btn) -> {
             this.close();
         }));
-        this.addDrawableChild(new Button(x + w / 2 + 3, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.select"), (btn) -> {
+        this.addDrawableChild(new Button(x + w / 2 + 3, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("jsmacros.select"), (btn) -> {
             if (this.selected != null && this.setEvent != null) {
                 this.setEvent.accept(this.selected);
                 this.close();
@@ -71,7 +70,7 @@ public class EventChooser extends OverlayContainer {
     }
 
     public void addEvent(String eventName) {
-        EventObj e = new EventObj(eventName, new Button(x + 3 + (events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, TranslationUtil.getTranslatedEventName(eventName), (btn) -> {
+        EventObj e = new EventObj(eventName, new Button(x + 3 + (events.size() % 5 * (width - 12) / 5), topScroll + (events.size() / 5 * 12), (width - 12) / 5, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFFFF, TranslationUtil.getTranslatedEventName(eventName), (btn) -> {
             selectEvent(eventName);
         }));
 
@@ -103,7 +102,7 @@ public class EventChooser extends OverlayContainer {
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         renderBackground(drawContext);
 
-        drawContext.drawWrappedText(textRenderer, eventText, x + 3, y + 3, width - 14, 0xFFFFFF, false);
+        drawContext.drawWrappedText(textRenderer, eventText, x + 3, y + 3, width - 14, 0xFFFFFFFF, false);
 
         drawContext.fill(x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
         drawContext.fill(x + 2, y + height - 15, x + width - 2, y + height - 14, 0xFFFFFFFF);
@@ -121,7 +120,7 @@ public class EventChooser extends OverlayContainer {
 
                 // fill
                 drawContext.fill(mouseX - 2, mouseY - textRenderer.fontHeight - 3, mouseX + width + 2, mouseY, 0xFF000000);
-                drawContext.drawTextWithShadow(textRenderer, b.getMessage(), mouseX, mouseY - textRenderer.fontHeight - 1, 0xFFFFFF);
+                drawContext.drawTextWithShadow(textRenderer, b.getMessage(), mouseX, mouseY - textRenderer.fontHeight - 1, 0xFFFFFFFF);
             }
         }
     }

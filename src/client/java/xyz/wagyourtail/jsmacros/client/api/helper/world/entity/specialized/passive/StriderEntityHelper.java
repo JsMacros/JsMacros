@@ -18,7 +18,7 @@ public class StriderEntityHelper extends AnimalEntityHelper<StriderEntity> {
      * @since 1.8.4
      */
     public boolean isSaddled() {
-        return base.isSaddled();
+        return base.hasSaddleEquipped();
     }
 
     /**

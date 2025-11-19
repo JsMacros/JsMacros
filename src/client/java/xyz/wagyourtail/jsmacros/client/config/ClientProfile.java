@@ -1,6 +1,5 @@
 package xyz.wagyourtail.jsmacros.client.config;
 
-import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
 import net.minecraft.advancement.AdvancementManager;
 import net.minecraft.advancement.AdvancementProgress;
@@ -31,20 +30,7 @@ import xyz.wagyourtail.jsmacros.client.api.event.impl.*;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.inventory.*;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.player.*;
 import xyz.wagyourtail.jsmacros.client.api.event.impl.world.*;
-import xyz.wagyourtail.jsmacros.client.api.helper.AdvancementHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.AdvancementManagerHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.AdvancementProgressHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.BlockPredicateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.CommandContextHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.CommandNodeHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.DyeColorHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.FormattingHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.InteractionManagerHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.NBTElementHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.NbtPredicateHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.OptionsHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.PacketByteBufferHelper;
-import xyz.wagyourtail.jsmacros.client.api.helper.StatePredicateHelper;
+import xyz.wagyourtail.jsmacros.client.api.helper.*;
 import xyz.wagyourtail.jsmacros.client.api.library.impl.*;
 import xyz.wagyourtail.jsmacros.client.gui.screens.EditorScreen;
 import xyz.wagyourtail.jsmacros.client.gui.screens.MacroScreen;
@@ -138,7 +124,7 @@ public class ClientProfile extends BaseProfile {
                     BaseWrappedException.GuestLocation loc = (BaseWrappedException.GuestLocation) head.location;
                     if (loc.file != null) {
                         locationStyle = locationStyle.withHoverEvent(
-                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.translatable("jsmacros.clicktoview"))
+                                new HoverEvent.ShowText(Text.translatable("jsmacros.clicktoview"))
                         ).withClickEvent(new CustomClickEvent(() -> {
                             if (loc.startIndex > -1) {
                                 EditorScreen.openAndScrollToIndex(loc.file, loc.startIndex, loc.endIndex);

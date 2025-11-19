@@ -1,7 +1,6 @@
 package xyz.wagyourtail.jsmacros.client.tick;
 
 import java.util.PriorityQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Wagyourtail

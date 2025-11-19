@@ -10,6 +10,7 @@
     "access.MixinAdvancementProgress",
     "access.MixinAllayEntity",
     "access.MixinAnvilScreen",
+    "access.MixinBlockPredicatesChecker",
     "access.MixinChatHud",
     "access.MixinChunkSelection",
     "access.MixinClientAdvancementManager",
@@ -28,6 +29,7 @@
     "access.MixinHandledScreen",
     "access.MixinHorseEntity",
     "access.MixinHorseScreen",
+    "access.MixinInGameHud",
     "access.MixinInteractionEntity",
     "access.MixinInteractionEntity2",
     "access.MixinItemCooldownEntry",
@@ -74,8 +76,7 @@
     "events.MixinMouse",
     "events.MixinSoundSystem",
     "events.MixinSplashOverlay",
-    "access.MixinBlockPredicatesChecker",
-    "access.MixinItemEnchantmentsComponent"
+    "events.MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

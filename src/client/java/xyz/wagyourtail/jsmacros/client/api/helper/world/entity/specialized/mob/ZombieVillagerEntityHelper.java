@@ -28,7 +28,7 @@ public class ZombieVillagerEntityHelper extends ZombieEntityHelper<ZombieVillage
      * @since 1.8.4
      */
     public String getVillagerBiomeType() {
-        return Registries.VILLAGER_TYPE.getId(base.getVillagerData().getType()).toString();
+        return Registries.VILLAGER_TYPE.getId(base.getVillagerData().type().value()).toString();
     }
 
     /**
@@ -36,7 +36,7 @@ public class ZombieVillagerEntityHelper extends ZombieEntityHelper<ZombieVillage
      * @since 1.8.4
      */
     public String getProfession() {
-        return base.getVillagerData().getProfession().id();
+        return base.getVillagerData().profession().getIdAsString();
     }
 
     /**
@@ -44,7 +44,7 @@ public class ZombieVillagerEntityHelper extends ZombieEntityHelper<ZombieVillage
      * @since 1.8.4
      */
     public int getLevel() {
-        return base.getVillagerData().getLevel();
+        return base.getVillagerData().level();
     }
 
 }

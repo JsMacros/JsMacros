@@ -6,7 +6,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import xyz.wagyourtail.jsmacros.client.JsMacrosClient;
 import xyz.wagyourtail.jsmacros.client.gui.settings.settingcontainer.*;
-import xyz.wagyourtail.jsmacros.core.Core;
 import xyz.wagyourtail.jsmacros.core.config.CoreConfigV2;
 import xyz.wagyourtail.jsmacros.core.config.Option;
 import xyz.wagyourtail.wagyourgui.BaseScreen;
@@ -75,10 +74,10 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
         super.init();
         int w = width - 4;
 
-        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.literal("X"), (btn) -> this.close()));
+        this.addDrawableChild(new Button(x + width - 12, y + 2, 10, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFFFF, Text.literal("X"), (btn) -> this.close()));
         sections = new CategoryTreeContainer(x + 2, y + 13, w / 3, height - 17, textRenderer, this);
 
-        this.addDrawableChild(new Button(x + width / 2, y + 2, width / 2 - 12, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.reloadconfig"), (btn) -> {
+        this.addDrawableChild(new Button(x + width / 2, y + 2, width / 2 - 12, 10, textRenderer, 0, 0x7FFFFFFF, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("jsmacros.reloadconfig"), (btn) -> {
             try {
                 JsMacrosClient.clientCore.config.loadConfig();
             } catch (IllegalAccessException | InstantiationException | IOException | InvocationTargetException | NoSuchMethodException e) {
@@ -147,7 +146,7 @@ public class SettingsOverlay extends OverlayContainer implements ICategoryTreePa
 
         sections.render(drawContext, mouseX, mouseY, delta);
 
-        drawContext.drawWrappedText(textRenderer, title, x + 3, y + 3, width - 14, 0xFFFFFF, false);
+        drawContext.drawWrappedText(textRenderer, title, x + 3, y + 3, width - 14, 0xFFFFFFFF, false);
         drawContext.fill(x + 2, y + 12, x + width - 2, y + 13, 0xFFFFFFFF);
 
         //sep

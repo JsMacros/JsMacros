@@ -27,11 +27,11 @@ public class TextPrompt extends OverlayContainer {
         super.init();
         int w = width - 4;
 
-        ti = this.addDrawableChild(new TextInput(x + 3, y + 25, w - 2, 14, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFF, defText, null, null));
+        ti = this.addDrawableChild(new TextInput(x + 3, y + 25, w - 2, 14, textRenderer, 0xFF101010, 0, 0xFF4040FF, 0xFFFFFFFF, defText, null, null));
 
-        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("gui.cancel"), (btn) -> close()));
+        this.addDrawableChild(new Button(x + 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("gui.cancel"), (btn) -> close()));
 
-        this.addDrawableChild(new Button(x + w / 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
+        this.addDrawableChild(new Button(x + w / 2, y + height - 14, w / 2, 12, textRenderer, 0, 0, 0x7FFFFFFF, 0xFFFFFFFF, Text.translatable("jsmacros.confirm"), (btn) -> {
             if (this.accept != null) {
                 this.accept.accept(ti.content);
             }
@@ -47,7 +47,7 @@ public class TextPrompt extends OverlayContainer {
         this.renderBackground(drawContext);
         int lineNum = 0;
         for (OrderedText line : textRenderer.wrapLines(message, width - 4)) {
-            drawContext.drawText(textRenderer, line, (int) (x + width / 2F - textRenderer.getWidth(line) / 2F), y + 5 + (lineNum++) * textRenderer.fontHeight, 0xFFFFFF, false);
+            drawContext.drawText(textRenderer, line, (int) (x + width / 2F - textRenderer.getWidth(line) / 2F), y + 5 + (lineNum++) * textRenderer.fontHeight, 0xFFFFFFFF, false);
         }
         super.render(drawContext, mouseX, mouseY, delta);
     }
